@@ -68,9 +68,9 @@ def coalescent_matrix(n, N, restrict=None):
     """
     Construct a transition probability matrix of size `n`, with population size `N`
     """
-    Q = np.zeros((n + 2, n + 2))
-    for i in range(0, n + 2):
-        for j in range(0, n + 2):
+    Q = np.zeros((n + 1, n + 1))
+    for i in range(0, n + 1):
+        for j in range(0, n + 1):
             d = j - i
-            Q[i, j] = transition_probability(n + 1, 1000, i, d, 2)
+            Q[i, j] = transition_probability(n, N, i, d, restrict)
     return Q
