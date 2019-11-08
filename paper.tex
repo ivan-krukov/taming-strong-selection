@@ -1,11 +1,42 @@
 \documentclass[]{article}
 
+\newcommand{\Dfrac}[2]{%
+  \ooalign{%
+    $\left(\genfrac{}{}{1.2pt}0{#1}{#2}\right)$\cr%
+    $\color{white}\genfrac{}{}{.4pt}0{\phantom{#1}}{\phantom{#2}}$}%
+}
+
+\newcommand{\Tfrac}[2]{%
+  \ooalign{%
+    $\left(genfrac{}{}{1.2pt}1{#1}{#2}\right)$\cr%
+    $\color{white}\genfrac{}{}{.4pt}1{\phantom{#1}}{\phantom{#2}}$}%
+}
+\usepackage{amsmath}% http://ctan.org/pkg/amsmath
+\usepackage{xcolor}% http://ctan.org/pkg/xcolor
+
+
 \begin{document}
 
 \section{Introduction}
 \label{sec:intro}
 
 Work on the discrete coalescent and the allele age in a finite sample
+\section{Computing high-order transition matrices in the moments framework}
+\subsection{Genetic drift only}
+The goal is to obtain the probability of observing $k$ derived alleles in a sample of size $n$ from a population of size $N$, given a similar sampling probability in the parental population. We denote $\Dfrac{k}{n}_g$ the observation of $k$ derived alleles in a sample of size $n$ at generation $g$ ($g$ will be $p$ for parent and $o$ for offspring).  Thus we would like 
+
+$$P\left(\Dfrac{k}{n}_o \middle|  \Dfrac{K}{N}_f \right),$$ where we are conditioning on the knowledge of the entire parental population (of size $N$). Many researchers over the years have observed that $P\Dfrac{j}{n}_p$ is a sufficient statistic for  $P\left(\Dfrac{k}{n}_o\right)$ under neutral Wright-Fisher evolution, opening the way for moment-based recursions of the distribution of allele frequencies \cite{Kimura, Ewens, Song, Jouganous, Kurtz-Donnely}.
+
+To see this, notice that $P(\Dfrac{k}{n}_o)$ can be computed by conditioning on the patterns of lineage coalescence $\Lambda$:
+$$\sum_\Lambda P(\Dfrac{k}{n}_o | \Lambda) P(\Lambda)$$
+
+
+
+
+
+ 
+
+Once we allow the possibility of multiple coalescence events in a single generation, the number of possible events increases rapidly. The challenge is to systematically sum ver all the possibilities. 
 
 
 \end{document}
