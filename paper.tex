@@ -31,12 +31,35 @@ To see this, notice that $P(\Dfrac{k}{n}_o)$ can be computed by conditioning on 
 $$\sum_\Lambda P(\Dfrac{k}{n}_o | \Lambda) P(\Lambda)$$
 
 
+ 
+
+Once we allow the possibility of multiple coalescence events in a single generation, the number of possible events increases rapidly. The challenge is to systematically sum over all the possibilities. 
+
+\subsection{Dynamic programming---Drift only}
+Our goal is to obtain an expression for the transition matrix under drift, and drift and selection, using a dynamic programming approach (i.e., we want to build the transition matrix for large samples by building transition matrices for small samples first. There are two ways to define the small-sample transition probabilities, which we will denote as $P$ and $Q$. $P\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right)$ is the probability that $i$ derived alleles are drawn out of $n$ in the offspring generation given that we have observed $j$ derived alleles among the first $k$ drawn parental lineages. Under a general model with selection, this is not well-defined, however it is well-defined under drift if $k\geq n$. 
+
+$Q\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right)$ is the probability that $\Dfrac{i}{n}$ derived alleles in the offspring are drawn from exactly $k$ distinct parental lineages (of which $j$ are derived). This is well-defined for all $k$, but will be zero for $k>n$ under drift alone. 
+
+To obtain the drift equations, we can condition on the state of the last parental allele that is drawn, and second on the parental lineage drawn for the last offspring that is drawn. 
+
+\begin{equation}
+\begin{split}
+ P\left(\Dfrac{j}{n} \rightarrow \Dfrac{i}{n} \right) =&\\& \left(\frac{j}{n}\right)\left[ \left(1-\frac{(n-1)}{N}\right) P\left(\Dfrac{j-1}{n-1} \rightarrow \Dfrac{i-1}{n-1} \right) \right. \\&
+ \left.+ \frac{j-1}{N} P\left(\Dfrac{j-1}{n-1} \rightarrow \Dfrac{i-1}{n-1} \right)  +     \frac{k-j}{N} P\left(\Dfrac{j-1}{n-1} \rightarrow \Dfrac{i}{n-1} \right)     \right]
+ \\&
+ + \left(\frac{n-j}{n}\right)\left[ \left(1-\frac{(n-1)}{N}\right) P\left(\Dfrac{j}{n-1} \rightarrow \Dfrac{i}{n-1} \right) 
+ \right. \\&
+ \left.+ \frac{j}{N} P\left(\Dfrac{j}{n-1} \rightarrow \Dfrac{i}{n-1} \right) +     \frac{k-j-1}{N} P\left(\Dfrac{j}{n-1} \rightarrow \Dfrac{i}{n-1} \right)     \right]
+\end{split}
+\end{equation}
+
+I think that this works for drift. For selection, if we want to keep track of unused lineages in the parents, we have to use the $Q$'s instead. A related recursion holds for the $Q's$ as for the $P$'s.
+
 
 
 
  
 
-Once we allow the possibility of multiple coalescence events in a single generation, the number of possible events increases rapidly. The challenge is to systematically sum ver all the possibilities. 
 
 
 \end{document}
