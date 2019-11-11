@@ -1,4 +1,4 @@
-from src.transition_probability import coalescent_matrix
+from transition_probability import coalescent_matrix
 
 import numpy as np
 import matplotlib.pyplot as plt

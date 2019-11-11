@@ -2,7 +2,7 @@ import numpy as np
 import numpy.linalg as la
 
 
-def allele_age(Q, starting=1):
+def allele_age(Q, starting=1, mean_only=False):
     """
     Calculate mean and standard deviation of allele age and variance for a sample of `n` chromosomes, having observed `observed` copies
     """
@@ -22,11 +22,14 @@ def allele_age(Q, starting=1):
     A = Q @ (I + Q)
     mu_2 = M3 @ A / M1
 
-    return mu_1, np.sqrt(mu_2 - np.power(mu_1, 2))
+    if mean_only:
+        return mu_1
+    else:
+        return mu_1, np.sqrt(mu_2 - np.power(mu_1, 2))
 
 
 def diffusion_allele_age(p):
     """
     Diffusion approximation of allele age, starting at allele frequency `p`
     """
-    return (-2 * p) / (1 - p) * np.log(p)
+    return ((-2 * p) / (1 - p)) * np.log(p)
