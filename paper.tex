@@ -36,9 +36,8 @@ $$\sum_\Lambda P(\Dfrac{k}{n}_o | \Lambda) P(\Lambda)$$
 Once we allow the possibility of multiple coalescence events in a single generation, the number of possible events increases rapidly. The challenge is to systematically sum over all the possibilities. 
 
 \subsection{Dynamic programming---Drift only}
-Our goal is to obtain an expression for the transition matrix under drift, and drift and selection, using a dynamic programming approach (i.e., we want to build the transition matrix for large samples by building transition matrices for small samples first. There are two ways to define the small-sample transition probabilities, which we will denote as $P$ and $Q$. $P\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right)$ is the probability that $i$ derived alleles are drawn out of $n$ in the offspring generation given that we have observed $j$ derived alleles among the first $k$ drawn parental lineages. Under a general model with selection, this is not well-defined, however it is well-defined under drift if $k\geq n$. 
+Our goal is to obtain an expression for the transition matrix under drift, and drift and selection, using a dynamic programming approach (i.e., we want to build the transition matrix for large samples by building transition matrices for small samples first. For drift only, consider $P\left(\Dfrac{j}{n} \rightarrow \Dfrac{i}{n} \right)$, the probability that $i$ derived alleles are drawn out of the first $n$ sampled lineages in the offspring generation given that we have observed $j$ derived alleles among the first $n$ drawn parental lineages. Our strategy will be to compute $P\left(\Dfrac{\cdot}{n} \rightarrow \Dfrac{\cdot}{n} \right)$ from $P\left(\Dfrac{\cdot}{n-1} \rightarrow \Dfrac{\cdot}{n-1} \right)$
 
-$Q\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right)$ is the probability that $\Dfrac{i}{n}$ derived alleles in the offspring are drawn from exactly $k$ distinct parental lineages (of which $j$ are derived). This is well-defined for all $k$, but will be zero for $k>n$ under drift alone. 
 
 To obtain the drift equations, we can condition on the state of the last parental allele that is drawn, and second on the parental lineage drawn for the last offspring that is drawn. 
 
@@ -53,7 +52,114 @@ To obtain the drift equations, we can condition on the state of the last parenta
 \end{split}
 \end{equation}
 
-I think that this works for drift. For selection, if we want to keep track of unused lineages in the parents, we have to use the $Q$'s instead. A related recursion holds for the $Q's$ as for the $P$'s.
+
+\subsection{Dynamic programming---Selection and drift}
+
+For selection, we will need to be a bit more careful, since the number of parental lineages required may exceed $n$. We therefore define $Q\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right)$ as the probability that the first $n$ drawn alleles in the offspring contain $i$ derived alleles with $k$ distinct parental lineages, \emph{given} that the first $k$ drawn lineages from parental contain $j$ derived (This is a messy definition). 
+The general computation with arbitrary number of selection events is a bit complicated (but not tremendously so, I think). Here we'll consider the limit where each offspring can have at most one selective event occur (i.e., 
+$s\ll 1$), while allowing for multiple selective events occurring in the entire sample (i.e., $ns>1$ is ok). 
+
+Our strategy to estimate $Q\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right)$ will be to consider the $n$th lineage, consider the genealogical possibilities for that lineage together with the possible state of the first $n-1$ lineage, thus deriving an expression for $Q\left(\Dfrac{\cdot}{\cdot} \rightarrow \Dfrac{\cdot}{n} \right)$ in term of the $Q\left(\Dfrac{\cdot}{\cdot} \rightarrow \Dfrac{\cdot}{n-1} \right). $
+
+There are six possible events that can occur with the last offspring allele: 
+
+\begin{enumerate}
+\item it can pick a new lineage without selection, 
+\item it can pick an existing lineage without selection
+\item it can pick a new lineage with selection, then pick another new lineage;
+\item it can pick an existing lineage with selection, then pick an existing lineage. 
+\item it can pick an existing lineage with selection then pick a new lineage; and 
+\item it can pick a new lineage with selection then pick an existing lineage; 
+
+\end{enumerate}
+Each event can be concluded can be concluded by drawing either a derived or an ancestral allele, leading to 12 terms. We will just proceed in order :
+
+\subsubsection{1) pick a new lineage without selection}
+Pick ancestral allele: there are no coalescences, the last parental allele is ancestral, and the correct draw occurs from previous alleles. 
+
+$$Q_{1a}\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) = \left(1-(k-1)/N\right)\frac{k-j}{k} Q\left(\Dfrac{j}{k-1} \rightarrow \Dfrac{i}{n-1} \right) $$
+ 
+ and 
+ 
+$$Q_{1d}\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) = \left(1-(k-1)/N\right)\frac{j}{k} (1-s) Q\left(\Dfrac{j-1}{k-1} \rightarrow \Dfrac{i-1}{n-1} \right) $$
+
+\subsubsection{2) pick an existing lineage without selection}
+
+
+$$Q_{2a}\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) = \frac{k-j}{N} Q\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n-1} \right) $$
+ 
+ and 
+ 
+$$Q_{2d}\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) =  \frac{j}{N} (1-s) Q\left(\Dfrac{j}{k} \rightarrow \Dfrac{i-1}{n-1} \right) $$
+
+\subsubsection{3) pick a new (derived) lineage with selection, then pick another new lineage}
+
+$$Q_{3a}\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) = \left(1-\frac{(k-2)}{N}\right) \frac{j}{k} s  \left(1-\frac{(k-1)}{N}\right) \frac{(k-j)}{k-1}  
+Q\left(\Dfrac{j-1}{k-2} \rightarrow \Dfrac{i}{n-1} \right) $$
+ 
+ and 
+ 
+$$Q_{3d}\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) =\left(1-\frac{(k-2)}{N}\right) \frac{j}{k} s  \left(1-\frac{(k-1)}{N}\right) \frac{(j-1)}{k-1}  
+Q\left(\Dfrac{j-2}{k-2} \rightarrow \Dfrac{i-1}{n-1} \right)  $$
+
+\subsubsection{4)  it can pick an existing lineage with selection, then pick an existing lineage; }
+
+
+$$Q_{4a}\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) =  \frac{j}{N} s  \frac{k-j}{N}  Q\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n-1} \right)  
+$$
+ 
+ and 
+ 
+$$Q_{4d}\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) =  \frac{j}{N} s  \frac{j-1}{N}   Q\left(\Dfrac{j}{k} \rightarrow \Dfrac{i-1}{n-1} \right) $$
+
+
+\subsubsection{5)  it can pick an existing lineage with selection then pick a new lineage}
+
+
+$$Q_{5a}\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) =  \frac{j}{N} s  \left(1-\frac{k-1}{N}\right) \frac{n-i}{n}  Q\left(\Dfrac{j}{k-1} \rightarrow \Dfrac{i}{n-1} \right)  $$
+ 
+ and 
+ 
+$$Q_{5d}\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) =  \frac{j}{N} s  \left(1-\frac{k-1}{N}\right)  \frac{i}{N}   Q\left(\Dfrac{j-1}{k-1} \rightarrow \Dfrac{i-1}{n-1} \right) $$
+
+
+
+
+\subsubsection{6)  it can pick a new lineage with selection then pick an existing lineage; }
+
+$$Q_{6a}\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) = \left(1-\frac{(k-1)}{N}\right) \frac{j}{k} s  \left(\frac{ k-j }{N}\right)  
+Q\left(\Dfrac{j-1}{k-1} \rightarrow \Dfrac{i}{n-1} \right) $$
+ 
+ and 
+ 
+$$Q_{6d}\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) =\left(1-\frac{(k-1)}{N}\right) \frac{j}{k} s \frac{(j-1)}{N}  
+Q\left(\Dfrac{j-1}{k-1} \rightarrow \Dfrac{i-1}{n-1} \right)  $$
+
+
+And 
+
+$$Q\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n} \right) = \sum_{t=1}^6  \left( Q_{ta}+ Q_{td} \right)$$
+
+
+\subsection{Initializing and computing}
+
+To initialize, consider 
+$$Q\left(\Dfrac{1}{1} \rightarrow \Dfrac{1}{1} \right) = 1-s$$
+$$Q\left(\Dfrac{0}{1} \rightarrow \Dfrac{0}{1} \right) = 1$$
+$$Q\left(\Dfrac{2}{2} \rightarrow \Dfrac{1}{1} \right) = s$$ (I think)
+
+$$Q\left(\Dfrac{1}{2} \rightarrow \Dfrac{0}{1} \right) = \frac{1}{2}s $$
+
+(All others being zero. I may have messed up a factor of two.)
+
+For each value of $n'<n$, compute 
+
+$$Q\left(\Dfrac{j}{k} \rightarrow \Dfrac{i}{n'} \right) )$$
+for $1\leq k\leq 2 n',$ $j\leq k$, and $i \leq n'.$ Since all alleles from parent are used, note $i\geq j$, and $n'-i \geq k-j$ (so that $i \leq n'-k+j$) .
+
+
+
+
 
 
 
