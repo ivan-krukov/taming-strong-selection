@@ -1,15 +1,19 @@
 \documentclass[]{article}
 
 \newcommand{\Dfrac}[2]{%
+  \left(
   \ooalign{%
-    $\left(\genfrac{}{}{1.2pt}0{#1}{#2}\right)$\cr%
+    $\genfrac{}{}{1.2pt}0{#1}{#2}$\cr%
     $\color{white}\genfrac{}{}{.4pt}0{\phantom{#1}}{\phantom{#2}}$}%
+  \right)
 }
 
 \newcommand{\Tfrac}[2]{%
+  \left(
   \ooalign{%
-    $\left(genfrac{}{}{1.2pt}1{#1}{#2}\right)$\cr%
+    $genfrac{}{}{1.2pt}1{#1}{#2}$\cr%
     $\color{white}\genfrac{}{}{.4pt}1{\phantom{#1}}{\phantom{#2}}$}%
+  \right)
 }
 \usepackage{amsmath}% http://ctan.org/pkg/amsmath
 \usepackage{xcolor}% http://ctan.org/pkg/xcolor
@@ -44,11 +48,11 @@ To obtain the drift equations, we can condition on the state of the last parenta
 \begin{equation}
 \begin{split}
  P\left(\Dfrac{j}{n} \rightarrow \Dfrac{i}{n} \right) =&\\& \left(\frac{j}{n}\right)\left[ \left(1-\frac{(n-1)}{N}\right) P\left(\Dfrac{j-1}{n-1} \rightarrow \Dfrac{i-1}{n-1} \right) \right. \\&
- \left.+ \frac{j-1}{N} P\left(\Dfrac{j-1}{n-1} \rightarrow \Dfrac{i-1}{n-1} \right)  +     \frac{k-j}{N} P\left(\Dfrac{j-1}{n-1} \rightarrow \Dfrac{i}{n-1} \right)     \right]
+ \left.+ \frac{j-1}{N} P\left(\Dfrac{j-1}{n-1} \rightarrow \Dfrac{i-1}{n-1} \right)  +     \frac{n-j}{N} P\left(\Dfrac{j-1}{n-1} \rightarrow \Dfrac{i}{n-1} \right)     \right]
  \\&
  + \left(\frac{n-j}{n}\right)\left[ \left(1-\frac{(n-1)}{N}\right) P\left(\Dfrac{j}{n-1} \rightarrow \Dfrac{i}{n-1} \right) 
  \right. \\&
- \left.+ \frac{j}{N} P\left(\Dfrac{j}{n-1} \rightarrow \Dfrac{i}{n-1} \right) +     \frac{k-j-1}{N} P\left(\Dfrac{j}{n-1} \rightarrow \Dfrac{i}{n-1} \right)     \right]
+ \left.+ \frac{j}{N} P\left(\Dfrac{j}{n-1} \rightarrow \Dfrac{i-1}{n-1} \right) +     \frac{n-j-1}{N} P\left(\Dfrac{j}{n-1} \rightarrow \Dfrac{i}{n-1} \right)     \right]
 \end{split}
 \end{equation}
 
