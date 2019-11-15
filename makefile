@@ -1,4 +1,4 @@
-paper.pdf: paper.tex
+disco.pdf: disco.tex
 	mkdir -p tmp
 	latexmk -pdf -outdir=tmp $^
-	mv tmp/paper.pdf .
+	mv tmp/disco.pdf .
