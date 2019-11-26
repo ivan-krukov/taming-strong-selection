@@ -3,5 +3,5 @@
 # `LaTeX` compiltation
 
 ```
-make paper.pdf
+make disco.pdf
 ```
