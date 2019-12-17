@@ -9,10 +9,10 @@ def Qn(io, no, ic, nc, N, cache, n):
         v = 1
     elif (io, no, ic, nc) == (0, 1, 0, 1):
         v = 1
-    elif (no < 1) or (nc < 1) or (io < 0) or (ic < 0) or (io > no) or (ic > nc) or (no < nc) or (io < ic):
+    elif (no < 1) or (nc < 1) or (io < 0) or (ic < 0) or (io > no) or (ic > nc):
         v = 0
     else:
-        v = cache[io, no, ic, nc]
+        v = cache[nc, no, ic, io]
         
         
         if np.isnan(v):
@@ -30,7 +30,8 @@ def Qn(io, no, ic, nc, N, cache, n):
             Q2d = 0 if Q == 0 else (ic/N) * Q
 
             v = Q1a + Q1d + Q2a + Q2d
-        cache[io, no, ic, nc] = v
+        
+        cache[nc, no, ic, io] = v
         
     return v
 
@@ -44,10 +45,10 @@ def Qs(io, no, ic, nc, N, s, cache):
         v = s
     elif (io, no, ic, nc) == (0, 1, 1, 2):
         v = s / 2
-    elif (no < 1) or (nc < 1) or (io < 0) or (ic < 0) or (io > no) or (ic > nc) or (no < nc) or (io < ic):
+    elif (no < 1) or (nc < 1) or (io < 0) or (ic < 0) or (io > no) or (ic > nc):
         v = 0
     else:
-        v = cache[io, no, ic, nc]
+        v = cache[nc-1][no-1][ic, io]
 
         if np.isnan(v):
             
@@ -89,7 +90,7 @@ def Qs(io, no, ic, nc, N, s, cache):
             
             v = Q1a + Q1d + Q2a + Q2d + Q3a + Q3d + Q4a + Q4d + Q5a + Q5d + Q6a + Q6d
             
-        cache[io, no, ic, nc] = v
+        cache[nc-1][no-1][ic, io] = v
         
     return v
 
@@ -122,8 +123,8 @@ def matrix_tangle(n, N):
 
 def matrix_selection(n, N, s=0):
     mtx = np.zeros((n + 1, n + 1))
-    # cache = [np.full((n+1, n+1, n+1), np.nan) for i in range(0, n+1)]
-    cache = np.full((n+1, n+1, n+1, n+1), np.nan)
+    # cache = np.full((n+1, n+1, n+1, n+1), np.nan)
+    cache = [[np.full((i+1, j+1), np.nan) for j in range(1, n+1)] for i in range(1, n+1)]
     for nc in range(0, n + 1):  # This can be (1, n+1)
         for ic in range(0, nc + 1):
             # vectorized over ip
@@ -134,6 +135,6 @@ def matrix_selection(n, N, s=0):
 
 
 
-Q_new, cache = matrix_tangle(5, 100)
-Q_old = matrix_dumb(5, 100)
-Q_new.sum(axis=1), np.allclose(Q_new - Q_old, 0), np.sum(np.isfinite(cache)) / np.prod(cache.shape)
+# Q_new, cache = matrix_tangle(5, 100)
+# Q_old = matrix_dumb(5, 100)
+# Q_new.sum(axis=1), np.allclose(Q_new - Q_old, 0), np.sum(np.isfinite(cache)) / np.prod(cache.shape)
