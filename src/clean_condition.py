@@ -37,21 +37,20 @@ def Qn(io, no, ic, nc, N, cache, n):
 
 
 def Qs(io, no, ic, nc, N, s, cache):
-    if (io, no, ic, nc) == (1, 1, 1, 1):
-        v = 1 - s
-    elif (io, no, ic, nc) == (0, 1, 0, 1):
-        v = 1
-    elif (io, no, ic, nc) == (1, 1, 2, 2):
-        v = s
-    elif (io, no, ic, nc) == (0, 1, 1, 2):
-        v = s / 2
-    elif (no < 1) or (nc < 1) or (io < 0) or (ic < 0) or (io > no) or (ic > nc):
-        v = 0
-    else:
-        v = cache[nc-1][no-1][ic, io]
-
-        if np.isnan(v):
-            
+    if (no < 1) or (nc < 1) or (io < 0) or (ic < 0) or (io > no) or (ic > nc):
+        return 0
+    v = cache[nc-1][no-1][ic, io]
+    # v = cache[nc-1,no-1,ic,io]
+    if np.isnan(v):
+        if (io, no, ic, nc) == (1, 1, 1, 1):
+            v = 1 - s
+        elif (io, no, ic, nc) == (0, 1, 0, 1):
+            v = 1
+        elif (io, no, ic, nc) == (1, 1, 2, 2):
+            v = s
+        elif (io, no, ic, nc) == (0, 1, 1, 2):
+            v = s / 2
+        else:
             Q = Qs(io, no-1, ic, nc-1, N, s, cache)
             Q1a = 0 if Q == 0 else (1 - ((nc-1)/N)) * (nc-ic)/nc * Q
 
@@ -89,9 +88,10 @@ def Qs(io, no, ic, nc, N, s, cache):
             Q6d = 0 if Q == 0 else (1-((nc-1)/N)) * ic/nc * s * (ic-1) / N * Q
             
             v = Q1a + Q1d + Q2a + Q2d + Q3a + Q3d + Q4a + Q4d + Q5a + Q5d + Q6a + Q6d
-            
-        cache[nc-1][no-1][ic, io] = v
         
+        cache[nc-1][no-1][ic, io] = v
+        # cache[nc-1,no-1,ic,io] = v
+ 
     return v
 
 def matrix_dumb(n, N):
@@ -132,6 +132,31 @@ def matrix_selection(n, N, s=0):
             for io in range(0, n + 1):
                 mtx[:, io] += Qs(io, n, ic, nc, N, s, cache) * p
     return mtx, cache
+
+
+def plot_cache(cache, log=True):
+    n = len(cache)
+    fig, ax = plt.subplots(nrows=n, ncols=n)
+    for i in range(n):
+        for j in range(n):
+            ax[i,j].set(xlim=(-0.5,n+0.5), ylim=(-0.5,n+0.5))
+            ax[i,j].set_axis_off()
+            ax[i,j].matshow(cache[i][j])
+    return fig
+
+
+# WIP
+def matrix_double_sample_selection(n, N, s=0):
+    mtx = np.zeros(((2*n) + 1, n + 1))
+    cache = np.full((2*n+1, 2*n+1, 2*n+1, 2*n+1), np.nan)
+    for nc in range(0, (2*n) + 1):  # This can be (1, n+1)
+        for ic in range(0, nc + 1):
+            # vectorized over ip
+            p = hypergeom.pmf(ic, 2*n, np.arange(0, (2*n)+1), nc)
+            for io in range(0, n + 1):
+                mtx[:, io] += Qs(io, n, ic, nc, N, s, cache) * p
+    return mtx, cache
+
 
 
 
