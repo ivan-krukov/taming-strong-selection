@@ -20,6 +20,8 @@
 }
 
 \newcommand{\ra}{\rightarrow}
+\newcommand{\sgcomment}[1]{\textcolor{red}{SG: #1}}
+
 
 \journal{Theoretical Population Biology}
 
@@ -83,7 +85,7 @@ closure property \cite{JouganousEtAl2017}.
 An extension to the Kingman's coalescent \cite{Kingman1982a}, the ancestral selection graph
 (\textit{ASG}) \cite{KroneNeuhauser1997} considers the ancestry of a sample in the presence of
 selection. The \textit{ASG} framework can be used to study the ancestry of highly deleterious
-alleles \cite{Wakeley2009}, but it has not been used for inference, to our knowledge. Another
+alleles \cite{Wakeley2009}, but it has not been used for inference, to our knowledge \sgcomment{I have not looked!}. Another
 possible resolution is to use an uncontrolled jack-knife approximation to add extra lineages - the
 method proposed in \cite{JouganousEtAl2017}.
 
@@ -95,14 +97,14 @@ improve on it by deriving bounds on the performance our approximation.
 \section{Background}
 \label{sec:background}
 
-First, consider the recursion describing the evolution of the allele frequency spectrum
-$\Phi_{n}^{(t)}$ of a sample of size $n$, without selection. There are two cases to be considered --
-no coalescent event, where all $p=n$ parental lineages contribute; and with a coalescent event,
-where $p=n-1$ parental lineages contribute to the sample. Without a coalescent event, $p$ parental
+First, consider the recursion describing the evolution of the \sgcomment{expected?} allele frequency spectrum
+$\Phi_{n}^{(t)}$ in a sample of size $n$, without selection, where $t$ is the time in generations. There are two cases to be considered --
+no coalescent event, where all \sgcomment{Watch out: there is no patental population of size $n$ -- this needs to be defined.} $p=n$ parental lineages contribute; and with a coalescent event,
+where $p=n-1$ parental lineages contribute to the sample \sgcomment{You have not yet specified why you can assume a single coalescence}. Without a coalescent event, $p$ parental
 lineages are sampled randomly into a present sample, so the allele frequencies remain the same:
 $\Phi_{n}^{(t)}=\Phi_{n}^{(t-1)}$. With a single coalescent event, the contribution comes from $n-1$
 parental lineages: $\Phi_{n}^{(t)}=\mathcal{D}(\Phi_{n-1}^{(t-1)})$, where $\mathcal{D}$ is a drift
-operator. Following the notation in \cite{JouganousEtAl2017}, we thus have:
+operator\sgcomment{"a drift operator" is not a standard term I think -- we just came up with this in our paper. maybe "a n by n-1 sparse matrix"?}. Following the notation in \cite{JouganousEtAl2017}, we thus have:
 
 \begin{align}
   \label{eq:op-neutral}
@@ -131,7 +133,7 @@ example, in case of a single selective death event, we have
 $\Phi_{n}^{(t)}=\mathcal{S}(\Phi_{n+1}^{(t-1)})$, with selection operator $\mathcal{S}$. Multiple
 selection events are possible per generation, but we restrict our attention to the case where each
 lineage experiences at most one selective death event. This still allows us to consider strong
-selection, with at most $p<=2n$ parental lineages contributing:
+selection, with at most $p<=2n$ parental lineages contributing: \sgcomment{Where did the drift + selection terms go?}
 
 \begin{align}
   \label{eq:op-selection}
@@ -154,7 +156,7 @@ number of (parental) lineages $p$ in the graph can be described as a birth-death
 
 The death rates of the parental lineages due to coalescence is of the order of $p^2$, while the
 birth rate due to selection events is of the order of $Nsp$. Thus, drift will dominate the process in
-the cases where $Ns < p$.
+the cases where $Ns < p$. \sgcomment{I'm a bit confused about why the population size $N$ made its way in equation 4. I think this is because you are reporting things in "coalescent time" units. I would recommend using physical units, since this way you don't have to go back and forth.  }
 
 The rest of the paper is organized into two sections. In the first section, we construct a Markov
 process to track the number of derived lineages in a large sample from a Wright-Fisher model,
