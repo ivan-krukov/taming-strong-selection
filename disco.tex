@@ -40,8 +40,9 @@
     As a consequence, useful recursion equations can be derived for patterns of polymorphism.  
     Under selection, by contrast, the number of relevant lineages can increase as we go back in time, 
     and the equivalent recursion equations do not close.
-    Given a large enough sample size, however, genetic drift overcomes natural selection and the 
-    number of relevant lineages is unlikely to increase.
+    Given a large enough sample size, however, the reduction in the number of lineages due to genetic drift 
+    is larger than the increase in the number of lineages due to natural selection, and the number of relevant 
+    lineages is unlikely to increase.
     We use this observation to derive asymptotically closed recursion equations for the distribution of 
     allele frequencies. 
     We show that this approach is accurate under strong drift and strong natural selection and ... 
@@ -111,7 +112,10 @@ operator\sgcomment{"a drift operator" is not a standard term I think -- we just 
   \Phi_{n}^{(t)}=\Phi_{n}^{(t-1)}+\mathcal{D}(\Phi_{n-1}^{(t-1)})
 \end{align}
 
-We want to incorporate the effects of large sample size into our treatment. As previously shown in
+In other words, the expected frequency spectrum of size $n$ at time $t$ can be obtained if only we know the expected frequency spectrum in a sample of identical size in the previous generation. This gives rise to a recursion formula for the frequency spectrum that can be solved efficiently\cite{JouganousEtAl2017}. Here we would like to generalize such an approach to cases including natural selection and large sample sizes.  
+
+
+We first incorporate the effects of large sample size into our treatment. As previously shown in
 \cite{BhaskarEtAl2014,NelsonEtAl2019}, the coalescent approximation may not be adequate in this
 setting, since multiple coalescent events can take place within a single generation. With a slight
 abuse of notation we denote $\mathcal{D}_i$ as the $i^{\text{th}}$-order diffusion event, which includes both
