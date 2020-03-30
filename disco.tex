@@ -299,7 +299,6 @@ calculated.
   \label{fig:strong-selection}
 \end{figure}
 
-% Mar 30 edits end
 
 \subsection{Closure properties}
 \label{subsec:closure}
@@ -552,6 +551,7 @@ $\mu=\mu_1+\mu_2$ and $\sigma^2 = \sigma^2_1 + \sigma^2_2$. By combining the req
 and variance, we find that the normal approximation then has the form:
 
 \begin{align}
+  \label{eq:normal-approximation}
   Pr(\mathcal{R}=r|n) \approx \mathcal{N}( \mu &= \left[(s n)/(1 - s) + N (1 - (1 - 1/N)^n)\right],\\
   \sigma &= \sqrt{N \left((N-1) \left(1-\frac{2}{N}\right)^n+\left(1-\frac{1}{N}\right)^n-N\left(1-\frac{1}{N}\right)^{2 n}\right)+\frac{n s}{(1-s)^2}})
 \end{align}
@@ -572,23 +572,40 @@ percentiles will require larger sample sizes.
 \section{Conclusion}
 \label{sec:conclusion}
 
-In this work we show that with the increasing sample size, the effect of drift overcomes the effect
-of selection. As a result, it is possible to construct asymptotically closed solutions to coalescent
-with selection, provided the sample size is sufficiently large.
+Classically, the coalescent considers models in the absence of natural selection. Since selection
+can increase the number of contributing lineages back in time, the coalescent can no longer be
+represented by trees, but instead acquires a graph structure. The ancestral selection graphs
+\citep{KroneNeuhauser1997} deal with this in the limit of large population size ($N$).
 
-The sample size where the expected number of extra lineages required by selection is less than the
-sample size is well approximated by $2Nxs$. However, the sample size that guarantees that almost no
-extra lineages are required is considerably larger (\ref{fig:cumulative-dist}).
+The large population size approximation implies that the sample size $n$ is much smaller than the
+whole population ($n \ll N$), so it is unlikely that more than one coalescent event will happen per
+generation. However, recent work \citep{BhaskarEtAl2014,NelsonEtAl2019} pointed out that this
+assumption is unreasonable with sample sizes pertinent to modern experiments. As a results, models
+that consider multiple coalescent events per generation are gaining increased relevance in the
+field \citep{FlemmingtonVoitCoalescentPapers}.
 
-Using this observation, we can construct a Markov model that describes the number of derived alleles
-in the sample. With a sufficiently large sample size, such Markov chains are closed, and can be used
-for the calculation of the allele frequency spectra with strong selection.
+In this work we show that increasing the sample size has another unexpected consequence. As sample
+size increases, the larger number of lineages needed due to selection can be masked by coalescent
+events. In this sense, the large sample size rescues the model from effect of selection. This means
+that recursion equations needed to calculate sample properties are asymptotically closed with large
+population size.
 
-As a future direction, we want to combine the jackknife approximation \citep{JouganousEtAl2017} with the
-results presented here. Since the jackknife is an uncontrolled approximation, the current results
-provide a more sensible approach. However, we can still employ the jackknife in the cases where
-extra lineages are still required in the current approach. This has the potential of further
-improving the accuracy of the model and computational efficiency.
+At first approximation, $2Nsx$ is a critical sample size, where the decrease of lineages due to
+coalescent back in time out-competes the increase due to selection (eq. \eqref{eq:critical-sample}).
+Further, we derive the full probability distribution for the number lineages needed with given
+selection coefficient and sample size (eq. \eqref{eq:lineages-in-past}). Unfortunately, the
+distribution does not have a closed form, so we derive a normal approximation to the number of
+lineages that contribute to a sample (eq. \eqref{eq:normal-approximation}). The normal approximation
+then allows us to get a quantile function that we use to find if the model preserves closure with
+some confidence level.
+
+This work has several implications. First, we can combine the model described here with the
+jackknife approximation \citep{JouganousEtAl2017}. This will allow us to construct a more robust
+inference framework that can account for large sample size and strong selection.
+
+Further, the results here suggest that effect of weak selection may be detectable in studies with
+large sample sizes. This may open up a way for new investigations of natural selection in population
+genetics.
 
 \section{Appendix}
 
