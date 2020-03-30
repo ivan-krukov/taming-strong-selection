@@ -152,7 +152,7 @@ three-way coalescent and double two-way coalescent. In section \ref{subsec:marko
 efficient dynamic programming algorithm to exhaustively enumerate all the events for a drift-only
 model.
 
-With multiple coalescent events per generation, \eqref{eq:op-neutral} becomes:
+With multiple coalescent events per generation, \eqref{eq:op-neutral} becomes: \sgcomment {here the problem in interpretation emerges. The zeroth-order, constant term should have the probability that no even occurs, does it not?}
 
 \begin{align}
   \label{eq:op-neutral-mult}
@@ -162,11 +162,9 @@ With multiple coalescent events per generation, \eqref{eq:op-neutral} becomes:
 The equation \eqref{eq:op-neutral-mult} is still closed in terms of the sample size, since
 $\Phi_{n}^{t}$ only depends on $r=(n-i)<n$ parental lineages. 
 
-
-If we now consider selective death events, we must also account for lineages that were not
-transmitted due to selection. We use the model shown in figure \ref{fig:schematic}C to describe
-this. Each generation, a random number of $\mathcal{R}=r$ parental lineages produce a large number
-of gametes, $\mathcal{G}=g$. Then $n$ individuals are formed by randomly sampling gametes, without
+We use the model shown in figure \ref{fig:schematic}C to describe
+natural selection. Each generation, a random number of $\mathcal{R}=r$ parental lineages produce a large number
+of gametes, $\mathcal{G}=g$ \sgcomment{This seems backward to me -- the parents don't know what G is yet, and we don't have a definition for it}. Then $n$ individuals are formed by randomly sampling gametes, without
 replacement. The probability of successfully sampling a particular gamete is $1-xs$, where $x$ is
 the frequency of the derived allele in the parental generation. In the case of a selective death a
 new lineage is re-drawn with probability $xs$. This sampling scheme allow us to consider drift ($r
