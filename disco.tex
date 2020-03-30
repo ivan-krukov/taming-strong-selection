@@ -110,7 +110,7 @@ merges (\ref{fig:schematic}B), and coalescent with multiple merges and selection
   \includegraphics[width=0.8\textwidth]{fig/schematic.pdf}
   \caption{\label{fig:schematic} Realizations of sampling models, showing $\mathcal{R}=r$ parental
     lineages at $t-1$ contributing to $n$ lineages in present generation $t$. \textbf{A} Standard
-    coalescent - at most 1 coalescent event per generation; $r\in[n-1, n]$. \textbf{B} Coalescent
+    coalescent - at most 1 coalescent event \sgcomment{per generation-> at a time}; $r\in[n-1, n]$. \textbf{B} Coalescent
     with multiple merges - parents \textit{3} and \textit{4} have 3 and 2 offspring, respectively;
     $r \in [1, n]$ \textbf{C} Including selection - each parent produces a random number of gametes
     ($\mathcal{G}$), which then may survive to produce offspring; $r \in [1, n]$, $g \in [n, 2n]$ }
@@ -120,7 +120,7 @@ First, consider a recursion describing the evolution of the expected allele freq
 (\textit{AFS}) $\Phi_{n}^{(t)}$, in the standard coalescent without selection (Figure
 \ref{fig:schematic}A). At generation $t$, the sample consists of $n$ lineages, and at $t-1$ there
 are $r$ parental lineages. In what follows, we closely follow the exposition of
-\cite{JouganousEtAl2017}. The standard coalescent model allows at most one event per generation, so
+\cite{JouganousEtAl2017}. The standard coalescent model allows at most one event \sgcomment{per generation->at a time}, so
 we need to consider only two cases: namely $r=n$ if no coalescent occurs, and $r=n-1$ if a single
 event took place.
 
@@ -130,7 +130,7 @@ coalescent event, the contribution comes from $r=(n-1)$ parental lineages:
 $\Phi_{n}^{(t)}=\mathcal{D}\Phi_{n-1}^{(t-1)}$, where $\mathcal{D}$ is a sparse $n \times (n-1)$
 matrix describing the effect of drift. We do not use $\mathcal{D}$ in this work (but see
 \citep{JouganousEtAl2017}), and instead construct a related matrix in section \ref{subsec:markov}.
-Combining the terms without and with the coalescent event, we have:
+Combining the terms without and with the coalescent event, we have: \sgcomment{This is a strange (incorrect?) interpretation of this equation. }
 
 \begin{align}
   \label{eq:op-neutral}
@@ -146,7 +146,7 @@ We first incorporate the effects of large sample size. As previously shown in
 (\cite{BhaskarEtAl2014} and \cite{NelsonEtAl2019}), the coalescent approximation may not be adequate in this
 setting, since multiple coalescent events can take place within a single generation
 (Figure \ref{fig:schematic}B). With a slight abuse of notation we denote $\mathcal{D}_i$ as the
-$i^{\text{th}}$-order drift matrix in which $i$ lineages are lost due to genetic drift. The
+$i^{\text{th}}$-order drift matrix \sgcomment{"the drift matrix" is not a known thing -- you<ll have to define it} in which $i$ lineages are lost due to genetic drift. The
 dimensionality of $\mathcal{D}_i$ is $n \times (n-i)$. For example, $\mathcal{D}_2$ includes both
 three-way coalescent and double two-way coalescent. In section \ref{subsec:markov}, we demonstrate an
 efficient dynamic programming algorithm to exhaustively enumerate all the events for a drift-only
