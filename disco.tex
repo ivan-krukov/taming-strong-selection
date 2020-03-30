@@ -7,7 +7,8 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{natbib}
-\bibliographystyle{elsarticle-num}
+\bibliographystyle{elsarticle-harv}
+\biboptions{authoryear}
 
 \newcommand{\drawcirclerow}[5][0] { % args: [start], count, color, height, radius
   \FPadd\stop#2#1
@@ -38,7 +39,7 @@
     selection. Because lineages are exchangeable in the neutral Wright-Fisher model, for example,
     the number of lineages that are relevant to the ancestry of a sample at a single locus can only
     decrease as we go back in time. As a consequence, useful recursion equations can be derived for
-    patterns of polymorphism. Under negative selection, by contrast, the number of relevant lineages
+    patterns of polymorphism. By contrast, under negative selection, the number of relevant lineages
     can increase as we go back in time, and the equivalent recursion equations do not close. Given a
     large enough sample size, however, the reduction in the number of lineages due to genetic drift
     is larger than the increase in the number of lineages due to natural selection, and the number
@@ -59,8 +60,8 @@ of demographic histories and other population genetic parameters. In the absence
 number of parental lineages that contribute to the sample decreases back in time due to coalescent
 events. This means that the equations are closed with respect to the sample size under neutrality.
 This has paved the way for moment-based recursions of the allele frequencies
-\cite{KimuraCrow1964,Ewens1972,DonnellyKurtz1999}. Recently, a number of successful methods,
-including \cite{GutenkunstEtAl2009,JouganousEtAl2017,KammEtAl2017}, have become popular for this
+\citep{KimuraCrow1964,Ewens1972,DonnellyKurtz1999}. Recently, a number of successful methods,
+including \citep{GutenkunstEtAl2009,JouganousEtAl2017,KammEtAl2017}, have become popular for this
 purpose. At their core, these methods describe the time-evolution of the \textit{AFS}. The goal of
 these approaches is to obtain the probability of observing a given number of derived alleles in a
 finite sample conditional on the state of the parental lineages.
@@ -68,19 +69,19 @@ finite sample conditional on the state of the parental lineages.
 Despite many successes, considering selection has been problematic within this framework. Under
 negative selection, the number of parental lineages that contribute to a sample can be larger that
 the sample size itself, due to selective death events. As a consequence, the equation lose the
-closure property \cite{JouganousEtAl2017}.
+closure property \citep{JouganousEtAl2017}.
 
-An extension to the Kingman's coalescent \cite{Kingman1982a}, the ancestral selection graph
-(\textit{ASG}), \cite{KroneNeuhauser1997} considers the ancestry of a sample in the presence of
+An extension to the Kingman's coalescent \citep{Kingman1982a}, the ancestral selection graph
+(\textit{ASG}), \citep{KroneNeuhauser1997} considers the ancestry of a sample in the presence of
 selection. The \textit{ASG} framework can be used to study the ancestry of highly deleterious
-alleles \cite{Wakeley2009} under certain assumptions. Another possible resolution is to use an
-uncontrolled jack-knife approximation to add extra lineages - the method proposed in
-\cite{JouganousEtAl2017}.
+alleles \citep{Wakeley2009} under certain assumptions. Another possible resolution is to use an
+uncontrolled jackknife approximation to add extra lineages - the method proposed in
+\citep{JouganousEtAl2017}.
 
-Unlike the \textit{ASG}, the present treatment does not need to assume an infinitely large
-population size, and also explicitly tracks multiple coalescent events, which is important with
-large sample sizes \cite{BhaskarEtAl2014}. Our approach can be combined with the jackknife, but we
-improve on it by deriving bounds on the performance our approximation.
+Unlike the \textit{ASG}, the present method does not need to assume an infinitely large population
+size, and also explicitly tracks multiple coalescent events, which is important with large sample
+sizes \citep{BhaskarEtAl2014}. Our approach can also be combined with the jackknife. Unlike the
+jackknife, our method allows derivation of bounds on the performance of the approximation.
 
 \section{Background}
 \label{sec:background}
@@ -99,10 +100,10 @@ merges (\ref{fig:schematic}B), and coalescent with multiple merges and selection
   \includegraphics[width=0.8\textwidth]{fig/schematic.pdf}
   \caption{\label{fig:schematic} Realizations of sampling models, showing $\mathcal{R}=r$ parental
     lineages at $t-1$ contributing to $n$ lineages in present generation $t$. \textbf{A} Standard
-    coalescent - at most 1 coalescent event per generation; $r\in[n-1, n]$. \textbf{B} Coalescent with multiple
-    merges - parents \textit{3} and \textit{4} have 3 and 2 offspring, respectively; $r in [1, n]$ \textbf{C}
-    Including selection - each parent produces a random number of gametes ($\mathcal{G}$), which
-    then may survive to produce offspring; $r \in [1, n]$, $g \in [g, 2n]$ }
+    coalescent - at most 1 coalescent event per generation; $r\in[n-1, n]$. \textbf{B} Coalescent
+    with multiple merges - parents \textit{3} and \textit{4} have 3 and 2 offspring, respectively;
+    $r \in [1, n]$ \textbf{C} Including selection - each parent produces a random number of gametes
+    ($\mathcal{G}$), which then may survive to produce offspring; $r \in [1, n]$, $g \in [n, 2n]$ }
 \end{figure}
 
 First, consider a recursion describing the evolution of the expected allele frequency spectrum
@@ -116,10 +117,10 @@ event took place.
 Without a coalescent event, $r$ parental lineages are sampled randomly into the present generation,
 so the allele frequencies remain the same: $\Phi_{n}^{(t)}=\Phi_{n}^{(t-1)}$. With a single
 coalescent event, the contribution comes from $r=(n-1)$ parental lineages:
-$\Phi_{n}^{(t)}=\mathcal{D}(\Phi_{n-1}^{(t-1)})$, where $\mathcal{D}$ is a sparse $n \times (n-1)$
+$\Phi_{n}^{(t)}=\mathcal{D}\Phi_{n-1}^{(t-1)}$, where $\mathcal{D}$ is a sparse $n \times (n-1)$
 matrix describing the effect of drift. We do not use $\mathcal{D}$ in this work (but see
-\cite{JouganousEtAl2017}), and instead construct a related matrix in section \ref{subsec:markov}.
-Combining the two terms, we have:
+\citep{JouganousEtAl2017}), and instead construct a related matrix in section \ref{subsec:markov}.
+Combining the terms without and with the coalescent event, we have:
 
 \begin{align}
   \label{eq:op-neutral}
@@ -128,13 +129,13 @@ Combining the two terms, we have:
 
 In other words, the \textit{AFS} of size $n$ at time $t$ can be obtained if we know the \textit{AFS}
 of sample sizes $n$ and $n-1$ in the previous generation. This gives rise to a recursion formula for
-the frequency spectrum that can be solved efficiently \cite{JouganousEtAl2017}. Here we would like
+the frequency spectrum that can be solved efficiently \citep{JouganousEtAl2017}. Here we would like
 to generalize such an approach to cases including natural selection and large sample sizes.
 
 We first incorporate the effects of large sample size. As previously shown in
-\cite{BhaskarEtAl2014,NelsonEtAl2019}, the coalescent approximation may not be adequate in this
+(\cite{BhaskarEtAl2014} and \cite{NelsonEtAl2019}), the coalescent approximation may not be adequate in this
 setting, since multiple coalescent events can take place within a single generation
-(\ref{fig:schematic}B). With a slight abuse of notation we denote $\mathcal{D}_i$ as the
+(Figure \ref{fig:schematic}B). With a slight abuse of notation we denote $\mathcal{D}_i$ as the
 $i^{\text{th}}$-order drift matrix in which $i$ lineages are lost due to genetic drift. The
 dimensionality of $\mathcal{D}_i$ is $n \times (n-i)$. For example, $\mathcal{D}_2$ includes both
 three-way coalescent and double two-way coalescent. In section \ref{subsec:markov}, we demonstrate an
@@ -153,16 +154,16 @@ $\Phi_{n}^{t}$ only depends on $r=(n-i)<n$ parental lineages.
 
 
 If we now consider selective death events, we must also account for lineages that were not
-transmitted due to selection. We use the following model to describe this (\ref{fig:schematic}C).
-Each generation, a random number of $\mathcal{R}=r$ parental lineages produce a large number of
-gametes, $\mathcal{G}=g$. Then $n$ individuals are formed by randomly sampling gametes, without
+transmitted due to selection. We use the model shown in figure \ref{fig:schematic}C to describe
+this. Each generation, a random number of $\mathcal{R}=r$ parental lineages produce a large number
+of gametes, $\mathcal{G}=g$. Then $n$ individuals are formed by randomly sampling gametes, without
 replacement. The probability of successfully sampling a particular gamete is $1-xs$, where $x$ is
-the frequency of the derived allele in the parental generation. Then, with probability $xs$, a new
-gamete is re-drawn. This sampling scheme allow us to consider drift ($r \ra g$) and selection ($g
-\ra n$) within the same generation as distinct processes.
+the frequency of the derived allele in the parental generation. In the case of a selective death a
+new lineage is re-drawn with probability $xs$. This sampling scheme allow us to consider drift ($r
+\ra g$) and selection ($g \ra n$) within the same generation as distinct processes.
  
 For example, in case of a single selective death event, we have
-$\Phi_{n}^{(t)}=\mathcal{S}(\Phi_{n+1}^{(t-1)})$, with selection matrix $\mathcal{S}$. Multiple
+$\Phi_{n}^{(t)}=\mathcal{S}\Phi_{n+1}^{(t-1)}$, with selection matrix $\mathcal{S}$. Multiple
 selection events are possible per generation, but we restrict our attention to the case where each
 lineage experiences at most one selective death event. This still allows us to consider strong
 selection, with at most $r\le 2n$ parental lineages contributing:
@@ -172,37 +173,37 @@ selection, with at most $r\le 2n$ parental lineages contributing:
   \Phi_{n}^{(t)}=\Phi_{n}^{(t-1)}+ \sum_{j=n}^{2n} \sum_{i=1}^{n} \mathcal{S}_j \mathcal{D}_i \Phi_{n-i+j}^{(t-1)}
 \end{align}
 
-The closure no longer holds for \eqref{eq:op-selection}, as up to $g \le 2n$ gametes can contribute
-to the sample. However, the effect of a large sample size counteracts the additional lineages needed
-due to selection. The opposite effects of drift and selection on the number of lineages relevant to
-a sample are particularly clear in the context of the ancestral selection graph (\textit{ASG}): in
-which the number of lineages relevant to a sample can be described as a birth-death process
-\cite{KroneNeuhauser1997, Wakeley2009}:
+The closure no longer holds for \eqref{eq:op-selection}, as up to $2n$ gametes can contribute to the
+sample. However, the effect of a large sample size counteracts the additional lineages needed due to
+selection. The opposite effects of drift and selection on the number of lineages relevant to a
+sample are particularly clear in the context of the size of the ancestral selection graph
+(\textit{ASG}): in which the number of lineages relevant to a sample can be described as a
+birth-death process \citep{KroneNeuhauser1997, Wakeley2009}:
 
 \begin{align}
   \label{eq:asg-size}
   n \ra \begin{cases}
-      n+1 & \text{at rate } \frac{Ns}{2} n  \text{ (selection) }\\
-      n-1 & \text{at rate } \binom{n}{2} \text{ (coalescence) }
+      n+1 & \text{at rate } Ns \frac{n}{2} \hspace{20pt} \text{ (selection) }\\
+      n-1 & \text{at rate } \frac{n(n-1)}{2}   \hspace{28pt} \text{ (coalescence) }
     \end{cases}
 \end{align}
 
-The rate of coalescence is higher than the rate of selective deaths if the number of lineages $Ns<
-n-1$. While building an ancestral selection graph, there is no particular constraint on the number
-of lineages that exist, as long as we eventually find a common ancestor.
+The coalescence (drift) term is quadratic with respect to the sample size, while the selection term
+is linear. The rate of coalescence is higher than the rate of selective deaths if the number of
+lineages $n>Ns+1$.
 
 Our goal here is to define recursions generalizing equation \eqref{eq:op-neutral}. For the equations
 to be closed, we need to ensure that the rate of coalescence is large enough that it overcomes the
 rate of selection not only on average, but \emph{almost always}.
 
-The rest of the paper is organized into two sections. In the first section, we construct a recursion
-to track the number of derived lineages in a large sample from a Wright-Fisher model, similar to
-\cite{JouganousEtAl2017,KammEtAl2017}. In this, we fully account for multiple coalescent events per
-generation, and show that we restore closure with increasing sample size. In the second part, we
-derive a number of asymptotic results to get a better understanding of the process. We construct an
-exact probability distribution for the number of contributing parental lineages, together with
-several approximations. Importantly, we derive a normal approximation that allows us to calculate a
-quantile of the sample size where the system is approximately closed.
+The rest of the paper is organized into two sections. In the first section, we construct a Markovian
+recursion to track the number of derived lineages in a large sample from a Wright-Fisher model,
+similar to \citep{JouganousEtAl2017,KammEtAl2017}. In this, we fully account for multiple coalescent
+events per generation, and show that we restore closure with increasing sample size. In the second
+part, we derive a number of asymptotic results to get a better understanding of the process. We
+construct an exact probability distribution for the number of contributing parental lineages,
+together with several approximations. Importantly, we derive a normal approximation that allows us
+to calculate a quantile of the sample size where the system is approximately closed.
 
 \section{Results}
 \label{sec:results}
@@ -217,15 +218,15 @@ will contain $i$ derived copies in the following generation.
 
 In the neutral case, this transition probability can be calculated if we know the transition
 probabilities in the smaller samples of size $n' \in [1, n-1]$ (similar to
-\eqref{eq:op-neutral-mult}) \cite{BhaskarEtAl2014}. We do not construct the intermediate matrices
-$\mathcal{D_i}$ of \eqref{eq:op-neutral-mult} explicitly, but instead calculate a transition
-probability matrix $P((j,n)\ra(i,n))$ in terms of transition probabilities for a smaller sample size
-$P((\dot,n')\ra(\dot,n'))$. In brief, we can construct the transition probability matrix
-$P((j,n)\ra(i,n))$ if we know the matrix $P((\dot,n-1)\ra(\dot,n-1))$, and then using the
-conditional probabilities for each type of an event. Starting from the edge cases for a sample size
-of $1$, we build up a set of square transition probability matrices. By using a dynamic programming
-algorithm, we can achieve reasonable performance for realistic sample sizes. The full derivation is
-shown in appendix A.
+\eqref{eq:op-neutral-mult}) \citep{BhaskarEtAl2014}. We do not construct the intermediate matrices
+$\mathcal{D_i}$ of \eqref{eq:op-neutral-mult} explicitly, but instead calculate a matrix
+$P((j,n)\ra(i,n))$, giving the probabilities of transitioning from $j$ to $i$ derived alleles in
+sample of size $n$ within one generation. In brief, we can construct the transition probability
+matrix $P((j,n)\ra(i,n))$ if we know the matrix for $n-1$, $P((\cdot,n-1)\ra(\cdot,n-1))$, and then
+use the conditional probabilities for each type of an event. Starting from the base cases for a
+sample size of $1$, we build up a set of square transition probability matrices. By using a dynamic
+programming algorithm, we can achieve reasonable performance for realistic sample sizes. The full
+derivation is shown in appendix A.
 
 The case of selection is slightly more complicated, since now we need to consider a larger set of
 states that can lead to transition from $j$ to $i$ copies in a sample size of $n$. In particular,
@@ -237,7 +238,7 @@ contributing gametes is between $n$ and $2n$.
 Note that this is analogous to the outer summation boundaries in eq. \eqref{eq:op-selection}. Again,
 we do not calculate the matrix $\mathcal{S}_i$ directly, but rather construct a transition
 probability $Q((j,n)\ra(i,n))$. We can define these transitions recursively if we know the
-transitions of $Q((\dot,m)\ra(\dot,n-1))$. Note that with selection we can have $m \in [1, 2n]$
+transitions of $Q((\cdot,m)\ra(\cdot,n-1))$. Note that with selection we can have $m \in [1, 2n]$
 lineages contribute, whereas we only needed $n' \in [1, n-1]$ in the neutral case.
 
 To retain the closure property under selection, the Markov process needs to take $2n$ lineages in
@@ -260,8 +261,8 @@ several approximations in the following sections.
 \label{subsec:afs}
 
 Once the truncated matrix $Q$ is constructed, it can be used to calculate the allele frequency
-spectrum within a sample. For the infinite sites model at equilibrium, we can calculate the
-\textit{AFS} $\Phi$ as a solution to a linear system:
+spectrum. For the infinite sites model at equilibrium, we can calculate the \textit{AFS} $\Phi$ as a
+solution to a linear system:
 
 \begin{equation}
   \label{eq:sfs-calc}
@@ -271,7 +272,7 @@ spectrum within a sample. For the infinite sites model at equilibrium, we can ca
 where $\mu$ is the per-site mutation rate, and $e_1$ is the first column of the identity matrix of
 size $n$. Figure \ref{fig:strong-selection} shows the comparison of the \textit{AFS} calculated from
 Equation \eqref{eq:sfs-calc}, the diffusion approximation \cite[eq. 9.23]{Ewens2004}, and the
-calculation performed in \texttt{Moments} \cite{JouganousEtAl2017}. Panel A shows a comparison at
+calculation performed in \texttt{Moments} \citep{JouganousEtAl2017}. Panel A shows a comparison at
 $Ns=50$, with the population size ($N=2000$), which is substantially larger than the sample size
 ($n=200$). There is a small deviation between the approaches at large allele frequencies. At
 stronger selection coefficients, \texttt{Moments} suffers from numerical instability, while the
@@ -282,7 +283,7 @@ If the sample size is the same as the population size ($n=N=200$) (Fig.
 our approach remains stable. This is expected, since the diffusion framework does not perform well
 if multiple coalescent events contribute. Furthermore, if our sample size is the entire population,
 we expect recursion equations to be closed. To confirm this, we compare our result to the
-\textit{AFS} calculated from a whole-population haploid Wright-Fisher matrix, with $N=200$. (Fig.
+\textit{AFS} calculated from a whole-population haploid Wright-Fisher model, with $N=200$. (Fig.
 \ref{fig:strong-selection}B) shows that our calculation is close to the full Wright-Fisher model.
 The discrepancy between the curves is due to a difference in the way the selection coefficients are
 calculated.
@@ -293,9 +294,11 @@ calculated.
   \caption{Normalized allele frequency spectra in a sample of size $n=200$, for highly deleterious
     alleles ($Ns=-50$). (A) shows the frequency spectrum in a sample from a large population
     ($N=2000$), (B) in a small population ($N=200$). Both panels are truncated at $10^{-15}$, to
-    show only moderately high allele frequencies.
+    show only moderately high allele frequencies.}
   \label{fig:strong-selection}
 \end{figure}
+
+% Mar 30 edits end
 
 \subsection{Closure properties}
 \label{subsec:closure}
@@ -335,7 +338,7 @@ order to derive a simple quantile function for the number of used lineages.
 
 We want to know the upper bound on the number of lineages used. Since the maximum number of lineages
 will be resampled when all lineages are derived, we will usually assume $x=1$ in the following
-calculations. This also allows us to treat the lineages as exchangeable \cite{Wakeley2009}. Note that
+calculations. This also allows us to treat the lineages as exchangeable \citep{Wakeley2009}. Note that
 in section \ref{subsec:markov}, we did not assume exchangeability of lineages, which led to a
 considerably more complex formulation.
 
@@ -389,7 +392,7 @@ The second approximation is made under the assumption that the sample size is mu
 population size. We can see that the expected number of lineages sampled will be increased by
 selection as a linear term. Drift tends to decrease the number of lineages as a quadratic term with
 respect to the sample size. This is analogous to the results from the ancestral selection graph
-\cite{KroneNeuhauser1997}, but now includes sample size directly.
+\citep{KroneNeuhauser1997}, but now includes sample size directly.
 
 We now want to ask when the expected number of lineages is less that the sample size:
 
@@ -451,7 +454,7 @@ We now construct a probability distribution of the number of contributing lineag
 into the past.
 
 The number of parental lineages used by drift can be modelled by the modified occupancy
-(Arfwedson) distribution \cite{Wakeley2009,ONeill2019,JohnsonEtAl2005}. This is given by:
+(Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}. This is given by:
 
 \begin{align}
   \label{eq:occupancy}
@@ -461,12 +464,12 @@ The number of parental lineages used by drift can be modelled by the modified oc
 where $S_2(g,p)$ is a Stirling number of the second kind, which is the number of ways to partition
 $g$ objects into $p$ categories. A typical statement of the occupancy distribution is that we have
 $N$ urns and $g$ colored balls, and we want to know the probability that exactly $p$ of the urns
-will be occupied (see \cite{JohnsonEtAl2005} section 10.4 for a thorough treatment). In our case,
+will be occupied (see \citep{JohnsonEtAl2005} section 10.4 for a thorough treatment). In our case,
 $N$ is the population size, urns correspond to the parents, colored balls to gametes. Note that the
 under drift, the number of parents will be smaller or equal to the number of gametes $p \le g$.
 
 The occupancy distribution is not simple to evaluate, but good performance can be achieved by
-pre-computing a table of reduced occupancy numbers, using the algorithm of \cite{ONeill2019}.
+pre-computing a table of reduced occupancy numbers, using the algorithm of \citep{ONeill2019}.
 
 As stated before, the number of lineages sampled under selection is described with a negative
 binomial distribution. Unlike \ref{eq:neg-binom-fail}, however, we are looking for the total number of
@@ -489,7 +492,7 @@ Combining the two distributions together through \ref{eq:conditional}, we get:
 \end{align}
 
 Unfortunately, this distribution does not have a simple analytical form. In certain parameter
-regimes, this can be approximated by the normal distribution \cite{JohnsonEtAl2005,ONeill2019},
+regimes, this can be approximated by the normal distribution \citep{JohnsonEtAl2005,ONeill2019},
 which we describe in the next section.
 
 Figure \ref{fig:sampling-dist} shows the distribution of the number of contributing parental
@@ -526,7 +529,7 @@ the normal approximation in the next section.
 \subsection{Normal approximation}
 
 Finally, we can construct a normal approximation to the distribution of the number of contributing
-lineages. The occupancy distribution is approximated by the normal \cite{ONeill2019} when $n \ll N$.
+lineages. The occupancy distribution is approximated by the normal \citep{ONeill2019} when $n \ll N$.
 Likewise, the number of failures (eq. \eqref{eq:neg-binom-fail}) before a given number of successes,
 can be approximated by the normal distribution. In the case of large population size, as required by
 the approximation of the occupancy by the normal, we can approximate the total number of
@@ -568,7 +571,7 @@ Using this observation, we can construct a Markov model that describes the numbe
 in the sample. With a sufficiently large sample size, such Markov chains are closed, and can be used
 for the calculation of the allele frequency spectra with strong selection.
 
-As a future direction, we want to combine the jackknife approximation \cite{JouganousEtAl2017} with the
+As a future direction, we want to combine the jackknife approximation \citep{JouganousEtAl2017} with the
 results presented here. Since the jackknife is an uncontrolled approximation, the current results
 provide a more sensible approach. However, we can still employ the jackknife in the cases where
 extra lineages are still required in the current approach. This has the potential of further
