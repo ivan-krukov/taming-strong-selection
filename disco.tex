@@ -29,7 +29,7 @@
 
 \begin{document}
 \begin{frontmatter}
-  \title{Counting parental contribution - how large sample size makes strong selection weak}
+  \title{Models of strong selection in large samples}
 
   \author{Ivan Krukov}
   \author{Simon Gravel}
@@ -55,33 +55,43 @@
 \section{Introduction}
 \label{sec:introduciton}
 
-The calculation of the allele frequency spectrum (\textit{AFS}) is an important tool for the inference
-of demographic histories and other population genetic parameters. In the absence of selection, the
-number of parental lineages that contribute to the sample decreases back in time due to coalescent
-events. This means that the equations are closed with respect to the sample size under neutrality.
-This has paved the way for moment-based recursions of the allele frequencies
-\citep{KimuraCrow1964,Ewens1972,DonnellyKurtz1999}. Recently, a number of successful methods,
-including \citep{GutenkunstEtAl2009,JouganousEtAl2017,KammEtAl2017}, have become popular for this
-purpose. At their core, these methods describe the time-evolution of the \textit{AFS}. The goal of
-these approaches is to obtain the probability of observing a given number of derived alleles in a
-finite sample conditional on the state of the parental lineages.
+The allele frequency spectrum (\textit{AFS}) is an important summary of genetic diversity that is commonly used to infer demographic history and natural selection. Given a demographic scenario, the diffusion approximation or coalescent simulations can be used to obtain a predicted AFS \sgcomment{citations}. By comparing predictions to the observed AFS, we can compute likelihoods for different demographic scenarios. Unfortunately, the AFS can be time consuming to compute in multi-population demographic models and for large sample sizes. \cite{}
 
-Despite many successes, considering selection has been problematic within this framework. Under
-negative selection, the number of parental lineages that contribute to a sample can be larger that
-the sample size itself, due to selective death events. As a consequence, the equation lose the
-closure property \citep{JouganousEtAl2017}.
+In the absence of selection, efficient computational shortcuts can be used. In particular, recursion equations can be derived for moments of the allele frequency distribution \citep{KimuraCrow1964,Ewens1972,JouganousEtAl2017}. Recently, these recursions have been useful in fitting complex demographic models to genetic data
+ \citep{JouganousEtAl2017,KammEtAl2017}. 
+ 
+In the presence of natural selection, the corresponding recursion equations do not close \citep{Donnelly, JouganousEtAl2017} -- they form an infinite set of coupled ordinary differential equations. Closure approximations have been developed (\citep{JouganousEtAl2017}), but these are not robust to strong selection and their convergence properties are not well understood.
 
-An extension to the Kingman's coalescent \citep{Kingman1982a}, the ancestral selection graph
-(\textit{ASG}), \citep{KroneNeuhauser1997} considers the ancestry of a sample in the presence of
-selection. The \textit{ASG} framework can be used to study the ancestry of highly deleterious
-alleles \citep{Wakeley2009} under certain assumptions. Another possible resolution is to use an
-uncontrolled jackknife approximation to add extra lineages - the method proposed in
-\citep{JouganousEtAl2017}.
+Closure of the moment equations under the neutral Wright-Fisher model occurs
+ because the genotype of a randomly sampled set of haploid genomes at present
+  depends on the genotypes of a randomly chosen set of individuals of equal
+ or smaller size in the previous generation. This does not hold under selection: t
+ he transmitted parental alleles do not form a random subset of the parental population. 
+ To simulate $n$ offspring, we must be ready to consider more than $n$ parents. 
+ 
+ This contrast can also be observed in the coalescent framework: 
+ In Kingman's coalescent \citep{Kingman1982a}, the number of lineages can only decrease 
+ as we go back in time, because of common ancestor events. By contrast, in the
+  ancestral selection graph (\textit{ASG}), \citep{KroneNeuhauser1997}, the number of
+  relevant lineages can also increase as we go back in time, because of selective events. 
+ 
+ In large samples, however, there are many more common ancestry events than selective 
+ events, and the number of relevant lineages is unlikely to increase as we go back in time. 
+ This suggests that large sample sizes can lead to almost-closed recursion equations.  
+ 
+In this article we derive such almost-closed recursions in the Wright-Fisher model, and study their behavior and applications for modelling the distribution of allele frequencies under strong selection. 
+\sgcomment{Cite BhaskarEtAl2014 somewhere else}
+ 
+ 
+ 
+  
 
-Unlike the \textit{ASG}, the present method does not need to assume an infinitely large population
-size, and also explicitly tracks multiple coalescent events, which is important with large sample
-sizes \citep{BhaskarEtAl2014}. Our approach can also be combined with the jackknife. Unlike the
-jackknife, our method allows derivation of bounds on the performance of the approximation.
+
+
+%Unlike the \textit{ASG}, the present method does not need to assume an infinitely large population
+%size, and also explicitly tracks multiple coalescent events, which is important with large sample
+%sizes \citep{BhaskarEtAl2014}. Our approach can also be combined with the jackknife. Unlike the
+%jackknife, our method allows derivation of bounds on the performance of the approximation.
 
 \section{Background}
 \label{sec:background}
