@@ -21,6 +21,7 @@
 
 \newcommand{\ra}{\rightarrow}
 \newcommand{\sgcomment}[1]{\textcolor{red}{SG: #1}}
+\newcommand{\ikcomment}[1]{\textcolor{blue}{IK: #1}}
 
 
 \journal{Theoretical Population Biology}
@@ -98,10 +99,10 @@ merges (\ref{fig:schematic}B), and coalescent with multiple merges and selection
   \includegraphics[width=0.8\textwidth]{fig/schematic.pdf}
   \caption{\label{fig:schematic} Realizations of sampling models, showing $\mathcal{R}=r$ parental
     lineages at $t-1$ contributing to $n$ lineages in present generation $t$. \textbf{A} Standard
-    coalescent - at most 1 coalescent event per generation; $r=[n-1, n]$. \textbf{B} Coalescent with multiple
-    merges - parents \textit{3} and \textit{4} have 3 and 2 offspring, respectively; $r \le n$ \textbf{C}
+    coalescent - at most 1 coalescent event per generation; $r\in[n-1, n]$. \textbf{B} Coalescent with multiple
+    merges - parents \textit{3} and \textit{4} have 3 and 2 offspring, respectively; $r in [1, n]$ \textbf{C}
     Including selection - each parent produces a random number of gametes ($\mathcal{G}$), which
-    then may survive to produce offspring; $r \le n$, $r \le g \le 2n$ }
+    then may survive to produce offspring; $r \in [1, n]$, $g \in [g, 2n]$ }
 \end{figure}
 
 First, consider a recursion describing the evolution of the expected allele frequency spectrum
@@ -116,8 +117,9 @@ Without a coalescent event, $r$ parental lineages are sampled randomly into the 
 so the allele frequencies remain the same: $\Phi_{n}^{(t)}=\Phi_{n}^{(t-1)}$. With a single
 coalescent event, the contribution comes from $r=(n-1)$ parental lineages:
 $\Phi_{n}^{(t)}=\mathcal{D}(\Phi_{n-1}^{(t-1)})$, where $\mathcal{D}$ is a sparse $n \times (n-1)$
-matrix describing the effect of drift (we demonstrate construction of $\mathcal{D}$ and related
-terms in appendix A). Combining the two terms, we have:
+matrix describing the effect of drift. We do not use $\mathcal{D}$ in this work (but see
+\cite{JouganousEtAl2017}), and instead construct a related matrix in section \ref{subsec:markov}.
+Combining the two terms, we have:
 
 \begin{align}
   \label{eq:op-neutral}
@@ -133,10 +135,11 @@ We first incorporate the effects of large sample size. As previously shown in
 \cite{BhaskarEtAl2014,NelsonEtAl2019}, the coalescent approximation may not be adequate in this
 setting, since multiple coalescent events can take place within a single generation
 (\ref{fig:schematic}B). With a slight abuse of notation we denote $\mathcal{D}_i$ as the
-$i^{\text{th}}$-order diffusion matrix in which $i$ lineages are lost due to genetic drift. For
-example, $\mathcal{D}_2$ includes both three-way coalescent and double two-way coalescent. In
-Appendix A, we demonstrate an efficient dynamic programming algorithm to exhaustively enumerate all
-the events for a drift-only model.
+$i^{\text{th}}$-order drift matrix in which $i$ lineages are lost due to genetic drift. The
+dimensionality of $\mathcal{D}_i$ is $n \times (n-i)$. For example, $\mathcal{D}_2$ includes both
+three-way coalescent and double two-way coalescent. In section \ref{subsec:markov}, we demonstrate an
+efficient dynamic programming algorithm to exhaustively enumerate all the events for a drift-only
+model.
 
 With multiple coalescent events per generation, \eqref{eq:op-neutral} becomes:
 
@@ -159,14 +162,14 @@ gamete is re-drawn. This sampling scheme allow us to consider drift ($r \ra g$) 
 \ra n$) within the same generation as distinct processes.
  
 For example, in case of a single selective death event, we have
-$\Phi_{n}^{(t)}=\mathcal{S}(\Phi_{n+1}^{(t-1)})$, with selection matrix $\mathcal{S}$ (see appendix
-B). Multiple selection events are possible per generation, but we restrict our attention to the case
-where each lineage experiences at most one selective death event. This still allows us to consider
-strong selection, with at most $r\le 2n$ parental lineages contributing:
+$\Phi_{n}^{(t)}=\mathcal{S}(\Phi_{n+1}^{(t-1)})$, with selection matrix $\mathcal{S}$. Multiple
+selection events are possible per generation, but we restrict our attention to the case where each
+lineage experiences at most one selective death event. This still allows us to consider strong
+selection, with at most $r\le 2n$ parental lineages contributing:
 
 \begin{align}
   \label{eq:op-selection}
-  \Phi_{n}^{(t)}=\Phi_{n}^{(t-1)}+ \sum_{j=0}^{2n} \sum_{i=1}^{n} \mathcal{S}_j \mathcal{D}_i \Phi_{n-i+j}^{(t-1)}
+  \Phi_{n}^{(t)}=\Phi_{n}^{(t-1)}+ \sum_{j=n}^{2n} \sum_{i=1}^{n} \mathcal{S}_j \mathcal{D}_i \Phi_{n-i+j}^{(t-1)}
 \end{align}
 
 The closure no longer holds for \eqref{eq:op-selection}, as up to $g \le 2n$ gametes can contribute
@@ -207,89 +210,90 @@ quantile of the sample size where the system is approximately closed.
 \subsection{Markov process construction}
 \label{subsec:markov}
 
-We first define a recursion equation for the distribution of allele frequency in a sample of size $n$ from a haploid Wright-Fisher population of size $N$, 
+We first define a recursion equation for the distribution of allele frequency in a sample of size
+$n$ from a haploid Wright-Fisher population of size $N$. Given that the sample in parental generation
+has $j$ copies of the derived allele, we seek to calculate the probability that the sample
+will contain $i$ derived copies in the following generation.
 
-%The goal is to
-%construct a probability of going from $i$ to $j$ derived alleles in a sample of size $n$, which we
-%denote as $(j,n)\ra(i,n)$.
+In the neutral case, this transition probability can be calculated if we know the transition
+probabilities in the smaller samples of size $n' \in [1, n-1]$ (similar to
+\eqref{eq:op-neutral-mult}) \cite{BhaskarEtAl2014}. We do not construct the intermediate matrices
+$\mathcal{D_i}$ of \eqref{eq:op-neutral-mult} explicitly, but instead calculate a transition
+probability matrix $P((j,n)\ra(i,n))$ in terms of transition probabilities for a smaller sample size
+$P((\dot,n')\ra(\dot,n'))$. In brief, we can construct the transition probability matrix
+$P((j,n)\ra(i,n))$ if we know the matrix $P((\dot,n-1)\ra(\dot,n-1))$, and then using the
+conditional probabilities for each type of an event. Starting from the edge cases for a sample size
+of $1$, we build up a set of square transition probability matrices. By using a dynamic programming
+algorithm, we can achieve reasonable performance for realistic sample sizes. The full derivation is
+shown in appendix A.
 
-In the neutral case, we want to compute the matrices $\mathcal{D}_i$ from Equation \eqref{eq:op-neutral-mult}. \sgcomment{Or, if you want to compute the square matrix, define it above?}
-These transition probabilities are conceptually simple: ($D_{i,jk}$, is the probability that \sgcomment{...}. However, the large number of combinatoric possibilities when accounting for multiple events make the computation cumbersome.  
- 
+The case of selection is slightly more complicated, since now we need to consider a larger set of
+states that can lead to transition from $j$ to $i$ copies in a sample size of $n$. In particular,
+there can be a large number of gametes (fig. \ref{fig:schematic}C) that can contribute from $n$ when
+there is no selection, to a potentially infinite number under strong negative selection. In our
+calculation, we only consider up to one selective death event per lineage, so the number of
+contributing gametes is between $n$ and $2n$.
 
-%Under neutrality, the knowledge of the parental configuration is sufficient to construct the
-%transition probabilities. Since we want to account for multiple coalescent events, parental
-%configurations of sizes $p \in [1, n-1]$ can all contribute \eqref{eq:op-neutral-mult}. For example,
-%$n-2$ parental lineages will contribute if there if a single coalescence of four lineages, or double
-%coalescence of two lineages. The number of contributions increases rapidly.
+Note that this is analogous to the outer summation boundaries in eq. \eqref{eq:op-selection}. Again,
+we do not calculate the matrix $\mathcal{S}_i$ directly, but rather construct a transition
+probability $Q((j,n)\ra(i,n))$. We can define these transitions recursively if we know the
+transitions of $Q((\dot,m)\ra(\dot,n-1))$. Note that with selection we can have $m \in [1, 2n]$
+lineages contribute, whereas we only needed $n' \in [1, n-1]$ in the neutral case.
 
-We therefore use a dynamic programming approach where
-we construct every transition probability matrix in for the (parental) sample sizes $p \in [1,n-1]$.
-Then the transition probabilities $P((j,n)\ra(i,n))$ can be obtained from $P((j,n-1)\ra(i,n-1))$.
-We derive this equation in appendix A.
+To retain the closure property under selection, the Markov process needs to take $2n$ lineages in
+the parental generation to $n$ lineages in the present. However, such rectangular transition
+probability matrix is not suited for our purposes, since we want to describe the behavior of a
+sample with constant size $n$. Instead, we only calculate the \textit{truncated} transition
+probabilities for a $n \times n$ matrix $Q$. This means that under very strong selection, some
+transitions will be unaccounted for. However, since the total sum of transition probabilities sums
+to $1$, we can easily calculate the total missing probabilities. As we show in the rest of this
+work, this missing probability tends to $0$ as sample size $n$ increases.
 
-In the case with selection, the number of parental lineages $p$ can exceed $n$: $p\in[1, \infty]$.
-We restrict our attention to the cases where parents of each lineage in the sample experience at
-most one selective death event (\textit{i.e.} $s \ll 1$, but $Ns$ can still be much larger than $1$), so we consider the range of $p \in [1, 2n]$.
+The construction of the full and truncated transition probability matrices is implemented via a
+dynamic programming approach similar to the neutral case, and is described fully in
+appendix B. Because we need to account for additional lineages in the selection case, the
+calculation time is of the order of $O(n^4)$, while it is only $O(n^3)$ for the neutral case. The
+increase in complexity makes this approach less suitable for large sample size, but we derive
+several approximations in the following sections.
 
-
-We therefore want to find $Q((j,m)\ra(i,n))$ \sgcomment{define}(note that the current and parental sample sizes, $n$
-and $m$ can be different) in terms of $Q((j',m')\ra(i',n-1))$, where $m' \in [1, 2n]$, $j',i' \in
-[1, m']$. The list of events that contribute to $Q((j,m)\ra(i,n))$ is shown in Figure
-\ref{fig:recurrence}, and the full derivation is in appendix B. \sgcomment{This needs a bit more guidance.}
-
-\begin{figure}
-  \centering
-  \includegraphics[height=0.7\textheight]{fig/recurrence.pdf}
-  \caption{Contribution of parental configurations to a present sample. The transition probability
-    at $Q((j,m)\ra(i,n))$ is the sum of 12 terms shown in the figure. The filled circles indicate
-    derived alleles, empty circles - ancestral alleles, lines show ancestral descent. The square
-    brackets and the align within indicate the parental configuration that contributes to the
-    entry. Full derivation is shown in appendix B.}
-  \label{fig:recurrence}
-\end{figure}
-
-In addition to every transition probability matrix of size $p \in [1, n-1]$, the calculation in the
-case with selection additionally requires the calculation of rectangular matrices where the number
-of parental contributors ($p' \in [1, 2n]$) is not equal to the sample size. As a result, the
-calculation time is of the order of $O(n^4)$ for the selection case, while it is only $O(n^3)$ for
-the neutral case.
-
-\subsection{Calculation of site frequency spectra}
+\subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
 
-Once the matrix $Q$ is constructed, it can be used to calculate the site frequency spectrum within a
-sample. For the infinite sites model at equilibrium, we can calculate the \textit{SFS} $\Phi$ as a
-solution to a linear system:
+Once the truncated matrix $Q$ is constructed, it can be used to calculate the allele frequency
+spectrum within a sample. For the infinite sites model at equilibrium, we can calculate the
+\textit{AFS} $\Phi$ as a solution to a linear system:
 
 \begin{equation}
   \label{eq:sfs-calc}
 \Phi = \Phi Q + n \mu e_1
 \end{equation}
-\sgcomment{is $Q$ square, now? Have you truncated it? This needs to be clarified!}
+
 where $\mu$ is the per-site mutation rate, and $e_1$ is the first column of the identity matrix of
 size $n$. Figure \ref{fig:strong-selection} shows the comparison of the \textit{AFS} calculated from
-Equation \eqref{eq:sfs-calc}, the diffusion approximation \cite[eq. 9.23]{Ewens2004}, and the calculation
-performed in \texttt{Moments} \cite{JouganousEtAl2017}. Panel A shows a comparison at $Ns=100$ \sgcomment{caption says otherwise}, with
-the population size ($N=2000$), which is substantially larger than the sample size ($n=200$). There
-is a small deviation between the approaches at large allele frequencies. However, since highly
-deleterious alleles are unlikely to reach these frequencies, the difference is immaterial \sgcomment{I would not say this, since this will eventually speak to the fixation probability of the deleterious alleles -- might be impactful over long time scales}. At
+Equation \eqref{eq:sfs-calc}, the diffusion approximation \cite[eq. 9.23]{Ewens2004}, and the
+calculation performed in \texttt{Moments} \cite{JouganousEtAl2017}. Panel A shows a comparison at
+$Ns=50$, with the population size ($N=2000$), which is substantially larger than the sample size
+($n=200$). There is a small deviation between the approaches at large allele frequencies. At
 stronger selection coefficients, \texttt{Moments} suffers from numerical instability, while the
 diffusion approximation performs well (not shown).
 
 If the sample size is the same as the population size ($n=N=200$) (Fig.
 \ref{fig:strong-selection}B), the diffusion approximation and \texttt{Moments} perform poorly, while
 our approach remains stable. This is expected, since the diffusion framework does not perform well
-if multiple coalescent events contribute. \sgcomment{Furthermore, if our sample size is the entire population, we expect recursion equations to be closed, since by definition we cannot need information about more than $N$ samples!}
-\sgcomment{Show that exact transition as validation?}
+if multiple coalescent events contribute. Furthermore, if our sample size is the entire population,
+we expect recursion equations to be closed. To confirm this, we compare our result to the
+\textit{AFS} calculated from a whole-population haploid Wright-Fisher matrix, with $N=200$. (Fig.
+\ref{fig:strong-selection}B) shows that our calculation is close to the full Wright-Fisher model.
+The discrepancy between the curves is due to a difference in the way the selection coefficients are
+calculated.
 
 \begin{figure}
   \centering
   \includegraphics[width=0.7\textheight]{fig/strong_selection.pdf}
-  \caption{Site frequency spectra in a sample of size $n=200$, for highly deleterious alleles
-    ($Ns=-50$). (A) shows the frequency spectrum in a sample from a large population ($N=2000$), (B)
-  in a small population ($N=200$). Both panels are truncated at $10^{-15}$, to show only
-  sufficiently high allele frequencies. Y-axis on a logarithmic scale. \sgcomment{No need to specify the axis -- people can see. Are the SFS' normalized?}}
+  \caption{Normalized allele frequency spectra in a sample of size $n=200$, for highly deleterious
+    alleles ($Ns=-50$). (A) shows the frequency spectrum in a sample from a large population
+    ($N=2000$), (B) in a small population ($N=200$). Both panels are truncated at $10^{-15}$, to
+    show only moderately high allele frequencies.
   \label{fig:strong-selection}
 \end{figure}
 
@@ -298,17 +302,20 @@ if multiple coalescent events contribute. \sgcomment{Furthermore, if our sample 
 
 To show the closure properties of $Q$, we can calculate the total probability that more that $n$
 parental lineages contribute to the sample of a given size. By construction, the sum of rows of $Q$
-should correspond to the total probability mass that included configurations contribute
-(Fig. \ref{fig:recurrence}). Thus, the probability that some number of configurations are
-unaccounted for, with $j$ derived alleles in the sample \sgcomment{Parents?}, is given by
-$1-\sum_{i=0}^{n}Q_{i,j}$. This probability depends on the number of derived alleles carried by the parental sample: the more derived alleles, the higher the likelihood of a selective event. Figure \ref{fig:missing} shows the probability of missing configurations in a sample size of $n=200$ in the worst-case scenario, with $j=200$ derived lineages.
+should correspond to the total probability mass that included configurations contribute (Fig.
+\ref{fig:recurrence}). Thus, the probability that some number of configurations are unaccounted for,
+with $j$ derived alleles in the parental sample, is given by $1-\sum_{i=0}^{n}Q_{i,j}$.
+This probability depends on the number of derived alleles carried by the parental sample: the more
+derived alleles, the higher the likelihood of a selective event. Figure \ref{fig:missing} shows the
+probability of missing configurations in a sample size of $n=200$ in the worst-case scenario, with
+$j=200$ derived lineages.
 
 \begin{figure}
   \centering
   \includegraphics[]{fig/missing.pdf}
   \caption{Probability that unaccounted lineages contribute to the transition probabilities. The
     probabilities are calculated as 1 minus the sum of probabilities for the state where every
-    allele is derived. \sgcomment{Did we already discuss having a log y? Include N in caption!}}
+    allele is derived. \ikcomment{Need to keep N consistent}}
     \label{fig:missing}
 \end{figure}
 
