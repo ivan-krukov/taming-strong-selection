@@ -171,12 +171,11 @@ new lineage is re-drawn with probability $xs$. This sampling scheme allow us to 
 \ra g$) and selection ($g \ra n$) within the same generation as distinct processes.
 \ikcomment{Should we use $s$ or $s/1+s$?}
  
-For example, in case of a single selective death event, we have
+For example  \sgcomment{here you need to explain how the recursion occurs, I think I don't think what follows is an example of what precedes }, in case of a single selective death event, we have
 $\Phi_{n}^{(t)}=\mathcal{S}\Phi_{n+1}^{(t-1)}$, with selection matrix $\mathcal{S}$. Multiple
 selection events are possible per generation, but we restrict our attention to the case where each
 lineage experiences at most one selective death event. This still allows us to consider strong
-selection, with at most $r\le 2n$ parental lineages contributing:
-
+selection, with at most $r\le 2n$ parental lineages contributing: \sgcomment{This also needs fixing for $i=0$. We could consider writing the model with arbitrary selection intensities, and explain the approximation for S later, to avoid explaining two things at once? Also, please check your indices. }
 \begin{align}
   \label{eq:op-selection}
   \Phi_{n}^{(t)}=\Phi_{n}^{(t-1)}+ \sum_{j=n}^{2n} \sum_{i=1}^{n} \mathcal{S}_j \mathcal{D}_i \Phi_{n-i+j}^{(t-1)}
@@ -187,7 +186,7 @@ sample. However, the effect of a large sample size counteracts the additional li
 selection. The opposite effects of drift and selection on the number of lineages relevant to a
 sample are particularly clear in the context of the size of the ancestral selection graph
 (\textit{ASG}): in which the number of lineages relevant to a sample can be described as a
-birth-death process \citep{KroneNeuhauser1997, Wakeley2009}:
+birth-death process \citep{KroneNeuhauser1997, Wakeley2009}: \sgcomment{I would definitely use the time in generation, here, for consistency.}
 
 \begin{align}
   \label{eq:asg-size}
@@ -225,7 +224,7 @@ $n$ from a haploid Wright-Fisher population of size $N$. Given that the sample i
 has $j$ copies of the derived allele, we seek to calculate the probability that the sample
 will contain $i$ derived copies in the following generation.
 
-In the neutral case, this transition probability can be calculated if we know the transition
+\sgcomment{The following could be clarified}In the neutral case, this transition probability can be calculated if we know the transition
 probabilities in the smaller samples of size $n' \in [1, n-1]$ (similar to
 \eqref{eq:op-neutral-mult}) \citep{BhaskarEtAl2014}. We do not construct the intermediate matrices
 $\mathcal{D_i}$ of \eqref{eq:op-neutral-mult} explicitly, but instead calculate a matrix
@@ -242,11 +241,11 @@ states that can lead to transition from $j$ to $i$ copies in a sample size of $n
 there can be a large number of gametes (fig. \ref{fig:schematic}C) that can contribute from $n$ when
 there is no selection, to a potentially infinite number under strong negative selection. In our
 calculation, we only consider up to one selective death event per lineage, so the number of
-contributing gametes is between $n$ and $2n$.
+contributing gametes is between $n$ and $2n$. \sgcomment{Perfect: you can skip discussion of the approximation in the previous section, since you just introduce it here. }
 
 Note that this is analogous to the outer summation boundaries in eq. \eqref{eq:op-selection}. Again,
 we do not calculate the matrix $\mathcal{S}_i$ directly, but rather construct a transition
-probability $Q((j,n)\ra(i,n))$. We can define these transitions recursively if we know the
+probability $Q((j,n)\ra(i,n))$ \sgcomment{I don't understand what Q is, here.}. We can define these transitions recursively if we know the
 transitions of $Q((\cdot,m)\ra(\cdot,n-1))$. Note that with selection we can have $m \in [1, 2n]$
 lineages contribute, whereas we only needed $n' \in [1, n-1]$ in the neutral case.
 
