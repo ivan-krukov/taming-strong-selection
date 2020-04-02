@@ -218,7 +218,7 @@ to calculate a quantile of the sample size where the system is approximately clo
 
 \subsection{Markov process construction}
 \label{subsec:markov}
-
+\sgcomment{It seems like it would make the most sense to derive the transition matrices in this section (without limiting ourselves to a square matrix), and talking about the truncation approximation only in the next section. You could then have a symbol for the overall transition matrix Q, and the truncated matrix (the closure approximation)}
 We first define a recursion equation for the distribution of allele frequency in a sample of size
 $n$ from a haploid Wright-Fisher population of size $N$. Given that the sample in parental generation
 has $j$ copies of the derived allele, we seek to calculate the probability that the sample
@@ -269,7 +269,7 @@ several approximations in the following sections.
 \label{subsec:afs}
 
 Once the truncated matrix $Q$ is constructed, it can be used to calculate the allele frequency
-spectrum. For the infinite sites model at equilibrium, we can calculate the \textit{AFS} $\Phi$ as a
+spectrum. For the infinite sites model at equilibrium, we can \sgcomment{calculate-approximate} the \sgcomment{equilibrium}\textit{AFS} $\Phi$ as a
 solution to a linear system:
 
 \begin{equation}
@@ -284,17 +284,17 @@ calculation performed in \texttt{Moments} \citep{JouganousEtAl2017}. Panel A sho
 $Ns=50$, with the population size ($N=2000$), which is substantially larger than the sample size
 ($n=200$). There is a small deviation between the approaches at large allele frequencies. At
 stronger selection coefficients, \texttt{Moments} suffers from numerical instability, while the
-diffusion approximation performs well (not shown).
+diffusion approximation performs well (not shown \sgcomment{why?}).
 
 If the sample size is the same as the population size ($n=N=200$) (Fig.
 \ref{fig:strong-selection}B), the diffusion approximation and \texttt{Moments} perform poorly, while
-our approach remains stable. This is expected, since the diffusion framework does not perform well
-if multiple coalescent events contribute. Furthermore, if our sample size is the entire population,
-we expect recursion equations to be closed. To confirm this, we compare our result to the
+our approach \sgcomment{no need to make it about ourselves here} remains stable. This is expected, since the diffusion framework does not perform well
+if multiple coalescent events contribute \sgcomment{cite bhaskar}. Furthermore, if our sample size is the entire population,
+we expect recursion equations to be closed \sgcomment{This deserves more clarification}. To confirm this, we compare our result to the
 \textit{AFS} calculated from a whole-population haploid Wright-Fisher model, with $N=200$. (Fig.
 \ref{fig:strong-selection}B) shows that our calculation is close to the full Wright-Fisher model.
 The discrepancy between the curves is due to a difference in the way the selection coefficients are
-calculated.
+calculated \sgcomment{What does that mean?}.
 
 \begin{figure}
   \centering
@@ -310,10 +310,11 @@ calculated.
 \subsection{Closure properties}
 \label{subsec:closure}
 
-To show the closure properties of $Q$, we can calculate the total probability that more that $n$
-parental lineages contribute to the sample of a given size. By construction, the sum of rows of $Q$
+To \sgcomment{show-investigate} the closure properties of $Q$, we can calculate the total probability that more that $n$
+parental lineages contribute to the sample of a given size.
+By construction, the sum of rows of $Q$
 should correspond to the total probability mass that included configurations contribute (Fig.
-\ref{fig:recurrence}). Thus, the probability that some number of configurations are unaccounted for,
+\ref{fig:recurrence} \sgcomment{no figure}). Thus, the probability that some number of configurations are unaccounted for,
 with $j$ derived alleles in the parental sample, is given by $1-\sum_{i=0}^{n}Q_{i,j}$.
 This probability depends on the number of derived alleles carried by the parental sample: the more
 derived alleles, the higher the likelihood of a selective event. Figure \ref{fig:missing} shows the
@@ -341,11 +342,11 @@ closed \eqref{eq:op-selection}. We derive several approximations to the model pr
 section,in order to get a better understanding of this behavior.
 
 As a first order approximation, we consider the mean number of lineages that contribute by selection
-or drift. Then, we construct a full probability distribution of the number of contributing lineages
+or drift \sgcomment{I don't know what that means}. Then, we construct a full probability distribution of the number of contributing lineages
 one generations into the past. Finally, we propose a normal approximation to this distribution, in
 order to derive a simple quantile function for the number of used lineages.
 
-The upper bound on the number of lineages used is of particular interest - it represents the worst
+The upper bound \sgcomment{which upper bound?} on the number of lineages used is of particular interest - it represents the worst
 case scenario in terms of extra lineages used by selection. Since the maximum number of lineages
 will be resampled when all lineages are derived, we will usually assume $x=1$ in the following
 calculations. This also allows us to treat the lineages as exchangeable \citep{Wakeley2009}. Note
@@ -380,7 +381,7 @@ gametes (drift) will be:
   \hat{E}[\mathcal{R}|n] = N(1-\left( 1 - \frac{1}{N} \right)^n)
 \end{align}
 
-This expression is not hard to derive intuitively. First, the probability of selecting a particular
+This expression is not hard to derive intuitively \sgcomment{You rarely gain anything by pointing out that something is easy or intuitive}. First, the probability of selecting a particular
 parent is $\frac{1}{N}$, so the probability of selecting different parents for $n$ individuals is
 $(1-\frac{1}{N})^n$. Then one minus this value is the probability that the same parent was picked at
 least once by any of the $n$ individuals.
@@ -408,7 +409,7 @@ The second approximation is made under the assumption that the sample size is mu
 population size. We can see that the expected number of lineages sampled will be increased by
 selection as a linear term. Drift tends to decrease the number of lineages as a quadratic term with
 respect to the sample size. This is analogous to the results from the ancestral selection graph
-\citep{KroneNeuhauser1997}, eq. \eqref{eq:asg-size}, but now includes sample size directly.
+\citep{KroneNeuhauser1997}, eq. \eqref{eq:asg-size}, but now includes sample size directly \sgcomment{I don't understand why the sample size is included more directly. It seems like we have spent a lot of space to re-derive well-known results.}.
 
 We now want to ask when the expected number of contributing lineages is less that the sample size:
 
@@ -441,7 +442,7 @@ by $2Ns$ (we assume that every lineage is derives, $x=1$).
 
 
 Using the same equation, we can track the expected number of used parental lineages back in time,
-which we denote as $n_{t-1}$:
+which we denote as $n_{t-1}$:  \sgcomment{Why are you doing this?}
 
 \begin{align}
   \label{eq:contributors-back}
@@ -451,7 +452,7 @@ which we denote as $n_{t-1}$:
 We solve this recurrence going back in time 10,000 generations, producing figure
 \ref{fig:bell-plot}. The equilibrium point is well-approximated by $2Ns$, shown as a dashed line
 here. This is the same as solving equation \ref{eq:critical-sample} explicitly. Non-withstanding of
-the starting sample size, we converge to the equilibrium relatively quickly.
+the starting sample size, we converge to the equilibrium relatively quickly. \sgcomment{This section was way too long. It could be summarized in two sentences.}
 
 \begin{figure}
   \centering
@@ -477,17 +478,17 @@ The number of parental lineages used by drift can be modelled by the modified oc
   P(\mathcal{R}=r|\mathcal{G}=g) = \frac{S_2(g,r) N!}{(N-r)! N^g}
 \end{align}
 
-where $S_2(g,r)$ is a Stirling number of the second kind, which is the number of ways to partition
+\sgcomment{Don't leave a space after eq if in same sentence to avoid indent} where $S_2(g,r)$ is a Stirling number of the second kind, which is the number of ways to partition
 $g$ objects into $r$ categories ($g$ gametes produced by $r$ parents). A typical statement of the
 occupancy distribution is that we have $N$ urns and $g$ colored balls, and we want to know the
 probability that exactly $r$ of the urns will be occupied (see \cite{JohnsonEtAl2005} section 10.4
 for a thorough treatment). In our case, $N$ is the population size, urns correspond to the parents,
 colored balls to gametes. Note that the under drift, the number of parents will be smaller or equal
 to the number of gametes $r \le g$. The expectation of this distribution is given by equation
-\eqref{eq:drift-expectation}.
+\eqref{eq:drift-expectation}. \sgcomment{too much detail here}
 
 The occupancy distribution is not simple to evaluate, but good performance can be achieved by
-pre-computing a table of reduced occupancy numbers, using the algorithm of \cite{ONeill2019}.
+pre-computing a table of reduced occupancy numbers, using the algorithm of \cite{ONeill2019}. \sgcomment{It will not be clear to readers why you are mentioning that here.}
 
 As stated before, the number of lineages sampled under selection is described with a negative
 binomial distribution. Unlike \ref{eq:neg-binom-fail}, however, we are now looking for the total
@@ -500,7 +501,12 @@ probability of the negative binomial is given by:
 \end{align}
 
 Here, the number of gametes can be larger that the sample size $n \le g$, if selection is present
-($s<0$).
+($s<0$) \sgcomment{Are you not using $s>0$?}.
+
+
+\sgcomment{This section is also too long. "The distribution of the number $g$ of gametes sampled to generate $n$ offspring under selection is a negative binomial EQN. The distribution of the number $r$ of distinct parents used to generate $g$ gametes under drift is the occupancy distibution[CITE] EQN. The chain rule gives us EQN  }
+
+\sgcomment{As is, people will get lost in the details of the descriptions, even if they could have guessed the results themselves.}
 
 Combining the two distributions together through \ref{eq:conditional}, we get:
 
@@ -509,15 +515,15 @@ Combining the two distributions together through \ref{eq:conditional}, we get:
    Pr(\mathcal{R}=r|n) = \sum_{g=1}^{\infty} \frac{S_2(g,r) N!}{(N-r)! N^g} \binom{g-1}{n-1}(1-xs)^n(xs)^{g-n}
 \end{align}
 
-Unfortunately, this distribution does not have a simple analytical form. In certain parameter
+Unfortunately, this distribution does not have a simple analytical form \sgcomment{How do you know?}. In certain parameter
 regimes, this can be approximated by the normal distribution \citep{JohnsonEtAl2005,ONeill2019},
-which we describe in the next section.
+which we describe in the next section. \sgcomment{Wait until then to mention it! You are doing too much back in forth. Present equation, show the result, then talk about approximation. No need to foreshadow something that is coming in 5 lines and that no one is expecting. }
 
 Figure \ref{fig:sampling-dist} shows the distribution of the number of contributing parental
 lineages for several selection coefficients for a sample $n=20$. In the absence of selection, the
 distribution has zero probability above $n=20$, as no extra lineages can be sampled. As the strength
 of selection is increased, we begin requiring larger number of lineages. At the equilibrium point
-($Ns=10$, \eqref{eq:critical-sample}), the distribution is symmetric.
+($Ns=10$, \eqref{eq:critical-sample}), the distribution is symmetric \sgcomment{it is not}.
 
 \begin{figure}
   \centering
@@ -528,8 +534,8 @@ of selection is increased, we begin requiring larger number of lineages. At the 
   \label{fig:sampling-dist}
 \end{figure}
 
-We note that at the critical sample size, the probability that we will have a sufficient number of
-lineages is only $50\%$. In order to guarantee that drift will out-pace selection, we can calculate
+We note that \sgcomment{"We note that" adds no information} at the critical sample size, the probability that we will have a sufficient number of
+lineages is only $50\%$ \sgcomment{I don't see this}. In order to guarantee that drift will out-pace selection, we can calculate
 the cumulative distribution - Figure \ref{fig:cumulative-dist}. This shows that a sample size in
 which the majority of lineages are accounted for can be substantially larger than the critical
 sample size of equation \eqref{eq:critical-sample}. To derive a convenient expression, we turn to
@@ -552,7 +558,7 @@ lineages. The occupancy distribution is approximated by the normal \citep{ONeill
 Likewise, the number of failures (eq. \eqref{eq:neg-binom-fail}) before a given number of successes,
 can be approximated by the normal distribution. In the case of large population size, as required by
 the approximation of the occupancy by the normal, we can approximate the total number of
-contributing lineages as the sum of lineages contributed by the two distributions. The random
+contributing lineages as the sum of lineages contributed by the two distributions \sgcomment{What does that mean? Why do you need an approximation? Were you not computing a bound?}. The random
 variable which is a sum of two normally-distributed random variables is also normal, with
 $\mu=\mu_1+\mu_2$ and $\sigma^2 = \sigma^2_1 + \sigma^2_2$. By combining the required expectations
 and variance, we find that the normal approximation then has the form:
@@ -563,15 +569,15 @@ and variance, we find that the normal approximation then has the form:
   \sigma &= \sqrt{N \left((N-1) \left(1-\frac{2}{N}\right)^n+\left(1-\frac{1}{N}\right)^n-N\left(1-\frac{1}{N}\right)^{2 n}\right)+\frac{n s}{(1-s)^2}})
 \end{align}
 
-Figure \ref{fig:normal-approximation} shows the quantiles of the normal approximation. We see that
+\sgcomment{Tell people N to make self contained} Figure \ref{fig:normal-approximation} shows the quantiles of the normal approximation. We see that
 up to $99\%$ of the lineages will be contained within the sample of 200 with $Ns=20$. Larger
 percentiles will require larger sample sizes.
 
 \begin{figure}
   \centering
   \includegraphics[]{fig/quantile.pdf}
-   \caption{The quantile function of the closure of the sample. Each line corresponds to different
-     percentile of the normal approximation. Black dashed line shows the reference sample size $n=200$.}
+   \caption{The quantile function of the closure of the sample \sgcomment{What is that?}. Each line corresponds to different
+     percentile of the normal approximation. Black dashed line shows the reference sample size $n=200$ \sgcomment{does it play a special role? If not why mention it (or have this line, really)?}. \sgcomment{It also seems like showing the cumulative distributions themselves would be more intuitive. E.g $\log(missing p)$. Also would be nice to have the numerical calculation. Could you get the cumulative distribution for the occupancy distribution from the Oneil algo? }}
   \label{fig:normal-approximation}
 \end{figure}
 
