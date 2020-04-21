@@ -1,0 +1,25 @@
+\documentclass[preview]{standalone}
+\usepackage{amsmath}
+\usepackage{xcolor}
+
+\newcommand{\Dfrac}[2]{%
+  \ooalign{%
+    $\genfrac{}{}{1.2pt}0{#1}{#2}$\cr%
+    $\color{white}\genfrac{}{}{.4pt}0{\phantom{#1}}{\phantom{#2}}$}%
+}
+\newcommand{\cond}{\middle\vert}
+
+\begin{document}
+\begin{equation*}
+  \begin{aligned}
+    P\left[ \Dfrac{i_o}{n_o} \cond \Dfrac{i_p}{n_p} \right] = \left( \frac{n-i_o}{n} \right) 
+    & \Bigg\{ \left( 1-\frac{n-1}{N}   \right)  P \left[ \Dfrac{i_o}{n_o-1}   \cond \Dfrac{i_p}{n_p-1} \right] \\
+    & +       \left( \frac{i_o}{N} \right)      P \left[ \Dfrac{i_o-1}{n_o-1} \cond \Dfrac{i_p}{n_p-1} \right] \\
+    & +       \left( \frac{n-i_o-1}{N} \right)  P \left[ \Dfrac{i_o}{n_o-1}   \cond \Dfrac{i_p}{n_p-1} \right] \Bigg\} \\
+    \left( \frac{i_o}{n_o} \right) 
+    & \Bigg\{  \left( 1 - \frac{n-1}{N} \right) P \left[ \Dfrac{i_o-1}{n_o-1} \cond \Dfrac{i_p-1}{n_p-1} \right] \\
+    & +       \left( \frac{i_o-1}{N} \right)    P \left[ \Dfrac{i_o-1}{n_o-1} \cond \Dfrac{i_p-1}{ n_p-1} \right] \\
+    & +       \left( \frac{n-i_o}{N} \right)    P \left[ \Dfrac{i_o}{n_o-1}   \cond \Dfrac{i_p-1}{n_p-1} \right] \Bigg\}
+  \end{aligned}
+\end{equation*}
+\end{document}

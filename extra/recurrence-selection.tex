@@ -1,0 +1,33 @@
+\documentclass[preview]{standalone}
+\usepackage{amsmath}
+\usepackage{xcolor}
+
+\newcommand{\Dfrac}[2]{%
+  \ooalign{%
+    $\genfrac{}{}{1.2pt}0{#1}{#2}$\cr%
+    $\color{white}\genfrac{}{}{.4pt}0{\phantom{#1}}{\phantom{#2}}$}%
+}
+\newcommand{\cond}{\middle\vert}
+
+\begin{document}
+
+\begin{equation*}
+  \begin{aligned}
+    P_s\left[ \Dfrac{i_o}{n_o} \cond \Dfrac{i_c}{n_c} \right]
+    = \left(\frac{1-(n_c-1)}{N}\right)\frac{n_c-i_c}{n_c} P_s\left[ \Dfrac{i_o}{n_o-1} \cond \Dfrac{i_c}{n_c-1} \right]& \\ %1a
+    + \frac{n_c-i_c}{N} P_s\left[ \Dfrac{i_o}{n_o-1} \cond \Dfrac{i_c}{n_c} \right]& \\ %2a
+    + \left(1-\frac{n_c-2}{N}\right) \frac{i_c}{n_c} s  \left(1-\frac{n_c-1}{N}\right) \frac{n_c-i_c}{n_c-1} P_s\left[ \Dfrac{i_o}{n_o-1} \cond \Dfrac{i_c-1}{n_c-2} \right]& \\ %3a
+    + \frac{i_c}{N} s  \frac{n_c-i_c}{N}  P_s\left[ \Dfrac{i_o}{n_o-1} \cond \Dfrac{i_c}{n_c} \right] & \\ %4a
+    + \frac{i_c}{N} s  \left(1-\frac{n_c-1}{N}\right) \frac{n_c-i_c}{n_c}  P_s\left[ \Dfrac{i_o}{n_o-1} \cond \Dfrac{i_c}{n_c-1} \right]& \\ %5a
+    + \left(1-\frac{n_c-1}{N}\right) \frac{i_c}{n_c} s  \left(\frac{ n_c-i_c }{N}\right) P_s\left[ \Dfrac{i_o}{n_o-1} \cond \Dfrac{i_c-1}{n_c-1} \right]& \\ %6a
+    + \left(\frac{1-(n_c-1)}{N}\right)\frac{i_c}{n_c} (1-s) P_s\left[ \Dfrac{i_o-1}{n_o-1} \cond \Dfrac{i_c-1}{n_c-1} \right]& \\ %1d
+    + \frac{i_c}{N} (1-s) P_s\left[ \Dfrac{i_o-1}{n_o-1} \cond \Dfrac{i_c}{n_c} \right]& \\ %2d
+    + \left(1-\frac{n_c-2}{N}\right) \frac{i_c}{n_c} s  \left(1-\frac{n_c-1}{N}\right) \frac{i_c-1}{n_c-1} P_s\left[ \Dfrac{i_o-1}{n_o-1} \cond \Dfrac{i_c-2}{n_c-2} \right]& \\ %3d
+    + \frac{i_c}{N} s  \frac{i_c-1}{N}   P_s\left[ \Dfrac{i_o-1}{n_o-1} \cond \Dfrac{i_c}{n_c} \right]& \\ %4d
+    + \frac{i_c}{N} s  \left(1-\frac{n_c-1}{N}\right) \frac{i_c}{N}   P_s\left[ \Dfrac{i_o-1}{n_o-1} \cond \Dfrac{i_c-1}{n_c-1} \right]& \\ %5d
+    + \left(1-\frac{n_c-1}{N}\right) \frac{i_c}{n_c} s \frac{i_c-1}{N} P_s\left[ \Dfrac{i_o-1}{n_o-1} \cond \Dfrac{i_c-1}{n_c-1} \right] %6d
+  \end{aligned}
+\end{equation*}
+
+
+\end{document}
