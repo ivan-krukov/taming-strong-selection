@@ -3,22 +3,11 @@
 \usepackage[]{geometry}
 \usepackage{amsmath}
 \usepackage{tikz}
-\usepackage[nomessages]{fp}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{natbib}
 \bibliographystyle{elsarticle-harv}
 \biboptions{authoryear}
-
-\newcommand{\drawcirclerow}[5][0] { % args: [start], count, color, height, radius
-  \FPadd\stop#2#1
-  \foreach \i in {#1,...,\stop} {
-    \ifnum \i < \stop
-    \fill[#3] (\i, #4) circle (#5);
-    \draw (\i, #4) circle (#5); 
-    \fi
-  }
-}
 
 \newcommand{\ra}{\rightarrow}
 \newcommand{\sgcomment}[1]{\textcolor{red}{SG: #1}}
@@ -48,17 +37,23 @@
     approach is accurate under strong drift and strong natural selection. We derive several
     asymptotic results to understand when the sample size is sufficiently large to overcome the
     influence of selection.
-    
   \end{abstract}
 \end{frontmatter}
 
 \section{Introduction}
 \label{sec:introduciton}
 
-The allele frequency spectrum (\textit{AFS}) is an important summary of genetic diversity that is commonly used to infer demographic history and natural selection. Given a demographic scenario, the diffusion approximation or coalescent simulations can be used to obtain a predicted AFS \sgcomment{citations}. By comparing predictions to the observed AFS, we can compute likelihoods for different demographic scenarios. Unfortunately, the AFS can be time consuming to compute in multi-population demographic models and for large sample sizes. \cite{}
+The allele frequency spectrum (\textit{AFS}) is an important summary of genetic diversity that is
+commonly used to infer demographic history and natural selection. Given a demographic scenario, the
+diffusion approximation or coalescent simulations can be used to obtain a predicted AFS
+\sgcomment{citations}. By comparing predictions to the observed AFS, we can compute likelihoods for
+different demographic scenarios. Unfortunately, the AFS can be time consuming to compute in
+multi-population demographic models and for large sample sizes. \cite{}
 
-In the absence of selection, efficient computational shortcuts can be used. In particular, recursion equations can be derived for moments of the allele frequency distribution \citep{KimuraCrow1964,Ewens1972,JouganousEtAl2017}. Recently, these recursions have been useful in fitting complex demographic models to genetic data
- \citep{JouganousEtAl2017,KammEtAl2017}. 
+In the absence of selection, efficient computational shortcuts can be used. In particular, recursion
+equations can be derived for moments of the allele frequency distribution
+\citep{KimuraCrow1964,Ewens1972,JouganousEtAl2017}. Recently, these recursions have been useful in
+fitting complex demographic models to genetic data \citep{JouganousEtAl2017,KammEtAl2017}.
  
 In the presence of natural selection, the corresponding recursion equations do not close \citep{Donnelly, JouganousEtAl2017} -- they form an infinite set of coupled ordinary differential equations. Closure approximations have been developed (\citep{JouganousEtAl2017}), but these are not robust to strong selection and their convergence properties are not well understood.
 
@@ -97,9 +92,9 @@ In this article we derive such almost-closed recursions in the Wright-Fisher mod
 \label{sec:background}
 
 Consider the behavior of a single biallelic locus in a haploid Wright-Fisher model with a population
-of size $N$. We consider a sample of size $n$ lineages from within the population. We want to know
-how many parental lineages $r$ have contributed to the present sample from one generation in the
-past. Going back in time, the random variable $\mathcal{R}$ is the number of lineages that
+of size $N$. We consider a sample of size $n$ lineages from within the population at time $t$. We want to know
+how many parental lineages $n'$ have contributed to the present sample from one generation in the
+past ($t-1$). Going back in time, the random variable $\mathcal{N}'$ is the number of lineages that
 contribute to the present day sample. Figure \ref{fig:schematic} shows examples the different models
 that we consider below -- standard coalescent (\ref{fig:schematic}A), coalescent with multiple
 merges (\ref{fig:schematic}B), and coalescent with multiple merges and selection
@@ -108,29 +103,30 @@ merges (\ref{fig:schematic}B), and coalescent with multiple merges and selection
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.8\textwidth]{fig/schematic.pdf}
-  \caption{\label{fig:schematic} Realizations of sampling models, showing $\mathcal{R}=r$ parental
+  \caption{\label{fig:schematic} Realizations of sampling models, showing $\mathcal{N}'=n'$ parental
     lineages at $t-1$ contributing to $n$ lineages in present generation $t$. \textbf{A} Standard
-    coalescent - at most 1 coalescent event \sgcomment{per generation-> at a time}; $r\in[n-1, n]$. \textbf{B} Coalescent
+    coalescent - at most 1 coalescent event at a time; $n'\in[n-1, n]$. \textbf{B} Coalescent
     with multiple merges - parents \textit{3} and \textit{4} have 3 and 2 offspring, respectively;
-    $r \in [1, n]$ \textbf{C} Including selection - each parent produces a random number of gametes
-    ($\mathcal{G}$), which then may survive to produce offspring; $r \in [1, n]$, $g \in [n, 2n]$ }
+    $n' \in [1, n]$ \textbf{C} Including selection - each parent produces a random number of gametes
+    ($\mathcal{N}^*=n^*$), which then may survive to produce offspring; $n' \in [1, n]$, $n^* \in [n, \infty]$. }
 \end{figure}
 
 First, consider a recursion describing the evolution of the expected allele frequency spectrum
 (\textit{AFS}) $\Phi_{n}^{(t)}$, in the standard coalescent without selection (Figure
 \ref{fig:schematic}A). At generation $t$, the sample consists of $n$ lineages, and at $t-1$ there
 are $r$ parental lineages. In what follows, we closely follow the exposition of
-\cite{JouganousEtAl2017}. The standard coalescent model allows at most one event \sgcomment{per generation->at a time}, so
-we need to consider only two cases: namely $r=n$ if no coalescent occurs, and $r=n-1$ if a single
-event took place.
+\cite{JouganousEtAl2017}. The standard coalescent model allows at most one event at a time, so we
+need to consider only two cases: namely $r=n$ if no coalescent occurs, and $r=n-1$ if a single event
+took place.
 
 Without a coalescent event, $r$ parental lineages are sampled randomly into the present generation,
 so the allele frequencies remain the same: $\Phi_{n}^{(t)}=\Phi_{n}^{(t-1)}$. With a single
 coalescent event, the contribution comes from $r=(n-1)$ parental lineages:
 $\Phi_{n}^{(t)}=\mathcal{D}\Phi_{n-1}^{(t-1)}$, where $\mathcal{D}$ is a sparse $n \times (n-1)$
-matrix describing the effect of drift. We do not use $\mathcal{D}$ in this work (but see
-\citep{JouganousEtAl2017}), and instead construct a related matrix in section \ref{subsec:markov}.
-Combining the terms without and with the coalescent event, we have: \sgcomment{This is a strange (incorrect?) interpretation of this equation. }
+matrix describing the effect of drift, which we refer to as a drift matrix. We do not use
+$\mathcal{D}$ directly in this work (but see \citep{JouganousEtAl2017}), and instead construct a
+related matrix in section \ref{subsec:markov}. Combining the terms without and with the coalescent
+event, we have: \sgcomment{This is a strange (incorrect?) interpretation of this equation. }
 
 \begin{align}
   \label{eq:op-neutral}
@@ -146,7 +142,7 @@ We first incorporate the effects of large sample size. As previously shown in
 (\cite{BhaskarEtAl2014} and \cite{NelsonEtAl2019}), the coalescent approximation may not be adequate in this
 setting, since multiple coalescent events can take place within a single generation
 (Figure \ref{fig:schematic}B). With a slight abuse of notation we denote $\mathcal{D}_i$ as the
-$i^{\text{th}}$-order drift matrix \sgcomment{"the drift matrix" is not a known thing -- you<ll have to define it} in which $i$ lineages are lost due to genetic drift. The
+$i^{\text{th}}$-order drift matrix \sgcomment{"the drift matrix" is not a known thing -- you'll have to define it} in which $i$ lineages are lost due to genetic drift. The
 dimensionality of $\mathcal{D}_i$ is $n \times (n-i)$. For example, $\mathcal{D}_2$ includes both
 three-way coalescent and double two-way coalescent. In section \ref{subsec:markov}, we demonstrate an
 efficient dynamic programming algorithm to exhaustively enumerate all the events for a drift-only
@@ -310,16 +306,15 @@ calculated \sgcomment{What does that mean?}.
 \subsection{Closure properties}
 \label{subsec:closure}
 
-To \sgcomment{show-investigate} the closure properties of $Q$, we can calculate the total probability that more that $n$
-parental lineages contribute to the sample of a given size.
-By construction, the sum of rows of $Q$
-should correspond to the total probability mass that included configurations contribute (Fig.
-\ref{fig:recurrence} \sgcomment{no figure}). Thus, the probability that some number of configurations are unaccounted for,
-with $j$ derived alleles in the parental sample, is given by $1-\sum_{i=0}^{n}Q_{i,j}$.
-This probability depends on the number of derived alleles carried by the parental sample: the more
-derived alleles, the higher the likelihood of a selective event. Figure \ref{fig:missing} shows the
-probability of missing configurations in a sample size of $n=200$ in the worst-case scenario, with
-$j=200$ derived lineages.
+To \sgcomment{show-investigate} the closure properties of $Q$, we can calculate the total
+probability that more that $n$ parental lineages contribute to the sample of a given size. By
+construction, the sum of rows of $Q$ should correspond to the total probability mass that included
+configurations contribute (Fig. \ref{fig:recurrence} \sgcomment{no figure}). Thus, the probability
+that some number of configurations are unaccounted for, with $j$ derived alleles in the parental
+sample, is given by $1-\sum_{i=0}^{n}Q_{i,j}$. This probability depends on the number of derived
+alleles carried by the parental sample: the more derived alleles, the higher the likelihood of a
+selective event. Figure \ref{fig:missing} shows the probability of missing configurations in a
+sample size of $n=200$ in the worst-case scenario, with $j=200$ derived lineages.
 
 \begin{figure}
   \centering
@@ -339,95 +334,75 @@ sample sizes.
 We now want to determine what sample size is sufficient so that the number of coalescent events due
 to drift is almost always larger than the number of selection events, such that the system remains
 closed \eqref{eq:op-selection}. We derive several approximations to the model proposed in the first
-section,in order to get a better understanding of this behavior.
+section, in order to get a better understanding of this behavior.
 
-As a first order approximation, we consider the mean number of lineages that contribute by selection
-or drift \sgcomment{I don't know what that means}. Then, we construct a full probability distribution of the number of contributing lineages
-one generations into the past. Finally, we propose a normal approximation to this distribution, in
-order to derive a simple quantile function for the number of used lineages.
+As a first order approximation, we consider the mean number of contributing lineages. Then, we
+construct a full probability distribution of the number of lineages contributing from the parental
+generation. Finally, we propose a normal approximation, which has a simple quantile
+function. This allows us to calculate the number of required lineages for the system to be closed
+with a given measure of certainty.
 
-The upper bound \sgcomment{which upper bound?} on the number of lineages used is of particular interest - it represents the worst
-case scenario in terms of extra lineages used by selection. Since the maximum number of lineages
-will be resampled when all lineages are derived, we will usually assume $x=1$ in the following
-calculations. This also allows us to treat the lineages as exchangeable \citep{Wakeley2009}. Note
-that in section \ref{subsec:markov}, we did not assume exchangeability of lineages, which led to a
-considerably more complex formulation.
+In the following derivations, we are assuming that the derived allele is present in the parental
+sample at frequency $x$, as opposed to explicitly modeling the count of derive alleles
+\ref{sec:markov}, which considerably simplifies the calculations. If we seek the upper bound for the
+number of ``lost'' lineages, the maximal value will occur with $x=1$, since only the derived
+lineages experience selection.
 
-For a given sample size, the probability that $r$ parents have contributed is:
+\subsection{Mean number of contributing lineages}
+\label{sec:mean-contr}
+
+For a given sample size, the probability that $n_p$ parents have contributed is:
 
 \begin{align}
   \label{eq:conditional}
-  Pr(\mathcal{R}=r|n) = \sum_{\mathcal{R}}Pr(\mathcal{R}=r|\mathcal{G}=g)Pr(\mathcal{G}=g|n)
+  Pr(n_p | n) = \sum_{n_g} Pr(n_p | n_g)Pr(n_g | n)
 \end{align}
 
-Where $\mathcal{R}$ and $\mathcal{G}$ are random variables denoting the number of contributing
-parents and gametes, respectively (Fig. \ref{fig:schematic}C).
+Where $n_p$ and $n_g$ is the number of contributing parents and gametes, respectively (Fig.
+\ref{fig:schematic}C).
 
 Before deriving the distribution formally, we seek to obtain several approximate results.
 
 \subsection{Expected number of lineages used}
 \label{subsec:exp-number}
 
-First, we seek an approximate expression for the expectation of the total number of lineages used.
-This can be approximated as the sum of expectations of the number of lineages sampled under drift
-($E[\mathcal{R}]$) plus the number of lineages rejected by selection ($E[\mathcal{G}-n]$). The
-expected number of contributing lineages is then $E[\mathcal{R} + \mathcal{G} - n]$. While this is
-an imprecise approximation, as is essentially assumes that selection and drift are independent, it
-allows us to derive several closed form results. The number of parents that contribute to $n$
-gametes (drift) will be:
+As a first order approximation, we can model $E[n_p | n]$ as the sum of lineages used under drift
+$E[n_p | n]$ plus the number of extra lineages required by selection, $E[n_p - n | n]$.
 
-\begin{align}
-  \label{eq:drift-expectation}
-  \hat{E}[\mathcal{R}|n] = N(1-\left( 1 - \frac{1}{N} \right)^n)
-\end{align}
+\begin{equation*}
+  \begin{aligned}
+    \hat{E}[n_p  | n] &= \hat{E}[n_g-n | n] + \hat{E}[n_p | n] \\
+    &= N(1-\left( 1 - \frac{1}{N} \right)^n) + n\left( \frac{xs}{1-xs}\right) \\
+    &\underset{N\gg n}{\approx} \frac{nxs}{1-xs} - \frac{n^2}{2N}
+  \end{aligned}
+\end{equation*}
 
-This expression is not hard to derive intuitively \sgcomment{You rarely gain anything by pointing out that something is easy or intuitive}. First, the probability of selecting a particular
-parent is $\frac{1}{N}$, so the probability of selecting different parents for $n$ individuals is
-$(1-\frac{1}{N})^n$. Then one minus this value is the probability that the same parent was picked at
-least once by any of the $n$ individuals.
-
-For selection, we want to consider the expected number of gametes that are rejected by selection to
-form a sample size of $n$, which is the number of extra lineages used by selection. If the
-probability of rejection is $xs$, the scheme is described by the negative binomial distribution,
-where the random variable is the number of failures, given $n$ successes. The expectation of this
-parameterization of negative binomial is:
-
-\begin{align}
-  \label{eq:neg-binom-fail}
-  \hat{E}[\mathcal{G}-n|n] = n\left( \frac{xs}{1-xs}\right)
-\end{align}
-
-Then summing the expectations of the two random variables yields:
-
-\begin{align}
-  \hat{E}[\mathcal{R}] &= \hat{E}[\mathcal{G}-n|n] + \hat{E}[\mathcal{R}|n] \\
-  &= N(1-\left( 1 - \frac{1}{N} \right)^n) + n\left( \frac{xs}{1-xs}\right) \\
-  &\underset{N\gg n}{\approx} \frac{nxs}{1-xs} - \frac{n^2}{2N}
-\end{align}
-
-The second approximation is made under the assumption that the sample size is much smaller than the
-population size. We can see that the expected number of lineages sampled will be increased by
-selection as a linear term. Drift tends to decrease the number of lineages as a quadratic term with
-respect to the sample size. This is analogous to the results from the ancestral selection graph
-\citep{KroneNeuhauser1997}, eq. \eqref{eq:asg-size}, but now includes sample size directly \sgcomment{I don't understand why the sample size is included more directly. It seems like we have spent a lot of space to re-derive well-known results.}.
+The expectations can be derived directly or from the corresponding probability distributions
+\eqref{XX}.The second approximation is made under the assumption that the sample size is much
+smaller than the population size. The increase of the number of lineages due to selection is linear.
+Drift decreases the number of lineages as a quadratic term with respect to the sample size. This is
+analogous to the results from the ancestral selection graph \citep{KroneNeuhauser1997}, eq.
+\eqref{eq:asg-size}.
 
 We now want to ask when the expected number of contributing lineages is less that the sample size:
 
-\begin{align}
-  \label{eq:critical-sample}
-  \hat{E}[\mathcal{R}-\mathcal{G}-n] &< n \nonumber \\
-  \frac{nxs}{1-xs} - \frac{n^2}{2N} &< n \\
-  n &\ge \frac{2Nxs}{1-xs} \nonumber \\
-  &\approx 2Nxs
-\end{align}
+\begin{equation*}
+  \begin{align}
+    \label{eq:critical-sample}
+    \hat{E}[n_p | n] &< n \\
+    \frac{nxs}{1-xs} - \frac{n^2}{2N} &< n \\
+    n &\ge \frac{2Nxs}{1-xs} \\
+                                       &\approx 2Nxs
+  \end{align}
+\end{equation*}
 
 This gives a simple expression for the sample size where drift overcomes selection: $n \ge 2Nxs$.
 Figure \ref{fig:critical-sample-size} shows this for several selection coefficients, assuming the
-entirety of the sample is derived in a population of $N=1,000$. The $Y$ axis shows the fraction of
+entirety of the sample is derived ($x=1$) in a population of $N=1,000$. The $Y$ axis shows the fraction of
 contributing parental lineages to the sample size, $\frac{r}{n}$. Above the horizontal line
 $\frac{r}{n} > 1$, selection dominates. Below, drift reduces the number of used lineages. The
 intercept of the line with $\frac{r}{n} = 1$ is the critical sample size, which is well-approximated
-by $2Ns$ (we assume that every lineage is derives, $x=1$).
+by $2Nsx$.
 
 \begin{figure}
   \centering
@@ -440,35 +415,11 @@ by $2Ns$ (we assume that every lineage is derives, $x=1$).
   \label{fig:critical-sample-size}
 \end{figure}
 
-
-Using the same equation, we can track the expected number of used parental lineages back in time,
-which we denote as $n_{t-1}$:  \sgcomment{Why are you doing this?}
-
-\begin{align}
-  \label{eq:contributors-back}
-  n_{t-1}=\frac{n_txs}{1-xs} - \frac{n_t^2}{2N}
-\end{align}
-
-We solve this recurrence going back in time 10,000 generations, producing figure
-\ref{fig:bell-plot}. The equilibrium point is well-approximated by $2Ns$, shown as a dashed line
-here. This is the same as solving equation \ref{eq:critical-sample} explicitly. Non-withstanding of
-the starting sample size, we converge to the equilibrium relatively quickly. \sgcomment{This section was way too long. It could be summarized in two sentences.}
-
-\begin{figure}
-  \centering
-  \includegraphics[]{fig/bell-plot.pdf}
-  \caption{Expected number of contributing parental lineages back in time. Starting at a given
-    sample size, the number of contributions is tracked with align \ref{eq:contributors-back}.
-    The $Y$ axis shows time on a logarithmic scale, $X$ axis is the sample size. $N=1000$, $Ns=10$.}
-  \label{fig:bell-plot}
-\end{figure}
-
-
 \subsection{Distribution of number of contributing lineages}
 \label{subsec:distribution}
 
 We now construct a probability distribution of the number of contributing lineages one generation
-into the past.
+into the past \ref{fig:schematic}C, \eqref{eq:conditional}. 
 
 The number of parental lineages used by drift can be modelled by the modified occupancy
 (Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}. This is given by:
@@ -477,23 +428,13 @@ The number of parental lineages used by drift can be modelled by the modified oc
   \label{eq:occupancy}
   P(\mathcal{R}=r|\mathcal{G}=g) = \frac{S_2(g,r) N!}{(N-r)! N^g}
 \end{align}
+where $S_2(g,r)$ is a Stirling number of the second kind, which is the number of ways to partition
+$g$ gametes into $r$ parents (see \cite{JohnsonEtAl2005} section 10.4 for a thorough treatment).
+Note that the under drift, the number of parents will be smaller or equal to the number of gametes
+$r \le g$.
 
-\sgcomment{Don't leave a space after eq if in same sentence to avoid indent} where $S_2(g,r)$ is a Stirling number of the second kind, which is the number of ways to partition
-$g$ objects into $r$ categories ($g$ gametes produced by $r$ parents). A typical statement of the
-occupancy distribution is that we have $N$ urns and $g$ colored balls, and we want to know the
-probability that exactly $r$ of the urns will be occupied (see \cite{JohnsonEtAl2005} section 10.4
-for a thorough treatment). In our case, $N$ is the population size, urns correspond to the parents,
-colored balls to gametes. Note that the under drift, the number of parents will be smaller or equal
-to the number of gametes $r \le g$. The expectation of this distribution is given by equation
-\eqref{eq:drift-expectation}. \sgcomment{too much detail here}
-
-The occupancy distribution is not simple to evaluate, but good performance can be achieved by
-pre-computing a table of reduced occupancy numbers, using the algorithm of \cite{ONeill2019}. \sgcomment{It will not be clear to readers why you are mentioning that here.}
-
-As stated before, the number of lineages sampled under selection is described with a negative
-binomial distribution. Unlike \ref{eq:neg-binom-fail}, however, we are now looking for the total
-number of lineages sampled, not simply the number of failed trials. In this parameterization, the
-probability of the negative binomial is given by:
+The distribution of the number of gametes, $n_g$ is given by the negative binomial, parameterized by
+the total number of trials before $n$ successes:
 
 \begin{align}
   \label{eq:neg-binomial-trials}
@@ -504,10 +445,6 @@ Here, the number of gametes can be larger that the sample size $n \le g$, if sel
 ($s<0$) \sgcomment{Are you not using $s>0$?}.
 
 
-\sgcomment{This section is also too long. "The distribution of the number $g$ of gametes sampled to generate $n$ offspring under selection is a negative binomial EQN. The distribution of the number $r$ of distinct parents used to generate $g$ gametes under drift is the occupancy distibution[CITE] EQN. The chain rule gives us EQN  }
-
-\sgcomment{As is, people will get lost in the details of the descriptions, even if they could have guessed the results themselves.}
-
 Combining the two distributions together through \ref{eq:conditional}, we get:
 
 \begin{align}
@@ -515,15 +452,12 @@ Combining the two distributions together through \ref{eq:conditional}, we get:
    Pr(\mathcal{R}=r|n) = \sum_{g=1}^{\infty} \frac{S_2(g,r) N!}{(N-r)! N^g} \binom{g-1}{n-1}(1-xs)^n(xs)^{g-n}
 \end{align}
 
-Unfortunately, this distribution does not have a simple analytical form \sgcomment{How do you know?}. In certain parameter
-regimes, this can be approximated by the normal distribution \citep{JohnsonEtAl2005,ONeill2019},
-which we describe in the next section. \sgcomment{Wait until then to mention it! You are doing too much back in forth. Present equation, show the result, then talk about approximation. No need to foreshadow something that is coming in 5 lines and that no one is expecting. }
-
-Figure \ref{fig:sampling-dist} shows the distribution of the number of contributing parental
-lineages for several selection coefficients for a sample $n=20$. In the absence of selection, the
-distribution has zero probability above $n=20$, as no extra lineages can be sampled. As the strength
-of selection is increased, we begin requiring larger number of lineages. At the equilibrium point
-($Ns=10$, \eqref{eq:critical-sample}), the distribution is symmetric \sgcomment{it is not}.
+This distribution does not appear to have a simple analytical form. However, it can be computed
+efficiently using methods presented in \citep{ONeill2019}. Figure \ref{fig:sampling-dist} shows the
+distribution of the number of contributing parental lineages for several selection coefficients for
+a sample $n=20$. In the absence of selection, the distribution has zero probability above $n=20$, as
+no extra lineages can be sampled. As the strength of selection is increased, we begin requiring
+larger number of lineages.
 
 \begin{figure}
   \centering
@@ -534,12 +468,13 @@ of selection is increased, we begin requiring larger number of lineages. At the 
   \label{fig:sampling-dist}
 \end{figure}
 
-We note that \sgcomment{"We note that" adds no information} at the critical sample size, the probability that we will have a sufficient number of
-lineages is only $50\%$ \sgcomment{I don't see this}. In order to guarantee that drift will out-pace selection, we can calculate
-the cumulative distribution - Figure \ref{fig:cumulative-dist}. This shows that a sample size in
-which the majority of lineages are accounted for can be substantially larger than the critical
-sample size of equation \eqref{eq:critical-sample}. To derive a convenient expression, we turn to
-the normal approximation in the next section.
+We defined the critical sample size as $E[n_p | n] = n$. However, the distributions in \ref{fig:XX}
+show that there is a large probability that $n_p>n$ at $n_{crit}=2n=20$. In order to guarantee that
+drift will out-pace selection, we can calculate the cumulative distribution - Figure
+\ref{fig:cumulative-dist}. This shows that a sample size in which the majority of lineages are
+accounted for can be substantially larger than the critical sample size of equation
+\eqref{eq:critical-sample}. To derive a convenient analytical approximation, we turn to the normal
+approximation in the next section.
 
 \begin{figure}
   \centering
