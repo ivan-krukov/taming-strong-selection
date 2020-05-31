@@ -13,7 +13,6 @@
 \newcommand{\sgcomment}[1]{\textcolor{red}{SG: #1}}
 \newcommand{\ikcomment}[1]{\textcolor{blue}{IK: #1}}
 
-
 \journal{Theoretical Population Biology}
 
 \begin{document}
@@ -55,7 +54,10 @@ equations can be derived for moments of the allele frequency distribution
 \citep{KimuraCrow1964,Ewens1972,JouganousEtAl2017}. Recently, these recursions have been useful in
 fitting complex demographic models to genetic data \citep{JouganousEtAl2017,KammEtAl2017}.
  
-In the presence of natural selection, the corresponding recursion equations do not close \citep{Donnelly, JouganousEtAl2017} -- they form an infinite set of coupled ordinary differential equations. Closure approximations have been developed (\citep{JouganousEtAl2017}), but these are not robust to strong selection and their convergence properties are not well understood.
+In the presence of natural selection, the corresponding recursion equations do not close
+\citep{Donnelly, JouganousEtAl2017} -- they form an infinite set of coupled ordinary differential
+equations. Closure approximations have been developed (\citep{JouganousEtAl2017}), but these are not
+robust to strong selection and their convergence properties are not well understood.
 
 Closure of the moment equations under the neutral Wright-Fisher model occurs
  because the genotype of a randomly sampled set of haploid genomes at present
@@ -387,13 +389,13 @@ analogous to the results from the ancestral selection graph \citep{KroneNeuhause
 We now want to ask when the expected number of contributing lineages is less that the sample size:
 
 \begin{equation*}
-  \begin{align}
+  \begin{aligned}
     \label{eq:critical-sample}
     \hat{E}[n_p | n] &< n \\
     \frac{nxs}{1-xs} - \frac{n^2}{2N} &< n \\
     n &\ge \frac{2Nxs}{1-xs} \\
                                        &\approx 2Nxs
-  \end{align}
+  \end{aligned}
 \end{equation*}
 
 This gives a simple expression for the sample size where drift overcomes selection: $n \ge 2Nxs$.
@@ -511,8 +513,13 @@ percentiles will require larger sample sizes.
 \begin{figure}
   \centering
   \includegraphics[]{fig/quantile.pdf}
-   \caption{The quantile function of the closure of the sample \sgcomment{What is that?}. Each line corresponds to different
-     percentile of the normal approximation. Black dashed line shows the reference sample size $n=200$ \sgcomment{does it play a special role? If not why mention it (or have this line, really)?}. \sgcomment{It also seems like showing the cumulative distributions themselves would be more intuitive. E.g $\log(missing p)$. Also would be nice to have the numerical calculation. Could you get the cumulative distribution for the occupancy distribution from the Oneil algo? }}
+  \caption{The quantile function of the closure of the sample \sgcomment{What is that?}. Each line
+    corresponds to different percentile of the normal approximation. Black dashed line shows the
+    reference sample size $n=200$ \sgcomment{does it play a special role? If not why mention it (or
+      have this line, really)?}. \sgcomment{It also seems like showing the cumulative distributions
+      themselves would be more intuitive. E.g $\log(missing p)$. Also would be nice to have the
+      numerical calculation. Could you get the cumulative distribution for the occupancy
+      distribution from the Oneil algo? }}
   \label{fig:normal-approximation}
 \end{figure}
 
@@ -554,11 +561,6 @@ inference framework that can account for large sample size and strong selection.
 Further, the results here suggest that effect of weak selection may be detectable in studies with
 large sample sizes. This may open up a way for new investigations of natural selection in population
 genetics.
-
-\section{Appendix}
-
-\ikcomment{TODO}
-
 
 \bibliography{disco}
 
