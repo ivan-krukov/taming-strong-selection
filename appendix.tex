@@ -38,44 +38,7 @@ $\Dfrac{i}{n}$ & $i$ derived \emph{out of} $n$ total alleles\\
 \end{tabular}
 \end{center}
 
-\section{Background}
-
-We want to describe the behavior of $n$ biallelic loci from a Wright-Fisher model with population
-size $N$. Specifically, we seek an expression for the transition probability matrix $\mathbf{P}$ for
-the time evolution of the \emph{AFS}, $\Phi$:
-
-\begin{equation}
-  \label{eq:app:time-evolution}
-  \Phi_n^{(t)} = \mathbf{P} \Phi_n^{(t-1)}
-\end{equation}
-
-$\mathbf{P}$ is a square $n \times n$ matrix, and it enumerates the number of derived alleles ($i$) at a
-biallelic locus in a sample of size $n$. We will need to keep track of these quantities in the
-offspring ($o$), parents ($p$), and contributing ($c$) lineages for a given generation (table X).
-For example, $\Dfrac{i_p}{n_p}$ (read as ``$i_p$ out of $n_p$'') denotes a sample of size $n$ with $i$
-derived in the parental generation (at $t-1$).
-
-Instead of using the summation formulation presented in the main text \eqref{eq:ZZ}, we use
-recursive conditional probabilities, where the transitions are defined in terms of transitions in
-smaller sample sizes. Each entry of the matrix, $\mathbf{P}_{(i_o,i_p)}$ is a a transition
-probability from $i_p$ to $i_o$ derived alleles with sample sizes $n_p$ and $n_o$, respectively. The
-key observation is that to construct such probabilities, we can condition on a set of coalescent
-events, $\{\Lambda\}$:
-
-\begin{align*}
-  P\left[\Dfrac{i_o}{n_o} \cond \Dfrac{i_p}{n_p}\right] &= \sum_{\lambda\in\{\Lambda\}}P(\lambda)
-  P\left[\Dfrac{i_o}{n_o} \cond \Dfrac{i_p}{n_p},\lambda\right] \\
-  &= \sum_{\lambda\in\{\Lambda\}}P(\lambda)
-  P\left[\Dfrac{i_o-|\lambda|_{i_o}}{n_o-|\lambda|_{n_o}} \cond \Dfrac{i_p-|\lambda|_{i_p}}{n_p-|\lambda|_{n_p}}\right]
-\end{align*}
-
-Above, $|\lambda|$ denotes the size of the coalescent event. The second equation ascertains that
-conditioning on a coalescent event is equivalent to subtracting relevant lineages from a sample.
-This yields a recurrence where transition probabilities in a sample of size $n$ can be
-described recursively in terms of transition probabilities in smaller sample sizes, $n' \in [1, n-1]$.
-
 \section{Neutral case}
-
 
 We want to construct the entries in the probability matrix
 $P\left[ \Dfrac{\cdot}{n_o} \cond \Dfrac{\cdot}{n_p} \right]$ in terms transition probabilities in

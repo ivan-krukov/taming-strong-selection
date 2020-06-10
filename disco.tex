@@ -11,6 +11,13 @@
 
 \newcommand{\ra}{\rightarrow}
 \newcommand{\afs}[2]{\Phi_{#1}^{(#2)}}
+\newcommand{\Dfrac}[2]{%
+  \ooalign{%
+    $\genfrac{}{}{1.2pt}0{#1}{#2}$\cr%
+    $\color{white}\genfrac{}{}{.4pt}0{\phantom{#1}}{\phantom{#2}}$}%
+}
+\newcommand{\cond}{\middle\vert}
+
 \newcommand{\sgcomment}[1]{\textcolor{red}{SG: #1}}
 \newcommand{\ikcomment}[1]{\textcolor{blue}{IK: #1}}
 
@@ -210,43 +217,71 @@ approximate probability distributions that describe the number of contributing l
 Additionally, we derive a normal approximation that allows us to calculate the quantile function of
 the sample size for a desired degree of closure.
 
-\ikcomment{--SNIP--}
 
 \section{Results}
 \label{sec:results}
 
 \subsection{Markov process construction}
 \label{subsec:markov}
-\sgcomment{It seems like it would make the most sense to derive the transition matrices in this section (without limiting ourselves to a square matrix), and talking about the truncation approximation only in the next section. You could then have a symbol for the overall transition matrix Q, and the truncated matrix (the closure approximation)}
-We first define a recursion equation for the distribution of allele frequency in a sample of size
-$n$ from a haploid Wright-Fisher population of size $N$. Given that the sample in parental generation
-has $j$ copies of the derived allele, we seek to calculate the probability that the sample
-will contain $i$ derived copies in the following generation.
 
-\sgcomment{The following could be clarified}In the neutral case, this transition probability can be calculated if we know the transition
-probabilities in the smaller samples of size $n' \in [1, n-1]$ (similar to
-\eqref{eq:op-neutral-mult}) \citep{BhaskarEtAl2014}. We do not construct the intermediate matrices
-$\mathcal{D_i}$ of \eqref{eq:op-neutral-mult} explicitly, but instead calculate a matrix
-$P((j,n)\ra(i,n))$, giving the probabilities of transitioning from $j$ to $i$ derived alleles in
-sample of size $n$ within one generation. In brief, we can construct the transition probability
-matrix $P((j,n)\ra(i,n))$ if we know the matrix for $n-1$, $P((\cdot,n-1)\ra(\cdot,n-1))$, and then
-use the conditional probabilities for each type of an event. Starting from the base cases for a
-sample size of $1$, we build up a set of square transition probability matrices. By using a dynamic
-programming algorithm, we can achieve reasonable performance for realistic sample sizes. The full
-derivation is shown in appendix A.
+An alternative way to describe the time-evolution of the \textit{AFS} \eqref{eq:op-selection}, is to
+consider a single transition-probability matrix, $\mathbf{P}$, that describes the change due to
+drift and selection as a single term, and explicitly models derived and ancestral states:
 
-The case of selection is slightly more complicated, since now we need to consider a larger set of
-states that can lead to transition from $j$ to $i$ copies in a sample size of $n$. In particular,
-there can be a large number of gametes (fig. \ref{fig:schematic}C) that can contribute from $n$ when
-there is no selection, to a potentially infinite number under strong negative selection. In our
-calculation, we only consider up to one selective death event per lineage, so the number of
-contributing gametes is between $n$ and $2n$. \sgcomment{Perfect: you can skip discussion of the approximation in the previous section, since you just introduce it here. }
+\begin{equation}
+  \label{eq:app:time-evolution}
+  \afs{n_o}{t} = \mathbf{P} \afs{n_o}{t-1}
+\end{equation}
 
-Note that this is analogous to the outer summation boundaries in eq. \eqref{eq:op-selection}. Again,
-we do not calculate the matrix $\mathcal{S}_i$ directly, but rather construct a transition
-probability $Q((j,n)\ra(i,n))$ \sgcomment{I don't understand what Q is, here.}. We can define these transitions recursively if we know the
-transitions of $Q((\cdot,m)\ra(\cdot,n-1))$. Note that with selection we can have $m \in [1, 2n]$
-lineages contribute, whereas we only needed $n' \in [1, n-1]$ in the neutral case.
+
+\ikcomment{$n_o$ and $n$ (without subscript) are the same thing. I use $n_o$ explicitly everywhere,
+  but I can probably drop the subscript when it's clear from context.}
+
+$\mathbf{P}$ is a square $n_o \times n_o$ matrix, and it enumerates the number of derived alleles
+($i$) at a biallelic locus in a sample of size $n_o$. $\mathbf{P}$ includes contributions from
+all possible configurations of parents $n_p$, weighted by the probability of the relevant
+coalescent/selective event. We will need to keep track of sample size and number of derived alleles
+in the offspring ($o$) and parents ($p$) lineages for a given generation. For example, we use
+$\Dfrac{i_p}{n_p}$ (read as ``$i_p$ out of $n_p$'') to denote a sample of size $n$ with $i$ derived in
+the parental generation (at $t-1$).
+
+Instead of using the summation formulation presented in \eqref{eq:op-selection}, we use recursive
+conditional probabilities, where transitions are defined in terms of transitions in smaller
+sample sizes. Each entry of the matrix, $\mathbf{P}_{(i_o,i_p)}$ is a a transition probability from
+$i_p$ to $i_o$ derived alleles with sample sizes $n_p$ and $n_o$, respectively. The key observation
+is that to construct such probabilities, we can condition on a set of coalescent events
+$\{\Lambda\}$ in a smaller sample size:
+
+\begin{align*}
+  \mathbf{P}_{(i_o,i_p)} &= P\left[\Dfrac{i_o}{n_o} \cond \Dfrac{i_p}{n_p}\right] \\
+  &= \sum_{\lambda\in\{\Lambda\}}P(\lambda)
+  P\left[\Dfrac{i_o}{n_o} \cond \Dfrac{i_p}{n_p},\lambda\right] \\
+  &= \sum_{\lambda\in\{\Lambda\}}P(\lambda)
+  P\left[\Dfrac{i_o-|\lambda|_{i_o}}{n_o-|\lambda|_{n_o}} \cond \Dfrac{i_p-|\lambda|_{i_p}}{n_p-|\lambda|_{n_p}}\right]
+\end{align*}
+
+Above, $|\lambda|$ denotes the size of the coalescent event. The third equality ascertains that
+conditioning on a coalescent event is equivalent to subtracting relevant lineages from the sample.
+This yields a recurrence where transition probabilities in a sample of size $n$ can be
+described recursively in terms of transition probabilities in smaller sample sizes, $n' \in [1, n-1]$.
+
+The full derivation of $\mathbf{P}$ for neutral and $\mathbf{P}_s$ for selective cases can be found
+in the appendix. This involves enumerating all the coalescent and selective events between samples of
+different sizes. We avoid it here for brevity.
+
+Similar to \eqref{eq:op-selection}, the transition probability matrix with selection
+($\mathbf{P}_s$), involves considering a large number of intermediate lineages. In practice, we
+limit the number of selective events to at most one per lineage -- which means that the maximum number of
+contributing lineages is $2n_o$ -- one selective death for each offspring.
+
+The recursive nature of these calculations makes them relatively inefficient. Using a dynamic
+programming algorithm, we implement the construction of the neutral matrix $\mathbf{P}$ in the order
+of $O(n^3)$ operations. The selection transition probability matrix $\mathbf{P}_s$ needs $O(n^4)$
+operations, due to the need to consider intermediate lineages. The increase in complexity makes this
+approach unsuitable for large sample sizes, but we derive several approximations in the following
+sections.
+
+\ikcomment{--SNIP--}
 
 To retain the closure property under selection, the Markov process needs to take $2n$ lineages in
 the parental generation to $n$ lineages in the present. However, such rectangular transition
@@ -257,12 +292,6 @@ transitions will be unaccounted for. However, since the total sum of transition 
 to $1$, we can easily calculate the total missing probabilities. As we show in the rest of this
 work, this missing probability tends to $0$ as sample size $n$ increases.
 
-The construction of the full and truncated transition probability matrices is implemented via a
-dynamic programming approach similar to the neutral case, and is described fully in
-appendix B. Because we need to account for additional lineages in the selection case, the
-calculation time is of the order of $O(n^4)$, while it is only $O(n^3)$ for the neutral case. The
-increase in complexity makes this approach less suitable for large sample size, but we derive
-several approximations in the following sections.
 
 \subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
