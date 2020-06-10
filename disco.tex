@@ -36,7 +36,7 @@
     unlikely to increase. We use this observation to derive asymptotically closed recursion
     equations for the distribution of allele frequencies in finite samples. We show that this
     approach is accurate under strong drift and strong natural selection. We derive several
-    asymptotic results to determine the when the sample size is sufficiently large for drift to
+    asymptotic results to determine when the sample size is sufficiently large for drift to
     overcome the effect of selection.
   \end{abstract}
 
@@ -46,12 +46,12 @@
 \label{sec:introduciton}
 
 The allele frequency spectrum (\textit{AFS}) is an important summary of genetic diversity that is
-commonly used to infer demographic history and natural selection. \citep{} Given a demographic
-scenario, of population size histories and migrations, the diffusion approximation or coalescent
-simulations can be used to obtain a predicted \textit{AFS} \sgcomment{citations}. By comparing
+commonly used to infer demographic history and natural selection \citep{}. Given a demographic
+scenario of population size histories and migrations, the diffusion approximation or coalescent
+simulations can be used to obtain a predicted \textit{AFS} \citep{}. By comparing
 predictions to the observed \textit{AFS}, we can compute likelihoods for different demographic
 scenarios. Unfortunately, the \textit{AFS} calculations can be time consuming with complex
-demographic models, for example with multiple populations with large sample sizes. \citep{}
+demographic models, for example with multiple populations with large sample sizes \citep{}.
 
 In the absence of selection, efficient computational shortcuts can be used. In particular, recursion
 equations have been derived for moments of the allele frequency distribution
@@ -66,30 +66,28 @@ these are not robust to strong selection and their convergence properties are no
 
 Closure of the moment equations under the neutral Wright-Fisher model occurs because the number of
 parental lineages that contribute to the present day sample is equal to or smaller than the sample
-size. Then to describe the a sample of size $n$, we need to recursively consider samples of size
-$n'\le n$. This does not hold under negative selection -- due to selective deaths, the number of
-parental lineages $n'$ can be larger than $n$. As we demonstrate later, this leads to a potentially
-infinite number of terms in the equations.
+size. To describe the a sample of size $n$, we need to recursively consider samples of size
+$n'\le n$. The decrease in the number of contributing lineages can be framed in terms of coalescent
+events \citep{Kingman1982a}. This does not hold under negative selection -- due to selective deaths,
+the number of parental lineages $n'$ can be larger than $n$. As we demonstrate later, this leads to
+a potentially infinite number of terms in the equations. This is similar to the ancestral selection
+graphs (\textit{ASG}), \citep{KroneNeuhauser1997}, where the number of relevant lineages can
+increase back in time.
 
-This can similarly be framed in coalescent terms \citep{Kingman1982a}: the number of lineages can
-only decrease as we go back in time, because of common ancestor events. By contrast, in the
-ancestral selection graph (\textit{ASG}), \citep{KroneNeuhauser1997}, the number of relevant
-lineages can also increase as we go back in time, because of selective death events.
+The interplay of drift and selection is important to consider. In large sample sizes, there are many
+more common ancestry events than selective deaths, and the number of contributing lineages is
+unlikely to increase back in time. This suggests that large sample sizes can lead to
+almost-closed recursion equations, as we will demonstrate here.
 
-The interplay of drift and selection is important to consider. In large sample sizes, there
-are many more common ancestry events than selective deaths, and the number of relevant lineages is
-unlikely to increase as we go back in time. This suggests that large sample sizes can lead to
-almost-closed recursion equations, as we demonstrate here.
-
-An additional complication is multiple and/or simultaneous coalescent events - which emerge with
+An additional complication is multiple and/or simultaneous coalescent events -- which emerge with
 large sample sizes \citep{BhaskarEtAl2014}. The standard coalescent model only allows one event per
 generation, but we also need to consider higher-order events, \textit{e.g.} multiple two-lineage or
-three-lineage mergers. These multiple-lineage coalescent events oppose the increase of
-contributing lineages due to negative selection.
+three-lineage mergers. These multiple-lineage coalescent events oppose the effect of selection by
+rapidly decreasing the number of contributing lineages \citep{NelsonEtAl2019}.
 
-In this article we derive such almost-closed recursions in the Wright-Fisher model, and study their
-behavior and applications for modeling the distribution of allele frequencies under strong
-selection.
+In this article we derive these asymptotically-closed recursions in the Wright-Fisher model, and
+study their behavior and applications for modeling the distribution of allele frequencies under
+strong selection.
 
 %Unlike the \textit{ASG}, the present method does not need to assume an infinitely large population
 %size, and also explicitly tracks multiple coalescent events, which is important with large sample
@@ -101,12 +99,12 @@ selection.
 
 We consider a haploid Wright-Fisher model of size $N$, focusing on a single biallelic locus. For a
 present sample with $n_o$ (offspring) lineages at time $t$, we want to know how many parental
-lineages ($n_p$) have been sampled from time $t-1$ (\ref{fig:schematic}). Under a neutral coalescent
-model (\ref{fig:schematic}A), the number of contributing parental lineages at $t-1$ is
-$n_p \le n_o$, as the number of lineages decreases backward in time.
+lineages ($n_p$) have been sampled from time $t-1$ (Fig. \ref{fig:schematic}). Under a neutral
+coalescent model (Fig. \ref{fig:schematic}A), the number of contributing parental lineages at $t-1$
+is $n_p \le n_o$, as the number of lineages decreases due to coalescent events.
 
-To model the interplay of selection and drift, we consider a two-stage selection scheme
-(\ref{fig:schematic}B). First, in a neutral process, $n_p$ parents at $t-1$ produce a (potentially
+To model the interplay of selection and drift, we consider a two-stage selection scheme (Fig.
+\ref{fig:schematic}B). First, in a neutral process, $n_p$ parents at $t-1$ produce a (potentially
 infinite) number $n_g$ gametes for an intermediate $t-\frac{1}{2}$ generation. Second, the $n_g$
 gametes are sampled (with rejection) into $n_o$ offspring at $t$. The number of rejected samples
 depends on the strength of negative selection, $s<0$. With stronger negative selection, more gametes
@@ -121,7 +119,9 @@ $n_o \le n_p$.
     parental lineages $n_p$ at $t-1$ is less than or equal to $n_o$ offspring lineages at $t$.
     \textbf{B} With selection, we add an intermediate gamete $n_g$ generation at $t-\frac{1}{2}$.
     Production of gametes is neutral, so $n_p\le n_g$. Gametes are sampled with rejection into
-    offspring, so $n_o \le n_g$.}
+    offspring, so $n_o \le n_g$. Rejected samples shown with red crosses. $n_p$ - parental sample
+    size (at $t-1$), $n_g$ - number of gametes (at $t-\frac{1}{2}$), $n_o$ - offspring (current)
+    sample size (at $t$).}
 \end{figure}
 
 In the Kingman coalescent, only a single coalescent event is allowed per generation, in
@@ -138,7 +138,7 @@ using drift ($\mathcal{D}_{n' \ra n}$) and selection ($\mathcal{S}_{n' \ra n}$) 
 operators are sparse matrices that describe changes in allele frequencies in going from sample size
 $n'$ to sample size $n$ due to coalescent and selection events, respectively \citep{JouganousEtAl2017}.
 
-Under neutrality (\ref{fig:schematic}A), we have $n_p \in [1, n_o]$, therefore:
+Under neutrality (Fig. \ref{fig:schematic}A), we have $n_p \in [1, n_o]$, therefore:
 
 \begin{align}
   \label{eq:op-neutral}
@@ -148,7 +148,7 @@ Under neutrality (\ref{fig:schematic}A), we have $n_p \in [1, n_o]$, therefore:
 This equation is closed with respect to the sample size $n_o$. 
 
 To include the effect of selection, we consider first the production of gametes from the parental
-generation as a neutral process. Changing the subscripts in \ref{eq:op-neutral} to refer to
+generation as a neutral process. Changing the subscripts in \eqref{eq:op-neutral} to refer to
 \ref{fig:schematic}B, we have:
 
 \begin{align*}
@@ -169,11 +169,11 @@ Combining the two expressions above, we get:
 \end{align}
 
 Since we need to consider a potentially infinite number of gametes produced ($n_g$), the equation
-(\ref{eq:op-selection}) is no longer closed.
+\eqref{eq:op-selection} is no longer closed with respect to sample size.
 
 The number of significant terms in the outer summation depends on the strength of negative selection
 $s<0$ -- described here by $\mathcal{S}$. Stronger negative selection will result in more resampling
-(\ref{fig:schematic}). The number of significant terms in the inner summation, however, depends on
+(Fig. \ref{fig:schematic}B). The number of significant terms in the inner summation, however, depends on
 the sample size -- larger sample sizes allow for more coalescent events. Above, this is opaquely
 included in $\mathcal{D}$.
 
@@ -181,21 +181,19 @@ included in $\mathcal{D}$.
   figure.}
 
 We want to show that as the sample size increases, the number of significant terms in
-\ref{eq:op-selection} decreases due to a large number of coalescent events, and smaller number of
-selection resamplings.
+\eqref{eq:op-selection} decreases due to a large number of coalescent events.
 
 The opposing effects of drift and selection on the number of lineages can be clearly seen in the
 context of the size of the ancestral selection graph (\textit{ASG}): in which the number of lineages
-is described by a birth-death process \citep{KroneNeuhauser1997, Wakeley2009}.
+is described by continuous-time a birth-death process \citep{KroneNeuhauser1997, Wakeley2009}.
 
 \begin{align}
   \label{eq:asg-size}
   n \ra \begin{cases}
-    n+1 & \text{at rate } \sigma \frac{n}{2} & \text{ (selection) }\\
-    n-1 & \text{at rate } \frac{n(n-1)}{2}   & \text{ (coalescence) }
+    n+1 \hspace{10pt} \text{at rate } \frac{\sigma n}{2} & \text{ (selection) }\\
+    n-1 \hspace{10pt} \text{at rate } \frac{n(n-1)}{2}   & \text{ (coalescence) }
   \end{cases}
 \end{align}
-
 \ikcomment{The reason I use continuous time rates here is that the coalescent term is obviously
   quadratic in $n$. If I use discrete generations, it will be $\frac{\sigma}{\sigma+n-1}$ for
   selection, and $\frac{n-1}{\sigma+n-1}$ for neutrality, which is a little less obvious.}
@@ -211,6 +209,8 @@ that with increasing sample size, the system becomes asymptotically closed. We c
 approximate probability distributions that describe the number of contributing lineages.
 Additionally, we derive a normal approximation that allows us to calculate the quantile function of
 the sample size for a desired degree of closure.
+
+\ikcomment{--SNIP--}
 
 \section{Results}
 \label{sec:results}
