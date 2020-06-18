@@ -39,7 +39,7 @@
     equations can be derived for patterns of polymorphism. By contrast, under negative selection,
     the number of relevant lineages can increase as we go back in time, due to selective deaths. As
     a result, the equivalent recursion equations do not close. However, given a sufficiently large
-    sample size, the reduction in the number of lineages due to coalescence is larger than the
+    sample size, the expected reduction in the number of lineages due to coalescence is larger than the
     increase in the number of lineages due to selection, and the number of contributing lineages is
     unlikely to increase. We use this observation to derive asymptotically closed recursion
     equations for the distribution of allele frequencies in finite samples. We show that this
@@ -203,8 +203,8 @@ is described by continuous-time a birth-death process \citep{KroneNeuhauser1997,
 \begin{align}
   \label{eq:asg-size}
   n \ra \begin{cases}
-    n+1 \hspace{10pt} \text{at rate } \frac{\sigma n}{2} & \text{ (selection) }\\
-    n-1 \hspace{10pt} \text{at rate } \frac{n(n-1)}{2}   & \text{ (coalescence) }
+    n+1 & \text{at rate } \sigma \frac{n}{2} ~ \text{ (selection) }\\
+    n-1 & \text{at rate } \frac{n(n-1)}{2}   ~ \text{ (coalescence) }
   \end{cases}
 \end{align}
 \ikcomment{The reason I use continuous time rates here is that the coalescent term is obviously
