@@ -2,6 +2,7 @@
 
 \usepackage[]{geometry}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{tikz}
 \usepackage{graphicx}
 \usepackage{hyperref}
@@ -73,13 +74,12 @@ these are not robust to strong selection and their convergence properties are no
 
 Closure of the moment equations under the neutral Wright-Fisher model occurs because the number of
 parental lineages that contribute to the present day sample is equal to or smaller than the sample
-size. To describe the a sample of size $n$, we need to recursively consider samples of size
-$n'\le n$. The decrease in the number of contributing lineages can be framed in terms of coalescent
-events \citep{Kingman1982a}. This does not hold under negative selection -- due to selective deaths,
-the number of parental lineages $n'$ can be larger than $n$. As we demonstrate later, this leads to
-a potentially infinite number of terms in the equations. This is similar to the ancestral selection
-graphs (\textit{ASG}), \citep{KroneNeuhauser1997}, where the number of relevant lineages can
-increase back in time.
+size, due to coalescent events back in time \citep{Kingman1982a}. To describe a sample of size $n$,
+we need to recursively consider samples of size $n'\le n$. This does not hold under negative
+selection -- due to selective deaths, the number of parental lineages $n'$ can be larger than $n$.
+As we demonstrate later, this leads to a potentially infinite number of terms in the equations. This
+is similar to the ancestral selection graphs (\textit{ASG}), \citep{KroneNeuhauser1997}, where the
+number of relevant lineages can increase back in time.
 
 The interplay of drift and selection is important to consider. In large sample sizes, there are many
 more common ancestry events than selective deaths, and the number of contributing lineages is
@@ -114,7 +114,7 @@ To model the interplay of selection and drift, we consider a two-stage selection
 \ref{fig:schematic}B). First, in a neutral process, $n_p$ parents at $t-1$ produce a (potentially
 infinite) number $n_g$ gametes for an intermediate $t-\frac{1}{2}$ generation. Second, the $n_g$
 gametes are sampled (with rejection) into $n_o$ offspring at $t$. The number of rejected samples
-depends on the strength of negative selection, $s<0$. With stronger negative selection, more gametes
+depends on the strength of negative selection, $s$. With stronger negative selection, more gametes
 will be rejected, so that $n_o \le n_g$. We want to show that as $n_o$ increases, asymptotically
 $n_o \le n_p$.
 
@@ -136,7 +136,13 @@ approximation that sample size is much smaller than the population size: $n_o \l
 that under neutrality $n_p \in [n_o-1, n]$. However, \citet{BhaskarEtAl2014} show that with
 increasing sample size, higher order coalescent terms contribute more substantially. This means that
 to describe the sample of size $n_o$, we need to consider $n_p$ potentially in the range
-$n_p \in [1, n]$. 
+$n_p \in [1, n]$.
+
+The number of gametes, $n_g$ is equal to the number of parents plus the number of coalescent events,
+$n_g=n_p+n_c$. At the selection stage, the number of gametes is the number of offspring plus the
+number of rejected samplings ($n_r$) due to selective deaths: $n_g = n_o+n_r$. Thus, the number of
+contributing parental lineages is $n_p = n_o+n_r-n_c$. Thus we can see that the coalescent events
+and selective deaths are affecting the number of parents in different directions.
 
 We want to describe the time-evolution of the allele-frequency spectrum (\textit{AFS}) in a sample
 size $n_o$ at time $t$, which we denote as $\afs{n_o}{t}$. We construct this recursively in terms of
@@ -155,7 +161,7 @@ Under neutrality (Fig. \ref{fig:schematic}A), we have $n_p \in [1, n_o]$, theref
 This equation is closed with respect to the sample size $n_o$. 
 
 To include the effect of selection, we consider first the production of gametes from the parental
-generation as a neutral process. Changing the subscripts in \eqref{eq:op-neutral} to refer to
+generation as a neutral process. Changing the subscripts in \eqref{eq:op-neutral} to refer to Fig.
 \ref{fig:schematic}B, we have:
 
 \begin{align*}
@@ -179,8 +185,8 @@ Since we need to consider a potentially infinite number of gametes produced ($n_
 \eqref{eq:op-selection} is no longer closed with respect to sample size.
 
 The number of significant terms in the outer summation depends on the strength of negative selection
-$s<0$ -- described here by $\mathcal{S}$. Stronger negative selection will result in more resampling
-(Fig. \ref{fig:schematic}B). The number of significant terms in the inner summation, however, depends on
+$s$ -- incorporated here by $\mathcal{S}$. Stronger negative selection will result in more resampling
+(Fig. \ref{fig:schematic}B). The number of significant terms in the inner summation depends on
 the sample size -- larger sample sizes allow for more coalescent events. Above, this is opaquely
 included in $\mathcal{D}$.
 
@@ -296,9 +302,9 @@ work, this missing probability tends to $0$ as sample size $n$ increases.
 \subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
 
-Once the truncated matrix $Q$ is constructed, it can be used to calculate the allele frequency
-spectrum. For the infinite sites model at equilibrium, we can \sgcomment{calculate-approximate} the \sgcomment{equilibrium}\textit{AFS} $\Phi$ as a
-solution to a linear system:
+Once the truncated matrix $\mathbf{P}_s$ is constructed, it can be used to calculate the allele frequency
+spectrum. For the infinite sites model at equilibrium, we can approximate the equilibrium
+\textit{AFS} $\Phi$ as a solution to a linear system:
 
 \begin{equation}
   \label{eq:sfs-calc}
@@ -338,12 +344,12 @@ calculated \sgcomment{What does that mean?}.
 \subsection{Closure properties}
 \label{subsec:closure}
 
-To \sgcomment{show-investigate} the closure properties of $Q$, we can calculate the total
-probability that more that $n$ parental lineages contribute to the sample of a given size. By
-construction, the sum of rows of $Q$ should correspond to the total probability mass that included
+To investigate the closure properties of $\mathbf{P}_s$, we can calculate the total probability that
+more that $n$ parental lineages contribute to the sample of a given size. By construction, the sum
+of rows of $\mathbf{P}_s$ should correspond to the total probability mass that included
 configurations contribute (Fig. \ref{fig:recurrence} \sgcomment{no figure}). Thus, the probability
 that some number of configurations are unaccounted for, with $j$ derived alleles in the parental
-sample, is given by $1-\sum_{i=0}^{n}Q_{i,j}$. This probability depends on the number of derived
+sample, is given by $1-\sum_{i=0}^{n}\mathbf{P}_s(i,j)$. This probability depends on the number of derived
 alleles carried by the parental sample: the more derived alleles, the higher the likelihood of a
 selective event. Figure \ref{fig:missing} shows the probability of missing configurations in a
 sample size of $n=200$ in the worst-case scenario, with $j=200$ derived lineages.
@@ -368,17 +374,10 @@ to drift is almost always larger than the number of selection events, such that 
 closed \eqref{eq:op-selection}. We derive several approximations to the model proposed in the first
 section, in order to get a better understanding of this behavior.
 
-As a first order approximation, we consider the mean number of contributing lineages. Then, we
-construct a full probability distribution of the number of lineages contributing from the parental
-generation. Finally, we propose a normal approximation, which has a simple quantile
-function. This allows us to calculate the number of required lineages for the system to be closed
-with a given measure of certainty.
-
-In the following derivations, we are assuming that the derived allele is present in the parental
-sample at frequency $x$, as opposed to explicitly modeling the count of derive alleles
-\ref{sec:markov}, which considerably simplifies the calculations. If we seek the upper bound for the
-number of ``lost'' lineages, the maximal value will occur with $x=1$, since only the derived
-lineages experience selection.
+In the following derivations, we are assuming that the derived allele is present at frequency $x$,
+as opposed to explicitly modeling the count of derive alleles \ref{sec:markov}, which simplifies the
+calculations. When looking for the upper bound on the number of rejected lineages, we take $x=1$,
+since only derived alleles experience selection.
 
 \subsection{Mean number of contributing lineages}
 \label{sec:mean-contr}
@@ -387,54 +386,40 @@ For a given sample size, the probability that $n_p$ parents have contributed is:
 
 \begin{align}
   \label{eq:conditional}
-  Pr(n_p | n) = \sum_{n_g} Pr(n_p | n_g)Pr(n_g | n)
+  Pr(n_p | n_o) = \sum_{n_g} Pr(n_p | n_g)Pr(n_g | n_o)
 \end{align}
 
 Where $n_p$ and $n_g$ is the number of contributing parents and gametes, respectively (Fig.
-\ref{fig:schematic}C).
+\ref{fig:schematic}B).
 
-Before deriving the distribution formally, we seek to obtain several approximate results.
-
-\subsection{Expected number of lineages used}
-\label{subsec:exp-number}
-
-As a first order approximation, we can model $E[n_p | n]$ as the sum of lineages used under drift
-$E[n_p | n]$ plus the number of extra lineages required by selection, $E[n_p - n | n]$.
+As a first order approximation, we can model the expectation $E[n_p | n_o]$ as the sum of lineages
+used under drift $\tilde{E}[n_p | n_o]$ (Fig. \ref{fig:schematic}A) plus the number of extra
+lineages required by selection, $E[n_r | n_o]$.
 
 \begin{equation*}
   \begin{aligned}
-    \hat{E}[n_p  | n] &= \hat{E}[n_g-n | n] + \hat{E}[n_p | n] \\
+    \label{eq:lineages-approx}
+    \hat{E}[n_p  | n_o] &= \tilde{E}[n_p | n_o] + \hat{E}[n_r | n_o] \\
     &= N(1-\left( 1 - \frac{1}{N} \right)^n) + n\left( \frac{xs}{1-xs}\right) \\
     &\underset{N\gg n}{\approx} \frac{nxs}{1-xs} - \frac{n^2}{2N}
   \end{aligned}
 \end{equation*}
 
 The expectations can be derived directly or from the corresponding probability distributions
-\eqref{XX}.The second approximation is made under the assumption that the sample size is much
-smaller than the population size. The increase of the number of lineages due to selection is linear.
-Drift decreases the number of lineages as a quadratic term with respect to the sample size. This is
-analogous to the results from the ancestral selection graph \citep{KroneNeuhauser1997}, eq.
-\eqref{eq:asg-size}.
+\ref{subsec:distribution}.The second approximation is made under the assumption that the sample size
+is much smaller than the population size. The increase of the number of lineages due to selection is
+linear. Drift decreases the number of lineages as a quadratic term with respect to the sample size.
+This is analogous to the results from the ancestral selection graph \citep{KroneNeuhauser1997}, eq.
+\eqref{eq:asg-size}. Solving \eqref{eq:lineages-approx} for $n_o^* > \hat{E}[n_p | n_o]$ yields
+$n_o^* \gsim 2Nxs$. This represents a critical sample size, above which drift outpaces selection.
+Note again the similarity to \eqref{eq:asg-size}.
 
-We now want to ask when the expected number of contributing lineages is less that the sample size:
-
-\begin{equation*}
-  \begin{aligned}
-    \label{eq:critical-sample}
-    \hat{E}[n_p | n] &< n \\
-    \frac{nxs}{1-xs} - \frac{n^2}{2N} &< n \\
-    n &\ge \frac{2Nxs}{1-xs} \\
-                                       &\approx 2Nxs
-  \end{aligned}
-\end{equation*}
-
-This gives a simple expression for the sample size where drift overcomes selection: $n \ge 2Nxs$.
-Figure \ref{fig:critical-sample-size} shows this for several selection coefficients, assuming the
-entirety of the sample is derived ($x=1$) in a population of $N=1,000$. The $Y$ axis shows the fraction of
-contributing parental lineages to the sample size, $\frac{r}{n}$. Above the horizontal line
-$\frac{r}{n} > 1$, selection dominates. Below, drift reduces the number of used lineages. The
-intercept of the line with $\frac{r}{n} = 1$ is the critical sample size, which is well-approximated
-by $2Nsx$.
+Figure \ref{fig:critical-sample-size} shows the critical sample size for several selection
+coefficients, assuming the entirety of the sample is derived ($x=1$) in a population of $N=1,000$.
+The $Y$ axis shows the fraction of contributing parental lineages to the sample size, $\frac{r}{n}$.
+Above the horizontal line $\frac{r}{n} > 1$, selection dominates. Below, drift reduces the number of
+used lineages. The intercept of the line with $\frac{r}{n} = 1$ is the critical sample size, which
+is well-approximated by $2Nsx$.
 
 \begin{figure}
   \centering
