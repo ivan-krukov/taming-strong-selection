@@ -18,12 +18,12 @@ def get_all_handles_and_labels(fig):
     :returns: List of handles, and their labels as a tuple of lists
     :rtype: [matplotlib.Artist], [str]
     """
-    handles, labels = [], []
+    artists = {}
     for ax in fig.get_axes():
-        h, l = ax.get_legend_handles_labels()
-        handles += h
-        labels += l
-    return handles, labels
+        handles, labels = ax.get_legend_handles_labels()
+        for h, l in zip(handles, labels):
+            artists[l] = h
+    return list(artists.values()), list(artists.keys())
 
 
 def adaptable_legend_subplot(nrow=1, ncol=1, legend_side='right', ratio=10, **figure_kwargs):

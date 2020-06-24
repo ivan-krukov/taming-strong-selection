@@ -260,6 +260,7 @@ is that to construct such probabilities, we can condition on a set of coalescent
 $\{\Lambda\}$ in a smaller sample size:
 
 \begin{align*}
+  \label{eq:coal-recursion}
   \mathbf{P}_{(i_o,i_p)} &= P\left[\Dfrac{i_o}{n_o} \cond \Dfrac{i_p}{n_p}\right] \\
   &= \sum_{\lambda\in\{\Lambda\}}P(\lambda)
   P\left[\Dfrac{i_o}{n_o} \cond \Dfrac{i_p}{n_p},\lambda\right] \\
@@ -276,12 +277,19 @@ The full derivation of $\mathbf{P}$ for neutral and $\mathbf{P}_s$ for selective
 in the appendix. This involves enumerating all the coalescent and selective events between samples of
 different sizes. We avoid it here for brevity.
 
+The maximum sample size is $n=N$, the size of the entire population. We expect that in the regime
+where $n\ll N$, the calculations with the present model do not differ substantially from the
+prediction under the standard coalescent, or \citep{JouganousEtAl2017}. In the limit where
+$n \ra N$, we expect the transition probabilities in $\mathbf{P}_s$ to approach those in the full
+Wright-Fisher model (\textit{i.e.} \cite[eq. 1.58]{Ewens2004}).
+
 Similar to \eqref{eq:op-selection}, the transition probability matrix with selection
 ($\mathbf{P}_s$), involves considering a large number of intermediate lineages. In practice, we
 limit the number of selective events to at most one per lineage -- which means that the maximum
 number of contributing lineages is $2n_o$ -- one selective death for each offspring. This allows us
 to model strong selection, while limiting the number of coalescent configurations we need to
-consider when building $\mathbf{P}_s$.
+consider when building $\mathbf{P}_s$. While it should in principle be possible to include
+additional selective events, we do not pursue this here.
 
 The above restriction implies that under strong selection with large number of derived lineages $i$,
 there is a possibility that some probability is \textit{missing} from $\mathbf{P}_s$. However, since
@@ -297,7 +305,6 @@ operations, due to the need to consider intermediate lineages. The increase in c
 approach unsuitable for large sample sizes, but we derive several approximations in the following
 sections.
 
-
 \subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
 
@@ -312,31 +319,32 @@ frequency spectrum. For the infinite sites model at equilibrium, we can approxim
 
 where $\mu$ is the per-site mutation rate, and $e_1$ is the first column of the identity matrix of
 size $n$. Figure \ref{fig:strong-selection} shows the comparison of the \textit{AFS} calculated from
-Equation \eqref{eq:sfs-calc}, the diffusion approximation \cite[eq. 9.23]{Ewens2004}, and the
-calculation performed in \texttt{Moments} \citep{JouganousEtAl2017}. Panel A shows a comparison at
-$Ns=50$, with the population size ($N=2000$), which is substantially larger than the sample size
-($n=200$). There is a small deviation between the approaches at large allele frequencies. At
-stronger selection coefficients, \texttt{Moments} suffers from numerical instability, while the
-diffusion approximation performs well (not shown \sgcomment{why?}).
+Equation \eqref{eq:coal-recursion, eq:sfs-calc}, the diffusion approximation \cite[eq.
+9.23]{Ewens2004}, and the calculation performed in \texttt{Moments} \citep{JouganousEtAl2017}.
+Panels A and B show the \textit{AFS} under neutrality, C and D under strong negative selection.
+Under neutrality, all the models agree, yeilding similar \textit{AFS}. When the sample size is equal
+to the population size (Fig. \ref{fig:strong-selection}B), we also include the \textit{AFS} from the
+full Wright-Fisher model, which the other three calculations agree with.
 
-If the sample size is the same as the population size ($n=N=200$) (Fig.
-\ref{fig:strong-selection}B), the diffusion approximation and \texttt{Moments} perform poorly, while
-our approach \sgcomment{no need to make it about ourselves here} remains stable. This is expected,
-since the diffusion framework does not perform well if multiple coalescent events contribute
-\sgcomment{cite bhaskar}. Furthermore, if our sample size is the entire population, we expect
-recursion equations to be closed \sgcomment{This deserves more clarification}. To confirm this, we
-compare our result to the \textit{AFS} calculated from a whole-population haploid Wright-Fisher
-model, with $N=200$. (Fig. \ref{fig:strong-selection}B) shows that our calculation is close to the
-full Wright-Fisher model. The discrepancy between the curves is due to a difference in the way the
-selection coefficients are calculated \sgcomment{What does that mean?}.
+Figure \ref{fig:strong-selction}C shows a comparison at strong negative $Ns=50$, with the population
+size ($N=1000$), which is substantially larger than the sample size ($n=100$). There is a small
+deviation between the approaches at large allele frequencies. At stronger selection coefficients,
+\texttt{Moments} suffers from numerical instability, while the diffusion approximation performs
+well.
+
+If the sample size is the same as the population size ($n=N=100$) (Fig.
+\ref{fig:strong-selection}D), the diffusion approximation and \texttt{Moments} perform detract from
+the Wright-Fisher prediction. The approach presented here (\ref{eq:coal-recursion}) shows a better
+match to the Wright-Fisher model at small allele frequencies, but deviates later. We believe that
+the disagreement is due to the fact that we only allow at most one selective event per lineage,
+while there is no such limitation in the Wright-Fisher model.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.7\textheight]{fig/strong_selection.pdf}
-  \caption{Normalized allele frequency spectra in a sample of size $n=200$, for highly deleterious
-    alleles ($Ns=-50$). (A) shows the frequency spectrum in a sample from a large population
-    ($N=2000$), (B) in a small population ($N=200$). Both panels are truncated at $10^{-15}$, to
-    show only moderately high allele frequencies.}
+  \includegraphics[width=0.7\textheight]{fig/strong_selection_four_panel.pdf}
+  \caption{Normalized allele frequency spectra in a sample of size $n=100$, for highly deleterious
+    alleles ($Ns=50$). (A) shows the frequency spectrum in a sample from a large population
+    ($N=1000$), (B) in a small population ($N=100$).}
   \label{fig:strong-selection}
 \end{figure}
 
@@ -478,10 +486,10 @@ larger number of lineages.
 
 \begin{figure}
   \centering
-  \includegraphics[]{fig/sampling-dist.pdf}
-  \caption{The distribution of the number of parental contributing lineages one generation into the
-    past ($n=20$, $N=1000$). Shaded area shows the drift-dominated regime, where the number of
-    lineages is smaller than the sample size.}
+  \includegraphics[]{fig/distributions.pdf}
+  \caption{\textbf{A} The distribution and \textbf{B}, cumulative distribution of the number of
+    parental contributing lineages one generation into the past ($n=20$, $N=1000$). Shaded red area
+    shows the drift-dominated regime, where the number of lineages is smaller than the sample size.}
   \label{fig:sampling-dist}
 \end{figure}
 

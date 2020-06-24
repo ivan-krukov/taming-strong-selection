@@ -1,10 +1,10 @@
 import numpy as np
 from numpy.linalg import eig
 import matplotlib.pyplot as plt
-from scipy.stats import hypergeom
+from scipy.stats import hypergeom, binom
 import scipy.sparse as sr
 from numba import jit
-
+from occupancy import reduced_occupancy, dist_num_anc
 
 @jit(nopython=True)
 def Qs(io, no, ic, nc, N, s, cache):
@@ -81,6 +81,28 @@ def matrix_selection(n, N, s=0):
                 mtx[:, io] += Qs(io, n, ic, nc, N, s, cache) * p
     return mtx, cache
 
+def matrix_selection_more_contributors(n, N, s=0):
+    rocc = reduced_occupancy(N)
+    mtx = np.zeros((n + 1, n + 1))
+    # cache is (io, no, ip, nc)
+    cache = np.full((2*n+1, n+1, 2*n+1, n+1), np.nan)
+    for ip in range(0, n + 1):
+        for io in range(0, n + 1):
+            for nc in range(0, n+1):
+                for ic in range(0, nc+1):
+                    p = binom.pmf(ic, nc, ip/n)
+
+                    mtx[ip, io] += Qs(io, n, ic, nc, N, s, cache) * p
+                    
+    # for nc in range(0, n+1):
+    #     for ic in range(0, nc+1):
+    #         # p = binom.pmf(ic, nc, np.arange(0, n+1)/n)
+    #         p = hypergeom.pmf(ic, n, np.arange(0, n+1), nc)
+    #         for io in range(0, n + 1):
+    #             mtx[:, io] += Qs(io, n, ic, nc, N, s, cache) * p
+    
+    return mtx, cache
+
 
 def plot_cache(cache):
     """Plot sparse cache"""
@@ -117,5 +139,3 @@ def matrix_double_sample_selection(n, N, s=0):
                 for ic in range(0, nc+1):
                     mtx[ip, io] += Qs(io, n, ic, nc, N, s, cache) * hypergeom.pmf(ic, 2*n, ip, nc)
     return mtx, cache
-
-

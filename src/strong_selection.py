@@ -8,8 +8,9 @@ import pickle
 import numpy.linalg as la
 from scipy.special import binom as choose
 from scipy import integrate
-import seaborn as sns
+from indemmar import plot_and_legend
 from wright_fisher import wright_fisher_haploid
+
 
 @np.vectorize
 def afs_inf_sites(x, N, s=0, u=1e-8):
@@ -21,32 +22,38 @@ def afs_inf_sites(x, N, s=0, u=1e-8):
         return theta / x
     else:
         alpha = 2 * N * s
-        y = 1-x
-        return (theta / (x*y)) * ((np.exp(alpha*y) - 1) / (np.exp(alpha) - 1))
+        y = 1 - x
+        return (theta / (x * y)) * ((np.exp(alpha * y) - 1) / (np.exp(alpha) - 1))
+
 
 # binomial projection
 def projection_fun(x, i, n, N, s=0, u=1e-8):
     # this can likely be done better in log space
-    return choose(n, i) * np.power(x, i) * np.power(1-x, n-i) * afs_inf_sites(x, N, s, u)
+    return (
+        choose(n, i)
+        * np.power(x, i)
+        * np.power(1 - x, n - i)
+        * afs_inf_sites(x, N, s, u)
+    )
 
 
 def binomial_projection_full(n, N, s=0, u=1e-8):
-    integ = np.zeros(n-1)
+    integ = np.zeros(n - 1)
     for i in range(1, n):
         z = integrate.quad(projection_fun, 0, 1, args=(i, n, N, s, u))
-        integ[i-1] = z[0]
+        integ[i - 1] = z[0]
     return integ
 
 
 tmp_store = Path("data")
 
-N_range = [100, 1000]
+N_range = [1000, 100]
 n = 100
 mu = 1e-8
-z = np.zeros(n-1)
-z[0] = n * mu                   # Forward mutation
+z = np.zeros(n - 1)
+z[0] = n * mu  # Forward mutation
 # z[-1] = n * mu                  # Backward mutation
-I = np.eye(n-1)
+I = np.eye(n - 1)
 
 
 ns_range = [0, 50]
@@ -58,7 +65,7 @@ for i, N in enumerate(tqdm(N_range)):
     for j, Ns in enumerate(tqdm(ns_range)):
         mtx_pkl = tmp_store / Path(f"mtx_n_{n}_Ns_{Ns}_N_{N}.pypkl")
         if not mtx_pkl.exists():
-            M, _ = matrix_selection_more_contributors(n, N, Ns/N)
+            M, _ = matrix_selection_more_contributors(n, N, Ns / N)
             with open(mtx_pkl, "wb") as pkl:
                 pickle.dump(M, pkl)
         else:
@@ -67,55 +74,57 @@ for i, N in enumerate(tqdm(N_range)):
         mtxs[i].append(M)
 
         # solve for equilibrium
-        pi = la.solve((M[1:-1,1:-1]-I).T, -z)
+        pi = la.solve((M[1:-1, 1:-1] - I).T, -z)
         frequency_spectra[i].append(pi)
 
 
 def moments_fs(n, N, s):
-    fs = moments.LinearSystem_1D.steady_state_1D(n, gamma=N*s)
-    fs = moments.Spectrum(fs)
+    pi = moments.LinearSystem_1D.steady_state_1D(n, gamma=N * s)
+    fs = moments.Spectrum(pi)
     return fs[1:-1]
+
 
 def normalize(x):
     return np.array(x) / sum(x)
 
+
 def wright_fisher_sfs(N, s, mu=0):
     w = wright_fisher_haploid(N, s)
-    I = np.eye(N-1)
-    z = np.zeros(N-1)
+    I = np.eye(N - 1)
+    z = np.zeros(N - 1)
     z[0] = (N) * mu
-    pi = la.solve((w[1:-1,1:-1]-I).T, -z)
+    pi = la.solve((w[1:-1, 1:-1] - I).T, -z)
     return pi
 
 
-# plt.semilogy(moments_fs(n, N, -ns_range[-1]/N), label="Moments")
-fig_store = Path("fig")
+plot_letters = list("ABCD")
+with plot_and_legend(
+    fname="fig/strong_selection_four_panel.pdf",
+    legend_title="Model",
+    ncol=2,
+    nrow=2,
+    figsize=(10, 6),
+) as (fig, ax):
 
-with sns.plotting_context("paper", font_scale=1.5):
-    fig, ax = plt.subplots(ncols=2, figsize=(10, 6))
+    for i, N in enumerate(N_range):
+        for j, Ns in enumerate(ns_range):
+            s = Ns / N
+            a = ax[j][i]
+            numeric = frequency_spectra[i][j]
+            a.semilogy(normalize(numeric), label="Numeric")
 
-    N = N_range[-1]
-    s = ns_range[-1] / N
+            moments_solution = moments_fs(n, N, -s)
+            a.semilogy(normalize(moments_solution), label="Moments")
 
-    ax[0].semilogy(normalize(frequency_spectra[-1][-1]), label="Numeric")
-    ax[0].semilogy(normalize(moments_fs(n, N, -s)), label="Moments")
-    ax[0].semilogy(normalize(binomial_projection_full(n, N, s)), ls="--", label="Diffusion")
-    ax[0].set(title=f"n={n}, N={N}, Ns={ns_range[-1]}")
-    # ax[0].set(xlim=(-1,50), ylim=(1e-15, 2))
+            diffusion = binomial_projection_full(n, N, s)
+            a.semilogy(normalize(diffusion), ls="--", label="Diffusion")
 
-    N = N_range[0]
-    s = ns_range[-1] / N
+            if N == n:
+                wright_fisher = wright_fisher_sfs(N, -s, mu)
+                a.semilogy(normalize(wright_fisher), label="Wright-Fisher")
 
-    ax[1].semilogy(normalize(frequency_spectra[0][-1]), label="Numeric (this study)")
-    ax[1].semilogy(normalize(moments_fs(n, N, -s)), label="Moments")
-    
-    ax[1].semilogy(normalize(binomial_projection_full(n, N, s)), ls="--", label="Diffusion")
-    ax[1].semilogy(normalize(wright_fisher_sfs(N, -s, mu)), label="Full Wright-Fisher")
-    ax[1].set(title=f"n={n}, N={N}, Ns={ns_range[-1]}")
-
-    #ax[1].set(xlim=(-1,50), ylim=(1e-15, 2))
-    ax[1].legend(frameon=False)
-
-    fig.tight_layout()
-
-    fig.savefig(fig_store / Path("strong_selection.pdf"), dpi=300)
+            a.set(title=f"n={n}, N={N}, Ns={Ns}")
+            idx = (j * 2) + i
+            a.text(
+                -0.05, 1.05, plot_letters[idx], fontweight="bold", transform=a.transAxes
+            )
