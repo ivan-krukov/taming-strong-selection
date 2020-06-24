@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from transition_probability_selection import matrix_selection
+from transition_probability_selection import matrix_selection_more_contributors
 import moments
 from pathlib import Path
 from tqdm import tqdm
@@ -38,10 +38,10 @@ def binomial_projection_full(n, N, s=0, u=1e-8):
     return integ
 
 
-tmp_store = Path.cwd() / Path("../data")
+tmp_store = Path("data")
 
-N_range = [200, 2000]
-n = 200
+N_range = [100, 1000]
+n = 100
 mu = 1e-8
 z = np.zeros(n-1)
 z[0] = n * mu                   # Forward mutation
@@ -58,7 +58,7 @@ for i, N in enumerate(tqdm(N_range)):
     for j, Ns in enumerate(tqdm(ns_range)):
         mtx_pkl = tmp_store / Path(f"mtx_n_{n}_Ns_{Ns}_N_{N}.pypkl")
         if not mtx_pkl.exists():
-            M, _ = matrix_selection(n, N, Ns/N)
+            M, _ = matrix_selection_more_contributors(n, N, Ns/N)
             with open(mtx_pkl, "wb") as pkl:
                 pickle.dump(M, pkl)
         else:
@@ -89,7 +89,7 @@ def wright_fisher_sfs(N, s, mu=0):
 
 
 # plt.semilogy(moments_fs(n, N, -ns_range[-1]/N), label="Moments")
-fig_store = Path.cwd() / Path("../fig")
+fig_store = Path("fig")
 
 with sns.plotting_context("paper", font_scale=1.5):
     fig, ax = plt.subplots(ncols=2, figsize=(10, 6))
@@ -98,23 +98,22 @@ with sns.plotting_context("paper", font_scale=1.5):
     s = ns_range[-1] / N
 
     ax[0].semilogy(normalize(frequency_spectra[-1][-1]), label="Numeric")
-    ax[0].semilogy(normalize(moments_fs(n, N, -s)), ls="--", label="Moments")
-    ax[0].semilogy(normalize(binomial_projection_full(n, N, s)), ls=":", label="Diffusion")
+    ax[0].semilogy(normalize(moments_fs(n, N, -s)), label="Moments")
+    ax[0].semilogy(normalize(binomial_projection_full(n, N, s)), ls="--", label="Diffusion")
     ax[0].set(title=f"n={n}, N={N}, Ns={ns_range[-1]}")
-    ax[0].set(xlim=(-1,50), ylim=(1e-15, 2))
-
+    # ax[0].set(xlim=(-1,50), ylim=(1e-15, 2))
 
     N = N_range[0]
     s = ns_range[-1] / N
 
     ax[1].semilogy(normalize(frequency_spectra[0][-1]), label="Numeric (this study)")
-    ax[1].semilogy(normalize(moments_fs(n, N, -s)), ls="--", label="Moments")
+    ax[1].semilogy(normalize(moments_fs(n, N, -s)), label="Moments")
     
-    ax[1].semilogy(normalize(binomial_projection_full(n, N, s)), ls=":", label="Diffusion")
-    ax[1].semilogy(normalize(wright_fisher_sfs(N, -s, mu)), ls="--", label="Full Wright-Fisher")
+    ax[1].semilogy(normalize(binomial_projection_full(n, N, s)), ls="--", label="Diffusion")
+    ax[1].semilogy(normalize(wright_fisher_sfs(N, -s, mu)), label="Full Wright-Fisher")
     ax[1].set(title=f"n={n}, N={N}, Ns={ns_range[-1]}")
 
-    ax[1].set(xlim=(-1,50), ylim=(1e-15, 2))
+    #ax[1].set(xlim=(-1,50), ylim=(1e-15, 2))
     ax[1].legend(frameon=False)
 
     fig.tight_layout()
