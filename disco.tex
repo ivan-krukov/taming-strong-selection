@@ -398,7 +398,8 @@ For a given sample size, the probability that $n_p$ parents have contributed is:
 \end{align}
 
 Where $n_p$ and $n_g$ is the number of contributing parents and gametes, respectively (Fig.
-\ref{fig:schematic}B).
+\ref{fig:schematic}B). Note that we consider this backward in time, so $n_o$ is given, and we ask
+the probability of $n_p$ conditional on $n_o$.
 
 As a first order approximation, we can model the expectation $E[n_p | n_o]$ as the sum of lineages
 used under drift $\tilde{E}[n_p | n_o]$ (Fig. \ref{fig:schematic}A) plus the number of extra
@@ -418,23 +419,29 @@ The expectations can be derived directly or from the corresponding probability d
 is much smaller than the population size. The increase of the number of lineages due to selection is
 linear. Drift decreases the number of lineages as a quadratic term with respect to the sample size.
 This is analogous to the results from the ancestral selection graph \citep{KroneNeuhauser1997}, eq.
-\eqref{eq:asg-size}. Solving \eqref{eq:lineages-approx} for $n_o^* > \hat{E}[n_p | n_o]$ yields
-$n_o^* \ge 2Nxs$. This represents a critical sample size, above which drift outpaces selection.
+\eqref{eq:asg-size}. Solving \eqref{eq:lineages-approx} for $n_o^* > \hat{E}[n_p | n_o]$ yields:
+
+\begin{equation}
+  \label{eq:critical-sample}
+  n_o^* \ge 2Nxs
+\end{equation}
+
+This represents a critical sample size, above which drift outpaces selection.
 Note again the similarity to \eqref{eq:asg-size}.
 
 Figure \ref{fig:critical-sample-size} shows the critical sample size for several selection
 coefficients, assuming the entirety of the sample is derived ($x=1$) in a population of $N=1,000$.
-The $Y$ axis shows the fraction of contributing parental lineages to the sample size, $\frac{r}{n}$.
-Above the horizontal line $\frac{r}{n} > 1$, selection dominates. Below, drift reduces the number of
-used lineages. The intercept of the line with $\frac{r}{n} = 1$ is the critical sample size, which
-is well-approximated by $2Nsx$.
+The $Y$ axis shows the fraction of contributing parental lineages to the sample size,
+$\frac{n_p}{n_o}$. Above the horizontal line $\frac{n_p}{n_o} > 1$, selection dominates. Below,
+drift reduces the number of used lineages. The intercept of the line with $\frac{n_p}{n_o} = 1$ is
+the critical sample size, which is well-approximated by $2Nsx$.
 
 \begin{figure}
   \centering
   \includegraphics{fig/critical_sample_size.pdf}
   \caption{Critical sample size for different selection coefficients. The $Y$ axis shows the
-    fraction of parental lineages over the sample size, $\frac{r}{n}$, each line corresponds to a
-    different selection coefficient. Above $\frac{r}{n}\ge 1$, selection dominates, below -- drift.
+    fraction of parental lineages over the sample size, $\frac{n_p}{n_o}$, each line corresponds to a
+    different selection coefficient. Above $\frac{n_p}{n_o}\ge 1$, selection dominates, below -- drift.
     The critical sample size, where the expected number of parental contributing lineages is smaller
     than the sample size is well-approximated by $2Ns$.}
   \label{fig:critical-sample-size}
@@ -444,37 +451,36 @@ is well-approximated by $2Nsx$.
 \label{subsec:distribution}
 
 We now construct a probability distribution of the number of contributing lineages one generation
-into the past \ref{fig:schematic}C, \eqref{eq:conditional}. 
+into the past \ref{fig:schematic}B, \eqref{eq:conditional}. 
 
 The number of parental lineages used by drift can be modelled by the modified occupancy
 (Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}. This is given by:
 
 \begin{align}
   \label{eq:occupancy}
-  P(\mathcal{R}=r|\mathcal{G}=g) = \frac{S_2(g,r) N!}{(N-r)! N^g}
+  P(n_p|n_g) = \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}}
 \end{align}
-where $S_2(g,r)$ is a Stirling number of the second kind, which is the number of ways to partition
-$g$ gametes into $r$ parents (see \cite{JohnsonEtAl2005} section 10.4 for a thorough treatment).
+where $S_2(n_g,n_p)$ is a Stirling number of the second kind, which is the number of ways to partition
+$n_g$ gametes into $n_p$ parents (see \cite{JohnsonEtAl2005} section 10.4 for a thorough treatment).
 Note that the under drift, the number of parents will be smaller or equal to the number of gametes
-$r \le g$.
+$n_p \le n_g$.
 
 The distribution of the number of gametes, $n_g$ is given by the negative binomial, parameterized by
-the total number of trials before $n$ successes:
+probability of resample $s$, and the total number of trials before $n_o$ successes (\textit{i.e.}
+$n_r+n_o$):
 
 \begin{align}
   \label{eq:neg-binomial-trials}
-  P(\mathcal{G}=g|n) = \binom{g-1}{n-1}(1-xs)^n(xs)^{g-n}
+  P(n_g|n_o) = \binom{n_g-1}{n_o-1}(1-xs)^{n_o}(xs)^{n_g-n_o}
 \end{align}
 
-Here, the number of gametes can be larger that the sample size $n \le g$, if selection is present
-($s<0$) \sgcomment{Are you not using $s>0$?}.
-
+Here, the number of gametes can be larger that the sample size $n_o \le n_g$, if selection is present.
 
 Combining the two distributions together through \ref{eq:conditional}, we get:
 
 \begin{align}
   \label{eq:lineages-in-past}
-   Pr(\mathcal{R}=r|n) = \sum_{g=1}^{\infty} \frac{S_2(g,r) N!}{(N-r)! N^g} \binom{g-1}{n-1}(1-xs)^n(xs)^{g-n}
+   Pr(n_p|n_o) = \sum_{n_g=1}^{\infty} \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}} \binom{n_g-1}{n_o-1}(1-xs)^{n_o}(xs)^{n_g-n_o}
 \end{align}
 
 This distribution does not appear to have a simple analytical form. However, it can be computed
@@ -486,31 +492,34 @@ larger number of lineages.
 
 \begin{figure}
   \centering
-  \includegraphics[]{fig/distributions.pdf}
+  \includegraphics[width=\textwidth]{fig/distributions.pdf}
   \caption{\textbf{A} The distribution and \textbf{B}, cumulative distribution of the number of
     parental contributing lineages one generation into the past ($n=20$, $N=1000$). Shaded red area
     shows the drift-dominated regime, where the number of lineages is smaller than the sample size.}
   \label{fig:sampling-dist}
 \end{figure}
 
-We defined the critical sample size as $E[n_p | n] = n$. However, the distributions in \ref{fig:XX}
-show that there is a large probability that $n_p>n$ at $n_{crit}=2n=20$. In order to guarantee that
-drift will out-pace selection, we can calculate the cumulative distribution - Figure
-\ref{fig:cumulative-dist}. This shows that a sample size in which the majority of lineages are
-accounted for can be substantially larger than the critical sample size of equation
-\eqref{eq:critical-sample}. To derive a convenient analytical approximation, we turn to the normal
-approximation in the next section.
-
+We defined the critical sample size as $n_o^* > E[n_p | n_o]$. However, the distributions in
+\ref{fig:sampling-dist} show that there is a large probability that $n_p>n_o$ at $n_o^*=2n=20$. In
+order to guarantee that drift will out-pace selection, we can calculate the cumulative distribution.
+This implies that a sample size in which the \textit{majority} of lineages are accounted for can be
+substantially larger than the critical sample size of equation \eqref{eq:critical-sample}. To derive
+a convenient analytical approximation, we turn to the normal approximation in the next section.
 
 \subsection{Normal approximation}
 
-Finally, we can construct a normal approximation to the distribution of the number of contributing
-lineages. The occupancy distribution is approximated by the normal \citep{ONeill2019} when $n \ll N$.
-Likewise, the number of failures (eq. \eqref{eq:neg-binom-fail}) before a given number of successes,
-can be approximated by the normal distribution. In the case of large population size, as required by
-the approximation of the occupancy by the normal, we can approximate the total number of
-contributing lineages as the sum of lineages contributed by the two distributions \sgcomment{What does that mean? Why do you need an approximation? Were you not computing a bound?}. The random
-variable which is a sum of two normally-distributed random variables is also normal, with
+We can construct a normal approximation to the distribution of the number of contributing lineages.
+This approximation will allow us to calculate sample size where, for example, the number of
+contributing lineages is smaller that the sample size $95\%$ of the time, instead of $50\%$, as
+given by $n_o^*$ in equation \eqref{eq:critical-sample}.
+
+The occupancy distribution is approximated by the normal \citep{ONeill2019} when $n_o \ll N$.
+Likewise, the number of failures ($n_r$) before a given number of successes, can be approximated by
+the normal distribution. In the case of large population size, as required by the approximation of
+the occupancy by the normal, we can approximate the total number of contributing lineages as the sum
+of lineages contributed by the two distributions.
+
+The random variable which is a sum of two normally-distributed random variables is also normal, with
 $\mu=\mu_1+\mu_2$ and $\sigma^2 = \sigma^2_1 + \sigma^2_2$. By combining the required expectations
 and variance, we find that the normal approximation then has the form:
 
@@ -520,20 +529,20 @@ and variance, we find that the normal approximation then has the form:
   \sigma &= \sqrt{N \left((N-1) \left(1-\frac{2}{N}\right)^n+\left(1-\frac{1}{N}\right)^n-N\left(1-\frac{1}{N}\right)^{2 n}\right)+\frac{n s}{(1-s)^2}})
 \end{align}
 
-\sgcomment{Tell people N to make self contained} Figure \ref{fig:normal-approximation} shows the quantiles of the normal approximation. We see that
+Figure \ref{fig:normal-approximation} shows the quantiles of the normal approximation. We see that
 up to $99\%$ of the lineages will be contained within the sample of 200 with $Ns=20$. Larger
 percentiles will require larger sample sizes.
 
 \begin{figure}
   \centering
   \includegraphics[]{fig/quantile.pdf}
-  \caption{The quantile function of the closure of the sample \sgcomment{What is that?}. Each line
-    corresponds to different percentile of the normal approximation. Black dashed line shows the
-    reference sample size $n=200$ \sgcomment{does it play a special role? If not why mention it (or
-      have this line, really)?}. \sgcomment{It also seems like showing the cumulative distributions
-      themselves would be more intuitive. E.g $\log(missing p)$. Also would be nice to have the
-      numerical calculation. Could you get the cumulative distribution for the occupancy
-      distribution from the Oneil algo? }}
+  \caption{\ikcomment{TODO: need to resolve this still} The quantile function of the closure of the
+    sample \eqref{eq:normal-approximation}. Each line corresponds to different percentile of the
+    normal approximation. Black dashed line shows the reference sample size $n_o^*=200$
+    \sgcomment{does it play a special role? If not why mention it (or have this line, really)?}.
+    \sgcomment{It also seems like showing the cumulative distributions themselves would be more
+      intuitive. E.g $\log(missing p)$. Also would be nice to have the numerical calculation. Could
+      you get the cumulative distribution for the occupancy distribution from the Oneil algorithm? }}
   \label{fig:normal-approximation}
 \end{figure}
 
@@ -551,7 +560,7 @@ whole population ($n \ll N$), so it is unlikely that more than one coalescent ev
 generation. However, recent work \citep{BhaskarEtAl2014,NelsonEtAl2019} pointed out that this
 assumption is unreasonable with sample sizes pertinent to modern experiments. As a results, models
 that consider multiple coalescent events per generation are gaining increased relevance in the
-field \citep{FlemmingtonVoitCoalescentPapers}.
+field \citep{FlemmingtonVoit}.
 
 In this work we show that increasing the sample size has another unexpected consequence. As sample
 size increases, the larger number of lineages needed due to selection can be masked by coalescent
@@ -559,7 +568,7 @@ events. In this sense, the large sample size rescues the model from effect of se
 that recursion equations needed to calculate sample properties are asymptotically closed with large
 population size.
 
-At first approximation, $2Nsx$ is a critical sample size, where the decrease of lineages due to
+At first approximation, $n_o^*=2Nsx$ is a critical sample size, where the decrease of lineages due to
 coalescent back in time out-competes the increase due to selection (eq. \eqref{eq:critical-sample}).
 Further, we derive the full probability distribution for the number lineages needed with given
 selection coefficient and sample size (eq. \eqref{eq:lineages-in-past}). Unfortunately, the
