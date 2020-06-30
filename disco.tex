@@ -274,6 +274,7 @@ Our goal is to obtain an explicit recursion from equation \eqref{eq:recur} and s
 \subsection{Markov process construction}
 \label{subsec:markov}
 
+\sgcomment{explain why we need a Markov process construction}
 An alternative way to describe the time-evolution of the \textit{AFS} \eqref{eq:op-selection}, is to
 consider a single transition-probability matrix, $\mathbf{P}$, that describes the change due to
 drift and selection as a single term, and explicitly models derived and ancestral states:
@@ -282,7 +283,7 @@ drift and selection as a single term, and explicitly models derived and ancestra
   \label{eq:app:time-evolution}
   \afs{n_o}{t} = \mathbf{P} \afs{n_o}{t-1}
 \end{equation}
-
+\sgcomment{why is this closed? Should the RHS be $n_p?$}
 
 \ikcomment{$n_o$ and $n$ (without subscript) are the same thing. I use $n_o$ explicitly everywhere,
   but I can probably drop the subscript when it's clear from context.}
