@@ -104,18 +104,20 @@ strong selection.
 \label{sec:background}
 
 We consider a haploid Wright-Fisher model of size $N$, focusing on a single biallelic locus. For a
-present sample with $n_o$ (offspring) lineages at time $t$, we want to know how many parental
-lineages ($n_p$) have been sampled from time $t-1$ (Fig. \ref{fig:schematic}). Under a neutral
-coalescent model (Fig. \ref{fig:schematic}A), the number of contributing parental lineages at $t-1$
-is $n_p \le n_o$, as the number of lineages decreases due to coalescent events.
+present sample with $n_o$ offspring lineages at time $t$, we are interested in the number $n_p$ of parental
+lineages that have been sampled from time $t-1$ (Fig. \ref{fig:schematic}). 
 
-To model the interplay of selection and drift, we consider a two-stage selection scheme (Fig.
-\ref{fig:schematic}B). First, in a neutral process, $n_p$ parents at $t-1$ produce a (potentially
-infinite) number $n_g$ gametes for an intermediate $t-\frac{1}{2}$ generation, $n_p \le n_g$. Second, the $n_g$
-gametes are sampled (with rejection) into $n_o$ offspring at time $t$. The number of rejected samples
-depends on the strength of negative selection, $s$. With stronger negative selection, more gametes
-will be rejected, so that $n_o \le n_g$. We want to show that as $n_o$ increases, asymptotically
-$n_o \le n_p$.
+Under a neutral coalescent model and in the large population and small sample size limit, at most one coalescence event 
+can occur per generation. $n_p = n_o-1$ with probability  $p_coal \simeq \frac{{n_o \choose 2}}{2N}$, and  $n_p = n_o$ otherwise. 
+If multiple coalescent events cannot be neglected (Fig. \ref{fig:schematic}A), the distribution $P(n_p|n_o)$ does not have a simple analytical form (e.g., \citet{BhaskarEtAl2014}).
+
+Selection further complicates this distribution. To model selection, we imagine that all parents generate 
+a large number of gametes, and that offspring pick gametes at random. Draws from the deleterious allele are 
+rejected with probability $s$, triggering a re-draw (Fig.\ref{fig:schematic}B). This leads to a $1:1-s$ advantage 
+in favour of the advantageous allele, and makes explicit the number of lineages that need to be drawn to 
+generate a sample of size $n_o$.  
+In particular, the number of rejected samples depends on the strength of negative selection, $s$. 
+With stronger negative selection, more gametes will be rejected, so that $n_o \le n_g$. 
 
 \begin{figure}[ht]
   \centering
@@ -130,76 +132,112 @@ $n_o \le n_p$.
     sample size (at $t$).}
 \end{figure}
 
-In the Kingman coalescent, only a single coalescent event is allowed per generation, in
-approximation that sample size is much smaller than the population size: $n_o \ll N$. This implies
-that under neutrality $n_p \in [n_o-1, n]$. However, \citet{BhaskarEtAl2014} show that with
-increasing sample size, higher order coalescent terms contribute more substantially. This means that
-to describe the sample of size $n_o$, we need to consider $n_p$ potentially in the range
-$n_p \in [1, n]$.
+%In the Kingman coalescent, only a single coalescent event is allowed per generation, in
+%approximation that sample size is much smaller than the population size: $n_o \ll N$. This implies
+%that under neutrality $n_p \in [n_o-1, n]$. However, \citet{BhaskarEtAl2014} show that with
+%increasing sample size, higher order coalescent terms contribute more substantially. This means that
+%to describe the sample of size $n_o$, we need to consider $n_p$ potentially in the range
+%$n_p \in [1, n]$.
 
-The number of gametes, $n_g$ is equal to the number of parents plus the number of coalescent events,
-$n_g=n_p+n_c$. At the selection stage, the number of gametes is the number of offspring plus the
-number of rejected samplings ($n_r$) due to selective deaths: $n_g = n_o+n_r$. Thus, the number of
-contributing parental lineages is $n_p = n_o+n_r-n_c$. Thus we can see that the coalescent events
-and selective deaths are affecting the number of parents in opposite directions.
+In this selection model, $n_p = n_o+n_r-n_c$, with $n_r$ the number of rejections and $n_c$ the 
+number of coalescences. Thus $n_p$ can be smaller than $n_o$ (if there is more drift than selection), or larger 
+(if there is more selection than drift). 
 
-We want to describe the time-evolution of the allele-frequency spectrum (\textit{AFS}) in a sample
-size $n_o$ at time $t$, which we denote as $\afs{n_o}{t}$. We construct this recursively in terms of
-smaller sample sizes, $n'$. In this section, we follow the exposition in \citet{JouganousEtAl2017},
-using drift ($\mathcal{D}_{n' \ra n}$) and selection ($\mathcal{S}_{n' \ra n}$) operators. These
-operators are sparse matrices that describe changes in allele frequencies in going from sample size
-$n'$ to sample size $n$ due to coalescent and selection events, respectively \citep{JouganousEtAl2017}.
+ Jouganous et al \cite{} have derived recursion equations for the allele frequency spectrum  (\textit{AFS})
+ under the neutral model and in a sample of size $n_o$, taking advantage of the fact that $n_p\leq n_o$ in that case. 
+Jouganous et al also derived recursion equations under selection, but these required 
+uncontrolled approximations to allow for the fact that the number of parents can be larger than 
+the number of offspring. 
+Our goal is to generalize these results by being more careful about tracking lineages `lost' to drift and those `gained' to selection
+in the strong selection and large sample size limit.  
 
-Under neutrality (Fig. \ref{fig:schematic}A), we have $n_p \in [1, n_o]$, therefore:
+To estimate the allele-frequency spectrum $\afs{n_o}{t}$  in a sample size $n_o$ at time $t$, 
+we only need information about the allelic state of the $n_p$ drawn lineages, which itself 
+is determined by $\afs{n_p}{t-1}.$ However, $n_p$ is a random variable, as is the number $j$ of derived alleles among them,
+so we need to sum over its possible values:
 
-\begin{align}
-  \label{eq:op-neutral}
-  \afs{n_o}{t} = \sum_{n_p=1}^{n_o}\mathcal{D}_{n_p\ra n_o} \afs{n_p}{t-1}
-\end{align}
+ $$\afs{n_o}{t}(i)=\sum_{n_p,j} P(i,j,n_p) =  \sum_{n_p,j} P(i | j,n_p) P(j,n_p) $$
 
-This equation is closed with respect to the sample size $n_o$. 
+The latter probability can be expressed in terms of the AFS by noticing that $ P(j,n_p) = P(n_p | r(j,n_p) ) \afs{n_p}{t},$ where $r(j,n_p)$ is the event that $j$ out of the first $n$ sampled alleles in the population are derived. In other words, the probability that we draw exactly $n_p$ parental alleles, of which $j$ are derived, is equal to the probability that a random subset of $n_p$ alleles drawn from the ancestral population contains $j$ derived alleles, times the probability that we draw exactly $n_p$ parental samples in that case. We emphasize the distinction between $j$ (the event of drawing $j$ parental derived alleles drawn in the Wright-Fisher sampling process of the first $n_o$ offspring), and $r(j,n)$ (the event of drawing of $j$ parental derived alleles in a hypergeometric sample of $n_p$ parents from the entire population). 
 
-To include the effect of selection, we consider first the production of gametes from the parental
-generation as a neutral process. Changing the subscripts in \eqref{eq:op-neutral} to refer to Fig.
-\ref{fig:schematic}B, we have:
+Thus we can write
+ 
+ \begin{equation}
+\label{eq:recur}
+ \afs{n_o}{t}(i)=\sum_{n_p,j} P(i,j,n_p) =  \sum_{n_p,j} P(i | j,n_p) P(n_p | d(j,n_p) ) \afs{n_p}{t}(j).
+\end{equation}
+Under neutral evolution, $n_p\leq n_0$ and \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$
+Under selection, $n_p$ can be larger than $n_o$, leading to an infinite set of coupled equations. 
 
-\begin{align*}
-  \afs{n_g}{t-\frac{1}{2}} = \sum_{n_p=1}^{n_g}\mathcal{D}_{n_p\ra n_g} \afs{n_p}{t-1}
-\end{align*}
-
-Then, the produced gametes are sampled with rejection into $n_o$ offspring:
-
-\begin{align*}
-  \afs{n_o}{t} = \sum_{n_g=n_o}^{\infty}\mathcal{S}_{n_g\ra n_o} \afs{n_g}{t-\frac{1}{2}}
-\end{align*}
-
-Combining the two expressions above, we get:
-
-\begin{align}
-  \label{eq:op-selection}
-  \afs{n_o}{t} = \sum_{n_g=n_o}^{\infty} \sum_{n_p=1}^{n_g} \mathcal{S}_{n_g\ra n_o}  \mathcal{D}_{n_p\ra n_g} \afs{n_p}{t-1}
-\end{align}
-
-Since we need to consider a potentially infinite number of gametes produced ($n_g$), the equation
-\eqref{eq:op-selection} is no longer closed with respect to sample size.
-
-Using $n_g=n_o+n_r=n_p+n_c$, we can re-write the above as:
-
-\begin{align}
-  \label{eq:op-selection}
-  \afs{n_o}{t} = \sum_{n_r=0}^{\infty} \sum_{n_c=0}^{n_o+n_r-1} \mathcal{S}_{(n_o+n_r) \ra n_o} \mathcal{D}_{(n_o+n_r-n_c)\ra (n_o+n_r)} \afs{n_o+n_r-n_c}{t-1}
-\end{align}
-
-This shows that the allele frequency spectrum in a sample size $n_o$ at present is a function of the
-AFS in the previous generation, with the sample size $n_o+n_r-n_c$.
-
-\ikcomment{I don't like this explanation, since I feel that the equation doesn't add much to the
-  figure.}
+This open set of equation can be closed, approximately, using jackknife extrapolation \cite{graveljackknife}. 
+In Jouganous et al, such a closure approximation was used every time a selection event occurred. 
+Equation \eqref{eq:recur} shows that such an approximation is only required when $n_p > n_o$ or,  
+equivalently, when  $n_s - n_d > 0.$
 
 
-The opposing effects of drift and selection on the number of lineages can be clearly seen in the
-context of the size of the ancestral selection graph (\textit{ASG}): in which the number of lineages
-is described by continuous-time a birth-death process \citep{KroneNeuhauser1997, Wakeley2009}.
+ 
+ 
+%   
+%
+%
+%
+%
+%
+%Under neutrality (Fig. \ref{fig:schematic}A), we have $n_p \in [1, n_o]$, therefore:
+%
+%\begin{align}
+%  \label{eq:op-neutral}
+%  \afs{n_o}{t} = \sum_{n_p=1}^{n_o}\mathcal{D}_{n_p\ra n_o} \afs{n_p}{t-1}
+%\end{align}
+%
+%where $\mathcal{D}_{n_p\ra n_o}$ is a sparse matrix whose $i,j$th entry represents the 
+%probability that... 
+%
+%
+%
+%
+%This equation is closed with respect to the sample size $n_o$. 
+%
+%To include the effect of selection, we consider first the production of gametes from the parental
+%generation as a neutral process. Changing the subscripts in \eqref{eq:op-neutral} to refer to Fig.
+%\ref{fig:schematic}B, we have:
+%
+%\begin{align*}
+%  \afs{n_g}{t-\frac{1}{2}} = \sum_{n_p=1}^{n_g}\mathcal{D}_{n_p\ra n_g} \afs{n_p}{t-1}
+%\end{align*}
+%
+%Then, the produced gametes are sampled with rejection into $n_o$ offspring: \sgcomment{I don't understand how you get the next expression, logically}
+%
+%\begin{align*}
+%  \afs{n_o}{t} = \sum_{n_g=n_o}^{\infty}\mathcal{S}_{n_g\ra n_o} \afs{n_g}{t-\frac{1}{2}}
+%\end{align*}
+%
+%Combining the two expressions above, we get:
+%
+%\begin{align}
+%  \label{eq:op-selection}
+%  \afs{n_o}{t} = \sum_{n_g=n_o}^{\infty} \sum_{n_p=1}^{n_g} \mathcal{S}_{n_g\ra n_o}  \mathcal{D}_{n_p\ra n_g} \afs{n_p}{t-1}
+%\end{align}
+%
+%Since we need to consider a potentially infinite number of gametes produced ($n_g$), the equation
+%\eqref{eq:op-selection} is no longer closed with respect to sample size.
+%
+%Using $n_g=n_o+n_r=n_p+n_c$, we can re-write the above as:
+%
+%\begin{align}
+%  \label{eq:op-selection}
+%  \afs{n_o}{t} = \sum_{n_r=0}^{\infty} \sum_{n_c=0}^{n_o+n_r-1} \mathcal{S}_{(n_o+n_r) \ra n_o} \mathcal{D}_{(n_o+n_r-n_c)\ra (n_o+n_r)} \afs{n_o+n_r-n_c}{t-1}
+%\end{align}
+%
+%This shows that the allele frequency spectrum in a sample size $n_o$ at present is a function of the
+%AFS in the previous generation, with the sample size $n_o+n_r-n_c$.
+%
+%\ikcomment{I don't like this explanation, since I feel that the equation doesn't add much to the
+%  figure.}
+%
+
+The relative effects of drift and selection on the number of relevant lineages is familiar from coalescent theory,
+where the number of relevant lineages in the ancestral selection graph (\textit{ASG}) is described by continuous-time a birth-death process \citep{KroneNeuhauser1997, Wakeley2009} with the number of lineages growing changing as
 
 \begin{align}
   \label{eq:asg-size}
@@ -214,15 +252,20 @@ is described by continuous-time a birth-death process \citep{KroneNeuhauser1997,
 
 The coalescence term is quadratic with respect to the sample size $n$, while the selection term is
 linear. The rate of coalescence is higher than the rate of selective events if the number of
-lineages $n>2Ns+1$.
+lineages $n>2Ns+1$.If $n$ is larger than $2 N_s$, we expect the number of lineages to decrease 
+more often than it increases.   
 
-Our goal is to further investigate the interplay of selection and drift, and their effect on the
-\textit{AFS}. First, we propose a construction that allows us to calculate the \textit{AFS} under
-strong selection and large sample size, accounting for high-order coalescent terms. Second, we show
-that with increasing sample size, the system becomes asymptotically closed. We construct exact and
-approximate probability distributions that describe the number of contributing lineages.
-Additionally, we derive a normal approximation that allows us to calculate the quantile function of
-the sample size for a desired degree of closure.
+Our goal is to obtain an explicit recursion from equation \eqref{eq:recur} and show that its asymptotic
+ behavior for large $n$ allows for almost-exact solutions in the strong selection regime. 
+ To do so, we will need to account for multiple coalescent events, which will require some careful bookkeeping.
+
+%Our goal is to further investigate the interplay of selection and drift, and their effect on the
+%\textit{AFS}. First, we propose a construction that allows us to calculate the \textit{AFS} under
+%strong selection and large sample size, accounting for high-order coalescent terms. Second, we show
+%that with increasing sample size, the system becomes asymptotically closed. We construct exact and
+%approximate probability distributions that describe the number of contributing lineages.
+%Additionally, we derive a normal approximation that allows us to calculate the quantile function of
+%the sample size for a desired degree of closure.
 
 
 \section{Results}
