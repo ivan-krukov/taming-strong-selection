@@ -147,7 +147,8 @@ so we can sum over their possible values:
 
  $$\afs{n_o}{t}(i)=\sum_{n_p,j} P(i,j,n_p) =  \sum_{n_p,j} P(i | j,n_p) P(j,n_p) $$
 
-The latter probability can be expressed in terms of the AFS by noticing that $ P(j,n_p) = P(n_p | r(j,n_p) ) \afs{n_p}{t},$ where $r(j,n_p)$ is the event that $j$ out of the first $n$ sampled alleles in the population are derived. $r(j,n_p)$ follows a hypergeometric distribution and is distinct from $j$, the event of drawing $j$ parental derived alleles in the Wright-Fisher sampling process for the first $n_o$ offspring.
+The latter probability can be expressed in terms of the AFS by noticing that $ P(j,n_p) = P(n_p | r(j,n_p) ) P(r(j,n_p)) = P(n_p | r(j,n_p) )
+\afs{n_p}{t},$ \sgcomment{check if AFS is defined as probability or counts, in which case there is a scaling factor} where $r(j,n)$ is the event that $j$ out of the first $n$ sampled alleles in the population are derived. $r(j,n_p)$ follows a hypergeometric distribution and is distinct from $j$, the event of drawing $j$ parental derived alleles in the Wright-Fisher sampling process for the first $n_o$ offspring.
 In words, the probability that we draw exactly $n_p$ parental alleles, of which $j$ are derived, is equal to the probability that a random subset of $n_p$ alleles drawn from the ancestral population contains $j$ derived alleles, times the probability that we draw exactly $n_p$ parental samples in that case.
  
 
@@ -155,7 +156,7 @@ Thus we can write
  
  \begin{equation}
 \label{eq:recur}
- \afs{n_o}{t}(i)= \sum_{n_p=1}^{n_{p,max}} \sum_{j=0}^{n_p} P(i | j,n_p) P(n_p | d(j,n_p) ) \afs{n_p}{t-1}(j).
+ \afs{n_o}{t}(i)= \sum_{n_p=1}^{n_{p,max}} \sum_{j=0}^{n_p} P(i | n_p,r(j,n_p)) P(n_p | r(j,n_p) ) \afs{n_p}{t-1}(j).
 \end{equation}
 Under neutral evolution, $n_{p,max}\leq n_0$. Since we can obtain smaller AFS from larger AFS through downsampling (i.e., $\afs{n'}{t}  = P_{n',n} \afs{n}{t}$ for hypergeometric projection matrix $P(n',n)$ and $n'<n$ )  \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ 
 This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele frequencies.  
@@ -277,8 +278,16 @@ Our goal is to obtain an explicit recursion from equation \eqref{eq:recur} and s
 
 \subsection{Constructing the transition matrix}
 
+We can write Equation \eqref{eq:recur} in matrix form as \sgcomment{placeholder notation}
+ \begin{equation}
+\label{eq:recur}
+ \afs{n_o}{t} = \sum_{n_p=1}^{n_{p,max}} \mathbf{P_{n_p,n_o}} \afs{n_p}{t-1}.
+\end{equation}
 
-
+Given that a sample of $n_p$ parents from the parental population has $j$ derived alleles ,the $(i, j)^{th}$ entry of $\mathbf{P_{n_p,n_o}} $ can be interpreted as the probability Wright-Fisher sampling of $n_o$ offspring draws exactly $n_p$ parents, and that the offspring has exactly $i$ derived alleles. 
+In the multiple-coalescence and strong selection regimes, we were unable to obtain an analytical expression
+ that account for all the combinatorial ways to achieve this. However, we can obtain fairly simple recursions
+ in terms of the sample size $n_o.$
 
 
 
