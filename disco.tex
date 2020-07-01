@@ -274,8 +274,7 @@ Our goal is to obtain an explicit recursion from equation \eqref{eq:recur} and s
 %the sample size for a desired degree of closure.
 
 
-\section{Results}
-\label{sec:results}
+
 
 \subsection{Constructing the transition matrix}
 
@@ -287,61 +286,74 @@ We can write Equation \eqref{eq:recur} in matrix form as \sgcomment{placeholder 
 
 Given that a sample of $n_p$ parents from the parental population has $j$ derived alleles ,the $(i, j)^{th}$ entry of $\mathbf{P_{n_p,n_o}} $ can be interpreted as the probability Wright-Fisher sampling of $n_o$ offspring draws exactly $n_p$ parents, and that the offspring has exactly $i$ derived alleles. 
 In the multiple-coalescence and strong selection regimes, we were unable to obtain an analytical expression
- that account for all the combinatorial ways to achieve this. However, we can obtain fairly simple recursions
- in terms of the sample size $n_o.$
+ that account for all the combinatorial ways to achieve this. 
+ 
+ However, we can obtain fairly simple recursions in terms of the sample size $n_o.$ 
+ Intuitively,  $\mathbf{P_{n_p,n_o-1}}$ provides information about the first $n_o-1$ 
+ offsprings and the parental samples. 
+ We can then draw an additional offspring, and update the SFS by summing over a 
+ small number of coalescence and selection possibilities for that offspring lineage.  
+ Their derivation is somewhat tedious, and is presented in Appendix X. 
+ \sgcomment{under the assumption that $s\ll1$ but allowing for $Ns \gg 1.$}
+ 
+  \sgcomment{Perhaps include description of recursion, jackknife, and convergence?}
+ \section{Results}
+\label{sec:results}
+ 
+ 
 
 
 
 
 \subsection{Markov process construction}
 \label{subsec:markov}
-
-\sgcomment{explain why we need a Markov process construction}
-An alternative way to describe the time-evolution of the \textit{AFS} \eqref{eq:op-selection}, is to
-consider a single transition-probability matrix, $\mathbf{P}$, that describes the change due to
-drift and selection as a single term, and explicitly models derived and ancestral states:
-
-\begin{equation}
-  \label{eq:app:time-evolution}
-  \afs{n_o}{t} = \mathbf{P} \afs{n_o}{t-1}
-\end{equation}
-\sgcomment{why is this closed? Should the RHS be $n_p?$}
-
-\ikcomment{$n_o$ and $n$ (without subscript) are the same thing. I use $n_o$ explicitly everywhere,
-  but I can probably drop the subscript when it's clear from context.}
-
-$\mathbf{P}$ is a square $n_o \times n_o$ matrix, and it enumerates the number of derived alleles
-($i$) at a biallelic locus in a sample of size $n_o$. $\mathbf{P}$ includes contributions from
-all possible configurations of parents $n_p$, weighted by the probability of the relevant
-coalescent/selective event. We will need to keep track of sample size and number of derived alleles
-in the offspring ($o$) and parents ($p$) lineages for a given generation. For example, we use
-$\Dfrac{i_p}{n_p}$ (read as ``$i_p$ out of $n_p$'') to denote a sample of size $n$ with $i$ derived in
-the parental generation (at $t-1$).
-
-Instead of using the summation formulation presented in \eqref{eq:op-selection}, we use recursive
-conditional probabilities, where transitions are defined in terms of transitions in smaller
-sample sizes. Each entry of the matrix, $\mathbf{P}_{(i_o,i_p)}$ is a a transition probability from
-$i_p$ to $i_o$ derived alleles with sample sizes $n_p$ and $n_o$, respectively. The key observation
-is that to construct such probabilities, we can condition on a set of coalescent events
-$\{\Lambda\}$ in a smaller sample size:
-
-\begin{align*}
-  \label{eq:coal-recursion}
-  \mathbf{P}_{(i_o,i_p)} &= P\left[\Dfrac{i_o}{n_o} \cond \Dfrac{i_p}{n_p}\right] \\
-  &= \sum_{\lambda\in\{\Lambda\}}P(\lambda)
-  P\left[\Dfrac{i_o}{n_o} \cond \Dfrac{i_p}{n_p},\lambda\right] \\
-  &= \sum_{\lambda\in\{\Lambda\}}P(\lambda)
-  P\left[\Dfrac{i_o-|\lambda|_{i_o}}{n_o-|\lambda|_{n_o}} \cond \Dfrac{i_p-|\lambda|_{i_p}}{n_p-|\lambda|_{n_p}}\right]
-\end{align*}
-
-Above, $|\lambda|$ denotes the size of the coalescent event. The third equality ascertains that
-conditioning on a coalescent event is equivalent to subtracting relevant lineages from the sample.
-This yields a recurrence where transition probabilities in a sample of size $n$ can be
-described recursively in terms of transition probabilities in smaller sample sizes, $n' \in [1, n-1]$.
-
-The full derivation of $\mathbf{P}$ for neutral and $\mathbf{P}_s$ for selective cases can be found
-in the appendix. This involves enumerating all the coalescent and selective events between samples of
-different sizes. We avoid it here for brevity.
+%
+%\sgcomment{explain why we need a Markov process construction (do we need it?)}
+%An alternative way to describe the time-evolution of the \textit{AFS} \eqref{eq:op-selection}, is to
+%consider a single transition-probability matrix, $\mathbf{P}$, that describes the change due to
+%drift and selection as a single term, and explicitly models derived and ancestral states:
+%
+%\begin{equation}
+%  \label{eq:app:time-evolution}
+%  \afs{n_o}{t} = \mathbf{P} \afs{n_o}{t-1}
+%\end{equation}
+%\sgcomment{why is this closed? Should the RHS be $n_p?$}
+%
+%\ikcomment{$n_o$ and $n$ (without subscript) are the same thing. I use $n_o$ explicitly everywhere,
+%  but I can probably drop the subscript when it's clear from context.}
+%
+%$\mathbf{P}$ is a square $n_o \times n_o$ matrix, and it enumerates the number of derived alleles
+%($i$) at a biallelic locus in a sample of size $n_o$. $\mathbf{P}$ includes contributions from
+%all possible configurations of parents $n_p$, weighted by the probability of the relevant
+%coalescent/selective event. We will need to keep track of sample size and number of derived alleles
+%in the offspring ($o$) and parents ($p$) lineages for a given generation. For example, we use
+%$\Dfrac{i_p}{n_p}$ (read as ``$i_p$ out of $n_p$'') to denote a sample of size $n$ with $i$ derived in
+%the parental generation (at $t-1$).
+%
+%Instead of using the summation formulation presented in \eqref{eq:op-selection}, we use recursive
+%conditional probabilities, where transitions are defined in terms of transitions in smaller
+%sample sizes. Each entry of the matrix, $\mathbf{P}_{(i_o,i_p)}$ is a a transition probability from
+%$i_p$ to $i_o$ derived alleles with sample sizes $n_p$ and $n_o$, respectively. The key observation
+%is that to construct such probabilities, we can condition on a set of coalescent events
+%$\{\Lambda\}$ in a smaller sample size:
+%
+%\begin{align*}
+%  \label{eq:coal-recursion}
+%  \mathbf{P}_{(i_o,i_p)} &= P\left[\Dfrac{i_o}{n_o} \cond \Dfrac{i_p}{n_p}\right] \\
+%  &= \sum_{\lambda\in\{\Lambda\}}P(\lambda)
+%  P\left[\Dfrac{i_o}{n_o} \cond \Dfrac{i_p}{n_p},\lambda\right] \\
+%  &= \sum_{\lambda\in\{\Lambda\}}P(\lambda)
+%  P\left[\Dfrac{i_o-|\lambda|_{i_o}}{n_o-|\lambda|_{n_o}} \cond \Dfrac{i_p-|\lambda|_{i_p}}{n_p-|\lambda|_{n_p}}\right]
+%\end{align*}
+%
+%Above, $|\lambda|$ denotes the size of the coalescent event. The third equality ascertains that
+%conditioning on a coalescent event is equivalent to subtracting relevant lineages from the sample.
+%This yields a recurrence where transition probabilities in a sample of size $n$ can be
+%described recursively in terms of transition probabilities in smaller sample sizes, $n' \in [1, n-1]$.
+%
+%The full derivation of $\mathbf{P}$ for neutral and $\mathbf{P}_s$ for selective cases can be found
+%in the appendix. This involves enumerating all the coalescent and selective events between samples of
+%different sizes. We avoid it here for brevity.
 
 The maximum sample size is $n=N$, the size of the entire population. We expect that in the regime
 where $n\ll N$, the calculations with the present model do not differ substantially from the
@@ -374,15 +386,14 @@ sections.
 \subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
 
-Once truncated matrix $\mathbf{P}_s$ is constructed, it can be used to calculate the allele
-frequency spectrum. For the infinite sites model at equilibrium, we can approximate the equilibrium
+Once the truncated matrix $\mathbf{P}_s$ is constructed, it can be used to calculate the allele
+frequency spectrum. For example, in the infinite sites model at equilibrium, we can approximate the equilibrium
 \textit{AFS} $\Phi$ as a solution to a linear system:
 
 \begin{equation}
   \label{eq:sfs-calc}
   \Phi = \Phi Q + n \mu e_1
 \end{equation}
-
 where $\mu$ is the per-site mutation rate, and $e_1$ is the first column of the identity matrix of
 size $n$. Figure \ref{fig:strong-selection} shows the comparison of the \textit{AFS} calculated from
 Equation \eqref{eq:coal-recursion, eq:sfs-calc}, the diffusion approximation \cite[eq.
@@ -392,14 +403,14 @@ Under neutrality, all the models agree, yeilding similar \textit{AFS}. When the 
 to the population size (Fig. \ref{fig:strong-selection}B), we also include the \textit{AFS} from the
 full Wright-Fisher model, which the other three calculations agree with.
 
-Figure \ref{fig:strong-selction}C shows a comparison at strong negative $Ns=50$, with the population
+Figure \ref{fig:strong-selection}C shows a comparison at strong negative $Ns=50$, with the population
 size ($N=1000$), which is substantially larger than the sample size ($n=100$). There is a small
 deviation between the approaches at large allele frequencies. At stronger selection coefficients,
 \texttt{Moments} suffers from numerical instability, while the diffusion approximation performs
 well.
 
 If the sample size is the same as the population size ($n=N=100$) (Fig.
-\ref{fig:strong-selection}D), the diffusion approximation and \texttt{Moments} perform detract from
+\ref{fig:strong-selection}D), the diffusion approximation and \texttt{Moments} perform detract \sgcomment{departs?} from
 the Wright-Fisher prediction. The approach presented here (\ref{eq:coal-recursion}) shows a better
 match to the Wright-Fisher model at small allele frequencies, but deviates later. We believe that
 the disagreement is due to the fact that we only allow at most one selective event per lineage,
@@ -410,8 +421,11 @@ while there is no such limitation in the Wright-Fisher model.
   \includegraphics[width=0.7\textheight]{fig/strong_selection_four_panel.pdf}
   \caption{Normalized allele frequency spectra in a sample of size $n=100$, for highly deleterious
     alleles ($Ns=50$). (A) shows the frequency spectrum in a sample from a large population
-    ($N=1000$), (B) in a small population ($N=100$).}
-  \label{fig:strong-selection}
+    ($N=1000$), (B) in a small population ($N=100$). \sgcomment{The caption does not correspond to the figure.
+    what is going on with the stripes? Presumably some log artefact? Maybe clarify that "numeric" is this work. Since the genome is only $3\times10^9 bases$, it would make sense to cutoff at $10^-9$. Would also highlight differences better. Axis labels missing. PErhaps put the x label in proportions, and cut off for strong selection?}
+    \label{fig:strong-selection}
+   }
+ 
 \end{figure}
 
 
@@ -419,7 +433,13 @@ while there is no such limitation in the Wright-Fisher model.
 \label{subsec:closure}
 
 To investigate the closure properties of $\mathbf{P}_s$, we can calculate the total probability that
-more that $n$ parental lineages contribute to the sample of a given size. By construction, the sum
+more that $n_o$ parental lineages contribute to a sample of size $n_o$. \sgcomment{I'm not sure
+ I understand what you describe below. My take:}
+Since $P_{n_o,n_p}(i,j)$ is a probability distribution over $n_p$ and $i$, we can easily compute the truncated probability as
+ $1-\sum_{i=0}^{n_o} \sum{n_p=0}^{n_o}{P_{n_o,n_p}(i,j)}$. 
+
+
+By construction, the sum
 of rows of $\mathbf{P}_s$ should correspond to the total probability mass that included
 configurations contribute (Fig. \ref{fig:rec-selection}). Thus, the probability that some number of
 configurations are unaccounted for, with $j$ derived alleles in the parental sample, is given by
