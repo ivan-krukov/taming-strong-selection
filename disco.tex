@@ -104,20 +104,16 @@ strong selection.
 \label{sec:background}
 
 We consider a haploid Wright-Fisher model of size $N$, focusing on a single biallelic locus. For a
-present sample with $n_o$ offspring lineages at time $t$, we are interested in the number $n_p$ of parental
-lineages that have been sampled from time $t-1$ (Fig. \ref{fig:schematic}). 
+present sample with $n_o$ offspring lineages at time $t$, we will be looking for recursion equations
+for the allele frequency distribution by considering the sampling process for a finite sample under drift 
+and selection.   
 
-Under a neutral coalescent model and in the large population and small sample size limit, at most one coalescence event 
-can occur per generation. $n_p = n_o-1$ with probability  $p_coal \simeq \frac{{n_o \choose 2}}{2N}$, and  $n_p = n_o$ otherwise. 
-If multiple coalescent events cannot be neglected (Fig. \ref{fig:schematic}A), the distribution $P(n_p|n_o)$ does not have a simple analytical form (e.g., \citet{BhaskarEtAl2014}).
-
-Selection further complicates this distribution. To model selection, we imagine that all parents generate 
+To model selection, we imagine that all parents generate 
 a large number of gametes, and that offspring pick gametes at random. Draws from the deleterious allele are 
 rejected with probability $s$, triggering a re-draw (Fig.\ref{fig:schematic}B). This leads to a $1:1-s$ advantage 
 in favour of the advantageous allele, and makes explicit the number of lineages that need to be drawn to 
 generate a sample of size $n_o$.  
-In particular, the number of rejected samples depends on the strength of negative selection, $s$. 
-With stronger negative selection, more gametes will be rejected, so that $n_o \le n_g$. 
+In particular, the number $n_g$ of gametes that are drawn increases with $s$. 
 
 \begin{figure}[ht]
   \centering
@@ -139,26 +135,21 @@ With stronger negative selection, more gametes will be rejected, so that $n_o \l
 %to describe the sample of size $n_o$, we need to consider $n_p$ potentially in the range
 %$n_p \in [1, n]$.
 
-In this selection model, $n_p = n_o+n_r-n_c$, with $n_r$ the number of rejections and $n_c$ the 
-number of coalescences. Thus $n_p$ can be smaller than $n_o$ (if there is more drift than selection), or larger 
+In this selection model, the number $n_p$ of parental lineages drawn is $n_p = n_o+n_r-n_c$, with $n_r$ 
+the number of rejections and $n_c$ the number of coalescences. 
+Thus $n_p$ can be smaller than $n_o$ (if there is more drift than selection), or larger 
 (if there is more selection than drift). 
-
- Jouganous et al \cite{} have derived recursion equations for the allele frequency spectrum  (\textit{AFS})
- under the neutral model and in a sample of size $n_o$, taking advantage of the fact that $n_p\leq n_o$ in that case. 
-Jouganous et al also derived recursion equations under selection, but these required 
-uncontrolled approximations to allow for the fact that the number of parents can be larger than 
-the number of offspring. 
-Our goal is to generalize these results by being more careful about tracking lineages `lost' to drift and those `gained' to selection
-in the strong selection and large sample size limit.  
 
 To estimate the allele-frequency spectrum $\afs{n_o}{t}$  in a sample size $n_o$ at time $t$, 
 we only need information about the allelic state of the $n_p$ drawn lineages, which itself 
 is determined by $\afs{n_p}{t-1}.$ However, $n_p$ is a random variable, as is the number $j$ of derived alleles among them,
-so we need to sum over its possible values:
+so we can sum over their possible values:
 
  $$\afs{n_o}{t}(i)=\sum_{n_p,j} P(i,j,n_p) =  \sum_{n_p,j} P(i | j,n_p) P(j,n_p) $$
 
-The latter probability can be expressed in terms of the AFS by noticing that $ P(j,n_p) = P(n_p | r(j,n_p) ) \afs{n_p}{t},$ where $r(j,n_p)$ is the event that $j$ out of the first $n$ sampled alleles in the population are derived. In other words, the probability that we draw exactly $n_p$ parental alleles, of which $j$ are derived, is equal to the probability that a random subset of $n_p$ alleles drawn from the ancestral population contains $j$ derived alleles, times the probability that we draw exactly $n_p$ parental samples in that case. We emphasize the distinction between $j$ (the event of drawing $j$ parental derived alleles drawn in the Wright-Fisher sampling process of the first $n_o$ offspring), and $r(j,n)$ (the event of drawing of $j$ parental derived alleles in a hypergeometric sample of $n_p$ parents from the entire population). 
+The latter probability can be expressed in terms of the AFS by noticing that $ P(j,n_p) = P(n_p | r(j,n_p) ) \afs{n_p}{t},$ where $r(j,n_p)$ is the event that $j$ out of the first $n$ sampled alleles in the population are derived. $r(j,n_p)$ follows a hypergeometric distribution and is distinct from $j$, the event of drawing $j$ parental derived alleles in the Wright-Fisher sampling process for the first $n_o$ offspring.
+In words, the probability that we draw exactly $n_p$ parental alleles, of which $j$ are derived, is equal to the probability that a random subset of $n_p$ alleles drawn from the ancestral population contains $j$ derived alleles, times the probability that we draw exactly $n_p$ parental samples in that case.
+ 
 
 Thus we can write
  
@@ -166,15 +157,14 @@ Thus we can write
 \label{eq:recur}
  \afs{n_o}{t}(i)=\sum_{n_p,j} P(i,j,n_p) =  \sum_{n_p,j} P(i | j,n_p) P(n_p | d(j,n_p) ) \afs{n_p}{t}(j).
 \end{equation}
-Under neutral evolution, $n_p\leq n_0$ and \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$
+Under neutral evolution, $n_p\leq n_0$ and \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ 
+This property was used in Jouganous et al. \cite{}. To efficiently compute distributions of allele frequencies.  
+
 Under selection, $n_p$ can be larger than $n_o$, leading to an infinite set of coupled equations. 
-
-This open set of equation can be closed, approximately, using jackknife extrapolation \cite{graveljackknife}. 
-In Jouganous et al, such a closure approximation was used every time a selection event occurred. 
-Equation \eqref{eq:recur} shows that such an approximation is only required when $n_p > n_o$ or,  
+Jouganous et al also derived recursion equations under selection, but these required approximations: 
+for every selection event, a new lineage had to be jackknifed into existence to ensure closure of the moment equations. 
+Our goal here is to take advantage of the fact that selective events can be treated exactly if  $n_p > n_o$ or,  
 equivalently, when  $n_s - n_d > 0.$
-
-
  
  
 %   
@@ -236,27 +226,41 @@ equivalently, when  $n_s - n_d > 0.$
 %  figure.}
 %
 
-The relative effects of drift and selection on the number of relevant lineages is familiar from coalescent theory,
-where the number of relevant lineages in the ancestral selection graph (\textit{ASG}) is described by continuous-time a birth-death process \citep{KroneNeuhauser1997, Wakeley2009} with the number of lineages growing changing as
+In the large population size and weak selection limit, the probability of observing a coalescence event 
+in a generation is $\frac{n_o(n_o-1)}{2 N},$ whereas the probability of observing a selection event is
+$2 n_o f_p s,$ with $f_p$ the parental deleterious allele frequency. These rates are familiar from the 
+ancestral selection graph  \citep{KroneNeuhauser1997, Wakeley2009}. 
+Since the probability of coalescence events grows quadratically with the sample size, whereas the 
+rate of selective events grows linearly, we expect  more drift events than selective events when 
+$n_o>2Nf_p s.$ 
 
-\begin{align}
-  \label{eq:asg-size}
-  n \ra \begin{cases}
-    n+1 & \text{at rate } \frac{2 N s n}{2 N} ~ \text{ (selection) }\\
-    n-1 & \text{at rate } \frac{n(n-1)}{2 N}   ~ \text{ (coalescence) }
-  \end{cases}
-\end{align}
+
+
+
+
+
+%The relative rates at which drift and selection events occur is familiar from coalescent theory,
+%where the ancestral selection graph (\textit{ASG}) has rates of selective and drift events equal to
+% \citep{KroneNeuhauser1997, Wakeley2009} with the number of lineages growing changing as
+%
+%\begin{align}
+%  \label{eq:asg-size}
+%  n \ra \begin{cases}
+%    n+1 & \text{at rate } \frac{2 N s n}{2 N} ~ \text{ (selection) }\\
+%    n-1 & \text{at rate } \frac{n(n-1)}{2 N}   ~ \text{ (coalescence) }
+%  \end{cases}
+%\end{align}
 % \ikcomment{The reason I use continuous time rates here is that the coalescent term is obviously
 %   quadratic in $n$. If I use discrete generations, it will be $\frac{\sigma}{\sigma+n-1}$ for
 %   selection, and $\frac{n-1}{\sigma+n-1}$ for neutrality, which is a little less obvious.}
 
-The coalescence term is quadratic with respect to the sample size $n$, while the selection term is
-linear. The rate of coalescence is higher than the rate of selective events if the number of
-lineages $n>2Ns+1$.If $n$ is larger than $2 N_s$, we expect the number of lineages to decrease 
-more often than it increases.   
+%The coalescence term is quadratic with respect to the sample size $n$, while the selection term is
+%linear. The rate of coalescence is higher than the rate of selective events if the number of
+%lineages $n>2Ns+1$.If $n$ is larger than $2 N_s$, we expect the number of lineages to decrease 
+%more often than it increases.   
 
 Our goal is to obtain an explicit recursion from equation \eqref{eq:recur} and show that its asymptotic
- behavior for large $n$ allows for almost-exact solutions in the strong selection regime. 
+ behavior for large $n$ allows for almost-exact solutions even in the strong selection regime. 
  To do so, we will need to account for multiple coalescent events, which will require some careful bookkeeping.
 
 %Our goal is to further investigate the interplay of selection and drift, and their effect on the
