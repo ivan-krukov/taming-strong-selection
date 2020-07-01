@@ -155,16 +155,16 @@ Thus we can write
  
  \begin{equation}
 \label{eq:recur}
- \afs{n_o}{t}(i)=\sum_{n_p,j} P(i,j,n_p) =  \sum_{n_p,j} P(i | j,n_p) P(n_p | d(j,n_p) ) \afs{n_p}{t}(j).
+ \afs{n_o}{t}(i)= \sum_{n_p=1}^{n_{p,max}} \sum_{j=0}^{n_p} P(i | j,n_p) P(n_p | d(j,n_p) ) \afs{n_p}{t-1}(j).
 \end{equation}
-Under neutral evolution, $n_p\leq n_0$ and \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ 
-This property was used in Jouganous et al. \cite{}. To efficiently compute distributions of allele frequencies.  
+Under neutral evolution, $n_{p,max}\leq n_0$. Since we can obtain smaller AFS from larger AFS through downsampling (i.e., $\afs{n'}{t}  = P_{n',n} \afs{n}{t}$ for hypergeometric projection matrix $P(n',n)$ and $n'<n$ )  \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ 
+This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele frequencies.  
 
-Under selection, $n_p$ can be larger than $n_o$, leading to an infinite set of coupled equations. 
-Jouganous et al also derived recursion equations under selection, but these required approximations: 
+Under selection, $n_{p,max}$ can be larger than $n_o$, leading to an infinite set of coupled equations. 
+\cite{JouganousEtAl2017} also derived recursion equations under selection, but these required approximations: 
 for every selection event, a new lineage had to be jackknifed into existence to ensure closure of the moment equations. 
-Our goal here is to take advantage of the fact that selective events can be treated exactly if  $n_p > n_o$ or,  
-equivalently, when  $n_s - n_d > 0.$
+Our goal here is to take advantage of the fact that selective events can be treated exactly as long as  $n_p > n_o$ or,  
+equivalently, as long as  $n_s - n_d \leq 0.$
  
  
 %   
@@ -229,8 +229,8 @@ equivalently, when  $n_s - n_d > 0.$
 In the large population size and weak selection limit, the probability of observing a coalescence event 
 in a generation is $\frac{n_o(n_o-1)}{2 N},$ whereas the probability of observing a selection event is
 $2 n_o f_p s,$ with $f_p$ the parental deleterious allele frequency. These rates are familiar from the 
-ancestral selection graph  \citep{KroneNeuhauser1997, Wakeley2009}. 
-Since the probability of coalescence events grows quadratically with the sample size, whereas the 
+ancestral selection graph  \citep{KroneNeuhauser1997}. 
+Since the probability of coalescence events grows quadratically with the sample size and the 
 rate of selective events grows linearly, we expect  more drift events than selective events when 
 $n_o>2Nf_p s.$ 
 
@@ -260,7 +260,7 @@ $n_o>2Nf_p s.$
 %more often than it increases.   
 
 Our goal is to obtain an explicit recursion from equation \eqref{eq:recur} and show that its asymptotic
- behavior for large $n$ allows for almost-exact solutions even in the strong selection regime. 
+ behavior for large $n_o$ allows for almost-exact solutions even in the strong selection regime. 
  To do so, we will need to account for multiple coalescent events, which will require some careful bookkeeping.
 
 %Our goal is to further investigate the interplay of selection and drift, and their effect on the
@@ -274,6 +274,14 @@ Our goal is to obtain an explicit recursion from equation \eqref{eq:recur} and s
 
 \section{Results}
 \label{sec:results}
+
+\subsection{Constructing the transition matrix}
+
+
+
+
+
+
 
 \subsection{Markov process construction}
 \label{subsec:markov}
