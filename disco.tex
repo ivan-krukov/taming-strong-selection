@@ -147,6 +147,7 @@ so we can sum over their possible values:
 
  $$\afs{n_o}{t}(i)=\sum_{n_p,j} P(i,j,n_p) =  \sum_{n_p,j} P(i | j,n_p) P(j,n_p) $$
 
+
 The latter probability can be expressed in terms of the AFS by noticing that $ P(j,n_p) = P(n_p | r(j,n_p) ) P(r(j,n_p)) = P(n_p | r(j,n_p) )
 \afs{n_p}{t},$ \sgcomment{check if AFS is defined as probability or counts, in which case there is a scaling factor} where $r(j,n)$ is the event that $j$ out of the first $n$ sampled alleles in the population are derived. $r(j,n_p)$ follows a hypergeometric distribution and is distinct from $j$, the event of drawing $j$ parental derived alleles in the Wright-Fisher sampling process for the first $n_o$ offspring.
 In words, the probability that we draw exactly $n_p$ parental alleles, of which $j$ are derived, is equal to the probability that a random subset of $n_p$ alleles drawn from the ancestral population contains $j$ derived alleles, times the probability that we draw exactly $n_p$ parental samples in that case.
@@ -156,7 +157,7 @@ Thus we can write
  
  \begin{equation}
 \label{eq:recur}
- \afs{n_o}{t}(i)= \sum_{n_p=1}^{n_{p,max}} \sum_{j=0}^{n_p} P(i | n_p,r(j,n_p)) P(n_p | r(j,n_p) ) \afs{n_p}{t-1}(j).
+ \afs{n_o}{t}(i)= \sum_{n_p=1}^{n_{p,max}} \sum_{j=0}^{n_p} P(i, n_p | r(j,n_p)) \afs{n_p}{t-1}(j).
 \end{equation}
 Under neutral evolution, $n_{p,max}\leq n_0$. Since we can obtain smaller AFS from larger AFS through downsampling (i.e., $\afs{n'}{t}  = P_{n',n} \afs{n}{t}$ for hypergeometric projection matrix $P(n',n)$ and $n'<n$ )  \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ 
 This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele frequencies.  
