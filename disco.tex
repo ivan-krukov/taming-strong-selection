@@ -135,22 +135,44 @@ In particular, the number $n_g$ of gametes that are drawn increases with $s$.
 %to describe the sample of size $n_o$, we need to consider $n_p$ potentially in the range
 %$n_p \in [1, n]$.
 
-In this selection model, the number $n_p$ of parental lineages drawn is $n_p = n_o+n_r-n_c$, with $n_r$ 
+In this selection model, the number $n_p$ of distinct parental lineages drawn is $n_p = n_o+n_r-n_c$, with $n_r$ 
 the number of rejections and $n_c$ the number of coalescences. 
 Thus $n_p$ can be smaller than $n_o$ (if there is more drift than selection), or larger 
 (if there is more selection than drift). 
 
-To estimate the allele-frequency spectrum $\afs{n_o}{t}$  in a sample size $n_o$ at time $t$, 
-we only need information about the allelic state of the $n_p$ drawn lineages, which itself 
-is determined by $\afs{n_p}{t-1}.$ However, $n_p$ is a random variable, as is the number $j$ of derived alleles among them,
-so we can sum over their possible values:
 
+
+
+To express the allele-frequency spectrum $\afs{n_o}{t}$ in a sample size $n_o$ at time $t$ in terms of the parental AFS $\afs{n_p}{t-1}$, we take advantage of the exchangeability of the parents in the drawing process. If we perform the Wright-Fisher sampling sequentially, one offspring at a time, the order in which (previously unsampled) parental lineages are drawn is random. 
+That is, we could have selected a random permutation of the parental population prior to starting the sampling process,
+and sampled new parental lineages in order from this permutation. 
+
+The probability that we draw $i$ derived alleles in the offspring can be written as a sum over two intermediate random variables: 
+the number $n_p$ of  distinct parental lineages drawn, and the number $j$ of derived parental lineages in a sample of $n_p$ 
+parental lineages. The event $r(j,n)$ that we draw $j$ derived alleles in a random sample of $n$ parental 
+lineages has probability $P(r(j,n)) =\afs{n}{t-1}(j) $
+
+
+$$\afs{n_o}{t}(i) = \sum_{n_p,j} P(i,n_p,r(j,n_p)) =\sum_{n_p,j}  P(i,n_p | r(j,n_p)) \afs{n_p}{t-1}(j).$$
+ 
+
+\sgcomment{Alternative derivation:
+To estimate the allele-frequency spectrum $\afs{n_o}{t}$ in a sample size $n_o$ at time $t$, 
+we can sum over the random variables $n_p,$ the number of distinct parental lineages selected, and $j$ 
+the number of derived lineages among them:
  $$\afs{n_o}{t}(i)=\sum_{n_p,j} P(i,j,n_p) =  \sum_{n_p,j} P(i | j,n_p) P(j,n_p) $$
-
-
-The latter probability can be expressed in terms of the AFS by noticing that $ P(j,n_p) = P(n_p | r(j,n_p) ) P(r(j,n_p)) = P(n_p | r(j,n_p) )
-\afs{n_p}{t},$ \sgcomment{check if AFS is defined as probability or counts, in which case there is a scaling factor} where $r(j,n)$ is the event that $j$ out of the first $n$ sampled alleles in the population are derived. $r(j,n_p)$ follows a hypergeometric distribution and is distinct from $j$, the event of drawing $j$ parental derived alleles in the Wright-Fisher sampling process for the first $n_o$ offspring.
+The event $(j,n_p)$ means that our Wright-Fisher sampling for $n_o$ offspring selected exactly $n_p$ distinct ancestors, 
+of which $j$ are derived. 
+If we perform the Wright-Fisher sampling sequentially, one offspring at a time, the order in which (previously 
+unsampled) parental lineages are drawn is random. That is, we could have performed a random permutation of the 
+parental population prior to starting the sampling process, and sampled new parental lineages in order from this permutation.  
+Thus the event $(j,n_p)$ can be reformulated as the the joint events that the first $n_p$ parental alleles from the random 
+permutation carry $j$ derived alleles and that exactly $n_p$ distinct parents were drawn in the Wright-Fisher sampling of the first $n_o$ 
+offspring. Let $r(j,n_p)$ be the event that the first $n_p$ parental alleles from the random permutation carry $j$ derived alleles. Then $P(r(j,n_p)) =\afs{n_p}{t} )j),$ and we can write
+$$\afs{n_o}{t}(i)=\sum_{n_p,j} P(i | r(j,n_p), n_p)  P(n_p | r(j,n_p) ) P(r(j,n_p)) = \sum_{n_p,j} P(i,n_p | r(j,n_p))  \afs{n_p}{t}$$
+ \sgcomment{check if AFS is defined as probability or counts, in which case there is a scaling factor} where $r(j,n)$ is the event that $j$ out of the first $n$ sampled alleles in the population are derived. $r(j,n_p)$ follows a hypergeometric distribution and is distinct from $j$, the event of drawing $j$ parental derived alleles in the Wright-Fisher sampling process for the first $n_o$ offspring.
 In words, the probability that we draw exactly $n_p$ parental alleles, of which $j$ are derived, is equal to the probability that a random subset of $n_p$ alleles drawn from the ancestral population contains $j$ derived alleles, times the probability that we draw exactly $n_p$ parental samples in that case.
+}
  
 
 Thus we can write
@@ -435,8 +457,8 @@ while there is no such limitation in the Wright-Fisher model.
 To investigate the closure properties of $\mathbf{P}_s$, we can calculate the total probability that
 more that $n_o$ parental lineages contribute to a sample of size $n_o$. \sgcomment{I'm not sure
  I understand what you describe below. My take:}
-Since $P_{n_o,n_p}(i,j)$ is a probability distribution over $n_p$ and $i$, we can easily compute the truncated probability as
- $1-\sum_{i=0}^{n_o} \sum{n_p=0}^{n_o}{P_{n_o,n_p}(i,j)}$. 
+Since $P_{n_o,n_p}(i,j)$ is a probability distribution over $n_p$ and $i$, we can easily compute the probability lost to 
+truncation as $1-\sum_{i=0}^{n_o} \sum{n_p=0}^{n_o}{P_{n_o,n_p}(i,j)}$. 
 
 
 By construction, the sum
