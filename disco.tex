@@ -145,12 +145,13 @@ Thus $n_p$ can be smaller than $n_o$ (if there is more drift than selection), or
 
 To express the allele-frequency spectrum $\afs{n_o}{t}$ in a sample size $n_o$ at time $t$ in terms of the parental AFS $\afs{n_p}{t-1}$, we take advantage of the exchangeability of the parents in the drawing process. If we perform the Wright-Fisher sampling sequentially, one offspring at a time, the order in which (previously unsampled) parental lineages are drawn is random. 
 That is, we could have selected a random permutation of the parental population prior to starting the sampling process,
-and sampled new parental lineages in order from this permutation. 
+and decided to sample new parental lineages in order from this permutation. 
+We can therefore condition on the random result of this permutation. 
 
 The probability that we draw $i$ derived alleles in the offspring can be written as a sum over two intermediate random variables: 
-the number $n_p$ of  distinct parental lineages drawn, and the number $j$ of derived parental lineages in a sample of $n_p$ 
+the number $n_p$ of  distinct parental lineages drawn, and the number $j$ of derived parental lineages in a random sample of $n_p$ 
 parental lineages. The event $r(j,n)$ that we draw $j$ derived alleles in a random sample of $n$ parental 
-lineages has probability $P(r(j,n)) =\afs{n}{t-1}(j) $
+lineages has probability $P(r(j,n)) =\afs{n}{t-1}(j).$ We can therefore write
 
 
 $$\afs{n_o}{t}(i) = \sum_{n_p,j} P(i,n_p,r(j,n_p)) =\sum_{n_p,j}  P(i,n_p | r(j,n_p)) \afs{n_p}{t-1}(j).$$
@@ -172,15 +173,13 @@ offspring. Let $r(j,n_p)$ be the event that the first $n_p$ parental alleles fro
 $$\afs{n_o}{t}(i)=\sum_{n_p,j} P(i | r(j,n_p), n_p)  P(n_p | r(j,n_p) ) P(r(j,n_p)) = \sum_{n_p,j} P(i,n_p | r(j,n_p))  \afs{n_p}{t}$$
  \sgcomment{check if AFS is defined as probability or counts, in which case there is a scaling factor} where $r(j,n)$ is the event that $j$ out of the first $n$ sampled alleles in the population are derived. $r(j,n_p)$ follows a hypergeometric distribution and is distinct from $j$, the event of drawing $j$ parental derived alleles in the Wright-Fisher sampling process for the first $n_o$ offspring.
 In words, the probability that we draw exactly $n_p$ parental alleles, of which $j$ are derived, is equal to the probability that a random subset of $n_p$ alleles drawn from the ancestral population contains $j$ derived alleles, times the probability that we draw exactly $n_p$ parental samples in that case.
-}
- 
-
 Thus we can write
- 
  \begin{equation}
 \label{eq:recur}
  \afs{n_o}{t}(i)= \sum_{n_p=1}^{n_{p,max}} \sum_{j=0}^{n_p} P(i, n_p | r(j,n_p)) \afs{n_p}{t-1}(j).
 \end{equation}
+}
+
 Under neutral evolution, $n_{p,max}\leq n_0$. Since we can obtain smaller AFS from larger AFS through downsampling (i.e., $\afs{n'}{t}  = P_{n',n} \afs{n}{t}$ for hypergeometric projection matrix $P(n',n)$ and $n'<n$ )  \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ 
 This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele frequencies.  
 
