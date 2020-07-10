@@ -180,14 +180,12 @@ Thus we can write
 \end{equation}
 }
 
-Under neutral evolution, $n_{p,max}\leq n_0$. Since we can obtain smaller AFS from larger AFS through downsampling (i.e., $\afs{n'}{t}  = P_{n',n} \afs{n}{t}$ for hypergeometric projection matrix $P(n',n)$ and $n'<n$ )  \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ 
-This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele frequencies.  
+Under neutral evolution, $n_{p,max}\leq n_0$. Since we can obtain smaller AFS from larger AFS through downsampling (i.e., $\afs{n'}{t}  = P_{n',n} \afs{n}{t}$ for hypergeometric projection matrix \sgcomment{We need to use a variable other than $P$ for all these matrices and probabilities :)} $P_{n',n}$ and $n'<n$ )  \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ 
+This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele frequencies under the large sample size limit.  
 
-Under selection, $n_{p,max}$ can be larger than $n_o$, leading to an infinite set of coupled equations. 
-\cite{JouganousEtAl2017} also derived recursion equations under selection, but these required approximations: 
-for every selection event, a new lineage had to be jackknifed into existence to ensure closure of the moment equations. 
-Our goal here is to take advantage of the fact that selective events can be treated exactly as long as  $n_p > n_o$ or,  
-equivalently, as long as  $n_s - n_d \leq 0.$
+Under selection, $n_{p,max}$ can be larger than $n_o$, leading to an infinite set of coupled equations. A jackknife approximation can be used to simulate the drawing of additional lineages while preserving closure.
+\cite{JouganousEtAl2017} also derived approximate recursion equations under selection, but these required multiple approximations: because Jouganous et al worked in a limit where the number of coalescent and selection events per generation is much smaller than one, every selective event led to $n_p> n_o,$ requiring a closure approximation.  
+Our goal here is to take advantage of the fact that selective events can be treated exactly in the large sample size limit as long as  $n_p > n_o$ or,  equivalently, as long as  $n_s - n_d \leq 0.$
  
  
 %   
@@ -302,20 +300,20 @@ Our goal is to obtain an explicit recursion from equation \eqref{eq:recur} and s
 We can write Equation \eqref{eq:recur} in matrix form as \sgcomment{placeholder notation}
  \begin{equation}
 \label{eq:recur}
- \afs{n_o}{t} = \sum_{n_p=1}^{n_{p,max}} \mathbf{P_{n_p,n_o}} \afs{n_p}{t-1}.
+ \afs{n_o}{t} = \sum_{n_p=1}^{n_{p,max}} \mathbf{P}_{n_p,n_o} \afs{n_p}{t-1}.
 \end{equation}
 
-Given that a sample of $n_p$ parents from the parental population has $j$ derived alleles ,the $(i, j)^{th}$ entry of $\mathbf{P_{n_p,n_o}} $ can be interpreted as the probability Wright-Fisher sampling of $n_o$ offspring draws exactly $n_p$ parents, and that the offspring has exactly $i$ derived alleles. 
+Given that a sample of $n_p$ parents from the parental population has $j$ derived alleles ,the $(i, j)^{th}$ entry of $\mathbf{P}_{n_p,n_o} $ can be interpreted as the probability that Wright-Fisher sampling of $n_o$ offspring draws exactly $n_p$ parents, and that the offspring has exactly $i$ derived alleles. 
 In the multiple-coalescence and strong selection regimes, we were unable to obtain an analytical expression
- that account for all the combinatorial ways to achieve this. 
+ that accounts for all the combinatorial ways to achieve this. 
  
  However, we can obtain fairly simple recursions in terms of the sample size $n_o.$ 
- Intuitively,  $\mathbf{P_{n_p,n_o-1}}$ provides information about the first $n_o-1$ 
+ Intuitively,  $\mathbf{P}_{n_p,n_o-1}$ provides information about the first $n_o-1$ 
  offsprings and the parental samples. 
- We can then draw an additional offspring, and update the SFS by summing over a 
+ We can then draw an additional offspring, and update the transition matrix by summing over a 
  small number of coalescence and selection possibilities for that offspring lineage.  
- Their derivation is somewhat tedious, and is presented in Appendix X. 
- \sgcomment{under the assumption that $s\ll1$ but allowing for $Ns \gg 1.$}
+ The derivation itself is somewhat tedious, and presented in Appendix X. 
+
  
   \sgcomment{Perhaps include description of recursion, jackknife, and convergence?}
  \section{Results}
@@ -735,6 +733,7 @@ recurrence is shown in figure \ref{fig:rec-neutral}. The panel on the right depi
 event for each term. Empty circles represent ancestral alleles, filled circles -- derived. The
 square box represents a sample of size $n-1$. The first three terms in the sum correspond to the
 cases where the last parent that we drew was ancestral, last three -- derived.
+\sgcomment{Would it be worth presenting the non-square transition probabilites as well to prepare the reader for what comes next with selection}
 
 \begin{figure}
   \centering
@@ -768,8 +767,74 @@ The recurrence is calculated while $n>1$, with the following base cases:
 \subsection{Selection case}
 
 Due to selective deaths, the number of lineages ($n_c$) that contribute to the current generation
-can be significantly larger than the number of offspring ($n_o$), and especially so with strong
-selection. We use $n_c$, the intermediate number of lineages at time $t-\frac{1}{2}$, which can
+can be larger than the number of offspring ($n_o$), and especially so with strong
+selection. Because the number of sampling configurations can be large, we use dynamic programming 
+to estimate $\mathbf{P}_{n_p,n_o}$ by summing over the possibilities for the last successful draw. Using the
+probability interpretation of the transition matrix, $\mathbf{P}_{n_p,n_o}(i,j) = P(i, n_p | r(j, n_p)),$ the
+probability that we draw $i$ derived offspring and exactly $n_p$ parental offspring given that $j$ of the first
+$n_p$ sampled parental alleles are derived.  The last successful draw event can be specified by the number $t \in \{0,\infty\}$ 
+of prior failed draws due to selection since the last successful draw, the allele $a \in {A, D}$ selected, 
+and the event $c$ of whether or not the sampled parental allele was previously drawn $c\in \{True, False\}$. We also consider the event $s \in \{True, False\}$ of whether the last draw was successful. Finally, let us define the event $E_{n_o,t}(i,n_p)$ that we have drawn 
+$i$ derived offspring among $n_o$ successful draws followed by $t$ failures, and that this required exactly $n_p$ parental lineages.   
+\begin{equation}
+\begin{split}
+P(i, n_p | r(j, n_p)) = P(E_{n_0,0}(i,n_p)  | r(j, n_p)) &=  \sum_{a, c,t} P(a,c,t; E_{n_o,0}(i,n_p)  | r(j, n_p)) 
+ \end{split}
+\end{equation}
+Let us consider the term $a=A$, $c=False$ \sgcomment{We could use a better notation here, eg using tikz. }
+\begin{equation}
+\begin{split}
+P(a=A,c=False,t; E_{n_o,0}(i,n_p)  | r(j, n_p)) &= P(a=A, c=False, t,s=True; E_{n_o,t}(i,n_p-1) | r(j, n_p))\\
+&= P(a=A, c=False, t; E_{n_o,t}(i,n_p-1) | r(j, n_p))\\
+&=P(a=A, c=False, t ; E_{n_o,t}(i,n_p-1); r(j, n_p-1) | r(j, n_p))\\
+&=P(a=A, c=False, t ; E_{n_o,t}(i,n_p-1)| r(j, n_p-1)  r(j, n_p)) P(r(j, n_p-1) |  r(j, n_p))\\
+&=P(c=False, t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)  r(j, n_p)) \frac{n_p-j}{n_p}\\
+&=P(c=False | t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)  r(j, n_p)) P(t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)  r(j, n_p)) \frac{n_p-j}{n_p}\\
+&=\left(1-\frac{n_p-1}{N}\right) P(t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)  r(j, n_p)) \frac{n_p-j}{n_p}\\
+&=\left(1-\frac{n_p-1}{N}\right) P(t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)) \frac{n_p-j}{n_p}
+\end{split}
+\end{equation}
+where the fourth line uses Bayes rule, and  most other lines are exercises in rewriting the same event in different ways. 
+Other combinations of $a$ and $c$ also yield expressions in terms of probabilities $P(t;  E_{n_o,t}(i,n_p) | r(j, n_p))$ for the state prior to the successful draw \sgcomment{write down final results?}. These can be similarly expressed as recursions over the last draw. Selection only affects derived alleles, but it can occur after both coalescence and non-coalescence events. 
+\begin{equation}
+\begin{split}
+P(t;  E_{n_o,t}(i,n_p) | r(j, n_p)) = \sum_c P(c, t;  E_{n_o,t}(i,n_p) | r(j, n_p)).
+\end{split}
+\end{equation}
+
+For example, the $c = True$ term can be written as 
+
+ \begin{equation}
+\begin{split}
+P(c=True, t;  E_{n_o,t}(i,n_p) | r(j, n_p)) &= P(c=True, a=D, s=False, t;  E_{n_o,t}(i,n_p) | r(j, n_p))\\
+&= s P(c=True, a=D, t;  E_{n_o,t-1}(i-1,n_p) | r(j, n_p))\\
+&= s \frac{j}{N} P( t;  E_{n_o,t-1}(i-1,n_p) | r(j, n_p)),\\
+\end{split}
+\end{equation}
+and similarly for $c=False$.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+We use $n_c$, the intermediate number of lineages at time $t-\frac{1}{2}$, which can
 potentially be much larger than the number of parents, $n_p$. This is analogous to the gamete
 intermediates, as presented in the main text. However, the two are not equivalent, since in this
 formulation we apply selection \emph{and} drift on the intermediate lineages. We model the
