@@ -795,7 +795,10 @@ P(a=A,c=False,t; E_{n_o,0}(i,n_p)  | r(j, n_p)) &= P(a=A, c=False, t,s=True; E_{
 \end{split}
 \end{equation}
 where the fourth line uses Bayes rule, and  most other lines are exercises in rewriting the same event in different ways. 
-Other combinations of $a$ and $c$ also yield expressions in terms of probabilities $P(t;  E_{n_o,t}(i,n_p) | r(j, n_p))$ for the state prior to the successful draw \sgcomment{write down final results?}. These can be similarly expressed as recursions over the last draw. Selection only affects derived alleles, but it can occur after both coalescence and non-coalescence events. 
+Other combinations of $a$ and $c$ also yield expressions in terms of probabilities $P(t;  E_{n_o,t}(i,n_p) | r(j, n_p))$ for the state prior to the successful draw \sgcomment{write down final results?}. 
+
+
+These can be similarly expressed as recursions over the last draw. Selection only affects derived alleles, but it can occur after both coalescence and non-coalescence events. 
 \begin{equation}
 \begin{split}
 P(t;  E_{n_o,t}(i,n_p) | r(j, n_p)) = \sum_c P(c, t;  E_{n_o,t}(i,n_p) | r(j, n_p)).
@@ -811,7 +814,15 @@ P(c=True, t;  E_{n_o,t}(i,n_p) | r(j, n_p)) &= P(c=True, a=D, s=False, t;  E_{n_
 &= s \frac{j}{N} P( t;  E_{n_o,t-1}(i-1,n_p) | r(j, n_p)),\\
 \end{split}
 \end{equation}
-and similarly for $c=False$.  
+and similarly for $c=False$ \sgcomment{Write out?}.  
+
+
+Putting this all together \sgcomment{pseudocode?}, we can perform an iteration over all $n_o.$ For each $n_o,$  we will compute all terms of the form $P(E_{n_0,0}(i,n_p)  | r(j, n_p)),$ for $i\in\{0,\ldots,n_0\}$, $j\in \{0,\ldots,n_p\}$, and $n_p \in\{1,\ldots,n_{p,max}\}.$ We further need to iterate over the possible number of failed selective events. If we only allow a maximum amount of failed selected events of $t_max$ for each successful draw, the number of terms we must compute is of order $t_max n_p^4$. The number of computations for each term is constant and only depends on previously computed terms. 
+
+To ensure that probabilities do sum to one despite the $t_max$ cutoff, we modify the Wright-Fisher model by imposing a successful draw after $t_max-1$ attempt. Thus terms
+
+$P(a=D,c,t_{max}; E_{n_o,0}(i,n_p)  | r(j, n_p))$ will lose a factor $(1-s)$.   
+
 
 
 
