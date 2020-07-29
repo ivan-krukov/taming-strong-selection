@@ -38,7 +38,7 @@
     ancestry of a sample decreases back in time due to coalescent events. As a consequence, useful
     recursion equations can be derived for patterns of polymorphism. By contrast, under negative
     selection, the number of relevant lineages can increase as we go back in time, due to selective
-    deaths. As a result, the equivalent recursion equations do not close. However, given a
+    deaths. As a result, the equivalent recursi`on equations do not close. However, given a
     sufficiently large sample size, the expected reduction in the number of contributing lineages
     due to coalescence is larger than the increase due to selection, so the net number is unlikely
     to increase. We use this observation to derive asymptotically closed recursion equations for the
@@ -455,7 +455,7 @@ To investigate the closure properties of $\mathbf{P}_s$, we can calculate the to
 more that $n_o$ parental lineages contribute to a sample of size $n_o$. \sgcomment{I'm not sure
  I understand what you describe below. My take:}
 Since $P_{n_o,n_p}(i,j)$ is a probability distribution over $n_p$ and $i$, we can easily compute the probability lost to 
-truncation as $1-\sum_{i=0}^{n_o} \sum{n_p=0}^{n_o}{P_{n_o,n_p}(i,j)}$. 
+truncation as $1-\sum_{i=0}^{n_o} \sum_{n_p=0}^{n_o}{P_{n_o,n_p}(i,j)}$. 
 
 
 By construction, the sum
@@ -651,6 +651,31 @@ percentiles will require larger sample sizes.
   \label{fig:normal-approximation}
 \end{figure}
 
+\subsection{Integrating over few generations} 
+To increase the chances that the number of lineages ancestral to a sample 
+of size $n_o$ is less than $n_o$, we can also chose to compute a transition matrix over more 
+than a single generation. In this case, lineages gained by selective death at one generation can 
+can be compensated by loss to genetic drift at another generation. If the expected number of 
+drift events is higher than the expected number of selective deaths, this can reduce the likelihood 
+of chance events. Asymptotic results suggest ... 
+
+Such transition matrices can also be computed iteratively. If  $n_g$ is the number of contributing 
+lineages in the grandparental generation, and $k$ is the number of derived among those, and we define 
+ $P(i, n_g | q(k, n_g))$, as above, as the probability of drawing $i$ derived alleles and using exactly $n_g$
+ grandparental alleles given the event $q(k, n_g)$ $k$ of the first $n_g$ grandparental alleles are derived, we can 
+ condition on the number of contributing alleles $n_c$ and the number of derived alleles $j$ among them in the parental generation:
+ 
+ \begin{equation}
+ \begin{split}
+ P(i, n_g | r(k, n_g)) & = \sum_{j,n_c} P(i, n_g ; j, n_c r(j,n_c)  | q(k, n_g))\\
+ &= \sum_{j,n_c} P(i, n_c,  r(j,n_c); n_g  | q(k, n_g))\\
+ &= \sum_{j,n_c} P(i, n_c|   r(j,n_c); n_g  ; q(k, n_g))  P(r(j,n_c); n_g  | q(k, n_g))\\
+ &= \sum_{j,n_c} P(i, n_c |   r(j,n_c))  P( r(j,n_c); n_g  | q(k, n_g))\\
+ &= \sum_{j,n_c} P(i, n_c |   r(j,n_c))  P( r(j,n_c); n_g  | q(k, n_g))
+ \end{split}
+\end{equation}
+and \sgcomment{despite the crap notation}, this is just the product of quantities we have already computed.
+
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -806,7 +831,6 @@ P(t;  E_{n_o,t}(i,n_p) | r(j, n_p)) = \sum_c P(c, t;  E_{n_o,t}(i,n_p) | r(j, n_
 \end{equation}
 
 For example, the $c = True$ term can be written as 
-
  \begin{equation}
 \begin{split}
 P(c=True, t;  E_{n_o,t}(i,n_p) | r(j, n_p)) &= P(c=True, a=D, s=False, t;  E_{n_o,t}(i,n_p) | r(j, n_p))\\
@@ -814,7 +838,28 @@ P(c=True, t;  E_{n_o,t}(i,n_p) | r(j, n_p)) &= P(c=True, a=D, s=False, t;  E_{n_
 &= s \frac{j}{N} P( t;  E_{n_o,t-1}(i-1,n_p) | r(j, n_p)),\\
 \end{split}
 \end{equation}
-and similarly for $c=False$ \sgcomment{Write out?}.  
+
+\sgcomment{I think this might want to be: }
+ \begin{equation}
+\begin{split}
+P(c=True, t;  E_{n_o,t}(i,n_p) | r(j, n_p)) &= P(c=True, a=D, s=False, t;  E_{n_o,t}(i,n_p) | r(j, n_p))\\
+&= s P(c=True, a=D, t;  E_{n_o,t-1}(i,n_p) | r(j, n_p))\\
+&= s \frac{j}{N} P( t;  E_{n_o,t-1}(i,n_p) | r(j, n_p)),\\
+\end{split}
+\end{equation}
+
+
+and similarly for $c=False$ \sgcomment{Write out? TODO, not complete}.  
+
+ \begin{equation}
+\begin{split}
+P(c=False, t;  E_{n_o,t}(i,n_p) | r(j, n_p)) &= P(c=False, a=D, s=False, t;  E_{n_o,t}(i,n_p) | r(j, n_p))\\
+&= s P(c=False, a=D, t;  E_{n_o,t-1}(i,n_p-1) | r(j, n_p))\\
+&= s \frac{j}{N} P( t;  E_{n_o,t-1}(i,n_p) | r(j, n_p)),\\
+\end{split}
+\end{equation}
+
+
 
 
 Putting this all together \sgcomment{pseudocode?}, we can perform an iteration over all $n_o.$ For each $n_o,$  we will compute all terms of the form $P(E_{n_0,0}(i,n_p)  | r(j, n_p)),$ for $i\in\{0,\ldots,n_0\}$, $j\in \{0,\ldots,n_p\}$, and $n_p \in\{1,\ldots,n_{p,max}\}.$ We further need to iterate over the possible number of failed selective events. If we only allow a maximum amount of failed selected events of $t_max$ for each successful draw, the number of terms we must compute is of order $t_max n_p^4$. The number of computations for each term is constant and only depends on previously computed terms. 
