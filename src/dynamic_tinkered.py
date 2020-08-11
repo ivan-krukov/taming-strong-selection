@@ -8,13 +8,18 @@ def basecases_t(io, no, ic, nc, s, t):
         or (nc < 0)
         or (io < 0)
         or (ic < 0)
-        or (io > no)
-        or (ic > nc)
-        or (no > 0 and nc == 0)
+        or (io > no) # There cannot be more derived offspring than offspring
+        or (ic > nc) # There cannot be more derived contributors than contributors
+        or (no > 0 and nc == 0) # There cannot be offspring without contributors
+        or (io>0 and ic==0) # There cannot be derived offspring without derived parent
+        or (io<no and ic == nc) # There cannot be ancestral offspring without derived ancestors
     ):
         return 0  # TODO: check if nc> N is also a concern
-    elif (io, no, ic, nc, t) == (0, 0, 0, 0, 0):
-        return 1
+    elif (io, no, ic, nc) == (0, 0, 0, 0): # Not sure what that means.
+        if (t==0):
+            return 1
+        else:
+            return 0
     else:
         return None
 

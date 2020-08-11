@@ -1,6 +1,7 @@
 import numpy as np
 
 def basecases(io, no, ic, nc, s, N):
+    """same as before"""
     if (no < 1) or (nc < 1) or (io < 0) or (ic < 0) or (io > no) or (ic > nc):
         return 0
     elif (io, no, ic, nc) == (1, 1, 1, 1):
@@ -15,6 +16,8 @@ def basecases(io, no, ic, nc, s, N):
         return None
 
 def Pf(io, no, ic, nc, s, N):
+    """Probability of failure for one failure. TODO : add t.
+    returns v, a value """
     v = basecases(io, no, ic, nc, s, N)
     if v is None:
         in_sample  = s * ic/N * Pf(io-1, no-1, ic, nc, s, N)
@@ -25,6 +28,7 @@ def Pf(io, no, ic, nc, s, N):
 
 
 def P(io, no, ic, nc, s, N):
+    """Full transition matrix"""
     v = basecases(io, no, ic, nc, s, N)
     if v is None:
         a = (1 - ((nc - 1) / N)) * ((nc-ic)/N) * P(io, no-1, ic, nc-1, s, N)
