@@ -13,7 +13,6 @@ def basecases_t(io, no, ic, nc, s, t):
         or (no > 0 and nc == 0) # There cannot be offspring without contributors
         or (io>0 and ic==0) # There cannot be derived offspring without derived parent
         or (io<no and ic == nc) # There cannot be ancestral offspring without derived ancestors
-        #or (no==0 and nc>0) # we cannot need contributing alleles if we draw zero offspring
     ):
         return 0  # TODO: check if nc> N is also a concern
     elif (io, no, ic, nc) == (0, 0, 0, 0): # Not sure what that means.
@@ -35,7 +34,11 @@ def Pf(io, no, ic, nc, s, N, t):
         if t == 0:
             # We will build a recursion over the number of successfully drawn offspring n_0.
             # We need to start our recursion on
-            v = P0(io, no, ic, nc, s, N, max_t=0)
+            v = P0(io, no, ic, nc, s, N, max_t=0) # I belive that the bug is here. By computing
+                                                  # P0 with max_t set to zero, we are forcing the
+                                                  # first draw to be successful. We wanted
+                                                  # to have P0 after zero attempts, not P0
+                                                  # after we forced the first attempt to be successful.
         else:  # the curent number of failures was obtained from a previous number of failures
             oos = 1 - ((nc - 1) / N)  # out-of-sample
             # B and C correspond to the cases in P0
@@ -70,8 +73,8 @@ def P0(io, no, ic, nc, s, N, max_t):
         # in sample, ancestral
         df = sum(Pf(io, no - 1, ic, nc, s, N, t) for t in range(max_t + 1))
         d = ((nc - ic) / N) * df
-        #print("io, no, ic, nc", io, no, ic, nc)
-        #print("a,b,c, d", a,b,c,d)
+        print("io, no, ic, nc", io, no, ic, nc)
+        print("a,b,c, d", a,b,c,d)
         v = a + b + c + d
         v += (oos * (ic / nc) * s * Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, max_t)) + (
             (ic / N) * s * Pf(io - 1, no - 1, ic, nc, s, N, max_t)
