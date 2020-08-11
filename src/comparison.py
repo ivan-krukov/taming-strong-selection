@@ -4,9 +4,9 @@ import numpy as np
 
 np.set_printoptions(precision=3, linewidth=100)
 
-Ne = 10**10
+Ne = 1e5
 s = 1e-2
-n = 2
+n = 4
 max_t=1
 
 print("Computing the old verion...")
@@ -21,7 +21,9 @@ M_new = matrix(n, s=s, N=Ne, max_t=max_t)
 print("absolute differences")
 print(M_new - M_old)
 print("relative differences")
-print((M_new - M_old)/M_old)
+
+relative_diff = (M_new - M_old)/M_old
+print(relative_diff)
 
 print("new")
 print(M_new)
@@ -37,3 +39,7 @@ print(Pf(1, 1, 1, 1, s, Ne, 0, 0))
 
 print("P0(1, 1, 1, 1, s, Ne, 0)")
 print(P0(1, 1, 1, 1, s, Ne, 0, 0))
+
+print("Expectedd order of difference: ", s/Ne)
+
+print("Max relative difference: ", np.max(np.abs(relative_diff, where=~np.isnan(relative_diff))))
