@@ -24,33 +24,35 @@ def basecases_t(io, no, ic, nc, s, t):
         return None
 
 
-def Pf(io, no, ic, nc, s, N, t):
+def Pf(io, no, ic, nc, s, N, t, max_t):
     """The probability of not having had a transition after t failures"""
 
     v = basecases_t(io, no, ic, nc, s, t)
     #print("v in pf", v, "for params ",io, no, ic, nc, s, t)
     if v is None:
         # t is the number of failures
-        if t == 0:
+        if t <= 0:
             # We will build a recursion over the number of successfully drawn offspring n_0.
             # We need to start our recursion on
-            v = P0(io, no, ic, nc, s, N, max_t=0) # I belive that the bug is here. By computing
-                                                  # P0 with max_t set to zero, we are forcing the
-                                                  # first draw to be successful. We wanted
-                                                  # to have P0 after zero attempts, not P0
-                                                  # after we forced the first attempt to be successful.
+            v = P0(io, no, ic, nc, s, N, max_t=max_t)
+            # I belive that the bug is here. By computing
+            # P0 with max_t set to zero, we are forcing the
+            # first draw to be successful. We wanted
+            # to have P0 after zero attempts, not P0
+            # after we forced the first attempt to be successful.
+
         else:  # the curent number of failures was obtained from a previous number of failures
             oos = 1 - ((nc - 1) / N)  # out-of-sample
             # B and C correspond to the cases in P0
-            b = oos * (ic / nc) * s * Pf(io, no, ic - 1, nc - 1, s, N, t - 1)
+            b = oos * (ic / nc) * s * Pf(io, no, ic - 1, nc - 1, s, N, t - 1, max_t)
 
-            c = (ic / N) * s * Pf(io, no, ic, nc, s, N, t - 1)
+            c = (ic / N) * s * Pf(io, no, ic, nc, s, N, t - 1, max_t)
 
             v = b + c
     return v
 
 
-def P0(io, no, ic, nc, s, N, max_t):
+def P0(io, no, ic, nc, s, N, max_t, force_success=True):
     """max_t is the maximum number of failures. """
 
     v = basecases_t(io, no, ic, nc, s, t=max_t)
@@ -59,26 +61,27 @@ def P0(io, no, ic, nc, s, N, max_t):
         sel = 1 - s
 
         # out of sample, ancestral
-        af = sum(Pf(io, no - 1, ic, nc - 1, s, N, t) for t in range(max_t + 1))
+        af = sum(Pf(io, no - 1, ic, nc - 1, s, N, t, max_t) for t in range(max_t + 1))
         a = oos * ((nc - ic) / nc) * af
 
         # out of sample, derived
-        bf = sum(Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, t) for t in range(max_t + 1))
+        bf = sum(Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, t, max_t) for t in range(max_t + 1))
         b = oos * (ic / nc) * sel * bf
 
         # in sample, derived
-        cf = sum(Pf(io - 1, no - 1, ic, nc, s, N, t) for t in range(max_t + 1))
+        cf = sum(Pf(io - 1, no - 1, ic, nc, s, N, t, max_t) for t in range(max_t + 1))
         c = (ic / N) * sel * cf
 
         # in sample, ancestral
-        df = sum(Pf(io, no - 1, ic, nc, s, N, t) for t in range(max_t + 1))
+        df = sum(Pf(io, no - 1, ic, nc, s, N, t, max_t) for t in range(max_t + 1))
         d = ((nc - ic) / N) * df
-        print("io, no, ic, nc", io, no, ic, nc)
-        print("a,b,c, d", a,b,c,d)
+        # print("io, no, ic, nc", io, no, ic, nc)
+        # print("a,b,c, d", a,b,c,d)
         v = a + b + c + d
-        v += (oos * (ic / nc) * s * Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, max_t)) + (
-            (ic / N) * s * Pf(io - 1, no - 1, ic, nc, s, N, max_t)
-        )  # Forcing success of cases b and c, respectively
+        if force_success:
+            v += (oos * (ic / nc) * s * Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, max_t, max_t)) + (
+                (ic / N) * s * Pf(io - 1, no - 1, ic, nc, s, N, max_t, max_t)
+            )  # Forcing success of cases b and c, respectively
     return v
 
 

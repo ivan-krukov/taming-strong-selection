@@ -1,5 +1,8 @@
 from dynamic_tinkered import matrix,P0,Pf
 from transition_probability_selection import matrix_selection
+import numpy as np
+
+np.set_printoptions(precision=3, linewidth=100)
 
 Ne = 10**10
 s = 1e-2
@@ -26,11 +29,11 @@ print(M_new)
 print(P0(1, 2, 1, 2, s, Ne, max_t))
 
 print("Pf(1, 1, 1, 1, s, Ne, max_t)")
-print(Pf(1, 1, 1, 1, s, Ne, 1))
+print(Pf(1, 1, 1, 1, s, Ne, 1, 1))
 
 
 print("Pf(1, 1, 1, 1, s, Ne, 0)")
-print(Pf(1, 1, 1, 1, s, Ne, 0))
+print(Pf(1, 1, 1, 1, s, Ne, 0, 0))
 
 print("P0(1, 1, 1, 1, s, Ne, 0)")
-print(P0(1, 1, 1, 1, s, Ne, 0))
+print(P0(1, 1, 1, 1, s, Ne, 0, 0))
