@@ -35,11 +35,6 @@ def Pf(io, no, ic, nc, s, N, t, max_t):
             # We will build a recursion over the number of successfully drawn offspring n_0.
             # We need to start our recursion on
             v = P0(io, no, ic, nc, s, N, max_t=max_t)
-            # I belive that the bug is here. By computing
-            # P0 with max_t set to zero, we are forcing the
-            # first draw to be successful. We wanted
-            # to have P0 after zero attempts, not P0
-            # after we forced the first attempt to be successful.
 
         else:  # the curent number of failures was obtained from a previous number of failures
             oos = 1 - ((nc - 1) / N)  # out-of-sample

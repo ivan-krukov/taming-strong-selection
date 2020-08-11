@@ -11,9 +11,9 @@ def Qs(io, no, ic, nc, N, s, cache):
     """Transition probability matrix entries with selection"""
     if (no < 1) or (nc < 1) or (io < 0) or (ic < 0) or (io > no) or (ic > nc):
         return 0
-    
+
     v = cache[nc,no,ic,io]
-    
+
     if np.isnan(v):
         if (io, no, ic, nc) == (1, 1, 1, 1):
             v = 1 - s
@@ -41,31 +41,31 @@ def Qs(io, no, ic, nc, N, s, cache):
 
             Q = Qs(io-1, no-1, ic-2, nc-2, N, s, cache)
             Q3d = 0 if Q == 0 else (1 - ((nc-2)/N)) * (ic/nc) * s * (1 - ((nc-1)/N)) * ((ic-1)/(nc-1)) * Q
-            
+
             Q = Qs(io, no-1, ic, nc, N, s, cache)
             Q4a = 0 if Q == 0 else (ic/N) * s * ((nc-ic)/N) * Q
-            
+
             Q = Qs(io-1, no-1, ic, nc, N, s, cache)
             Q4d = 0 if Q == 0 else (ic/N) * s * ((ic)/N) * Q # this was ic-1
-            
+
             Q = Qs(io, no-1, ic, nc-1, N, s, cache)
             Q5a = 0 if Q == 0 else (ic/N) * s * (1-((nc-1)/N)) * (nc-ic)/nc * Q
-            
+
             Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache)
             Q5d = 0 if Q == 0 else (ic/N) * s * (1-((nc-1)/N)) * (ic)/nc * Q
-            
+
             Q = Qs(io, no-1, ic-1, nc-1, N, s, cache)
             Q6a = 0 if Q == 0 else (1-((nc-1)/N)) * ic/nc * s * (nc - ic) / N * Q
-            
+
             Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache)
             Q6d = 0 if Q == 0 else (1-((nc-1)/N)) * ic/nc * s * (ic-1) / N * Q
-            
+
             v = Q1a + Q1d + Q2a + Q2d + Q3a + Q3d + Q4a + Q4d + Q5a + Q5d + Q6a + Q6d
 
-        
+
             cache[nc,no,ic,io] = v
-        
- 
+
+
     return v
 
 
@@ -93,21 +93,21 @@ def matrix_selection_more_contributors(n, N, s=0):
                     p = binom.pmf(ic, nc, ip/n)
 
                     mtx[ip, io] += Qs(io, n, ic, nc, N, s, cache) * p
-                    
+
     # for nc in range(0, n+1):
     #     for ic in range(0, nc+1):
     #         # p = binom.pmf(ic, nc, np.arange(0, n+1)/n)
     #         p = hypergeom.pmf(ic, n, np.arange(0, n+1), nc)
     #         for io in range(0, n + 1):
     #             mtx[:, io] += Qs(io, n, ic, nc, N, s, cache) * p
-    
+
     return mtx, cache
 
 
 def plot_cache(cache):
     """Plot sparse cache"""
     n0 = len(cache)
-    n1 = len(cache[0]) 
+    n1 = len(cache[0])
     fig, ax = plt.subplots(nrows=n0, ncols=n1)
     for i in range(n0):
         for j in range(n1):
@@ -118,7 +118,7 @@ def plot_cache(cache):
 
 def plot_dense_cache(cache):
     n0 = len(cache)
-    n1 = len(cache[0]) 
+    n1 = len(cache[0])
     fig, ax = plt.subplots(nrows=n0, ncols=n1)
     for i in range(n0):
         for j in range(n1):
