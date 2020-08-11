@@ -13,6 +13,7 @@ def basecases_t(io, no, ic, nc, s, t):
         or (no > 0 and nc == 0) # There cannot be offspring without contributors
         or (io>0 and ic==0) # There cannot be derived offspring without derived parent
         or (io<no and ic == nc) # There cannot be ancestral offspring without derived ancestors
+        #or (no==0 and nc>0) # we cannot need contributing alleles if we draw zero offspring
     ):
         return 0  # TODO: check if nc> N is also a concern
     elif (io, no, ic, nc) == (0, 0, 0, 0): # Not sure what that means.
@@ -26,7 +27,9 @@ def basecases_t(io, no, ic, nc, s, t):
 
 def Pf(io, no, ic, nc, s, N, t):
     """The probability of not having had a transition after t failures"""
+
     v = basecases_t(io, no, ic, nc, s, t)
+    #print("v in pf", v, "for params ",io, no, ic, nc, s, t)
     if v is None:
         # t is the number of failures
         if t == 0:
@@ -48,7 +51,7 @@ def P0(io, no, ic, nc, s, N, max_t):
     """max_t is the maximum number of failures. """
 
     v = basecases_t(io, no, ic, nc, s, t=max_t)
-    if v is None:  # Recursion on the number of
+    if v is None:  # Recursion on what happened in the last lineage.
         oos = 1 - ((nc - 1) / N)  # out-of-sample
         sel = 1 - s
 
@@ -67,7 +70,8 @@ def P0(io, no, ic, nc, s, N, max_t):
         # in sample, ancestral
         df = sum(Pf(io, no - 1, ic, nc, s, N, t) for t in range(max_t + 1))
         d = ((nc - ic) / N) * df
-
+        #print("io, no, ic, nc", io, no, ic, nc)
+        #print("a,b,c, d", a,b,c,d)
         v = a + b + c + d
         v += (oos * (ic / nc) * s * Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, max_t)) + (
             (ic / N) * s * Pf(io - 1, no - 1, ic, nc, s, N, max_t)
