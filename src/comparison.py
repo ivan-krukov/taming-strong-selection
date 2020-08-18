@@ -4,9 +4,9 @@ import numpy as np
 
 np.set_printoptions(precision=3, linewidth=100)
 
-Ne = 1e5
+Ne = 1e3
 s = 1e-2
-n = 4
+n = 5
 max_t=1
 
 print("Computing the old verion...")
@@ -24,6 +24,9 @@ print("relative differences")
 
 relative_diff = (M_new - M_old)/M_old
 print(relative_diff)
+
+print("old")
+print(M_old)
 
 print("new")
 print(M_new)

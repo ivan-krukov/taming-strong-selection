@@ -38,7 +38,7 @@
     ancestry of a sample decreases back in time due to coalescent events. As a consequence, useful
     recursion equations can be derived for patterns of polymorphism. By contrast, under negative
     selection, the number of relevant lineages can increase as we go back in time, due to selective
-    deaths. As a result, the equivalent recursi`on equations do not close. However, given a
+    deaths. As a result, the equivalent recursion equations do not close. However, given a
     sufficiently large sample size, the expected reduction in the number of contributing lineages
     due to coalescence is larger than the increase due to selection, so the net number is unlikely
     to increase. We use this observation to derive asymptotically closed recursion equations for the
@@ -53,43 +53,52 @@
 \section{Introduction}
 \label{sec:introduciton}
 
-The allele frequency spectrum (\textit{AFS}) is an important summary of genetic diversity that is
-commonly used to infer demographic history and natural selection \citep{}. Given a demographic
-scenario of population size histories and migrations, the diffusion approximation or coalescent
-simulations can be used to obtain a predicted \textit{AFS} \citep{}. By comparing
-predictions to the observed \textit{AFS}, one can compute likelihoods for different demographic
-scenarios. Unfortunately, the \textit{AFS} calculations can be time consuming with complex
-demographic models, for example with multiple populations, or with large sample sizes \citep{}.
+The allele frequency spectrum (\textit{AFS}) is an important summary of genetic
+diversity that is commonly used to infer demographic history and natural
+selection \citep{}. Given a demographic scenario of population size histories
+and migrations, the diffusion approximation or coalescent simulations can be
+used to obtain a predicted \textit{AFS} \citep{}. By comparing predictions to
+the observed \textit{AFS}, one can compute likelihoods for different
+demographic scenarios. Unfortunately, the \textit{AFS} calculations can be time
+consuming with complex demographic models, for example with multiple
+populations, or with large sample sizes \citep{}.
 
-In the absence of selection, efficient computational shortcuts can be used. In particular, recursion
-equations have been derived for moments of the allele frequency distribution
-\citep{KimuraCrow1964,Ewens1972,JouganousEtAl2017}. Recently, these recursions have been useful in
-fitting complex demographic models to genetic data \citep{JouganousEtAl2017,KammEtAl2017}.
+In the absence of selection, efficient computational shortcuts can be used. In
+particular, recursion equations have been derived for moments of the allele
+frequency distribution \citep{KimuraCrow1964,Ewens1972,JouganousEtAl2017}.
+Recently, these recursions have been useful in fitting complex demographic
+models to genetic data \citep{JouganousEtAl2017,KammEtAl2017}.
  
-In the presence of natural selection, the corresponding recursion equations do not close
-\citep{Donnelly, JouganousEtAl2017} -- they form an infinite set of coupled ordinary differential
-equations. Moment-based closure approximation have been developed \citep{JouganousEtAl2017}, but
-these are not robust to strong selection and their convergence properties are not well understood.
+In the presence of natural selection, the corresponding recursion equations do
+not close \citep{Donnelly, JouganousEtAl2017} -- they form an infinite set of
+coupled ordinary differential equations. Moment-based closure approximation
+have been developed \citep{JouganousEtAl2017}, but these are not robust to
+strong selection and their convergence properties are not well understood.
 
-Closure of the moment equations under the neutral Wright-Fisher model occurs because the number of
-parental lineages that contribute to the present day sample is equal to or smaller than the sample
-size, due to coalescent events back in time \citep{Kingman1982a}. To describe a sample of size $n$,
-we need to recursively consider samples of size $n'\le n$. This does not hold under negative
-selection -- due to selective deaths, the number of parental lineages $n'$ can be larger than $n$.
-As we demonstrate later, this leads to a potentially infinite number of terms in the equations. This
-is similar to the ancestral selection graphs (\textit{ASG}), \citep{KroneNeuhauser1997}, where the
-number of relevant lineages can increase back in time.
+Closure of the moment equations under the neutral Wright-Fisher model occurs
+because the number of parental lineages that contribute to the present day
+sample is equal to or smaller than the sample size, due to coalescent events
+back in time \citep{Kingman1982a}. To describe a sample of size $n$, we need to
+recursively consider samples of size $n'\le n$. This does not hold under
+negative selection -- due to selective deaths, the number of parental lineages
+$n'$ can be larger than $n$.  As we demonstrate later, this leads to a
+potentially infinite number of terms in the equations. This is similar to the
+ancestral selection graphs (\textit{ASG}), \citep{KroneNeuhauser1997}, where
+the number of relevant lineages can increase back in time.
 
-The interplay of drift and selection is important to consider. In large sample sizes, there are many
-more common ancestry events than selective deaths, so the number of contributing lineages is
-unlikely to increase back in time. This suggests that large sample sizes can lead to
-almost-closed recursion equations, as we will demonstrate here.
+The interplay of drift and selection is important to consider. In large sample
+sizes, there are many more common ancestry events than selective deaths, so the
+number of contributing lineages is unlikely to increase back in time. This
+suggests that large sample sizes can lead to almost-closed recursion equations,
+as we will demonstrate here.
 
-An additional complication is multiple and/or simultaneous coalescent events -- which emerge with
-large sample sizes \citep{BhaskarEtAl2014}. The standard coalescent model only allows one event per
-generation, but we also need to consider higher-order events, \textit{e.g.} multiple two-lineage or
-three-lineage mergers. These multiple-lineage coalescent events oppose the effect of selection by
-rapidly decreasing the number of contributing lineages \citep{NelsonEtAl2019}.
+An additional complication is multiple and/or simultaneous coalescent events --
+which emerge with large sample sizes \citep{BhaskarEtAl2014}. The standard
+coalescent model only allows one event per generation, but we also need to
+consider higher-order events, \textit{e.g.} multiple two-lineage or
+three-lineage mergers. These multiple-lineage coalescent events oppose the
+effect of selection by rapidly decreasing the number of contributing lineages
+\citep{NelsonEtAl2019}.
 
 In this article we derive these asymptotically-closed recursions in the Wright-Fisher model, and
 study their behavior and applications for modeling the distribution of allele frequencies under

@@ -21,7 +21,7 @@ def basecases_t(io, no, ic, nc, s, t):
         else:
             return 0
     else:
-        return None
+        return -1
 
 
 def Pf(io, no, ic, nc, s, N, t, max_t):
@@ -29,7 +29,7 @@ def Pf(io, no, ic, nc, s, N, t, max_t):
 
     v = basecases_t(io, no, ic, nc, s, t)
     #print("v in pf", v, "for params ",io, no, ic, nc, s, t)
-    if v is None:
+    if v == -1:
         # t is the number of failures
         if t <= 0:
             # We will build a recursion over the number of successfully drawn offspring n_0.
@@ -51,7 +51,7 @@ def P0(io, no, ic, nc, s, N, max_t, force_success=True):
     """max_t is the maximum number of failures. """
 
     v = basecases_t(io, no, ic, nc, s, t=max_t)
-    if v is None:  # Recursion on what happened in the last lineage.
+    if v == -1:  # Recursion on what happened in the last lineage.
         oos = 1 - ((nc - 1) / N)  # out-of-sample
         sel = 1 - s
 
