@@ -24,9 +24,8 @@ def Qs(io, no, ic, nc, N, s, cache):
         elif (io, no, ic, nc) == (0, 1, 1, 2):
             v = s / 2
         else:
-            # out of sample
-            oos = (1 - ((nc-1)/N))
-
+            # Out-sample
+            oos = 1 - ((nc-1) / N)
             # In all cases, we force the last attempt to sucseed
             # If there are two attempts, the first one fails
 
@@ -34,64 +33,64 @@ def Qs(io, no, ic, nc, N, s, cache):
             Q = Qs(io, no-1, ic, nc-1, N, s, cache)
             Q1a = 0 if Q == 0 else oos * (nc-ic)/nc * Q
 
+            # out-of-sample derived
+            Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache)
+            Q1d = 0 if Q == 0 else oos * (ic)/nc * (1-s) * Q
+
             # in-sample ancestral
             Q = Qs(io, no-1, ic, nc, N, s, cache)
             Q2a = 0 if Q == 0 else (nc-ic)/N * Q
 
-            # first derived out-of-sample, then acestral out-of-sample
-            Q = Qs(io, no-1, ic-1, nc-2, N, s, cache)
-            Q3a = 0 if Q == 0 else oos * (ic/nc) * s * (oos - (1/N)) * ((nc-ic)/(nc-1)) * Q
+            # in-sample derived
+            Q = Qs(io-1, no-1, ic, nc, N, s, cache)
+            Q2d = 0 if Q == 0 else (ic/N) * (1-s) * Q
 
-            # first derived in sample, then ancestral in sample
+            # out-of-sample derived (fail), then out-of-sample ancesral (success)
+            Q = Qs(io, no-1, ic-1, nc-2, N, s, cache)
+            Q3a = 0 if Q == 0 else (oos + (1/N)) * (ic/nc) * s * oos * ((nc-ic)/(nc-1)) * Q
+
+            # out-of-sample derived (fail), then out-of-sample derived (success)
+            Q = Qs(io-1, no-1, ic-2, nc-2, N, s, cache)
+            Q3d = 0 if Q == 0 else (oos + (1/N)) * (ic/nc) * s * oos * ((ic-1)/(nc-1)) * Q
+
+            # in-sample derived (fail), then in-sample ancestral (success)
             Q = Qs(io, no-1, ic, nc, N, s, cache)
             Q4a = 0 if Q == 0 else (ic/N) * s * ((nc-ic)/N) * Q
 
-            # first derived in-sample, then ancestral out-of-sample
+            # in-sample derived (fail), then in-sample derived (success)
+            Q = Qs(io-1, no-1, ic, nc, N, s, cache)
+            Q4d = 0 if Q == 0 else (ic/N) * s * ((ic)/N) * Q # this was ic-1
+
+            # in-sample derived (fail), then out-of-sample ancestral (success)
             Q = Qs(io, no-1, ic, nc-1, N, s, cache)
             Q5a = 0 if Q == 0 else (ic/N) * s * oos * (nc-ic)/nc * Q
 
-            # first derived out-of-sample, then ancestral in-sample
-            Q = Qs(io, no-1, ic-1, nc-1, N, s, cache)
-            Q6a = 0 if Q == 0 else oos * ic/nc * s * (nc - ic) / N * Q
-
-            # out-of-sample derived
-            Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache)
-            Q1d = 0 if Q == 0 else oos * ic/nc * (1-s) * Q
-
-            # in-sample derived
-            Q = Qs(io-1, no-1, ic, nc, N, s, cache)
-            Q2d = 0 if Q == 0 else ic/N * (1-s) * Q
-
-            # first derived out-of-sample, then derived out-of-sample
-            Q = Qs(io-1, no-1, ic-2, nc-2, N, s, cache)
-            Q3d = 0 if Q == 0 else oos * (ic/nc) * s * (oos - (1/N)) * ((ic-1)/(nc-1)) * Q
-
-            # first derived in sample, then derived in sample
-            Q = Qs(io-1, no-1, ic, nc, N, s, cache)
-            Q4d = 0 if Q == 0 else (ic/N) * s * ((ic)/N)
-
-            # first derived in-sample, then derived out-of-sample
+            # in-sample derived (fail), then out-of-sample derived (success)
             Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache)
             Q5d = 0 if Q == 0 else (ic/N) * s * oos * (ic)/nc * Q
 
-            # first derived out-of-sample, then derived in-sample
+            # out-of-sample derived (fail), then in-sample ancestral (success)
+            Q = Qs(io, no-1, ic-1, nc-1, N, s, cache)
+            Q6a = 0 if Q == 0 else oos * ic/nc * s * (nc - ic) / N * Q
+
+            # out-of-sample derived (fail), then in-sample derived (success)
             Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache)
             Q6d = 0 if Q == 0 else oos * ic/nc * s * (ic-1) / N * Q
 
             v = Q1a + Q1d + Q2a + Q2d + Q3a + Q3d + Q4a + Q4d + Q5a + Q5d + Q6a + Q6d 
 
             # extra cases - pick and reject the same allele - both derived
-            # out of sample
+
+            # out-of-sample derived fail, then same success
             Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache)
-            Q7 = 0 if Q == 0 else (1-((nc-1)/N)) * ic / nc * s * (1/N) * Q
-            # in sample
+            Q7 = 0 if Q == 0 else oos * ic / nc * s * (1/N) * Q
+            # in-sample derived fail, then same success
             Q = Qs(io-1, no-1, ic, nc, N, s, cache)
             Q8 = 0 if Q == 0 else ic / N * s * (1/N) * Q
 
-            # v += Q7 + Q8
+            v += Q7 + Q8
 
             cache[nc,no,ic,io] = v
-
 
     return v
 
