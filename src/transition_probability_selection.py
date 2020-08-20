@@ -88,7 +88,7 @@ def Qs(io, no, ic, nc, N, s, cache):
             Q7 = 0 if Q == 0 else oos * ic / nc * s * (1/(N)) * Q
             # in-sample derived fail, then same success
             Q = Qs(io-1, no-1, ic, nc, N, s, cache)
-            Q8 = 0 if Q == 0 else (1-oos) * ic / N * s * (1/(N)) * Q
+            Q8 = 0 if Q == 0 else ic / N * s * (1/(N)) * Q
 
             v += Q7 + Q8
 
