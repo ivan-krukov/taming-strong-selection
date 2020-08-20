@@ -78,19 +78,19 @@ strong selection and their convergence properties are not well understood.
 Closure of the moment equations under the neutral Wright-Fisher model occurs
 because the number of parental lineages that contribute to the present day
 sample is equal to or smaller than the sample size, due to coalescent events
-back in time \citep{Kingman1982a}. To describe a sample of size $n$, we need to
-recursively consider samples of size $n'\le n$. This does not hold under
-negative selection -- due to selective deaths, the number of parental lineages
-$n'$ can be larger than $n$.  As we demonstrate later, this leads to a
+back in time \citep{Kingman1982a}. This does not hold under negative selection
+-- due to selective deaths, the number of parental lineages that contribute can
+be larger than the sample size, $n$.  As we demonstrate later, this leads to a
 potentially infinite number of terms in the equations. This is similar to the
 ancestral selection graphs (\textit{ASG}), \citep{KroneNeuhauser1997}, where
 the number of relevant lineages can increase back in time.
 
-The interplay of drift and selection is important to consider. In large sample
-sizes, there are many more common ancestry events than selective deaths, so the
-number of contributing lineages is unlikely to increase back in time. This
-suggests that large sample sizes can lead to almost-closed recursion equations,
-as we will demonstrate here.
+The interplay of drift and selection is important to consider. The number of
+coalescent events is proportional to the sample size, while the number of
+selective deaths is independent from it. This suggests that with sufficiently
+large samples, the effect of selection would be smaller than that of drift,
+which would lead to almost-closed recursion equations, as we will demonstrate
+here.
 
 An additional complication is multiple and/or simultaneous coalescent events --
 which emerge with large sample sizes \citep{BhaskarEtAl2014}. The standard
@@ -100,9 +100,9 @@ three-lineage mergers. These multiple-lineage coalescent events oppose the
 effect of selection by rapidly decreasing the number of contributing lineages
 \citep{NelsonEtAl2019}.
 
-In this article we derive these asymptotically-closed recursions in the Wright-Fisher model, and
-study their behavior and applications for modeling the distribution of allele frequencies under
-strong selection.
+In this article we derive these asymptotically-closed recursions in the
+Wright-Fisher model, and study their behaviour and applications for modelling
+the distribution of allele frequencies under strong selection.
 
 %Unlike the \textit{ASG}, the present method does not need to assume an infinitely large population
 %size, and also explicitly tracks multiple coalescent events, which is important with large sample
@@ -112,17 +112,19 @@ strong selection.
 \section{Background}
 \label{sec:background}
 
-We consider a haploid Wright-Fisher model of size $N$, focusing on a single biallelic locus. For a
-present sample with $n_o$ offspring lineages at time $t$, we will be looking for recursion equations
-for the allele frequency distribution by considering the sampling process for a finite sample under drift 
-and selection.   
+We consider a haploid Wright-Fisher model of size $N$, focusing on a single
+biallelic locus. For a present-day sample with $n_o$ offspring lineages at time
+$t$, we will be looking for recursion equations for the allele frequency
+distribution by considering the sampling process in a finite sample under
+drift and selection.   
 
-To model selection, we imagine that all parents generate 
-a large number of gametes, and that offspring pick gametes at random. Draws from the deleterious allele are 
-rejected with probability $s$, triggering a re-draw (Fig.\ref{fig:schematic}B). This leads to a $1:1-s$ advantage 
-in favour of the advantageous allele, and makes explicit the number of lineages that need to be drawn to 
-generate a sample of size $n_o$.  
-In particular, the number $n_g$ of gametes that are drawn increases with $s$. 
+To model selection, we imagine that all parents generate a large number of
+gametes, and that offspring pick gametes at random. Draws from the deleterious
+allele are rejected with probability $s$, triggering a re-draw
+(Fig.\ref{fig:schematic}B). This leads to a $1:1-s$ advantage in favour of the
+advantageous allele, and makes explicit the number of lineages that need to be
+drawn to generate a sample of size $n_o$.  In particular, the number $n_g$ of
+gametes that are drawn increases with $s$. 
 
 \begin{figure}[ht]
   \centering
@@ -144,52 +146,56 @@ In particular, the number $n_g$ of gametes that are drawn increases with $s$.
 %to describe the sample of size $n_o$, we need to consider $n_p$ potentially in the range
 %$n_p \in [1, n]$.
 
-In this selection model, the number $n_p$ of distinct parental lineages drawn is $n_p = n_o+n_r-n_c$, with $n_r$ 
-the number of rejections and $n_c$ the number of coalescences. 
-Thus $n_p$ can be smaller than $n_o$ (if there is more drift than selection), or larger 
-(if there is more selection than drift). 
+In this selection model, the number $n_p$ of distinct parental lineages drawn
+is $n_p = n_o+n_r-n_c$, with $n_r$ the number of rejections and $n_c$ the
+number of coalescences.  Thus $n_p$ can be smaller than $n_o$ (if there is more
+drift than selection), or larger (if there is more selection than drift). 
 
+To estimate the allele-frequency spectrum $\afs{n_o}{t}$ in a sample size $n_o$
+at time $t$, we can sum over the random variables $n_p,$ the number of distinct
+parental lineages selected, and $j$ the number of derived lineages among them:
 
+\begin{equation}
+\afs{n_o}{t}(i)=\sum_{n_p,j} P(i,j,n_p) = 
+ \sum_{n_p,j} P(i | j,n_p) P(j,n_p)
+\end{equation}
 
+The event $(j,n_p)$ means that our Wright-Fisher sampling for $n_o$ offspring
+selected exactly $n_p$ distinct ancestors, of which $j$ are derived. Under
+Wright-Fisher sampling, the order in which (previously unsampled) parental
+lineages are drawn is random. That is, we could have performed a random
+permutation of the parental population prior to starting the sampling process,
+and sampled new parental lineages in order from this permutation. Thus the
+event $(j,n_p)$ can be reformulated as the joint events that the first $n_p$
+parental alleles from the random permutation carry $j$ derived alleles
+\textit{and} that exactly $n_p$ distinct parents were drawn in the
+Wright-Fisher sampling of the first $n_o$ offspring. Now, let $r(j,n_p)$ be the
+(less specific) event that the first $n_p$ parental alleles from the random
+permutation carry $j$ derived alleles. Then $P(r(j,n_p)) =\afs{n_p}{t} (j),$
+and we can write
 
-To express the allele-frequency spectrum $\afs{n_o}{t}$ in a sample size $n_o$ at time $t$ in terms of the parental AFS $\afs{n_p}{t-1}$, we take advantage of the exchangeability of the parents in the drawing process. If we perform the Wright-Fisher sampling sequentially, one offspring at a time, the order in which (previously unsampled) parental lineages are drawn is random. 
-That is, we could have selected a random permutation of the parental population prior to starting the sampling process,
-and decided to sample new parental lineages in order from this permutation. 
-We can therefore condition on the random result of this permutation. 
+\begin{equation}
+\afs{n_o}{t}(i) = \sum_{n_p,j} P(i | r(j,n_p), n_p)  P(n_p | r(j,n_p) ) P(r(j,n_p)) 
+    = \sum_{n_p,j} P(i,n_p | r(j,n_p))  \afs{n_p}{t}
+\end{equation}
 
-The probability that we draw $i$ derived alleles in the offspring can be written as a sum over two intermediate random variables: 
-the number $n_p$ of  distinct parental lineages drawn, and the number $j$ of derived parental lineages in a random sample of $n_p$ 
-parental lineages. The event $r(j,n)$ that we draw $j$ derived alleles in a random sample of $n$ parental 
-lineages has probability $P(r(j,n)) =\afs{n}{t-1}(j).$ We can therefore write
+\sgcomment{check if AFS is defined as probability or counts, in which case
+there is a scaling factor} where $r(j,n)$ is the event that $j$ out of the
+first $n$ sampled alleles in the population are derived. $r(j,n_p)$ follows a
+hypergeometric distribution and is distinct from $j$, the event of drawing $j$
+parental derived alleles in the Wright-Fisher sampling process for the first
+$n_o$ offspring. In words, the probability that we draw exactly $n_p$ parental
+alleles, of which $j$ are derived, is equal to the probability that a random
+subset of $n_p$ alleles drawn from the ancestral population contains $j$
+derived alleles, times the probability that we draw exactly $n_p$ parental
+samples in that case. Thus we can write
 
-
-$$\afs{n_o}{t}(i) = \sum_{n_p,j} P(i,n_p,r(j,n_p)) =\sum_{n_p,j}  P(i,n_p | r(j,n_p)) \afs{n_p}{t-1}(j).$$
- 
-
-\sgcomment{Alternative derivation:
-To estimate the allele-frequency spectrum $\afs{n_o}{t}$ in a sample size $n_o$ at time $t$, 
-we can sum over the random variables $n_p,$ the number of distinct parental lineages selected, and $j$ 
-the number of derived lineages among them:
- $$\afs{n_o}{t}(i)=\sum_{n_p,j} P(i,j,n_p) =  \sum_{n_p,j} P(i | j,n_p) P(j,n_p) $$
-The event $(j,n_p)$ means that our Wright-Fisher sampling for $n_o$ offspring selected exactly $n_p$ distinct ancestors, 
-of which $j$ are derived. 
-If we perform the Wright-Fisher sampling sequentially, one offspring at a time, the order in which (previously 
-unsampled) parental lineages are drawn is random. That is, we could have performed a random permutation of the 
-parental population prior to starting the sampling process, and sampled new parental lineages in order from this permutation.  
-Thus the event $(j,n_p)$ can be reformulated as the the joint events that the first $n_p$ parental alleles from the random 
-permutation carry $j$ derived alleles and that exactly $n_p$ distinct parents were drawn in the Wright-Fisher sampling of the first $n_o$ 
-offspring. Let $r(j,n_p)$ be the event that the first $n_p$ parental alleles from the random permutation carry $j$ derived alleles. Then $P(r(j,n_p)) =\afs{n_p}{t} )j),$ and we can write
-$$\afs{n_o}{t}(i)=\sum_{n_p,j} P(i | r(j,n_p), n_p)  P(n_p | r(j,n_p) ) P(r(j,n_p)) = \sum_{n_p,j} P(i,n_p | r(j,n_p))  \afs{n_p}{t}$$
- \sgcomment{check if AFS is defined as probability or counts, in which case there is a scaling factor} where $r(j,n)$ is the event that $j$ out of the first $n$ sampled alleles in the population are derived. $r(j,n_p)$ follows a hypergeometric distribution and is distinct from $j$, the event of drawing $j$ parental derived alleles in the Wright-Fisher sampling process for the first $n_o$ offspring.
-In words, the probability that we draw exactly $n_p$ parental alleles, of which $j$ are derived, is equal to the probability that a random subset of $n_p$ alleles drawn from the ancestral population contains $j$ derived alleles, times the probability that we draw exactly $n_p$ parental samples in that case.
-Thus we can write
- \begin{equation}
+\begin{equation}
 \label{eq:recur}
  \afs{n_o}{t}(i)= \sum_{n_p=1}^{n_{p,max}} \sum_{j=0}^{n_p} P(i, n_p | r(j,n_p)) \afs{n_p}{t-1}(j).
 \end{equation}
-}
 
-Under neutral evolution, $n_{p,max}\leq n_0$. Since we can obtain smaller AFS from larger AFS through downsampling (i.e., $\afs{n'}{t}  = P_{n',n} \afs{n}{t}$ for hypergeometric projection matrix \sgcomment{We need to use a variable other than $P$ for all these matrices and probabilities :)} $P_{n',n}$ and $n'<n$ )  \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ 
+Under neutral evolution, $n_{p,max}\leq n_0$. Since we can obtain smaller AFS from larger AFS through downsampling (i.e., $\afs{n'}{t}  = P_{n',n} \afs{n}{t}$ for hypergeometric projection matrix \sgcomment{We need to use a variable other than $P$ for all these matrices and probabilities} $P_{n',n}$ and $n'<n$ )  \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ 
 This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele frequencies under the large sample size limit.  
 
 Under selection, $n_{p,max}$ can be larger than $n_o$, leading to an infinite set of coupled equations. A jackknife approximation can be used to simulate the drawing of additional lineages while preserving closure.
@@ -197,11 +203,6 @@ Under selection, $n_{p,max}$ can be larger than $n_o$, leading to an infinite se
 Our goal here is to take advantage of the fact that selective events can be treated exactly in the large sample size limit as long as  $n_p > n_o$ or,  equivalently, as long as  $n_s - n_d \leq 0.$
  
  
-%   
-%
-%
-%
-%
 %
 %Under neutrality (Fig. \ref{fig:schematic}A), we have $n_p \in [1, n_o]$, therefore:
 %
