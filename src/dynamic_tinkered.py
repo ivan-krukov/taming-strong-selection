@@ -90,6 +90,15 @@ def matrix(no=5, s=1 / 1000, N=1000, max_t=1):
                 mtx[:, io] += P0(io, no, ic, nc, s, N, max_t) * p
     return mtx
 
+def matrix_nop(no=5, s=1 / 1000, N=1000, max_t=1):
+    mtx = np.zeros((no + 1, no + 1))
+    for nc in range(0, no + 1):
+        for ic in range(0, nc + 1):
+            # vectorized over ip
+            # p = hypergeom.pmf(ic, no, np.arange(0, no + 1), nc)
+            for io in range(0, no + 1):
+                mtx[:, io] += P0(io, no, ic, nc, s, N, max_t)
+    return mtx
 
 def matrix_double_sample(n, N, s=0, max_t=1):
     mtx = np.zeros((2 * n + 1, n + 1))

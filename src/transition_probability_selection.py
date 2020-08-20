@@ -109,6 +109,19 @@ def matrix_selection(n, N, s=0):
                 mtx[:, io] += Qs(io, n, ic, nc, N, s, cache) * p
     return mtx, cache
 
+def matrix_selection_nop(n, N, s=0):
+    mtx = np.zeros((n + 1, n + 1))
+    cache = np.full((n+1, n+1, n+1, n+1), np.nan) # this is messier (we allocate way more than we need, but it's easier for numba)
+    # cache = [[np.full((i+1, j+1), np.nan) for j in range(1, n+1)] for i in range(1, n+1)] # this is the minimal size allocation possible
+    for nc in range(0, n + 1):
+        for ic in range(0, nc + 1):
+            # vectorized over ip
+            # p = hypergeom.pmf(ic, n, np.arange(0, n+1), nc)
+            for io in range(0, n + 1):
+                mtx[:, io] += Qs(io, n, ic, nc, N, s, cache)
+    return mtx, cache
+
+
 def matrix_selection_more_contributors(n, N, s=0):
     rocc = reduced_occupancy(N)
     mtx = np.zeros((n + 1, n + 1))
