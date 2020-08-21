@@ -9,14 +9,26 @@ from occupancy import reduced_occupancy, dist_num_anc
 # @jit(nopython=True)
 def Qs(io, no, ic, nc, N, s, cache, debug=False):
     """Transition probability matrix entries with selection"""
-    if (no < 1) or (nc < 1) or (io < 0) or (ic < 0) or (io > no) or (ic > nc):
-        return 0
+    # if (no < 1) or (nc < 1) or (io < 0) or (ic < 0) or (io > no) or (ic > nc):
+    #     return 0
 
+    if (
+        (no < 0)
+        or (nc < 0)
+        or (io < 0)
+        or (ic < 0)
+        or (io > no) # There cannot be more derived offspring than offspring
+        or (ic > nc) # There cannot be more derived contributors than contributors
+        or (no > 0 and nc == 0) # There cannot be offspring without contributors
+        or (io>0 and ic==0) # There cannot be derived offspring without derived parent
+        or (io<no and ic == nc) # There cannot be ancestral offspring without derived ancestors
+    ):
+        return 0
     v = cache[nc,no,ic,io]
 
     if np.isnan(v):
         if (io, no, ic, nc) == (1, 1, 1, 1):
-            v = 1 - s
+            v = (1 - s) + (s/N)
         elif (io, no, ic, nc) == (0, 1, 0, 1):
             v = 1
         elif (io, no, ic, nc) == (1, 1, 2, 2):
@@ -123,6 +135,10 @@ def Qs(io, no, ic, nc, N, s, cache, debug=False):
 
             cache[nc,no,ic,io] = v
 
+    if debug:
+        return v, {'Q1a': Q1a, 'Q2a': Q2a, 'Q3a': Q3a, 'Q4a': Q4a, 'Q5a': Q5a, 'Q6a': Q6a, 'Q1d':
+                   Q1d, 'Q2d': Q2d, 'Q3d': Q3d, 'Q4d': Q4d, 'Q5d': Q5d, 'Q6d': Q6d, 'Q7': Q7, 'Q8':
+                   Q8}
     return v
 
 

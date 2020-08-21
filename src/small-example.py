@@ -4,23 +4,23 @@ def two_by_two(s, N):
     case = [0 for _ in range(8 + 1)]
 
     case[1] = (1/2) *     (1-s) *         (1 - (1/N))
-    print(case[1])
+    print("C1 ", case[1])
     case[2] = (1/2) * s * (1-s) * (1/N) * (1 - (1/N))
-    print(case[2])
+    print("C2 ", case[2])
     case[3] = (1/2) *     (1-s) *         (1 - (1/N))
-    print(case[3])
+    print("C3 ", case[3])
     case[4] = (1/2) * s * (1-s) * (1/N) * (1 - (1/N))
-    print(case[4])
+    print("C4 ", case[4])
     case[5] = (1/2) * s * (1-s) * (1/N) * (1 - (1/N))
-    print(case[5])
+    print("C5 ", case[5])
     case[6] = (1/2) * s * (1-s) * (1/N) * (1 - (1/N)) * (1/N) * s
-    print(case[6])
+    print("C6 ", case[6])
     case[7] = (1/2) * s * (1-s) * (1/N) * (1 - (1/N))
-    print(case[7])
+    print("C7 ", case[7])
     case[8] = (1/2) * s * (1-s) * (1/N) * (1 - (1/N)) * (1/N) * s
-    print(case[8])
+    print("C8 ", case[8])
 
-    return sum(case)
+    return case, sum(case)
 
 def two_by_two_new_simplitied(s, N):
     return (1-s) * (1 - (1/N)) * (1 + (s/N))**2
@@ -31,7 +31,7 @@ def two_by_two_old_simplitied(s, N):
 N = 1e5
 s = 1e-2
 n = 2
-x = two_by_two(s=s, N=N)
+cases, x = two_by_two(s=s, N=N)
 # y = two_by_two_new_simplitied(s=s, N=N)
 # z = two_by_two_old_simplitied(s=s, N=N)
 
@@ -42,12 +42,19 @@ M_new = matrix_nop(n, s=s, N=N, max_t=1) #matrix(n, s=s, N=N, max_t=1)
 M_old, _ = matrix_selection_nop(n, s=s, N=N) #matrix(n, s=s, N=N, max_t=1)
 
 cache =  np.full((2*n+1, 2*n+1, 2*n+1, 2*n+1), np.nan)
-M_old_rect = Qs(1,2,1,2,s=s,N=N,cache=cache, debug=True)
+M_old_rect, Q_cases = Qs(1,2,1,2,s=s,N=N,cache=cache, debug=True)
+
+print('C1    = Q1d; d=',  Q_cases['Q1d'] - cases[1])
+print('C2    = Q7;  d=',  Q_cases['Q7']  - cases[2])
+print('C3+C5 = Q1a; d=',  Q_cases['Q1a'] - cases[3] - cases[5])
+print('C4+C6 = Q5a; d=',  Q_cases['Q5a'] - cases[4] - cases[6])
+print('C7    = Q2d; d=',  Q_cases['Q2d'] - cases[7])
+print('C8    = Q8;  d=',  Q_cases['Q8']  - cases[8])
 # M_old, _ = matrix_selection(n, N, s)
 # print(x, y, z)
 # print(M_old[1,1], M_new[1,1])
 # print(y - M_old[1,1], z - M_new[1,1])
-print(x - M_new[1,1])
-print(x - M_old[1,1])
-print(x - M_old_rect)
-print(x, M_old_rect)
+# print(x - M_new[1,1])
+# print(x - M_old[1,1])
+# print(x - M_old_rect)
+# print(M_new - M_old)
