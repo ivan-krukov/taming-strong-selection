@@ -6,8 +6,8 @@ import scipy.sparse as sr
 from numba import jit
 from occupancy import reduced_occupancy, dist_num_anc
 
-@jit(nopython=True)
-def Qs(io, no, ic, nc, N, s, cache):
+# @jit(nopython=True)
+def Qs(io, no, ic, nc, N, s, cache, debug=False):
     """Transition probability matrix entries with selection"""
     if (no < 1) or (nc < 1) or (io < 0) or (ic < 0) or (io > no) or (ic > nc):
         return 0
@@ -26,69 +26,98 @@ def Qs(io, no, ic, nc, N, s, cache):
         else:
             # Out-sample
             oos = 1 - ((nc-1) / N)
+            oos2 = 1 - ((nc-2) / N)
             # In all cases, we force the last attempt to sucseed
             # If there are two attempts, the first one fails
 
             # Ancestral succeeds
             # out-of-sample ancestral
-            Q = Qs(io, no-1, ic, nc-1, N, s, cache)
-            Q1a = 0 if Q == 0 else oos * (nc-ic)/nc * Q
+            Q = Qs(io, no-1, ic, nc-1, N, s, cache, False)
+            Q1a = 0 if Q == 0 else oos * ((nc-ic)/nc) * Q
+            if debug:
+                print("Q1a: ", Q1a)
 
             # in-sample ancestral
-            Q = Qs(io, no-1, ic, nc, N, s, cache)
-            Q2a = 0 if Q == 0 else (nc-ic)/N * Q
+            Q = Qs(io, no-1, ic, nc, N, s, cache, False)
+            Q2a = 0 if Q == 0 else ((nc-ic)/N) * Q
+            if debug:
+                print("Q2a: ", Q2a)
 
             # out-of-sample derived (fail), then out-of-sample ancesral (success)
-            Q = Qs(io, no-1, ic-1, nc-2, N, s, cache)
-            Q3a = 0 if Q == 0 else (oos + (1/N)) * (ic/nc) * s * oos * ((nc-ic)/(nc-1)) * Q
+            Q = Qs(io, no-1, ic-1, nc-2, N, s, cache, False)
+            Q3a = 0 if Q == 0 else oos2 * (ic/nc) * s * oos * ((nc-ic)/(nc-1)) * Q
+            if debug:
+                print("Q3a: ", Q3a)
 
             # in-sample derived (fail), then in-sample ancestral (success)
-            Q = Qs(io, no-1, ic, nc, N, s, cache)
+            Q = Qs(io, no-1, ic, nc, N, s, cache, False)
             Q4a = 0 if Q == 0 else (ic/N) * s * ((nc-ic)/(N)) * Q
+            if debug:
+                print("Q4a: ", Q4a)
 
             # in-sample derived (fail), then out-of-sample ancestral (success)
-            Q = Qs(io, no-1, ic, nc-1, N, s, cache)
-            Q5a = 0 if Q == 0 else (ic/N) * s * oos * (nc-ic)/(nc) * Q # should the last one be nc-1?
+            Q = Qs(io, no-1, ic, nc-1, N, s, cache, False)
+            Q5a = 0 if Q == 0 else (ic/N) * s * oos * ((nc-ic)/(nc)) * Q # should the last one be nc-1?
+            if debug:
+                print("Q5a: ", Q5a)
 
             # out-of-sample derived (fail), then in-sample ancestral (success)
-            Q = Qs(io, no-1, ic-1, nc-1, N, s, cache)
-            Q6a = 0 if Q == 0 else oos * ic/nc * s * (nc - ic) / N * Q
+            Q = Qs(io, no-1, ic-1, nc-1, N, s, cache, False)
+            Q6a = 0 if Q == 0 else oos * (ic/nc) * s * ((nc - ic) / N) * Q
+            if debug:
+                print("Q6a: ", Q6a)
 
             # Derived succeeds
             # out-of-sample derived
-            Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache)
-            Q1d = 0 if Q == 0 else oos * (ic)/nc * (1-s) * Q
+            Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache, False)
+            Q1d = 0 if Q == 0 else oos * (ic/nc) * (1-s) * Q
+            if debug:
+                print("Q1d: ", Q1d)
 
             # in-sample derived
-            Q = Qs(io-1, no-1, ic, nc, N, s, cache)
+            Q = Qs(io-1, no-1, ic, nc, N, s, cache, False)
             Q2d = 0 if Q == 0 else (ic/N) * (1-s) * Q
+            if debug:
+                print("Q2d: ", Q2d)
 
             # out-of-sample derived (fail), then out-of-sample derived (success)
-            Q = Qs(io-1, no-1, ic-2, nc-2, N, s, cache)
-            Q3d = 0 if Q == 0 else (oos + (1/N)) * (ic/nc) * s * oos * ((ic-1)/(nc-1)) * Q
+            Q = Qs(io-1, no-1, ic-2, nc-2, N, s, cache, False)
+            Q3d = 0 if Q == 0 else oos2 * (ic/nc) * s * oos * ((ic-1)/(nc-1)) * Q
+            if debug:
+                print("Q3d: ", Q3d)
 
             # in-sample derived (fail), then in-sample derived (success)
-            Q = Qs(io-1, no-1, ic, nc, N, s, cache)
+            Q = Qs(io-1, no-1, ic, nc, N, s, cache, False)
             Q4d = 0 if Q == 0 else (ic/N) * s * ((ic-1)/(N)) * Q
+            if debug:
+                print("Q4d: ", Q4d)
 
             # in-sample derived (fail), then out-of-sample derived (success)
-            Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache)
-            Q5d = 0 if Q == 0 else (ic-1/N) * s * oos * (ic)/(nc) * Q
+            Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache, False)
+            Q5d = 0 if Q == 0 else ((ic-1)/N) * s * oos * (ic/nc) * Q
+            if debug:
+                print("Q5d: ", Q5d)
 
             # out-of-sample derived (fail), then in-sample derived (success)
-            Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache)
-            Q6d = 0 if Q == 0 else oos * ic/nc * s * (ic-1) / N * Q
+            Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache, False)
+            Q6d = 0 if Q == 0 else oos * (ic/nc) * s * ((ic-1) / N) * Q
+            if debug:
+                print("Q6d: ", Q6d)
 
             v = Q1a + Q1d + Q2a + Q2d + Q3a + Q3d + Q4a + Q4d + Q5a + Q5d + Q6a + Q6d
 
             # extra cases - pick and reject the same allele - both derived
 
             # out-of-sample derived fail, then same success
-            Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache)
-            Q7 = 0 if Q == 0 else oos * ic / nc * s * (1/(N)) * Q
+            Q = Qs(io-1, no-1, ic-1, nc-1, N, s, cache, False)
+            Q7 = 0 if Q == 0 else oos * (ic / nc) * s * (1/(N)) * Q
+            if debug:
+                print("Q7: ", Q7)
             # in-sample derived fail, then same success
-            Q = Qs(io-1, no-1, ic, nc, N, s, cache)
-            Q8 = 0 if Q == 0 else ic / N * s * (1/(N)) * Q
+            Q = Qs(io-1, no-1, ic, nc, N, s, cache, False)
+            Q8 = 0 if Q == 0 else (ic / N) * s * (1/(N)) * Q
+            if debug:
+                print("Q8: ", Q8)
 
             v += Q7 + Q8
 
