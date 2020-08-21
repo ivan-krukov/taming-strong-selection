@@ -32,9 +32,9 @@ def Qs(io, no, ic, nc, N, s, cache, debug=False):
         elif (io, no, ic, nc) == (0, 1, 0, 1):
             v = 1
         elif (io, no, ic, nc) == (1, 1, 2, 2):
-            v = s
+            v = s * (1-(1/N))
         elif (io, no, ic, nc) == (0, 1, 1, 2):
-            v = s / 2
+            v = (s / 2) * (1-(1/N))
         else:
             # Out-sample
             oos = 1 - ((nc-1) / N)

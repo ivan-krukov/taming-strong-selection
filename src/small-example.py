@@ -28,8 +28,8 @@ def two_by_two_new_simplitied(s, N):
 def two_by_two_old_simplitied(s, N):
     return (1-s) * (1 - (1/N)) * (1 + (s/N))
 
-N = 1e5
-s = 1e-2
+N = 1e1
+s = 1e-1
 n = 2
 cases, x = two_by_two(s=s, N=N)
 # y = two_by_two_new_simplitied(s=s, N=N)
@@ -38,8 +38,8 @@ cases, x = two_by_two(s=s, N=N)
 from dynamic_tinkered import matrix, P0, matrix_nop
 from transition_probability_selection import matrix_selection, matrix_selection_nop, Qs
 
-M_new = matrix_nop(n, s=s, N=N, max_t=1) #matrix(n, s=s, N=N, max_t=1)
-M_old, _ = matrix_selection_nop(n, s=s, N=N) #matrix(n, s=s, N=N, max_t=1)
+M_new = matrix(n, s=s, N=N, max_t=1) #matrix(n, s=s, N=N, max_t=1)
+M_old, _ = matrix_selection(n, s=s, N=N) #matrix(n, s=s, N=N, max_t=1)
 
 cache =  np.full((2*n+1, 2*n+1, 2*n+1, 2*n+1), np.nan)
 M_old_rect, Q_cases = Qs(1,2,1,2,s=s,N=N,cache=cache, debug=True)
@@ -57,4 +57,4 @@ print('C8    = Q8;  d=',  Q_cases['Q8']  - cases[8])
 # print(x - M_new[1,1])
 # print(x - M_old[1,1])
 # print(x - M_old_rect)
-# print(M_new - M_old)
+print(M_new - M_old)
