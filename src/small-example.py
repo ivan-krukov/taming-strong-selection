@@ -5,19 +5,19 @@ def two_by_two(s, N):
 
     case[1] = (1/2) *     (1-s) *         (1 - (1/N))
     print("C1 ", case[1])
-    case[2] = (1/2) * s * (1-s) * (1/N) * (1 - (1/N))
+    case[2] = (1/2) * s         * (1/N) * (1 - (1/N))
     print("C2 ", case[2])
     case[3] = (1/2) *     (1-s) *         (1 - (1/N))
     print("C3 ", case[3])
     case[4] = (1/2) * s * (1-s) * (1/N) * (1 - (1/N))
     print("C4 ", case[4])
-    case[5] = (1/2) * s * (1-s) * (1/N) * (1 - (1/N))
+    case[5] = (1/2) * s         * (1/N) * (1 - (1/N))
     print("C5 ", case[5])
-    case[6] = (1/2) * s * (1-s) * (1/N) * (1 - (1/N)) * (1/N) * s
+    case[6] = (1/2) * s         * (1/N) * (1 - (1/N)) * (1/N) * s
     print("C6 ", case[6])
     case[7] = (1/2) * s * (1-s) * (1/N) * (1 - (1/N))
     print("C7 ", case[7])
-    case[8] = (1/2) * s * (1-s) * (1/N) * (1 - (1/N)) * (1/N) * s
+    case[8] = (1/2) * s         * (1/N) * (1 - (1/N)) * (1/N) * s
     print("C8 ", case[8])
 
     return case, sum(case)
@@ -29,7 +29,7 @@ def two_by_two_old_simplitied(s, N):
     return (1-s) * (1 - (1/N)) * (1 + (s/N))
 
 N = 1e1
-s = 1e-1
+s = 2e-1
 n = 2
 cases, x = two_by_two(s=s, N=N)
 # y = two_by_two_new_simplitied(s=s, N=N)
@@ -58,3 +58,5 @@ print('C8    = Q8;  d=',  Q_cases['Q8']  - cases[8])
 # print(x - M_old[1,1])
 # print(x - M_old_rect)
 print(M_new - M_old)
+
+print(M_old_rect - x)
