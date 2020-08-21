@@ -1,4 +1,4 @@
-from dynamic_tinkered import matrix,P0,Pf
+from transition_probability_dynamic_failures import matrix,P0,Pf
 from transition_probability_selection import matrix_selection
 import numpy as np
 

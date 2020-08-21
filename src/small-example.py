@@ -35,8 +35,8 @@ cases, x = two_by_two(s=s, N=N)
 # y = two_by_two_new_simplitied(s=s, N=N)
 # z = two_by_two_old_simplitied(s=s, N=N)
 
-from dynamic_tinkered import matrix, P0, matrix_nop
-from transition_probability_selection import matrix_selection, matrix_selection_nop, Qs
+from transition_probability_dynamic_failures import matrix, P0
+from transition_probability_selection import matrix_selection, Qs
 
 M_new = matrix(n, s=s, N=N, max_t=1) #matrix(n, s=s, N=N, max_t=1)
 M_old, _ = matrix_selection(n, s=s, N=N) #matrix(n, s=s, N=N, max_t=1)
