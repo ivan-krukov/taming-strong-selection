@@ -33,10 +33,12 @@
 
   \begin{abstract}
     
-    Neutral models of genetic diversity tend to be easier to analyze than models including
-    selection. Under the neutral Wright-Fisher model, the number of lineages that contribute to
-    ancestry of a sample decreases back in time due to coalescent events. As a consequence, useful
-    recursion equations can be derived for patterns of polymorphism. By contrast, under negative
+    Neutral models of genetic diversity tend to be easier to study than models including
+    selection.
+    In the Wright-Fisher model, the number of parental lineages that contribute to ancestry of 
+    a sample is lower than the number of offspring.
+    As a consequence, useful recursion equations can be derived for patterns of polymorphism. 
+    By contrast, under negative
     selection, the number of relevant lineages can increase as we go back in time, due to selective
     deaths. As a result, the equivalent recursion equations do not close. However, given a
     sufficiently large sample size, the expected reduction in the number of contributing lineages
@@ -81,16 +83,18 @@ sample is equal to or smaller than the sample size, due to coalescent events
 back in time \citep{Kingman1982a}. This does not hold under negative selection
 -- due to selective deaths, the number of parental lineages that contribute can
 be larger than the sample size, $n$.  As we demonstrate later, this leads to a
-potentially infinite number of terms in the equations. This is similar to the
-ancestral selection graphs (\textit{ASG}), \citep{KroneNeuhauser1997}, where
-the number of relevant lineages can increase back in time.
+potentially infinite number of terms in the equations. The potential increase in the number of 
+relevant lineages as we go back in time is explicit in the ancestral selection graphs 
+(\textit{ASG}), \citep{KroneNeuhauser1997}.
 
-The interplay of drift and selection is important to consider. The number of
-coalescent events is proportional to the sample size, while the number of
-selective deaths is independent from it. This suggests that with sufficiently
+The actual increase in the number of lineages as we go back in time depends on the
+relative importance of drift and selection. The number of
+coalescent events per generation is proportional to the square of the sample size $n$, 
+while the number of selective deaths is linear in $n$. This suggests that with sufficiently
 large samples, the effect of selection would be smaller than that of drift,
-which would lead to almost-closed recursion equations, as we will demonstrate
-here.
+which would prevent the increase in the number of lineages -- at least most of the times.
+Thus recursion equations can become almost-closed, in a sense that we will explore below.   
+
 
 An additional complication is multiple and/or simultaneous coalescent events --
 which emerge with large sample sizes \citep{BhaskarEtAl2014}. The standard
