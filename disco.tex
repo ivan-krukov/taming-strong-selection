@@ -160,10 +160,10 @@ at time $t$ in terms of the AFS at time $t-1$, we can sum over the random variab
 parental lineages selected, and $j$ the number of derived lineages among them:
 
 \begin{equation}
-\afs{n_o}{t}(i)=\sum_{n_p,j} P(i,j,n_p) = 
- \sum_{n_p,j} P(i | j,n_p) P(j,n_p)
+\afs{n_o}{t}(i)=\sum_{n_p,j} P_{n_o}(i,j,n_p) = 
+ \sum_{n_p,j} P_{n_o}(i | j,n_p) P(j,n_p),
 \end{equation}
-
+where the subscript $n_o$ indicates probabilities that depend on $n_o.$
 The event $(j,n_p)$ means that our Wright-Fisher sampling for $n_o$ offspring
 selected exactly $n_p$ distinct ancestors, of which $j$ are derived. Under
 Wright-Fisher sampling, the order in which (previously unsampled) parental
@@ -179,87 +179,18 @@ permutation carry $j$ derived alleles. Then $P(r(j,n_p)) =\afs{n_p}{t} (j),$
 and we can write
 
 \begin{equation}
-\afs{n_o}{t}(i) = \sum_{n_p,j} P(i | r(j,n_p), n_p)  P(n_p | r(j,n_p) ) P(r(j,n_p)) 
-    = \sum_{n_p,j} P(i,n_p | r(j,n_p))  \afs{n_p}{t-1}(j)
-\end{equation}
-
-\sgcomment{check if AFS is defined as probability or counts, in which case
-there is a scaling factor} where $r(j,n)$ is the event that $j$ out of the
-first $n$ sampled alleles in the population are derived. $r(j,n_p)$ follows a
-hypergeometric distribution and is distinct from $j$, the event of drawing $j$
-parental derived alleles in the Wright-Fisher sampling process for the first
-$n_o$ offspring. In words, the probability that we draw exactly $n_p$ parental
-alleles, of which $j$ are derived, is equal to the probability that a random
-subset of $n_p$ alleles drawn from the ancestral population contains $j$
-derived alleles, times the probability that we draw exactly $n_p$ parental
-samples in that case. Thus we can write
-
-\begin{equation}
+\afs{n_o}{t}(i) = \sum_{n_p,j} P_{n_o}(i | r(j,n_p), n_p)  P_{n_o}(n_p | r(j,n_p) ) P(r(j,n_p)) 
+ =   \sum_{n_p=1}^{n_{p,max}} \sum_{j=0}^{n_p}  P_{n_o}(i,n_p | r(j,n_p))  \afs{n_p}{t-1}(j).
 \label{eq:recur}
- \afs{n_o}{t}(i)= \sum_{n_p=1}^{n_{p,max}} \sum_{j=0}^{n_p} P(i, n_p | r(j,n_p)) \afs{n_p}{t-1}(j).
 \end{equation}
 
-Under neutral evolution, $n_{p,max}\leq n_0$. Since we can obtain smaller AFS from larger AFS through downsampling (i.e., $\afs{n'}{t}  = P_{n',n} \afs{n}{t}$ for hypergeometric projection matrix \sgcomment{We need to use a variable other than $P$ for all these matrices and probabilities} $P_{n',n}$ and $n'<n$ )  \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ 
-This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele frequencies under the large sample size limit.  
+Under neutral evolution, $n_{p,max}\leq n_0$. Since we can obtain smaller AFS from larger AFS through downsampling (i.e., $\afs{n_p}{t}  = H_{n_p,n_o} \afs{n_o}{t}$ for hypergeometric projection matrix $H_{n_p,n_o}$ if $n_p<n_o$ ), Equation \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele frequencies under the large sample size limit.  
 
-Under selection, $n_{p,max}$ can be larger than $n_o$, leading to an infinite set of coupled equations. A jackknife approximation can be used to simulate the drawing of additional lineages while preserving closure.
-\cite{JouganousEtAl2017} also derived approximate recursion equations under selection, but these required multiple approximations: because Jouganous et al worked in a limit where the number of coalescent and selection events per generation is much smaller than one, every selective event led to $n_p> n_o,$ requiring a closure approximation.  
+Under selection, $n_{p,max}$ can be larger than $n_o$, leading to an infinite set of coupled equations. A jackknife approximation can be used to simulate the drawing of a small number of additional lineages ($\afs{n_p}{t}  \simeq J_{n_p,n_o} \afs{n_o}{t}$ with $n_p>n_o$) while restoring closure.
+\cite{JouganousEtAl2017} used this to derive approximate recursion equations under selection. Jouganous et al worked in a limit where the number of coalescent and selection events per time period is much smaller than one, so that every selective event leads to $n_p> n_o$ and requires a closure approximation.  
 Our goal here is to take advantage of the fact that selective events can be treated exactly in the large sample size limit as long as  $n_p > n_o$ or,  equivalently, as long as  $n_s - n_d \leq 0.$
  
  
-%
-%Under neutrality (Fig. \ref{fig:schematic}A), we have $n_p \in [1, n_o]$, therefore:
-%
-%\begin{align}
-%  \label{eq:op-neutral}
-%  \afs{n_o}{t} = \sum_{n_p=1}^{n_o}\mathcal{D}_{n_p\ra n_o} \afs{n_p}{t-1}
-%\end{align}
-%
-%where $\mathcal{D}_{n_p\ra n_o}$ is a sparse matrix whose $i,j$th entry represents the 
-%probability that... 
-%
-%
-%
-%
-%This equation is closed with respect to the sample size $n_o$. 
-%
-%To include the effect of selection, we consider first the production of gametes from the parental
-%generation as a neutral process. Changing the subscripts in \eqref{eq:op-neutral} to refer to Fig.
-%\ref{fig:schematic}B, we have:
-%
-%\begin{align*}
-%  \afs{n_g}{t-\frac{1}{2}} = \sum_{n_p=1}^{n_g}\mathcal{D}_{n_p\ra n_g} \afs{n_p}{t-1}
-%\end{align*}
-%
-%Then, the produced gametes are sampled with rejection into $n_o$ offspring: \sgcomment{I don't understand how you get the next expression, logically}
-%
-%\begin{align*}
-%  \afs{n_o}{t} = \sum_{n_g=n_o}^{\infty}\mathcal{S}_{n_g\ra n_o} \afs{n_g}{t-\frac{1}{2}}
-%\end{align*}
-%
-%Combining the two expressions above, we get:
-%
-%\begin{align}
-%  \label{eq:op-selection}
-%  \afs{n_o}{t} = \sum_{n_g=n_o}^{\infty} \sum_{n_p=1}^{n_g} \mathcal{S}_{n_g\ra n_o}  \mathcal{D}_{n_p\ra n_g} \afs{n_p}{t-1}
-%\end{align}
-%
-%Since we need to consider a potentially infinite number of gametes produced ($n_g$), the equation
-%\eqref{eq:op-selection} is no longer closed with respect to sample size.
-%
-%Using $n_g=n_o+n_r=n_p+n_c$, we can re-write the above as:
-%
-%\begin{align}
-%  \label{eq:op-selection}
-%  \afs{n_o}{t} = \sum_{n_r=0}^{\infty} \sum_{n_c=0}^{n_o+n_r-1} \mathcal{S}_{(n_o+n_r) \ra n_o} \mathcal{D}_{(n_o+n_r-n_c)\ra (n_o+n_r)} \afs{n_o+n_r-n_c}{t-1}
-%\end{align}
-%
-%This shows that the allele frequency spectrum in a sample size $n_o$ at present is a function of the
-%AFS in the previous generation, with the sample size $n_o+n_r-n_c$.
-%
-%\ikcomment{I don't like this explanation, since I feel that the equation doesn't add much to the
-%  figure.}
-%
 
 In the large population size and weak selection limit, the probability of observing a coalescence event 
 in a generation is $\frac{n_o(n_o-1)}{2 N},$ whereas the probability of observing a selection event is
@@ -270,63 +201,20 @@ rate of selective events grows linearly, we expect  more drift events than selec
 $n_o>2Nf_p s.$ 
 
 
-
-
-
-
-%The relative rates at which drift and selection events occur is familiar from coalescent theory,
-%where the ancestral selection graph (\textit{ASG}) has rates of selective and drift events equal to
-% \citep{KroneNeuhauser1997, Wakeley2009} with the number of lineages growing changing as
-%
-%\begin{align}
-%  \label{eq:asg-size}
-%  n \ra \begin{cases}
-%    n+1 & \text{at rate } \frac{2 N s n}{2 N} ~ \text{ (selection) }\\
-%    n-1 & \text{at rate } \frac{n(n-1)}{2 N}   ~ \text{ (coalescence) }
-%  \end{cases}
-%\end{align}
-% \ikcomment{The reason I use continuous time rates here is that the coalescent term is obviously
-%   quadratic in $n$. If I use discrete generations, it will be $\frac{\sigma}{\sigma+n-1}$ for
-%   selection, and $\frac{n-1}{\sigma+n-1}$ for neutrality, which is a little less obvious.}
-
-%The coalescence term is quadratic with respect to the sample size $n$, while the selection term is
-%linear. The rate of coalescence is higher than the rate of selective events if the number of
-%lineages $n>2Ns+1$.If $n$ is larger than $2 N_s$, we expect the number of lineages to decrease 
-%more often than it increases.   
-
 Our goal is to obtain an explicit recursion from equation \eqref{eq:recur} and show that its asymptotic
  behavior for large $n_o$ allows for almost-exact solutions even in the strong selection regime. 
  To do so, we will need to account for multiple coalescent events, which will require some careful bookkeeping.
-
-%Our goal is to further investigate the interplay of selection and drift, and their effect on the
-%\textit{AFS}. First, we propose a construction that allows us to calculate the \textit{AFS} under
-%strong selection and large sample size, accounting for high-order coalescent terms. Second, we show
-%that with increasing sample size, the system becomes asymptotically closed. We construct exact and
-%approximate probability distributions that describe the number of contributing lineages.
-%Additionally, we derive a normal approximation that allows us to calculate the quantile function of
-%the sample size for a desired degree of closure.
-
 
 
 
 \subsection{Constructing the transition matrix}
 
-We can write Equation \eqref{eq:recur} in matrix form as \sgcomment{placeholder notation}
- \begin{equation}
-\label{eq:recur}
- \afs{n_o}{t} = \sum_{n_p=1}^{n_{p,max}} \mathbf{P}_{n_p,n_o} \afs{n_p}{t-1}.
-\end{equation}
-
-Given that a sample of $n_p$ parents from the parental population has $j$ derived alleles ,the $(i, j)^{th}$ entry of $\mathbf{P}_{n_p,n_o} $ can be interpreted as the probability that Wright-Fisher sampling of $n_o$ offspring draws exactly $n_p$ parents, and that the offspring has exactly $i$ derived alleles. 
-In the multiple-coalescence and strong selection regimes, we were unable to obtain an analytical expression
- that accounts for all the combinatorial ways to achieve this. 
+Even though $P_{n_o}(i,n_p | r(j,n_p))$ is a simple combinatorial probability, we were unable to compute 
+an analytical expression for it while allowing for multiple coalescences and multiple selective events.  
  
- However, we can obtain fairly simple recursions in terms of the sample size $n_o.$ 
- Intuitively,  $\mathbf{P}_{n_p,n_o-1}$ provides information about the first $n_o-1$ 
- offsprings and the parental samples. 
- We can then draw an additional offspring, and update the transition matrix by summing over a 
- small number of coalescence and selection possibilities for that offspring lineage.  
- The derivation itself is somewhat tedious, and presented in Appendix X. 
+ However, we can obtain fairly simple recursions in terms of the sample size $n_o,$ 
+ by assuming that we know   $P_{n_o-1}(i,n_p | r(j,n_p))$ and conditioning on the last drawn
+ offspring. The derivation itself is somewhat tedious, and presented in Appendix X. 
 
  
   \sgcomment{Perhaps include description of recursion, jackknife, and convergence?}
