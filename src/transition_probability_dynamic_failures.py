@@ -22,39 +22,43 @@ def basecases_t(io, no, ic, nc, s, t):
         else:
             return 0
     else:
-        return -1
+        return np.nan
 
 @jit(nopython=True)
-def Pf(io, no, ic, nc, s, N, t, max_t, cache):
+def Pf(io, no, ic, nc, s, N, t, max_t, cache_P0, cache_Pf):
     """The probability of not having had a transition after t failures"""
 
     v = basecases_t(io, no, ic, nc, s, t)
 
     #print("v in pf", v, "for params ",io, no, ic, nc, s, t)
-    if v == -1:
+    if np.isnan(v):
         # t is the number of failures
         if t <= 0:
             # We will build a recursion over the number of successfully drawn offspring n_0.
             # We need to start our recursion on
-            v = P0(io, no, ic, nc, s, N, max_t, cache)
+            v = P0(io, no, ic, nc, s, N, max_t, cache_P0, cache_Pf)
 
         else:  # the curent number of failures was obtained from a previous number of failures
-            oos = 1 - ((nc - 1) / N)  # out-of-sample
-            # B and C correspond to the cases in P0
-            b = oos * (ic / nc) * s * Pf(io, no, ic - 1, nc - 1, s, N, t - 1, max_t, cache)
+            v = cache_Pf[io, no, ic, nc, t]
+            if np.isnan(v):
+                oos = 1 - ((nc - 1) / N)  # out-of-sample
+                # B and C correspond to the cases in P0
+                b = oos * (ic / nc) * s * Pf(io, no, ic - 1, nc - 1, s, N, t - 1, max_t, cache_P0, cache_Pf)
 
-            c = (ic / N) * s * Pf(io, no, ic, nc, s, N, t - 1, max_t, cache)
-
-            v = b + c
+                c = (ic / N) * s * Pf(io, no, ic, nc, s, N, t - 1, max_t, cache_P0, cache_Pf)
+                v = b + c
+                
+                cache_Pf[io, no, ic, nc, t] = v
+            
     return v
 
 @jit(nopython=True)
-def P0(io, no, ic, nc, s, N, max_t, cache):
+def P0(io, no, ic, nc, s, N, max_t, cache_P0, cache_Pf):
     """max_t is the maximum number of failures. """
 
     v = basecases_t(io, no, ic, nc, s, t=max_t)
-    if v == -1:  # Recursion on what happened in the last lineage.
-        v = cache[io, no, ic, nc]
+    if np.isnan(v):  # Recursion on what happened in the last lineage.
+        v = cache_P0[io, no, ic, nc]
         if np.isnan(v):
             oos = 1 - ((nc - 1) / N)  # out-of-sample
             sel = 1 - s
@@ -62,55 +66,45 @@ def P0(io, no, ic, nc, s, N, max_t, cache):
             # out of sample, ancestral
             af = 0
             for t in range(max_t + 1):
-                af += Pf(io, no - 1, ic, nc - 1, s, N, t, max_t, cache)
+                af += Pf(io, no - 1, ic, nc - 1, s, N, t, max_t, cache_P0, cache_Pf)
             a = oos * ((nc - ic) / nc) * af
 
             # out of sample, derived
             bf = 0
             for t in range(max_t+1):
-                bf += Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, t, max_t, cache)
+                bf += Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, t, max_t, cache_P0, cache_Pf)
             b = oos * (ic / nc) * sel * bf
 
             # in sample, derived
             cf = 0
             for t in range(max_t+1):
-                cf += Pf(io - 1, no - 1, ic, nc, s, N, t, max_t, cache)
+                cf += Pf(io - 1, no - 1, ic, nc, s, N, t, max_t, cache_P0, cache_Pf)
             c = (ic / N) * sel * cf
 
             # in sample, ancestral
             df = 0
             for t in range(max_t+1):
-                df += Pf(io, no - 1, ic, nc, s, N, t, max_t, cache)
+                df += Pf(io, no - 1, ic, nc, s, N, t, max_t, cache_P0, cache_Pf)
             d = ((nc - ic) / N) * df
             # print("io, no, ic, nc", io, no, ic, nc)
             # print("a,b,c, d", a,b,c,d)
             v = a + b + c + d
-            v += (oos * (ic / nc) * s * Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, max_t, max_t, cache)) + (
-                (ic / N) * s * Pf(io - 1, no - 1, ic, nc, s, N, max_t, max_t, cache)
+            v += (oos * (ic / nc) * s * Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, max_t, max_t, cache_P0, cache_Pf)) + (
+                (ic / N) * s * Pf(io - 1, no - 1, ic, nc, s, N, max_t, max_t, cache_P0, cache_Pf)
             )  # Forcing success of cases b and c, respectively
 
-            cache[io, no, ic, nc] = v
+            cache_P0[io, no, ic, nc] = v
     return v
 
 
 def matrix(no=5, s=1 / 1000, N=1000, max_t=1):
     mtx = np.zeros((no + 1, no + 1))
-    cache = np.full((no+1, no+1, no+1, no+1), np.nan) # this is messier (we allocate way more than we need, but it's easier for numba)
+    cache_P0 = np.full((no+1, no+1, no+1, no+1), np.nan)
+    cache_Pf = np.full((no+1, no+1, no+1, no+1, max_t+1), np.nan)
     for nc in range(0, no + 1):
         for ic in range(0, nc + 1):
             # vectorized over ip
             p = hypergeom.pmf(ic, no, np.arange(0, no + 1), nc)
             for io in range(0, no + 1):
-                mtx[:, io] += P0(io, no, ic, nc, s, N, max_t, cache) * p
-    return mtx
-
-def matrix_double_sample(n, N, s=0, max_t=1):
-    mtx = np.zeros((2 * n + 1, n + 1))
-    for ip in range(0, 2 * n + 1):
-        for io in range(0, n + 1):
-            for nc in range(0, 2 * n + 1):
-                for ic in range(0, nc + 1):
-                    mtx[ip, io] += P0(io, n, ic, nc, s, N, max_t) * hypergeom.pmf(
-                        ic, 2 * n, ip, nc
-                    )
-    return mtx
+                mtx[:, io] += P0(io, no, ic, nc, s, N, max_t, cache_P0, cache_Pf) * p
+    return mtx, cache_P0, cache_Pf
