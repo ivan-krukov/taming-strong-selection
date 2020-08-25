@@ -180,7 +180,7 @@ and we can write
 
 \begin{equation}
 \afs{n_o}{t}(i) = \sum_{n_p,j} P(i | r(j,n_p), n_p)  P(n_p | r(j,n_p) ) P(r(j,n_p)) 
-    = \sum_{n_p,j} P(i,n_p | r(j,n_p))  \afs{n_p}{t-1}
+    = \sum_{n_p,j} P(i,n_p | r(j,n_p))  \afs{n_p}{t-1}(j)
 \end{equation}
 
 \sgcomment{check if AFS is defined as probability or counts, in which case
