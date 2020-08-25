@@ -155,8 +155,8 @@ is $n_p = n_o+n_r-n_c$, with $n_r$ the number of rejections and $n_c$ the
 number of coalescences.  Thus $n_p$ can be smaller than $n_o$ (if there is more
 drift than selection), or larger (if there is more selection than drift). 
 
-To estimate the allele-frequency spectrum $\afs{n_o}{t}$ in a sample size $n_o$
-at time $t$, we can sum over the random variables $n_p,$ the number of distinct
+To express the allele-frequency spectrum $\afs{n_o}{t}$ in a sample size $n_o$
+at time $t$ in terms of the AFS at time $t-1$, we can sum over the random variables $n_p,$ the number of distinct
 parental lineages selected, and $j$ the number of derived lineages among them:
 
 \begin{equation}
@@ -180,7 +180,7 @@ and we can write
 
 \begin{equation}
 \afs{n_o}{t}(i) = \sum_{n_p,j} P(i | r(j,n_p), n_p)  P(n_p | r(j,n_p) ) P(r(j,n_p)) 
-    = \sum_{n_p,j} P(i,n_p | r(j,n_p))  \afs{n_p}{t}
+    = \sum_{n_p,j} P(i,n_p | r(j,n_p))  \afs{n_p}{t-1}
 \end{equation}
 
 \sgcomment{check if AFS is defined as probability or counts, in which case
