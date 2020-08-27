@@ -241,15 +241,21 @@ an analytical expression for it while allowing for multiple coalescences and mul
 Using a dynamic
 programming algorithm, we implement the construction of the exact neutral transition matrices $\mathbf{Q}$ in 
 $O(n^3)$ operations. The set of selection transition probability matrices $\mathbf{T}$ requires $O(n^4)$
-operations. \sgcomment{We will discuss approximate solutions below? add the number of selection events allowed per ploid?}
+operations. \sgcomment{We will discuss approximate solutions below? add the number of selection events allowed per ploid, and add this in the scaling?}
 
 
 \subsection{Missing probability}
 
 Truncation of the recursion means that some events are not accounted for. Given $j$ derived alleles in a sample of size $n_o$, 
 probability lost due to truncation is simply $1- \sum_i Q_{n_o}(i,j),$ with the maximum loss of probability occurring for $j= n_o.$ 
-In numerical applications, we re-normalize each row of $Q$ to ensure a proper probability transition, and we  track $1- \sum_i Q_{n_o}(i,n_o)$ 
+Thus the maximum loss of probability occurs for very deleterious alleles at high frequency -- which is an unusual occurrence. 
+An alternative method of measuring lost probability is by weighing the missed probability by $\phi_{n_o}(j)$. 
+
+
+In numerical applications, we re-normalize each row of $Q$ to ensure a proper probability transition, and we track $1- \sum_i Q_{n_o}(i,n_o)$ 
 to ensure that it remains below a threshold \sgcomment{What did we use?}.
+
+
 
 
  \section{Results}
@@ -311,6 +317,8 @@ to ensure that it remains below a threshold \sgcomment{What did we use?}.
 %in the appendix. This involves enumerating all the coalescent and selective events between samples of
 %different sizes. We avoid it here for brevity.
 
+\sgcomment{Do we really need the following two paragraphs?}
+
 The sample size $n_o$ can range between $1$ and $N$, the size of the entire population. We expect that 
 when $n\ll N$, the calculations with the present model do not differ substantially from the
 prediction under the standard coalescent, or \citep{JouganousEtAl2017}. In the limit where
@@ -324,12 +332,12 @@ number of contributing lineages is $2n_o$ -- one selective death for each offspr
 to model strong selection, while limiting the number of coalescent configurations we need to
 consider when building $\mathbf{P}_s$. 
 
-The above restriction implies that under strong selection with large number of derived lineages $i$,
-there is a possibility that some probability is \textit{missing} from $\mathbf{P}_s$. However, since
-this model forms a proper Markov chain, we can calculate the total missing probability, by
-subtracting the total probability for a given derived allele count $i$ from $1$. This gives a rather
-natural proxy to checking how many extra lineages are required by selection. As we show further,
-this missing probability tends to $0$ with increasing sample size.
+%The above restriction implies that under strong selection with large number of derived lineages $i$,
+%there is a possibility that some probability is \textit{missing} from $\mathbf{P}_s$. However, since
+%this model forms a proper Markov chain, we can calculate the total missing probability, by
+%subtracting the total probability for a given derived allele count $i$ from $1$. This gives a rather
+%natural proxy to checking how many extra lineages are required by selection. As we show further,
+%this missing probability tends to $0$ with increasing sample size.
 
 %The recursive nature of these calculations makes them relatively inefficient. Using a dynamic
 %programming algorithm, we implement the construction of the neutral matrix $\mathbf{P}$ in the order
@@ -353,6 +361,7 @@ where $\mu$ is the per-site mutation rate, and $e_1$ is the first column of the 
 size $n$. Figure \ref{fig:strong-selection} shows the comparison of the \textit{AFS} calculated from
 Equation \eqref{eq:coal-recursion, eq:sfs-calc}, the diffusion approximation \cite[eq.
 9.23]{Ewens2004}, and the calculation performed in \texttt{Moments} \citep{JouganousEtAl2017}.
+\sgcomment{Should we give an example for very large sample sizes on panels A and B to show the finite sample effect?} 
 Panels A and B show the \textit{AFS} under neutrality, C and D under strong negative selection.
 Under neutrality, all the models agree, yeilding similar \textit{AFS}. When the sample size is equal
 to the population size (Fig. \ref{fig:strong-selection}B), we also include the \textit{AFS} from the
@@ -387,6 +396,8 @@ while there is no such limitation in the Wright-Fisher model.
 \subsection{Closure properties}
 \label{subsec:closure}
 
+\sgcomment{I added the closure derivation higher up. So here we can focus on the results. }
+
 To investigate the closure properties of $\mathbf{P}_s$, we can calculate the total probability that
 more that $n_o$ parental lineages contribute to a sample of size $n_o$. \sgcomment{I'm not sure
  I understand what you describe below. My take:}
@@ -408,7 +419,8 @@ $n=200$ in the worst-case scenario, with $j=200$ derived lineages.
   \includegraphics[]{fig/missing.pdf}
   \caption{Probability that unaccounted lineages contribute to the transition probabilities. The
     probabilities are calculated as 1 minus the sum of probabilities for the state where every
-    allele is derived.}
+    allele is derived.} \sgcomment{It could be cool to have both the worst case missing lineages (with $f=1$) and the average 
+    number of missing lineages at equilibrium. }
   \label{fig:missing}
 \end{figure}
 
