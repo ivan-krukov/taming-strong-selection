@@ -6,7 +6,7 @@ from time import perf_counter
 np.set_printoptions(precision=2, linewidth=70)
 
 Ne = 1e3
-s = 1e-2
+s = 1e-3
 n = 100
 max_t=1
 
@@ -24,14 +24,14 @@ M_new, cP0, cPf = matrix(n, s=s, N=Ne, max_t=max_t)
 print("Took ", perf_counter() - t_start)
 
 print("absolute differences")
-print(M_new - M_old)
+# print(M_new - M_old)
 print("relative differences")
 
 relative_diff = (M_new - M_old)/M_old
-print(relative_diff)
+# print(relative_diff)
 
 print("old")
-print(M_old)
+# print(M_old)
 
 print("new")
 print(M_new)
