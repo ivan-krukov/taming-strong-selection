@@ -202,7 +202,7 @@ If we have high confidence that this will be the case, we can restore closure by
 \begin{split}
 \afs{n_o}{t}(i)&\simeq \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o}   \afs{n_p}{t-1} \\
 &=   \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} H_{n_p,n_o}  \afs{n_o}{t-1}\\ 
-&\equiv    \mathbf{Q}_{n_p,n_o}  \afs{n_o}{t-1}\\ 
+&\equiv    \mathbf{Q}_{n_o}  \afs{n_o}{t-1}\\ 
 \end{split}
 \label{eq:truncated}
 \end{equation}
@@ -242,6 +242,15 @@ Using a dynamic
 programming algorithm, we implement the construction of the exact neutral transition matrices $\mathbf{Q}$ in 
 $O(n^3)$ operations. The set of selection transition probability matrices $\mathbf{T}$ requires $O(n^4)$
 operations. \sgcomment{We will discuss approximate solutions below? add the number of selection events allowed per ploid?}
+
+
+\subsection{Missing probability}
+
+Truncation of the recursion means that some events are not accounted for. Given $j$ derived alleles in a sample of size $n_o$, 
+probability lost due to truncation is simply $1- \sum_i Q_{n_o}(i,j),$ with the maximum loss of probability occurring for $j= n_o.$ 
+In numerical applications, we re-normalize each row of $Q$ to ensure a proper probability transition, and we  track $1- \sum_i Q_{n_o}(i,n_o)$ 
+to ensure that it remains below a threshold \sgcomment{What did we use?}.
+
 
  \section{Results}
 \label{sec:results}
@@ -322,12 +331,12 @@ subtracting the total probability for a given derived allele count $i$ from $1$.
 natural proxy to checking how many extra lineages are required by selection. As we show further,
 this missing probability tends to $0$ with increasing sample size.
 
-The recursive nature of these calculations makes them relatively inefficient. Using a dynamic
-programming algorithm, we implement the construction of the neutral matrix $\mathbf{P}$ in the order
-of $O(n^3)$ operations. The selection transition probability matrix $\mathbf{P}_s$ needs $O(n^4)$
-operations, due to the need to consider intermediate lineages. The increase in complexity makes this
-approach unsuitable for large sample sizes, but we derive several approximations in the following
-sections.
+%The recursive nature of these calculations makes them relatively inefficient. Using a dynamic
+%programming algorithm, we implement the construction of the neutral matrix $\mathbf{P}$ in the order
+%of $O(n^3)$ operations. The selection transition probability matrix $\mathbf{P}_s$ needs $O(n^4)$
+%operations, due to the need to consider intermediate lineages. The increase in complexity makes this
+%approach unsuitable for large sample sizes, but we derive several approximations in the following
+%sections.
 
 \subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
