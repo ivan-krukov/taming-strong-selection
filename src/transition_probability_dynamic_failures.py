@@ -27,73 +27,72 @@ def basecases_t(io, no, ic, nc, s, t):
 @jit(nopython=True)
 def Pf(io, no, ic, nc, s, N, t, max_t, cache_P0, cache_Pf):
     """The probability of not having had a transition after t failures"""
-
-    v = basecases_t(io, no, ic, nc, s, t)
-
+    v = cache_Pf[io, no, ic, nc, t]
+    
     #print("v in pf", v, "for params ",io, no, ic, nc, s, t)
     if np.isnan(v):
-        # t is the number of failures
-        if t <= 0:
-            # We will build a recursion over the number of successfully drawn offspring n_0.
-            # We need to start our recursion on
-            v = P0(io, no, ic, nc, s, N, max_t, cache_P0, cache_Pf)
+        v = basecases_t(io, no, ic, nc, s, t)
+        if np.isnan(v):
+            
+            # t is the number of failures
+            if t <= 0:
+                # We will build a recursion over the number of successfully drawn offspring n_0.
+                # We need to start our recursion on
+                v = P0(io, no, ic, nc, s, N, max_t, cache_P0, cache_Pf)
 
-        else:  # the curent number of failures was obtained from a previous number of failures
-            v = cache_Pf[io, no, ic, nc, t]
-            if np.isnan(v):
+            else:  # the curent number of failures was obtained from a previous number of failures
                 oos = 1 - ((nc - 1) / N)  # out-of-sample
                 # B and C correspond to the cases in P0
                 b = oos * (ic / nc) * s * Pf(io, no, ic - 1, nc - 1, s, N, t - 1, max_t, cache_P0, cache_Pf)
 
                 c = (ic / N) * s * Pf(io, no, ic, nc, s, N, t - 1, max_t, cache_P0, cache_Pf)
                 v = b + c
-                
-                cache_Pf[io, no, ic, nc, t] = v
-            
+
+    cache_Pf[io, no, ic, nc, t] = v
     return v
 
 @jit(nopython=True)
 def P0(io, no, ic, nc, s, N, max_t, cache_P0, cache_Pf):
     """max_t is the maximum number of failures. """
 
-    v = basecases_t(io, no, ic, nc, s, t=max_t)
+    
+    v = cache_P0[io, no, ic, nc]
     if np.isnan(v):  # Recursion on what happened in the last lineage.
-        v = cache_P0[io, no, ic, nc]
+        v = basecases_t(io, no, ic, nc, s, t=max_t)
         if np.isnan(v):
             oos = 1 - ((nc - 1) / N)  # out-of-sample
             sel = 1 - s
 
             # out of sample, ancestral
             af = 0
-            for t in range(max_t + 1):
-                af += Pf(io, no - 1, ic, nc - 1, s, N, t, max_t, cache_P0, cache_Pf)
+            for t in range(max_t, -1, -1):
+                af +=  Pf(io, no - 1, ic, nc - 1, s, N, t, max_t, cache_P0, cache_Pf)
             a = oos * ((nc - ic) / nc) * af
 
             # out of sample, derived
             bf = 0
-            for t in range(max_t+1):
+            for t in range(max_t, -1, -1):
                 bf += Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, t, max_t, cache_P0, cache_Pf)
             b = oos * (ic / nc) * sel * bf
 
             # in sample, derived
             cf = 0
-            for t in range(max_t+1):
+            for t in range(max_t, -1, -1):
                 cf += Pf(io - 1, no - 1, ic, nc, s, N, t, max_t, cache_P0, cache_Pf)
             c = (ic / N) * sel * cf
 
             # in sample, ancestral
             df = 0
-            for t in range(max_t+1):
+            for t in range(max_t, -1, -1):
                 df += Pf(io, no - 1, ic, nc, s, N, t, max_t, cache_P0, cache_Pf)
             d = ((nc - ic) / N) * df
-            # print("io, no, ic, nc", io, no, ic, nc)
-            # print("a,b,c, d", a,b,c,d)
+
             v = a + b + c + d
             v += (oos * (ic / nc) * s * Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, max_t, max_t, cache_P0, cache_Pf)) + (
                 (ic / N) * s * Pf(io - 1, no - 1, ic, nc, s, N, max_t, max_t, cache_P0, cache_Pf)
             )  # Forcing success of cases b and c, respectively
 
-            cache_P0[io, no, ic, nc] = v
+    cache_P0[io, no, ic, nc] = v
     return v
 
 
