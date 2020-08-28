@@ -476,7 +476,7 @@ Assuming $x=1$, the expectation over $n_p$ simply given by the occupancy distrib
 Since $n_g-n_o$ follows a negative binomial distribution with $n_g$ trials and success rate $1-s$, we can use the moment generating function to show that for any constant $x$,
 
 \begin{equation}
-E_{n_g}[x^{n_g}] = x^{n_o}  \frac{1-s}{1-sx}.
+E_{n_g}[x^{n_g}] = x^{n_o}  \left(\frac{1-s}{1-sx}\right)^{n_o}.
 \label{eq:identity}
 \end{equation} 
 
@@ -484,7 +484,7 @@ Thus we can write
 \begin{equation*}
   \begin{aligned}
     \label{eq:lineages-approx}
-    \hat{E}[n_p -n_o | n_o]    & =   N-N  \left( 1 - \frac{1}{N} \right)^{n_o} \frac{1-s}{1-s \left( 1 - \frac{1}{N} \right)}     -n_o.
+    \hat{E}[n_p -n_o | n_o]    & =   N-N  \left( 1 - \frac{1}{N} \right)^{n_o}\left( \frac{1-s}{1-s \left( 1 - \frac{1}{N} \right)}\right)^{n_o}     -n_o.
   \end{aligned}
 \end{equation*}
 
