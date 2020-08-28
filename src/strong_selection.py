@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from transition_probability_selection import matrix_selection_more_contributors
+#from transition_probability_selection import matrix_selection_more_contributors
 import moments
 from pathlib import Path
 from tqdm import tqdm
@@ -47,14 +47,13 @@ def binomial_projection_full(n, N, s=0, u=1e-8):
 
 tmp_store = Path("data")
 
-N_range = [1000, 100]
+N_range = [1000, 200]
 n = 100
 mu = 1e-8
 z = np.zeros(n - 1)
 z[0] = n * mu  # Forward mutation
 # z[-1] = n * mu                  # Backward mutation
 I = np.eye(n - 1)
-
 
 ns_range = [0, 50]
 
@@ -64,13 +63,13 @@ frequency_spectra = [[] for _ in N_range]
 for i, N in enumerate(tqdm(N_range)):
     for j, Ns in enumerate(tqdm(ns_range)):
         mtx_pkl = tmp_store / Path(f"mtx_n_{n}_Ns_{Ns}_N_{N}.pypkl")
-        if not mtx_pkl.exists():
-            M, _ = matrix_selection_more_contributors(n, N, Ns / N)
-            with open(mtx_pkl, "wb") as pkl:
-                pickle.dump(M, pkl)
-        else:
-            with open(mtx_pkl, "rb") as pkl:
-                M = pickle.load(pkl)
+        # if not mtx_pkl.exists():
+        #     M, _ = matrix_selection_more_contributors(n, N, Ns / N)
+        #     with open(mtx_pkl, "wb") as pkl:
+        #         pickle.dump(M, pkl)
+        # else:
+        with open(mtx_pkl, "rb") as pkl:
+            M = pickle.load(pkl)
         mtxs[i].append(M)
 
         # solve for equilibrium
@@ -121,7 +120,7 @@ with plot_and_legend(
 
             if N == n:
                 wright_fisher = wright_fisher_sfs(N, -s, mu)
-                a.semilogy(normalize(wright_fisher), label="Wright-Fisher")
+                a.semilogy(normalize(wright_fisher), ls="--", label="Wright-Fisher")
 
             a.set(title=f"n={n}, N={N}, Ns={Ns}")
             idx = (j * 2) + i
