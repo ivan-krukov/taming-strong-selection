@@ -58,18 +58,18 @@ def adaptable_legend_subplot(nrow=1, ncol=1, legend_side='right', ratio=10, **fi
     row_start, row_stop = 0, nrow
     col_start, col_stop = 0, ncol
 
-    if legend_side is 'top':
+    if legend_side == 'top':
         row_start, row_stop = 1, nrow + 1
         gs = GridSpec(nrow + 1, ncol, fig, height_ratios=[1] + [ratio] * nrow)
         lax = fig.add_subplot(gs[0, :])  # span first row
-    elif legend_side is 'bottom':
+    elif legend_side == 'bottom':
         gs = GridSpec(nrow + 1, ncol, fig, height_ratios=[ratio] * nrow + [1])
         lax = fig.add_subplot(gs[-1, :])  # span last row
-    elif legend_side is 'left':
+    elif legend_side == 'left':
         col_start, col_stop = 1, ncol + 1
         gs = GridSpec(nrow, ncol + 1, fig, width_ratios=[1] + [ratio] * ncol)
         lax = fig.add_subplot(gs[:, 0])  # span first column
-    elif legend_side is 'right':
+    elif legend_side == 'right':
         gs = GridSpec(nrow, ncol + 1, fig, width_ratios=[ratio] * ncol + [1])
         lax = fig.add_subplot(gs[:, -1])  # span last column
     else:
@@ -85,7 +85,7 @@ def adaptable_legend_subplot(nrow=1, ncol=1, legend_side='right', ratio=10, **fi
 
     # flatten if necessary
     ax = ax.flatten() if 1 in ax.shape else ax
-    ax = ax[0] if ax.size is 1 else ax
+    ax = ax[0] if ax.size == 1 else ax
 
     return fig, lax, ax
 
