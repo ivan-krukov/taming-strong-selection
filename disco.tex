@@ -241,15 +241,21 @@ an analytical expression for it while allowing for multiple coalescences and mul
 Using a dynamic
 programming algorithm, we implement the construction of the exact neutral transition matrices $\mathbf{Q}$ in 
 $O(n^3)$ operations. The set of selection transition probability matrices $\mathbf{T}$ requires $O(n^4)$
-operations. \sgcomment{We will discuss approximate solutions below? add the number of selection events allowed per ploid?}
+operations. \sgcomment{We will discuss approximate solutions below? add the number of selection events allowed per ploid, and add this in the scaling?}
 
 
 \subsection{Missing probability}
 
 Truncation of the recursion means that some events are not accounted for. Given $j$ derived alleles in a sample of size $n_o$, 
 probability lost due to truncation is simply $1- \sum_i Q_{n_o}(i,j),$ with the maximum loss of probability occurring for $j= n_o.$ 
-In numerical applications, we re-normalize each row of $Q$ to ensure a proper probability transition, and we  track $1- \sum_i Q_{n_o}(i,n_o)$ 
+Thus the maximum loss of probability occurs for very deleterious alleles at high frequency -- which is an unusual occurrence. 
+An alternative method of measuring lost probability is by weighing the missed probability by $\phi_{n_o}(j)$. 
+
+
+In numerical applications, we re-normalize each row of $Q$ to ensure a proper probability transition, and we track $1- \sum_i Q_{n_o}(i,n_o)$ 
 to ensure that it remains below a threshold \sgcomment{What did we use?}.
+
+
 
 
  \section{Results}
@@ -311,6 +317,8 @@ to ensure that it remains below a threshold \sgcomment{What did we use?}.
 %in the appendix. This involves enumerating all the coalescent and selective events between samples of
 %different sizes. We avoid it here for brevity.
 
+\sgcomment{Do we really need the following two paragraphs?}
+
 The sample size $n_o$ can range between $1$ and $N$, the size of the entire population. We expect that 
 when $n\ll N$, the calculations with the present model do not differ substantially from the
 prediction under the standard coalescent, or \citep{JouganousEtAl2017}. In the limit where
@@ -324,12 +332,12 @@ number of contributing lineages is $2n_o$ -- one selective death for each offspr
 to model strong selection, while limiting the number of coalescent configurations we need to
 consider when building $\mathbf{P}_s$. 
 
-The above restriction implies that under strong selection with large number of derived lineages $i$,
-there is a possibility that some probability is \textit{missing} from $\mathbf{P}_s$. However, since
-this model forms a proper Markov chain, we can calculate the total missing probability, by
-subtracting the total probability for a given derived allele count $i$ from $1$. This gives a rather
-natural proxy to checking how many extra lineages are required by selection. As we show further,
-this missing probability tends to $0$ with increasing sample size.
+%The above restriction implies that under strong selection with large number of derived lineages $i$,
+%there is a possibility that some probability is \textit{missing} from $\mathbf{P}_s$. However, since
+%this model forms a proper Markov chain, we can calculate the total missing probability, by
+%subtracting the total probability for a given derived allele count $i$ from $1$. This gives a rather
+%natural proxy to checking how many extra lineages are required by selection. As we show further,
+%this missing probability tends to $0$ with increasing sample size.
 
 %The recursive nature of these calculations makes them relatively inefficient. Using a dynamic
 %programming algorithm, we implement the construction of the neutral matrix $\mathbf{P}$ in the order
@@ -353,6 +361,7 @@ where $\mu$ is the per-site mutation rate, and $e_1$ is the first column of the 
 size $n$. Figure \ref{fig:strong-selection} shows the comparison of the \textit{AFS} calculated from
 Equation \eqref{eq:coal-recursion, eq:sfs-calc}, the diffusion approximation \cite[eq.
 9.23]{Ewens2004}, and the calculation performed in \texttt{Moments} \citep{JouganousEtAl2017}.
+\sgcomment{Should we give an example for very large sample sizes on panels A and B to show the finite sample effect?} 
 Panels A and B show the \textit{AFS} under neutrality, C and D under strong negative selection.
 Under neutrality, all the models agree, yeilding similar \textit{AFS}. When the sample size is equal
 to the population size (Fig. \ref{fig:strong-selection}B), we also include the \textit{AFS} from the
@@ -387,6 +396,8 @@ while there is no such limitation in the Wright-Fisher model.
 \subsection{Closure properties}
 \label{subsec:closure}
 
+\sgcomment{I added the closure derivation higher up. So here we can focus on the results. }
+
 To investigate the closure properties of $\mathbf{P}_s$, we can calculate the total probability that
 more that $n_o$ parental lineages contribute to a sample of size $n_o$. \sgcomment{I'm not sure
  I understand what you describe below. My take:}
@@ -408,7 +419,8 @@ $n=200$ in the worst-case scenario, with $j=200$ derived lineages.
   \includegraphics[]{fig/missing.pdf}
   \caption{Probability that unaccounted lineages contribute to the transition probabilities. The
     probabilities are calculated as 1 minus the sum of probabilities for the state where every
-    allele is derived.}
+    allele is derived.} \sgcomment{It could be cool to have both the worst case missing lineages (with $f=1$) and the average 
+    number of missing lineages at equilibrium. }
   \label{fig:missing}
 \end{figure}
 
@@ -438,37 +450,60 @@ For a given sample size, the probability that $n_p$ parents have contributed is:
   Pr(n_p | n_o) = \sum_{n_g} Pr(n_p | n_g)Pr(n_g | n_o)
 \end{align}
 
+\sgcomment{Use same notation as above?}
 Where $n_p$ and $n_g$ is the number of contributing parents and gametes, respectively (Fig.
-\ref{fig:schematic}B). Note that we consider this backward in time, so $n_o$ is given, and we ask
-the probability of $n_p$ conditional on $n_o$.
+\ref{fig:schematic}B). %Note that we consider this backward in time, so $n_o$ is given, and we ask
+%the probability of $n_p$ conditional on $n_o$.
 
-As a first order approximation, we can model the expectation $E[n_p | n_o]$ as the sum of lineages
-used under drift $\tilde{E}[n_p | n_o]$ (Fig. \ref{fig:schematic}A) plus the number of extra
-lineages required by selection, $E[n_r | n_o]$.
+We can model the expectation $E[n_p-n_o | n_o]$ as the sum of lineages
+lost to drift plus the number of extra
+lineages required by selection
 
 \begin{equation*}
   \begin{aligned}
     \label{eq:lineages-approx}
-    \hat{E}[n_p  | n_o] &= \tilde{E}[n_p | n_o] + \hat{E}[n_r | n_o] \\
-    &= N\left[1-\left( 1 - \frac{1}{N} \right)^n \right] + n\left( \frac{xs}{1-xs}\right) \\
-    &\underset{N\gg n}{\approx} \frac{nxs}{1-xs} - \frac{n^2}{2N}
+    E[n_p -n_o | n_o] &= E[n_p-n_g | n_o] + E[n_g-n_o | n_o] \\
+    &= \sum_{n_g} E[n_p-n_g | n_g] P(n_g|n_o) + n_o\left( \frac{xs}{1-xs}\right)
+  \end{aligned}
+\end{equation*}
+The first term represents the number of lineages lost to drift, and each expectation is bounded below by $E[n_p-n_o| n_o]$, so that we can write 
+\begin{equation*}
+  \begin{aligned}
+    \label{eq:lineages-approx}
+    \hat{E}[n_p -n_o | n_o] & \leq   N\left[1-\left( 1 - \frac{1}{N} \right)^{n_o} \right] -n_o + n_o\left( \frac{xs}{1-xs}\right)\\
+     &\underset{N\gg n}{\approx} \frac{n_oxs}{1-xs} - \frac{n_o^2}{2N}
   \end{aligned}
 \end{equation*}
 
-The expectations can be derived directly or from the corresponding probability distributions
-\ref{subsec:distribution}.The second approximation is made under the assumption that the sample size
-is much smaller than the population size. The increase of the number of lineages due to selection is
-linear. Drift decreases the number of lineages as a quadratic term with respect to the sample size.
-This is analogous to the results from the ancestral selection graph \citep{KroneNeuhauser1997}, eq.
-\eqref{eq:asg-size}. Solving \eqref{eq:lineages-approx} for $n_o^* > \hat{E}[n_p | n_o]$ yields:
+
+
+
+
+
+
+%\begin{equation*}
+ % \begin{aligned}
+ %   \label{eq:lineages-approx}
+ %   \hat{E}[n_p  | n_o] &= \tilde{E}[n_p | n_o] + \hat{E}[n_r | n_o] \\
+ %   &= N\left[1-\left( 1 - \frac{1}{N} \right)^n \right] + n\left( \frac{xs}{1-xs}\right) \\
+  %
+  %  &\underset{N\gg n}{\approx} \frac{nxs}{1-xs} - \frac{n^2}{2N}
+ % \end{aligned}
+%\end{equation*}
+
+%The expectations can be derived directly or from the corresponding probability distributions
+%\ref{subsec:distribution}.The second approximation is made under the assumption that the sample size
+%is much smaller than the population size. 
+We thus have the usual result that the increase of the number of lineages due to selection is
+linear, whereas the reduction due to drift is quadratic. Solving \eqref{eq:lineages-approx} for $ \hat{E}[n_p -n_o | n_o]<0$ yields:
 
 \begin{equation}
   \label{eq:critical-sample}
   n_o^* \ge 2Nxs
 \end{equation}
 
-This represents a critical sample size, above which drift outpaces selection.
-Note again the similarity to \eqref{eq:asg-size}.
+%This represents a critical sample size, above which drift outpaces selection.
+%Note again the similarity to \eqref{eq:asg-size}.
 
 Figure \ref{fig:critical-sample-size} shows the critical sample size for several selection
 coefficients, assuming the entirety of the sample is derived ($x=1$) in a population of $N=1,000$.
@@ -490,6 +525,9 @@ the critical sample size, which is well-approximated by $2Nsx$.
 
 \subsection{Distribution of number of contributing lineages}
 \label{subsec:distribution}
+
+To ensure approximate closure of the recursion, we need a stricter constraint, we need $n_p\leq n_o$
+not in average, but almost always. WE therefore need to study the distribution $P(N_p|n_0)$. 
 
 We now construct a probability distribution of the number of contributing lineages one generation
 into the past \ref{fig:schematic}B, \eqref{eq:conditional}. 
