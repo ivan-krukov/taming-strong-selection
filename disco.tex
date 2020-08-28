@@ -450,37 +450,60 @@ For a given sample size, the probability that $n_p$ parents have contributed is:
   Pr(n_p | n_o) = \sum_{n_g} Pr(n_p | n_g)Pr(n_g | n_o)
 \end{align}
 
+\sgcomment{Use same notation as above?}
 Where $n_p$ and $n_g$ is the number of contributing parents and gametes, respectively (Fig.
-\ref{fig:schematic}B). Note that we consider this backward in time, so $n_o$ is given, and we ask
-the probability of $n_p$ conditional on $n_o$.
+\ref{fig:schematic}B). %Note that we consider this backward in time, so $n_o$ is given, and we ask
+%the probability of $n_p$ conditional on $n_o$.
 
-As a first order approximation, we can model the expectation $E[n_p | n_o]$ as the sum of lineages
-used under drift $\tilde{E}[n_p | n_o]$ (Fig. \ref{fig:schematic}A) plus the number of extra
-lineages required by selection, $E[n_r | n_o]$.
+We can model the expectation $E[n_p-n_o | n_o]$ as the sum of lineages
+lost to drift plus the number of extra
+lineages required by selection
 
 \begin{equation*}
   \begin{aligned}
     \label{eq:lineages-approx}
-    \hat{E}[n_p  | n_o] &= \tilde{E}[n_p | n_o] + \hat{E}[n_r | n_o] \\
-    &= N\left[1-\left( 1 - \frac{1}{N} \right)^n \right] + n\left( \frac{xs}{1-xs}\right) \\
-    &\underset{N\gg n}{\approx} \frac{nxs}{1-xs} - \frac{n^2}{2N}
+    E[n_p -n_o | n_o] &= E[n_p-n_g | n_o] + E[n_g-n_o | n_o] \\
+    &= \sum_{n_g} E[n_p-n_g | n_g] P(n_g|n_o) + n_o\left( \frac{xs}{1-xs}\right)
+  \end{aligned}
+\end{equation*}
+The first term represents the number of lineages lost to drift, and each expectation is bounded below by $E[n_p-n_o| n_o]$, so that we can write 
+\begin{equation*}
+  \begin{aligned}
+    \label{eq:lineages-approx}
+    \hat{E}[n_p -n_o | n_o] & \leq   N\left[1-\left( 1 - \frac{1}{N} \right)^{n_o} \right] -n_o + n_o\left( \frac{xs}{1-xs}\right)\\
+     &\underset{N\gg n}{\approx} \frac{n_oxs}{1-xs} - \frac{n_o^2}{2N}
   \end{aligned}
 \end{equation*}
 
-The expectations can be derived directly or from the corresponding probability distributions
-\ref{subsec:distribution}.The second approximation is made under the assumption that the sample size
-is much smaller than the population size. The increase of the number of lineages due to selection is
-linear. Drift decreases the number of lineages as a quadratic term with respect to the sample size.
-This is analogous to the results from the ancestral selection graph \citep{KroneNeuhauser1997}, eq.
-\eqref{eq:asg-size}. Solving \eqref{eq:lineages-approx} for $n_o^* > \hat{E}[n_p | n_o]$ yields:
+
+
+
+
+
+
+%\begin{equation*}
+ % \begin{aligned}
+ %   \label{eq:lineages-approx}
+ %   \hat{E}[n_p  | n_o] &= \tilde{E}[n_p | n_o] + \hat{E}[n_r | n_o] \\
+ %   &= N\left[1-\left( 1 - \frac{1}{N} \right)^n \right] + n\left( \frac{xs}{1-xs}\right) \\
+  %
+  %  &\underset{N\gg n}{\approx} \frac{nxs}{1-xs} - \frac{n^2}{2N}
+ % \end{aligned}
+%\end{equation*}
+
+%The expectations can be derived directly or from the corresponding probability distributions
+%\ref{subsec:distribution}.The second approximation is made under the assumption that the sample size
+%is much smaller than the population size. 
+We thus have the usual result that the increase of the number of lineages due to selection is
+linear, whereas the reduction due to drift is quadratic. Solving \eqref{eq:lineages-approx} for $ \hat{E}[n_p -n_o | n_o]<0$ yields:
 
 \begin{equation}
   \label{eq:critical-sample}
   n_o^* \ge 2Nxs
 \end{equation}
 
-This represents a critical sample size, above which drift outpaces selection.
-Note again the similarity to \eqref{eq:asg-size}.
+%This represents a critical sample size, above which drift outpaces selection.
+%Note again the similarity to \eqref{eq:asg-size}.
 
 Figure \ref{fig:critical-sample-size} shows the critical sample size for several selection
 coefficients, assuming the entirety of the sample is derived ($x=1$) in a population of $N=1,000$.
