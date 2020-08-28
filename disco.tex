@@ -21,7 +21,7 @@
 
 \newcommand{\sgcomment}[1]{\textcolor{red}{SG: #1}}
 \newcommand{\ikcomment}[1]{\textcolor{blue}{IK: #1}}
-
+\newcommand{\Var}{\operatorname{Var}}
 \journal{Theoretical Population Biology}
 
 \begin{document}
@@ -467,7 +467,7 @@ Assuming $x=1$, the expectation over $n_p$ simply given by the occupancy distrib
 
 \begin{equation*}
   \begin{aligned}
-    \label{eq:lineages-approx}
+    \label{eq:lineages-derive}
     \hat{E}[n_p -n_o | n_o] & =   E_{n_g}\left[N\left[1-\left( 1 - \frac{1}{N} \right)^{n_g} \right]\right]- n_o\\
     & =   N-N  E_{n_g}\left[\left( 1 - \frac{1}{N} \right)^{n_g} \right] -n_o. 
   \end{aligned}
@@ -483,9 +483,16 @@ E_{n_g}[x^{n_g}] = x^{n_o}  \left(\frac{1-s}{1-sx}\right)^{n_o}.
 Thus we can write 
 \begin{equation*}
   \begin{aligned}
-    \label{eq:lineages-approx}
+    \label{eq:lineages-exact}
     \hat{E}[n_p -n_o | n_o]    & =   N-N  \left( 1 - \frac{1}{N} \right)^{n_o}\left( \frac{1-s}{1-s \left( 1 - \frac{1}{N} \right)}\right)^{n_o}     -n_o.
   \end{aligned}
+\end{equation*}
+
+Taking the terms of order $\frac{1}{N}$ gives
+
+\begin{equation*}
+    \label{eq:lineages-approx}
+    \hat{E}[n_p -n_o | n_o]    =   n_os - \frac{n_o (n_o-1) }{2N}  
 \end{equation*}
 
 
@@ -508,12 +515,14 @@ Thus we can write
 %The expectations can be derived directly or from the corresponding probability distributions
 %\ref{subsec:distribution}.The second approximation is made under the assumption that the sample size
 %is much smaller than the population size. 
+
+
 We thus have the usual result that the increase of the number of lineages due to selection is
-linear, whereas the reduction due to drift is quadratic. Solving \eqref{eq:lineages-approx} for $ \hat{E}[n_p -n_o | n_o]<0$ yields:
+linear, whereas the reduction due to drift is quadratic. Solving for $ \hat{E}[n_p -n_o | n_o]<0$ yields, to leading order,
 
 \begin{equation}
   \label{eq:critical-sample}
-  n_o^* \ge 2Nxs
+  n_o^* \ge 2Nxs.
 \end{equation}
 
 %This represents a critical sample size, above which drift outpaces selection.
@@ -537,11 +546,49 @@ the critical sample size, which is well-approximated by $2Nsx$.
   \label{fig:critical-sample-size}
 \end{figure}
 
+
+
+
 \subsection{Distribution of number of contributing lineages}
 \label{subsec:distribution}
 
 To ensure approximate closure of the recursion, we need a stricter constraint, that is, $n_p\leq n_o$
  almost always (rather than on average. We therefore need to study the distribution $P(n_p|n_0)$. 
+
+
+We can obtain the variance of this distribution by using the law of total variance:
+
+\begin{equation}
+\Var\left[n_p-n_o \right] = \Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right]+  E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] 
+\end{equation}
+
+The expectation in the first term can be derived from the occupancy distribution and the identity \ref{eq:identity}:
+
+\begin{equation}
+\begin{split}
+\Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right] &= \Var_{n_g}\left[E\left[n_p| n_g \right]\right] \\
+&= \Var_{n_g}\left[N\left(1-(1-\frac{1}{N})^{n_g} \right) \right] \\ 
+&= N^2 \Var_{n_g}\left[(1-\frac{1}{N})^{n_g} \right] \\
+&= N^2 \left( E_{n_g}\left[(1-\frac{1}{N})^{2n_g} \right] - E_{n_g}\left[(1-\frac{1}{N})^{n_g} \right]^2\right) \\
+&= N^2 \left( \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o} 
+-   \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)}\right)^{2n_o} \right) \\
+\end{split}
+\end{equation}
+
+The variance of the second term is the variance of the occupancy distribution \cite{}:
+
+\begin{equation}
+\begin{split}
+E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] & = E_{n_g}\left[N ((N - 1) (1 - 2/N)^{n_g} + (1 - 1/N)^{n_g} - N (1 - 1/N)^{2 n_g}) \right] \\
+& = N (N-1)  \left(1-\frac{1}{2N}\right)^{n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{2N}\right)}\right)^{n_o} +  \left(1-\frac{1}{N}\right)^{n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)}\right)^{n_o} \\
+&-N  \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o}. 
+\end{split}
+\end{equation}
+
+The two terms can be put together to provide an analytical expression for the variance of $n_p$. 
+
+
+
 
 The number of parental lineages used by drift can be modelled by the modified occupancy
 (Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}. This is given by:
