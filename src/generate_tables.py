@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 N_range = [1000, 100, 200]
 Ns_range = [0, 10, 50]
-max_t = 5
+max_t = 4
 n = 100
 tmp_store = Path("data")
 
