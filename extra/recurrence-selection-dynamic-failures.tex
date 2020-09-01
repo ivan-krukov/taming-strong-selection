@@ -2,31 +2,25 @@
 \usepackage{amsmath}
 \usepackage{xcolor}
 
-\newcommand{\Dfrac}[2]{%
-  \ooalign{%
-    $\genfrac{}{}{1.2pt}0{#1}{#2}$\cr%
-    $\color{white}\genfrac{}{}{.4pt}0{\phantom{#1}}{\phantom{#2}}$}%
-}
-\newcommand{\cond}{\middle\vert}
 \newcommand{\Coalc}[4]{\begin{bmatrix}#1,#2 \\ #3,#4 \end{bmatrix}}
 
 \begin{document}
 
 \begin{equation*}
   \begin{aligned}
-    T_{f,0}\Coalc{i_c}{n_c}{i_o}{n_o}
-    = \left(1-\frac{n_c-1}{N}\right) \frac{n_c-i_c}{n_c}       \sum_{t=0}^{t_{max}}                                                 T_{f,t}\Coalc{i_c  }{n_c-1}{i_o  }{n_o-1} & (A) \\
-    + \left(1-\frac{n_c-1}{N}\right) \frac{i_c}{n_c}     (1-s) \sum_{t=0}^{t_{max}} \left(\frac{s}{1-s}\right)^{\delta_{t,t_{max}}} T_{f,t}\Coalc{i_c-1}{n_c-1}{i_o-1}{n_o-1} & (B) \\
-    +                                \frac{i_c}{N}       (1-s) \sum_{t=0}^{t_{max}} \left(\frac{s}{1-s}\right)^{\delta_{t,t_{max}}} T_{f,t}\Coalc{i_c  }{n_c  }{i_o-1}{n_o-1} & (C) \\
-    +                                \frac{n_c-i_c}{N}         \sum_{t=0}^{t_{max}}                                                 T_{f,t}\Coalc{i_c  }{n_c  }{i_o  }{n_o-1} & (D) \\
+    T_{r=0}\Coalc{i_c}{n_c}{i_o}{n_o}
+    = \left(1-\frac{n_c-1}{N}\right) \frac{n_c-i_c}{n_c}       \sum_{r=0}^{r_{max}}                                                 T_{r}\Coalc{i_c  }{n_c-1}{i_o  }{n_o-1} & (A) \\
+    +                                \frac{n_c-i_c}{N}         \sum_{r=0}^{r_{max}}                                                 T_{r}\Coalc{i_c  }{n_c  }{i_o  }{n_o-1} & (B) \\
+    + \left(1-\frac{n_c-1}{N}\right) \frac{i_c}{n_c}     (1-s) \sum_{r=0}^{r_{max}} \left(\frac{s}{1-s}\right)^{\delta_{r,r_{max}}} T_{r}\Coalc{i_c-1}{n_c-1}{i_o-1}{n_o-1} & (C) \\
+    +                                \frac{i_c}{N}       (1-s) \sum_{r=0}^{r_{max}} \left(\frac{s}{1-s}\right)^{\delta_{r,r_{max}}} T_{r}\Coalc{i_c  }{n_c  }{i_o-1}{n_o-1} & (D) \\
   \end{aligned}
 \end{equation*}
 
 \begin{equation*}
   \begin{aligned}
-    T_{f,t}\Coalc{i_c}{n_c}{i_o}{n_o}
-    = \left(1-\frac{n_c-1}{N}\right) \frac{i_c}{n_c} s T_{f,t-1} \Coalc{i_c-1}{n_c-1}{i_o}{n_o}& (sB) \\
-    +                                \frac{i_c}{N}   s T_{f,t-1} \Coalc{i_c  }{n_c  }{i_o}{n_o}& (sC) \\
+    T_{r}\Coalc{i_c}{n_c}{i_o}{n_o}
+    = \left(1-\frac{n_c-1}{N}\right) \frac{i_c}{n_c} s T_{r-1} \Coalc{i_c-1}{n_c-1}{i_o}{n_o}& (rC) \\
+    +                                \frac{i_c}{N}   s T_{r-1} \Coalc{i_c  }{n_c  }{i_o}{n_o}& (rD) \\
   \end{aligned}
 \end{equation*}
 
