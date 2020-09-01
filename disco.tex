@@ -18,6 +18,7 @@
     $\color{white}\genfrac{}{}{.4pt}0{\phantom{#1}}{\phantom{#2}}$}%
 }
 \newcommand{\cond}{\middle\vert}
+\newcommand{\Coalc}[4]{\begin{bmatrix}#1,#2 \\ #3,#4 \end{bmatrix}}
 
 \newcommand{\sgcomment}[1]{\textcolor{red}{SG: #1}}
 \newcommand{\ikcomment}[1]{\textcolor{blue}{IK: #1}}
@@ -207,13 +208,55 @@ will need to account for multiple coalescent events, which will require some car
 
 \subsection{Constructing the transition matrix}
 
-Even though $P_{n_o}(i,n_p | r(j,n_p))$ is a simple combinatorial probability describing a single
-generation, we were unable to compute an analytical expression for it while allowing for multiple
-coalescences and multiple selective events.
- 
-However, we can obtain fairly simple recursions in terms of the sample size $n_o,$ by assuming that
-we know $P_{n_o-1}(i,n_p | r(j,n_p))$ for all $i, j, n_p$ and conditioning on the last drawn
-offspring. The derivation itself is somewhat tedious, and presented in Appendix X. \sgcomment{Maybe
+Even though $T_{n_p,n_o}$ is a simple combinatorial probability describing a single generation, we
+were unable to compute an analytical expression for it while allowing for multiple coalescences and
+multiple selective events. However, we can obtain fairly simple recursions in terms of the sample
+size $n_o$, by assuming that we know $T_{n_p,n_o-1}$ conditional on the last drawn offspring.
+
+\ikcomment{Need to reconcile $n_p$ (parents) vs $n_c$ (contributors) notation.}
+
+Figure \ref{fig:selection-dynamic-failures} shows the recursion equation in the selection case. On
+the right, filled circles correspond to derived alleles, empty to ancestral alleles. A line
+connecting two circles represents a successful draw, a capped broken line - selective event. Square
+brackets represent the events in a smaller ($n_o-1$) sample size. Double line represents potentially
+multiple draws.
+
+The term $T_{r}\Coalc{i_c}{n_c}{i_o}{n_o}$ represents the probability of drawing $i_o$ derived
+alleles in the offspring generation from $i_c$ derived in the parental generation, with exactly $r$
+selective events. $n_c$ and $n_o$ are the sample sizes of parental and offspring generations,
+respectively.
+
+Each of the summands (A,B,C,D) represents a particular type of a draw, whereas the recursive term
+describes the events in a smaller sample size. To account for potentially multiple selection events,
+we set
+$T_{r=0}\Coalc{\cdot}{\cdot}{\cdot}{n_o} = \sum_{r=0}^{r_{max}}
+T_{r}\Coalc{\cdot}{\cdot}{\cdot}{n_o-1}$. In words, the probability of no selective redraws in
+sample size $n_o$ considers between $0$ and $r_{max}$ selective re-draws in sample size $n_o-1$.
+
+To
+account for multiple selection events, we add an additional parameter $t$, corresponding to the
+number of selection re-draws. The term $T_{r}\Coalc{i_c}{n_c}{i_o}{n_o}$ represents the probability
+of drawing $i_o$ derived alleles in the offspring generation from $i_c$ derived in the parental
+generation, with $r$ selective events. The sample sizes are $n_o$ for the offspring, and $n_c$ for
+the parents. We note that
+
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{fig/recurrence-selection-dynamic-failures-annotated.pdf}
+  \caption{First six terms are conditional on the last
+    offspring having an ancestral state, last six -- derived. Filled circles -- derived alleles;
+    empty circles - ancestral alleles; square brackets -- smaller sample.}
+  \label{fig:rec-selection}
+\end{figure}
+
+Each
+of the summands (A,B,C,D) corresponds to a lineage drawn in a sample size $n_o$, conditional on the draws in
+sample $n_o-1$. To account for multiple selection events, we 
+
+
+The derivation itself is somewhat tedious, and presented in Appendix X. \sgcomment{Maybe
   some of this should come back in this section? E.g. one of the plots?}
  
 Using a dynamic
@@ -870,16 +913,5 @@ Note that unlike in the neutral case $n_c$ is now variable. The base cases of th
     \text{otherwise} &\phantom{{}=} 0
   \end{aligned}
 \end{equation*}
-
-\subsection{Selection with dynamic failures}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.9\textwidth]{fig/recurrence-selection-dynamic-failures-annotated.pdf}
-  \caption{First six terms are conditional on the last
-    offspring having an ancestral state, last six -- derived. Filled circles -- derived alleles;
-    empty circles - ancestral alleles; square brackets -- smaller sample.}
-  \label{fig:rec-selection}
-\end{figure}
 
 \end{document}
