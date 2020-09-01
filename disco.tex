@@ -215,62 +215,59 @@ size $n_o$, by assuming that we know $T_{n_p,n_o-1}$ conditional on the last dra
 
 \ikcomment{Need to reconcile $n_p$ (parents) vs $n_c$ (contributors) notation.}
 
-Figure \ref{fig:selection-dynamic-failures} shows the recursion equation in the selection case. On
-the right, filled circles correspond to derived alleles, empty to ancestral alleles. A line
-connecting two circles represents a successful draw, a capped broken line - selective event. Square
-brackets represent the events in a smaller ($n_o-1$) sample size. Double line represents potentially
-multiple draws.
+Figure \ref{fig:rec-selection-dynamic-fail} shows the recursion equation in the selection case. The
+summands correspond to types of draws, represented graphically on the right. Filled circles
+correspond to derived alleles, empty to ancestral alleles. A line connecting two circles represents
+a successful draw, a capped broken line - a selective event. Double line represents potentially
+multiple draws. Square brackets represent the events in a smaller ($n_o-1$) sample size.
 
 The term $T_{r}\Coalc{i_c}{n_c}{i_o}{n_o}$ represents the probability of drawing $i_o$ derived
-alleles in the offspring generation from $i_c$ derived in the parental generation, with exactly $r$
-selective events. $n_c$ and $n_o$ are the sample sizes of parental and offspring generations,
-respectively.
+alleles into the offspring generation from $i_c$ derived in the parental generation, with exactly
+$r$ selective events for that lineage. $n_c$ and $n_o$ are the sample sizes of parental and
+offspring generations, respectively.
 
-Each of the summands (A,B,C,D) represents a particular type of a draw, whereas the recursive term
-describes the events in a smaller sample size. To account for potentially multiple selection events,
-we set
-$T_{r=0}\Coalc{\cdot}{\cdot}{\cdot}{n_o} = \sum_{r=0}^{r_{max}}
-T_{r}\Coalc{\cdot}{\cdot}{\cdot}{n_o-1}$. In words, the probability of no selective redraws in
-sample size $n_o$ considers between $0$ and $r_{max}$ selective re-draws in sample size $n_o-1$.
-
-To
-account for multiple selection events, we add an additional parameter $t$, corresponding to the
-number of selection re-draws. The term $T_{r}\Coalc{i_c}{n_c}{i_o}{n_o}$ represents the probability
-of drawing $i_o$ derived alleles in the offspring generation from $i_c$ derived in the parental
-generation, with $r$ selective events. The sample sizes are $n_o$ for the offspring, and $n_c$ for
-the parents. We note that
-
-
+Each of the summands (\textit{A,B,C,D}) represents a particular type of a draw, whereas the
+recursive term describes the events in a smaller sample size. To account for potentially multiple
+selection events per lineage, we also need to consider that the smaller sample size $n_o-1$ had
+anywhere between $0$, and $r_{max}$ selective re-draw evants. The probability for $r$ re-draws
+$T_{r}\Coalc{\cdot}{\cdot}{\cdot}{n_o-1}$ is the sum of terms \textit{rC} and \textit{rD}.
 
 \begin{figure}
   \centering
   \includegraphics[width=0.9\textwidth]{fig/recurrence-selection-dynamic-failures-annotated.pdf}
-  \caption{First six terms are conditional on the last
-    offspring having an ancestral state, last six -- derived. Filled circles -- derived alleles;
-    empty circles - ancestral alleles; square brackets -- smaller sample.}
-  \label{fig:rec-selection}
+
+  \caption{Recursion construct for transition probability with selection, accounting for multiple
+    kinds of coalescent events. The right hand panel represents summands on the left graphically.
+    Filled and empty circles represent derived and ancestral alleles. Solid and broken lines are
+    successful lineage draws and re-draws due to selection. Double lines represent potnetially
+    multiple draws. Square brackets represent events in a smaller sample size ($n_o-1$). Summands
+    (\textit{A-D}) are successful draws where the last lineage is ancestral (\textit{A,B}) or
+    derived (\textit{C,D}). Note that these terms depend on the probability that there were between
+    $0$ to $r_{max}$ in sample size $n_o-1$. Terms \textit{rC} and \textit{rD} represent the
+    probability that last selection re-draw was due to a lineage from outside (\textit{rC}) or
+    within (\textit{rD}) the sample. See table XX for notation used. }
+
+  \label{fig:rec-selection-dynamic-fail}
 \end{figure}
-
-Each
-of the summands (A,B,C,D) corresponds to a lineage drawn in a sample size $n_o$, conditional on the draws in
-sample $n_o-1$. To account for multiple selection events, we 
-
-
-The derivation itself is somewhat tedious, and presented in Appendix X. \sgcomment{Maybe
-  some of this should come back in this section? E.g. one of the plots?}
  
-Using a dynamic
-programming algorithm, we implement the construction of the exact neutral transition matrices $\mathbf{Q}$ in 
-$O(n^3)$ operations. The set of selection transition probability matrices $\mathbf{T}$ requires $O(n^4)$
-operations. As describe abo
+There are other ways to write down similar recursion equations. In the appendix, we show a simpler
+model for neutral alleles, and a more direct model where $r_{max}=1$.
 
-\sgcomment{We will discuss approximate solutions below? add the number of selection events allowed per ploid, and add this in the scaling?}
+Using a dynamic programming algorithm, we implement the construction of the exact neutral transition
+matrices $\mathbf{T}$ in $O(n^3)$ operations. The set of selection transition probability matrices
+$\mathbf{T}$ requires $O(n^4+r)$ operations.
+
+In practice, we set the maximum number of re-draws per lineage to $r_{max}=4$, which appears to be
+sufficient to consider strong negative selection up to $Ns=50$.
+
+Since these calculations are expensive, we also propose a number of approximations in the following
+sections.
 
 
 \subsection{Missing probability}
 
 Truncation of the recursion means that some events are not accounted for. Given $j$ derived alleles in a sample of size $n_o$, 
-probability lost due to truncation is simply $1- \sum_i Q_{n_o}(i,j),$ with the maximum loss of probability occurring for $j= n_o.$ 
+probability lost due to truncation is simply $1- \sum_i Q_{n_o}(i,j),$ with the maximum loss of probability occurring for $j= n_o$.
 Thus the maximum loss of probability occurs for very deleterious alleles at high frequency -- which is an unusual occurrence. 
 An alternative method of measuring lost probability is by weighing the missed probability by $\phi_{n_o}(j)$. 
 
