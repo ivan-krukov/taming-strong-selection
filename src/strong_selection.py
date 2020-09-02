@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.ma as ma
 import matplotlib.pyplot as plt
 #from transition_probability_selection import matrix_selection_more_contributors
 import moments
@@ -60,19 +61,12 @@ I = np.eye(n - 1)
 ns_range = [0, 50]
 
 
-mtxs = [[] for _ in N_range]
 frequency_spectra = [[] for _ in N_range]
 for i, N in enumerate(tqdm(N_range)):
     for j, Ns in enumerate(tqdm(ns_range)):
         mtx_pkl = tmp_store / Path(f"mtx_n_{n}_Ns_{Ns}_N_{N}.pypkl")
-        # if not mtx_pkl.exists():
-        #     M, _ = matrix_selection_more_contributors(n, N, Ns / N)
-        #     with open(mtx_pkl, "wb") as pkl:
-        #         pickle.dump(M, pkl)
-        # else:
         with open(mtx_pkl, "rb") as pkl:
             M = pickle.load(pkl)
-        mtxs[i].append(M)
 
         # solve for equilibrium
         pi = la.solve((M[1:-1, 1:-1] - I).T, -z)
@@ -102,6 +96,9 @@ def hypergeom_projection_mtx(N, n):
     rN = np.arange(0, N+1)
     return np.array([hypergeom(N, i, n).pmf(rn) for i in rN])
 
+def relative_error(values, truth):
+    return np.abs(values - truth) / truth
+
 sns.set_style("whitegrid")
 sns.set_context("paper", font_scale=1.5)
 plot_letters = list("ABCD")
@@ -111,7 +108,7 @@ with plot_and_legend(
         nrow=2,
         figsize=(10, 6),
         legend_side="bottom",
-        legend_ncol=2
+        legend_ncol=3
 ) as (fig, ax):
 
     for i, N in enumerate(N_range):
@@ -122,26 +119,28 @@ with plot_and_legend(
             wright_fisher = wright_fisher_sfs(N, -s, mu)
             H = hypergeom_projection_mtx(N, n)[1:-1, 1:-1]
             wf_n = normalize(wright_fisher @ H)
+            large_v = wf_n > 1e-12
 
-            numeric = normalize(frequency_spectra[i][j])
+            numeric = relative_error(normalize(frequency_spectra[i][j]), wf_n)
+            assert(len(numeric) == n-1)
+            moments_solution = relative_error(normalize(moments_fs(n, N, -s)), wf_n)
+            assert(len(moments_solution) == n-1)
+            diffusion = relative_error(normalize(binomial_projection_full(n, N, s)), wf_n)
+            assert(len(diffusion) == n-1)
+            plot_range = np.arange(1, n)
 
-            moments_solution = normalize(moments_fs(n, N, -s))
-
-            diffusion = normalize(binomial_projection_full(n, N, s))
-
-            a.semilogy(numeric, label="This study", ls="", marker=".", markersize=2)
-            a.semilogy(moments_solution, label="Moments", ls="", marker=".", markersize=2)
-            a.semilogy(diffusion, label="Diffusion approximation")
-            a.semilogy(wf_n, label="Wright-Fisher")
+            plt_kw = dict(ls="", marker=".", markersize=5)
+            a.plot(plot_range, ma.masked_array(numeric, ~large_v), label="This study", **plt_kw)
+            a.plot(plot_range, ma.masked_array(moments_solution, ~large_v), label="Moments", **plt_kw)
+            a.plot(plot_range, ma.masked_array(diffusion, ~large_v), label="Diffusion approximation")
 
             a.set(title=f"n={n}, N={N}, Ns={Ns}")
             idx = (j * 2) + i
             a.text(
                 -0.05, 1.05, plot_letters[idx], fontweight="bold", transform=a.transAxes
             )
-            # Don't show extermely small values
-            #if j == 1:
-            #    a.set(ylim=(1e-12, 1))
-    ax[0][0].set(ylabel="Probability")
-    ax[1][0].set(ylabel="Probability", xlabel="Allele count")
+
+    ax[0][0].set(ylabel="Relative error")
+    ax[1][0].set(ylabel="Relative error", xlabel="Allele count")
     ax[1][1].set(xlabel="Allele count")
+    fig.suptitle("Relative error to the exact Wright-Fisher AFS")
