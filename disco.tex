@@ -230,7 +230,7 @@ Each of the summands (\textit{A,B,C,D}) represents a particular type of a draw, 
 recursive term describes the events in a smaller sample size. To account for potentially multiple
 selection events per lineage, we also need to consider that the smaller sample size $n_o-1$ had
 anywhere between $0$, and $r_{max}$ selective re-draw evants. The probability for $r$ re-draws
-$T_{r}\Coalc{\cdot}{\cdot}{\cdot}{n_o-1}$ is the sum of terms \textit{rC} and \textit{rD}.
+$T_{r}$ is the sum of terms \textit{rC} and \textit{rD}.
 
 \begin{figure}
   \centering
@@ -266,43 +266,38 @@ sections.
 
 \subsection{Missing probability}
 
-Truncation of the recursion means that some events are not accounted for. Given $j$ derived alleles in a sample of size $n_o$, 
-probability lost due to truncation is simply $1- \sum_i Q_{n_o}(i,j),$ with the maximum loss of probability occurring for $j= n_o$.
-Thus the maximum loss of probability occurs for very deleterious alleles at high frequency -- which is an unusual occurrence. 
-An alternative method of measuring lost probability is by weighing the missed probability by $\phi_{n_o}(j)$. 
+Truncation of the recursion means that some events are not accounted for. Given $j$ derived alleles
+in a sample of size $n_o$, probability lost due to truncation is simply $1- \sum_i Q_{n_o}(i,j),$
+with the maximum loss of probability occurring for $j= n_o$. Thus the maximum loss of probability
+occurs for very deleterious alleles at high frequency -- which is an unusual occurrence. An
+alternative method of measuring lost probability is by weighing the missed probability by
+$\phi_{n_o}(j)$.
 
 
-In numerical applications, we re-normalize each row of $Q$ to ensure a proper probability transition, and we track $1- \sum_i Q_{n_o}(i,n_o)$ 
-to ensure that it remains below a threshold \sgcomment{What did we use?}.
+In numerical applications, we re-normalize each row of $Q$ to ensure a proper probability
+transition, and we track $1- \sum_i Q_{n_o}(i,n_o)$ to ensure that it remains below a threshold
+\sgcomment{What did we use?}.
 
-
-
-
- \section{Results}
+\section{Results}
 \label{sec:results}
- 
- 
 
+% \subsection{Markov process construction}
+% \label{subsec:markov}
 
+% \sgcomment{Do we really need the following two paragraphs?}
 
+% The sample size $n_o$ can range between $1$ and $N$, the size of the entire population. We expect that 
+% when $n\ll N$, the calculations with the present model do not differ substantially from the
+% prediction under the standard coalescent, or \citep{JouganousEtAl2017}. In the limit where
+% $n \ra N$, we expect the transition probabilities in \sgcomment {Call this matrix something else? R? T?} $\mathbf{P}_s$ to approach those in the full
+% Wright-Fisher model (\textit{i.e.} \cite[eq. 1.58]{Ewens2004}).
 
-\subsection{Markov process construction}
-\label{subsec:markov}
-
-\sgcomment{Do we really need the following two paragraphs?}
-
-The sample size $n_o$ can range between $1$ and $N$, the size of the entire population. We expect that 
-when $n\ll N$, the calculations with the present model do not differ substantially from the
-prediction under the standard coalescent, or \citep{JouganousEtAl2017}. In the limit where
-$n \ra N$, we expect the transition probabilities in \sgcomment {Call this matrix something else? R? T?} $\mathbf{P}_s$ to approach those in the full
-Wright-Fisher model (\textit{i.e.} \cite[eq. 1.58]{Ewens2004}).
-
-Similar to \eqref{eq:op-selection}, the transition probability matrix with selection
-($\mathbf{P}_s$), involves considering a large number of intermediate lineages. In practice, we
-limit the number of selective events to at most one per lineage -- which means that the maximum
-number of contributing lineages is $2n_o$ -- one selective death for each offspring. This allows us
-to model strong selection, while limiting the number of coalescent configurations we need to
-consider when building $\mathbf{P}_s$. 
+% Similar to \eqref{eq:op-selection}, the transition probability matrix with selection
+% ($\mathbf{P}_s$), involves considering a large number of intermediate lineages. In practice, we
+% limit the number of selective events to at most one per lineage -- which means that the maximum
+% number of contributing lineages is $2n_o$ -- one selective death for each offspring. This allows us
+% to model strong selection, while limiting the number of coalescent configurations we need to
+% consider when building $\mathbf{P}_s$. 
 
 \subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
@@ -365,16 +360,6 @@ $1-\sum_{i=0}^{n}\mathbf{P}_s(i,j)$. This probability depends on the number of d
 carried by the parental sample: the more derived alleles, the higher the likelihood of a selective
 event. Figure \ref{fig:missing} shows the probability of missing configurations in a sample size of
 $n=200$ in the worst-case scenario, with $j=200$ derived lineages.
-
-\begin{figure}
-  \centering
-  \includegraphics[]{fig/missing.pdf}
-  \caption{Probability that unaccounted lineages contribute to the transition probabilities. The
-    probabilities are calculated as 1 minus the sum of probabilities for the state where every
-    allele is derived.} \sgcomment{It could be cool to have both the worst case missing lineages (with $f=1$) and the average 
-    number of missing lineages at equilibrium. }
-  \label{fig:missing}
-\end{figure}
 
 Since the expected number of drift events increases quadratically and the number of selective events
 increases only linearly, the probability that we need additional lineages decreases rapidly with
@@ -462,17 +447,6 @@ $\frac{n_p}{n_o}$. Above the horizontal line $\frac{n_p}{n_o} > 1$, selection do
 drift reduces the number of used lineages. The intercept of the line with $\frac{n_p}{n_o} = 1$ is
 the critical sample size, which is well-approximated by $2Nsx$.
 
-\begin{figure}
-  \centering
-  \includegraphics{fig/critical_sample_size.pdf}
-  \caption{Critical sample size for different selection coefficients. The $Y$ axis shows the
-    fraction of parental lineages over the sample size, $\frac{n_p}{n_o}$, each line corresponds to a
-    different selection coefficient. Above $\frac{n_p}{n_o}\ge 1$, selection dominates, below -- drift.
-    The critical sample size, where the expected number of parental contributing lineages is smaller
-    than the sample size is well-approximated by $2Ns$.}
-  \label{fig:critical-sample-size}
-\end{figure}
-
 \subsection{Distribution of number of contributing lineages}
 \label{subsec:distribution}
 
@@ -553,10 +527,10 @@ larger number of lineages.
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{fig/distributions.pdf}
-  \caption{\textbf{A} The distribution and \textbf{B}, cumulative distribution of the number of
-    parental contributing lineages one generation into the past ($n=20$, $N=1000$). Shaded red area
-    shows the drift-dominated regime, where the number of lineages is smaller than the sample size.}
+  \includegraphics[width=\textwidth]{fig/combined.pdf}
+  \caption{\textbf{A} The distribution of number of required lineages, \textbf{B} critical sample
+    size to contain all lineages, with given confidence ($n=200$, $N=1000$). Shaded red area shows
+    missing probability.}
   \label{fig:sampling-dist}
 \end{figure}
 

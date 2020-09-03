@@ -8,3 +8,7 @@ extra/%.svg: extra/%.dvi extra/%.log extra/%.aux
 
 extra/%.dvi: extra/%.tex
 	latex -output-format=dvi -output-directory=$(@D) $^
+
+
+clean:
+	rm disco.pdf
