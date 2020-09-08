@@ -107,6 +107,29 @@ equations for the allele frequency spectrum ($\afs{n_o}{t}(i_o)$) by considering
 in a finite sample under drift and selection. We define the \textit{AFS} as a probability of
 observing $i_o$ copies of the derived allele at a single locus in $n_o$ samples.
 
+\begin{center}
+\begin{tabular}{l|p{100mm}}
+Symbol & Meaning\\
+\hline
+$N$ & Population size\\
+$n_p$ & Number of parental lineages\\
+$n_g$ & Number of gametes\\
+$n_c$ & Number of contributing lineages\\
+$n_o$ & Number of offspring, sample size\\
+$i_p$ & Number of derived alleles in parents\\
+$i_c$ & Number of derived alleles in contributors\\
+$i_o$ & Number of derived alleles in offspring\\
+$t$ & Time, in generations\\
+$\Phi_{n_o}^{t}(i_o)$ & Allele frequency spectrum in $n_o$ at generation $t$\\
+$s$ & Selection advangate of the derived allele\\
+$x$ & Frequency of derived allele at generation $t$\\
+$i_o \dslash n_o$ & A sample with $i_o$ derived alleles ``out of'' $n_o$ total\\
+$\mathbf{H}\Coalc{i_p}{n_p}{i_c}{n_c}$ & Hypergeometric probability of $i_c$ successes in a sample of $n_c$ draws from a population of size $n_p$ with $i_p$ potential successes\\
+$\mathbf{T}\Coalc{i_c}{n_c}{i_o}{n_o}$ & Probability of drawing $i_o$ derived lineages in a sample size of $n_o$ given $i_c$ out of $n_c$ lineages contributed\\
+ & \\
+\end{tabular}
+\end{center}
+
 We utilize two models of selection acting one generation into the past. In the first model, we
 imagine that all parents ($n_p$) generate a large number ($n_g$) of gametes, and that offspring
 ($n_o$) pick gametes at random. Draws from the deleterious allele are rejected with probability $s$,
@@ -127,13 +150,14 @@ events, and increased by the number of selection (re-draw) events.
   \centering
   \includegraphics[width=1.0\textwidth]{fig/schematic.pdf}
   \caption{\label{fig:schematic} Realizations of sampling parental lineages under neutrality (A) and
-    selection (B). \textbf{A} Under neutrality, possible coalescent events imply that number of
-    parental lineages $n_p$ at $t-1$ is less than or equal to $n_o$ offspring lineages at $t$.
-    \textbf{B} With selection, we add an intermediate gamete $n_g$ generation at $t-\frac{1}{2}$.
-    Production of gametes is neutral, so $n_p\le n_g$. Gametes are sampled with rejection into
-    offspring, so $n_o \le n_g$. Rejected samples shown with red crosses. $n_p$ - parental sample
-    size (at $t-1$), $n_g$ - number of gametes (at $t-\frac{1}{2}$), $n_o$ - offspring (current)
-    sample size (at $t$).}
+    two used models under selection (B,C). \textbf{A} Under neutrality, possible coalescent events
+    imply that number of parental lineages $n_p$ at $t-1$ is less than or equal to $n_o$ offspring
+    lineages at $t$. \textbf{B} With selection, we also consider the number of gametes $n_g$.
+    Production of gametes is neutral, so $n_p\le n_g$. Gametes are then sampled (with possible
+    rejection) into offspring, so $n_o \le n_g$. Rejected samples are shown with capped lines.
+    \textbf{C} An alternative selection model where we first select a random number of contributing
+    lineages $n_c$. Then the offspring is produced by accounting for coalescent and selection
+    events.}
 \end{figure}
 
 To express the allele-frequency spectrum $\afs{n_o}{t}$ for $n_o$ offspring in terms of the
