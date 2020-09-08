@@ -88,6 +88,7 @@ def P0(io, no, ic, nc, s, N, max_t, cache_P0, cache_Pf):
             d = ((nc - ic) / N) * df
 
             v = a + b + c + d
+            # should this be multiplied by s
             v += (oos * (ic / nc) * s * Pf(io - 1, no - 1, ic - 1, nc - 1, s, N, max_t, max_t, cache_P0, cache_Pf)) + (
                 (ic / N) * s * Pf(io - 1, no - 1, ic, nc, s, N, max_t, max_t, cache_P0, cache_Pf)
             )  # Forcing success of cases b and c, respectively

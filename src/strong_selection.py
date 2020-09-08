@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.ma as ma
 import matplotlib.pyplot as plt
 #from transition_probability_selection import matrix_selection_more_contributors
 import moments
@@ -8,8 +9,10 @@ import pickle
 import numpy.linalg as la
 from scipy.special import binom as choose
 from scipy import integrate
+from scipy.stats import hypergeom
 from indemmar import plot_and_legend
 from wright_fisher import wright_fisher_haploid
+import seaborn as sns
 
 
 @np.vectorize
@@ -47,7 +50,7 @@ def binomial_projection_full(n, N, s=0, u=1e-8):
 
 tmp_store = Path("data")
 
-N_range = [1000, 200]
+N_range = [1000, 100]
 n = 100
 mu = 1e-8
 z = np.zeros(n - 1)
@@ -58,19 +61,12 @@ I = np.eye(n - 1)
 ns_range = [0, 50]
 
 
-mtxs = [[] for _ in N_range]
 frequency_spectra = [[] for _ in N_range]
 for i, N in enumerate(tqdm(N_range)):
     for j, Ns in enumerate(tqdm(ns_range)):
         mtx_pkl = tmp_store / Path(f"mtx_n_{n}_Ns_{Ns}_N_{N}.pypkl")
-        # if not mtx_pkl.exists():
-        #     M, _ = matrix_selection_more_contributors(n, N, Ns / N)
-        #     with open(mtx_pkl, "wb") as pkl:
-        #         pickle.dump(M, pkl)
-        # else:
         with open(mtx_pkl, "rb") as pkl:
             M = pickle.load(pkl)
-        mtxs[i].append(M)
 
         # solve for equilibrium
         pi = la.solve((M[1:-1, 1:-1] - I).T, -z)
@@ -95,35 +91,56 @@ def wright_fisher_sfs(N, s, mu=0):
     pi = la.solve((w[1:-1, 1:-1] - I).T, -z)
     return pi
 
+def hypergeom_projection_mtx(N, n):
+    rn = np.arange(0, n+1)
+    rN = np.arange(0, N+1)
+    return np.array([hypergeom(N, i, n).pmf(rn) for i in rN])
 
+def relative_error(values, truth):
+    return np.abs(values - truth) / truth
+
+sns.set_style("whitegrid")
+sns.set_context("paper", font_scale=1.5)
 plot_letters = list("ABCD")
 with plot_and_legend(
-    fname="fig/strong_selection_four_panel.pdf",
-    legend_title="Model",
-    ncol=2,
-    nrow=2,
-    figsize=(10, 6),
+        fname="fig/strong_selection_four_panel.pdf",
+        ncol=2,
+        nrow=2,
+        figsize=(10, 6),
+        legend_side="bottom",
+        legend_ncol=3
 ) as (fig, ax):
 
     for i, N in enumerate(N_range):
         for j, Ns in enumerate(ns_range):
             s = Ns / N
             a = ax[j][i]
-            numeric = frequency_spectra[i][j]
-            a.semilogy(normalize(numeric), label="Numeric")
 
-            moments_solution = moments_fs(n, N, -s)
-            a.semilogy(normalize(moments_solution), label="Moments")
+            wright_fisher = wright_fisher_sfs(N, -s, mu)
+            H = hypergeom_projection_mtx(N, n)[1:-1, 1:-1]
+            wf_n = normalize(wright_fisher @ H)
+            large_v = wf_n > 1e-12
 
-            diffusion = binomial_projection_full(n, N, s)
-            a.semilogy(normalize(diffusion), ls="--", label="Diffusion")
+            numeric = relative_error(normalize(frequency_spectra[i][j]), wf_n)
+            assert(len(numeric) == n-1)
+            moments_solution = relative_error(normalize(moments_fs(n, N, -s)), wf_n)
+            assert(len(moments_solution) == n-1)
+            diffusion = relative_error(normalize(binomial_projection_full(n, N, s)), wf_n)
+            assert(len(diffusion) == n-1)
+            plot_range = np.arange(1, n)
 
-            if N == n:
-                wright_fisher = wright_fisher_sfs(N, -s, mu)
-                a.semilogy(normalize(wright_fisher), ls="--", label="Wright-Fisher")
+            plt_kw = dict(ls="", marker=".", markersize=5)
+            a.plot(plot_range, ma.masked_array(numeric, ~large_v), label="This study", **plt_kw)
+            a.plot(plot_range, ma.masked_array(moments_solution, ~large_v), label="Moments", **plt_kw)
+            a.plot(plot_range, ma.masked_array(diffusion, ~large_v), label="Diffusion approximation")
 
             a.set(title=f"n={n}, N={N}, Ns={Ns}")
             idx = (j * 2) + i
             a.text(
                 -0.05, 1.05, plot_letters[idx], fontweight="bold", transform=a.transAxes
             )
+
+    ax[0][0].set(ylabel="Relative error")
+    ax[1][0].set(ylabel="Relative error", xlabel="Allele count")
+    ax[1][1].set(xlabel="Allele count")
+    fig.suptitle("Relative error to the exact Wright-Fisher AFS")
