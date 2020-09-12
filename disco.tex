@@ -3,8 +3,8 @@
 \usepackage[]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{tikz}
 \usepackage{graphicx}
+\usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{natbib}
 \bibliographystyle{elsarticle-harv}
@@ -21,8 +21,8 @@
 \newcommand{\dslash}{/\!\!/}
 \newcommand{\Coalc}[4]{\begin{bmatrix}#1\dslash #2 \\ #3\dslash #4 \end{bmatrix}}
 
-\newcommand{\sgcomment}[1]{\textcolor{red}{SG: #1}}
-\newcommand{\ikcomment}[1]{\textcolor{blue}{IK: #1}}
+\newcommand{\sgcomment}[1]{{\color{red}{SG: #1}}}
+\newcommand{\ikcomment}[1]{{\color{blue}{IK: #1}}}
 \newcommand{\Var}{\operatorname{Var}}
 \journal{Theoretical Population Biology}
 

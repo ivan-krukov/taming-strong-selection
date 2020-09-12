@@ -1,3 +1,6 @@
+.PHONY: default
+default: disco.pdf
+
 %.pdf: %.tex
 	mkdir -p tmp
 	latexmk -pdf -outdir=tmp $^
@@ -11,4 +14,4 @@ extra/%.dvi: extra/%.tex
 
 
 clean:
-	rm disco.pdf
+	rm -f disco.pdf

@@ -3,5 +3,5 @@
 # `LaTeX` compiltation
 
 ```
-make disco.pdf
+make
 ```
