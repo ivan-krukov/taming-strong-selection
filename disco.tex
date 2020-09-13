@@ -34,7 +34,6 @@
   \author{Simon Gravel}
 
   \begin{abstract}
-    
     Neutral models of genetic diversity tend to be easier to study than models including selection.
     In the Wright-Fisher model, the number of parental lineages that contribute to ancestry of a
     sample is lower than the number of offspring. As a consequence, useful recursion equations can
@@ -108,96 +107,97 @@ in a finite sample under drift and selection. We define the \textit{AFS} as a pr
 observing $i_o$ copies of the derived allele at a single locus in $n_o$ samples.
 
 \begin{center}
+  \label{Table of symbols}
 \begin{tabular}{l|p{100mm}}
 Symbol & Meaning\\
 \hline
 $N$ & Population size\\
 $n_p$ & Number of parental lineages\\
 $n_g$ & Number of gametes\\
-$n_c$ & Number of contributing lineages\\
 $n_o$ & Number of offspring, sample size\\
 $i_p$ & Number of derived alleles in parents\\
-$i_c$ & Number of derived alleles in contributors\\
 $i_o$ & Number of derived alleles in offspring\\
 $t$ & Time, in generations\\
 $\Phi_{n_o}^{t}(i_o)$ & Allele frequency spectrum in $n_o$ at generation $t$\\
 $s$ & Selection advangate of the derived allele\\
 $x$ & Frequency of derived allele at generation $t$\\
 $i_o \dslash n_o$ & A sample with $i_o$ derived alleles ``out of'' $n_o$ total\\
-$\mathbf{H}\Coalc{i_p}{n_p}{i_c}{n_c}$ & Hypergeometric probability of $i_c$ successes in a sample of $n_c$ draws from a population of size $n_p$ with $i_p$ potential successes\\
-$\mathbf{T}\Coalc{i_c}{n_c}{i_o}{n_o}$ & Probability of drawing $i_o$ derived lineages in a sample size of $n_o$ given $i_c$ out of $n_c$ lineages contributed\\
  & \\
 \end{tabular}
 \end{center}
 
-We utilize two models of selection acting one generation into the past. In the first model, we
-imagine that all parents ($n_p$) generate a large number ($n_g$) of gametes, and that offspring
-($n_o$) pick gametes at random. Draws from the deleterious allele are rejected with probability $s$,
-triggering a re-draw from another parent (Fig.\ref{fig:schematic}B). This two-step model is utilized
-to derive asymptotic results, which we describe in section \ref{sec:asympt}.
+Under neutral evolution, the number of lineages in the sample decreases into the past due to
+coalescent events (Fig.\ref{fig:schematic}A). Specifically, the parental generation carries $n_p$
+alleles, and the offspring generation - $n_o$ alleles. Under neutrality $n_p \le n_o$.
 
-In the second model, the parental lineages ($n_p$) are first randomly permuted, and then the next
-generation is drawn from the first $n_c$ \textit{contributing} lineages (Fig.\ref{fig:schematic}C),
-until $n_o$ offspring are drawn. In this model, selection and drift act on the $n_c$ contributing
-lineages. This formulation is used for the calculation of the \textit{AFS}.
+Under selection, a lineage of a derived allele can be ``rejected'' as a result of selective death
+(Fig. \ref{fig:schematic}B). To track the number of derived (deleterious) alleles, we introduce the
+notation $i_p \dslash n_p$ to represent that $i_p$ alleles are derived ``out of'' total $n_p$
+parental alleles. $i_o \dslash n_o$ represents the offspring generation.
 
-In both models, we have a $1:1-s$ advantage in favour of the advantageous allele, and makes explicit
-the number of lineages that need to be drawn to generate a sample of size $n_o$. In this selection
-model, the number $n_p$ of distinct parental lineages drawn is decreased by the number of coalescent
-events, and increased by the number of selection (re-draw) events.
+In case of a selective death a lineage can be resampled, with probability $1-s$, leading to $1:1-s$
+advantage of the ancestral allele. Under selection, it is possible that $n_p \ge n_o$. We use this
+notation and model in section XX.
+
+It is also convenient to make the number of gametes produced by the parental generation explicit
+(Fig. \ref{fig:schematic}C). We denote the number of these intermediate gametes with $n_g$. In our
+model, the production of gametes is neutral, thus $n_p \le n_g$. The assortment of gametes into the
+offspring is subject to selection, so $n_g \ge n_o$. This two-step process allows us to consider
+effects of drift and selection within a single generation. In the case where there is more
+coalescent selection events, we can have $n_p \le n_o$. We use this observation in section XX.
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=1.0\textwidth]{fig/schematic.pdf}
   \caption{\label{fig:schematic} Realizations of sampling parental lineages under neutrality (A) and
-    two used models under selection (B,C). \textbf{A} Under neutrality, possible coalescent events
-    imply that number of parental lineages $n_p$ at $t-1$ is less than or equal to $n_o$ offspring
-    lineages at $t$. \textbf{B} With selection, we also consider the number of gametes $n_g$.
-    Production of gametes is neutral, so $n_p\le n_g$. Gametes are then sampled (with possible
-    rejection) into offspring, so $n_o \le n_g$. Rejected samples are shown with capped lines.
-    \textbf{C} An alternative selection model where we first select a random number of contributing
-    lineages $n_c$. Then the offspring is produced by accounting for coalescent and selection
-    events.}
+    under selection (B,C). \textbf{A} Under neutrality, possible coalescent events imply that number
+    of parental lineages $n_p$ at $t-1$ is less than or equal to $n_o$ offspring lineages at $t$.
+    \textbf{B} With selection, re-sampling events are also possible, thus $n_p \ge n_o$. The net
+    number of selection minus the coalescent events will indicate if the equations close. \textbf{C}
+    It is also instructive to consider the number of gametes ($n_g$) produced. If we posit that
+    production of gametes is neutral, and the passing of gametes to offspring is under the control
+    of selection, we can develop a more intuitive understanding of the interplay of the two forces.
+  }
 \end{figure}
 
 To express the allele-frequency spectrum $\afs{n_o}{t}$ for $n_o$ offspring in terms of the
-\textit{AFS} at time $t-1$, we can sum over the random variables $n_c$, the number of distinct
-contributing parental lineages selected, and $i_c$, the number of derived lineages among them:
+\textit{AFS} at time $t-1$, we can sum over the random variables $n_p$, the number of distinct
+contributing parental lineages selected, and $i_p$, the number of derived lineages among them:
 
 \begin{equation}
-\afs{n_o}{t}(i_o)=\sum_{n_c,i_c} P_{n_o}(i_o,i_c,n_c) = 
-                  \sum_{n_c,i_c} P_{n_o}(i_o|i_c,n_c) P(i_c,n_c),
+\afs{n_o}{t}(i_o)=\sum_{n_p,i_p} P_{n_o}(i_o,i_p,n_p) = 
+                  \sum_{n_p,i_p} P_{n_o}(i_o|i_p,n_p) P(i_p,n_p),
 \end{equation}
 
-where the subscript $n_o$ indicates probabilities that depend on $n_o$. The event $(i_c,n_c)$ means
-that our Wright-Fisher sampling for $n_o$ offspring selected exactly $n_c$ distinct ancestors, of
+where the subscript $n_o$ indicates probabilities that depend on $n_o$. The event $(i_p,n_p)$ means
+that our Wright-Fisher sampling for $n_o$ offspring selected exactly $n_p$ distinct ancestors, of
 which $i_c$ are derived. Under Wright-Fisher sampling, the order in which (previously unsampled)
 parental lineages are drawn is random. That is, we could have performed a random permutation of the
 parental population prior to starting the sampling process, and sampled new parental lineages in
-order from this permutation. Thus the event $(i_c,n_c)$ can be reformulated as the joint events that
-the first $n_c$ parental alleles from the random permutation carry $i_c$ derived alleles \textit{and}
-that exactly $n_c$ distinct parents were drawn in the Wright-Fisher sampling of the first $n_o$
-offspring. Now, let $r(i_c,n_c)$ be the (less specific) event that the first $n_c$ parental alleles
-from the random permutation carry $i_c$ derived alleles. Then $P(r(i_c,n_c)) =\afs{n_c}{t} (i_c)$, and we
+order from this permutation. Thus the event $(i_c,n_p)$ can be reformulated as the joint events that
+the first $n_p$ parental alleles from the random permutation carry $i_c$ derived alleles \textit{and}
+that exactly $n_p$ distinct parents were drawn in the Wright-Fisher sampling of the first $n_o$
+offspring. Now, let $r(i_c,n_p)$ be the (less specific) event that the first $n_p$ parental alleles
+from the random permutation carry $i_c$ derived alleles. Then $P(r(i_c,n_p)) =\afs{n_p}{t} (i_c)$, and we
 can write:
 
 \begin{equation}
 \begin{split}
   \afs{n_o}{t}(i_o)
-  &=      \sum_{n_c,i_c}                                  P_{n_o}(i_o|r(i_c,n_c),n_c) P_{n_o}(n_c|r(i_c,n_c)) P(r(i_c,n_c)) \\
-  &=      \sum_{n_c=1}^{n_p} \sum_{i_c=0}^{n_c}     P_{n_o}(i_o,n_c|r(i_c,n_c)) \afs{n_c}{t-1}(i_c)  \\
-  &\equiv \sum_{n_c=1}^{n_p} \mathbf{T}_{n_c,n_o}                         \afs{n_c}{t-1}
+  &=      \sum_{n_p,i_c}                                  P_{n_o}(i_o|r(i_c,n_p),n_p) P_{n_o}(n_p|r(i_c,n_p)) P(r(i_c,n_p)) \\
+  &=      \sum_{n_p=1}^{n_p} \sum_{i_c=0}^{n_p}     P_{n_o}(i_o,n_p|r(i_c,n_p)) \afs{n_p}{t-1}(i_c)  \\
+  &\equiv \sum_{n_p=1}^{n_p} \mathbf{T}_{n_p,n_o}                         \afs{n_p}{t-1}
 \end{split}
 \label{eq:recur}
 \end{equation}
 
-where the $\mathbf{T}_{n_c,n_o}$ are $(n_o+1) \times (n_c+1)$ matrices whose row and column indices
+where the $\mathbf{T}_{n_p,n_o}$ are $(n_o+1) \times (n_p+1)$ matrices whose row and column indices
 correspond to the number of derived alleles in the offspring and contributing parental lineages,
 respectively.
 
 Under neutral evolution, $n_p\leq n_o$. Since we can obtain smaller \textit{AFS} from larger
-\textit{AFS} through downsampling (\textit{i.e.}, $\afs{n_c}{t} = \mathbf{H}_{n_c,n_o} \afs{n_o}{t}$
-for hypergeometric projection matrix $\mathbf{H}_{n_c,n_o}$ if $n_c\leq n_o$), Equation \eqref{eq:recur}
+\textit{AFS} through downsampling (\textit{i.e.}, $\afs{n_p}{t} = \mathbf{H}_{n_p,n_o} \afs{n_o}{t}$
+for hypergeometric projection matrix $\mathbf{H}_{n_p,n_o}$ if $n_p\leq n_o$), Equation \eqref{eq:recur}
 provides a closed form recursion for $\Phi_{n_o}.$ This property was used in
 \cite{JouganousEtAl2017} to efficiently compute distributions of allele frequencies under the large
 sample size limit.
@@ -211,16 +211,16 @@ truncating Eq. \eqref{eq:recur}:
 \begin{equation}
 \begin{split}
   \afs{n_o}{t}(i_o)
-  &\simeq \sum_{n_c=1}^{n_{o}} \mathbf{T}_{n_c,n_o}                      \afs{n_c}{t-1}\\
-  &=      \sum_{n_c=1}^{n_{o}} \mathbf{T}_{n_c,n_o} \mathbf{H}_{n_c,n_o} \afs{n_o}{t-1}\\
+  &\simeq \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o}                      \afs{n_p}{t-1}\\
+  &=      \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o} \afs{n_o}{t-1}\\
   &\equiv \mathbf{Q}_{n_o}                                               \afs{n_o}{t-1}\\
 \end{split}
 \label{eq:truncated}
 \end{equation}
 
 A jackknife approximation can be used to simulate the drawing of a small number of additional
-lineages and improve upon this closure approximation ($\afs{n_c}{t} \simeq J_{n_p,n_o} \afs{n_o}{t}$
-with $n_c>n_o$). \cite{JouganousEtAl2017} used this to derive approximate recursion equations under
+lineages and improve upon this closure approximation ($\afs{n_p}{t} \simeq J_{n_p,n_o} \afs{n_o}{t}$
+with $n_p>n_o$). \cite{JouganousEtAl2017} used this to derive approximate recursion equations under
 weak selection. We will show below that closure is asymptotically maintained for large sample sizes
 even without requiring a jackknife approximation.
 
@@ -234,7 +234,7 @@ were unable to compute an analytical expression for it while allowing for multip
 multiple selective events. However, we can obtain fairly simple recursions in terms of the sample
 size $n_o$, by assuming that we know $T_{n_p,n_o-1}$ conditional on the last drawn offspring.
 
-\ikcomment{Need to reconcile $n_p$ (parents) vs $n_c$ (contributors) notation.}
+\ikcomment{Need to reconcile $n_p$ (parents) vs $n_p$ (contributors) notation.}
 
 Figure \ref{fig:rec-selection-dynamic-fail} shows the recursion equation in the selection case. The
 summands correspond to types of draws, represented graphically on the right. Filled circles
@@ -242,9 +242,9 @@ correspond to derived alleles, empty to ancestral alleles. A line connecting two
 a successful draw, a capped broken line - a selective event. Double line represents potentially
 multiple draws. Square brackets represent the events in a smaller ($n_o-1$) sample size.
 
-The term $T_{r}\Coalc{i_c}{n_c}{i_o}{n_o}$ represents the probability of drawing $i_o$ derived
+The term $T_{r}\Coalc{i_c}{n_p}{i_o}{n_o}$ represents the probability of drawing $i_o$ derived
 alleles into the offspring generation from $i_c$ derived in the parental generation, with exactly
-$r$ selective events for that lineage. $n_c$ and $n_o$ are the sample sizes of parental and
+$r$ selective events for that lineage. $n_p$ and $n_o$ are the sample sizes of parental and
 offspring generations, respectively.
 
 Each of the summands (\textit{A,B,C,D}) represents a particular type of a draw, whereas the

@@ -6,7 +6,7 @@ default: disco.pdf
 	latexmk -pdf -outdir=tmp $^
 	mv tmp/$(@F) .
 
-extra/%.svg: extra/%.dvi extra/%.log extra/%.aux
+extra/%.svg: extra/%.dvi
 	dvisvgm --no-fonts=1 $^ -o $(@D)/%f.svg
 
 extra/%.dvi: extra/%.tex
