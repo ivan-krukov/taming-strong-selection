@@ -151,14 +151,16 @@ coalescent selection events, we can have $n_p \le n_o$. We use this observation 
   \centering
   \includegraphics[width=1.0\textwidth]{fig/schematic.pdf}
   \caption{\label{fig:schematic} Realizations of sampling parental lineages under neutrality (A) and
-    under selection (B,C). \textbf{A)} Under neutrality, possible coalescent events imply that
-    number of parental lineages $n_p$ at time $t-1$ is less than or equal to $n_o$ offspring
-    lineages at time $t$. \textbf{B)} With selection, re-sampling events are also possible, thus
-    $n_p \ge n_o$. The net number of selection minus the coalescent events will indicate if the
-    equations close. \textbf{C)} We can also consider the number of gametes ($n_g$) produced. If we
-    posit that production of gametes is neutral, and the passing of gametes to offspring is under
-    the control of selection, we can develop a more intuitive understanding of the interplay of the
-    two forces. }
+    under selection (B,C). Top row represents the parental generation, bottom row - the offspring.
+    Filled circles correspond to derived alleles, empty - to ancestral alleles. A line connecting
+    two circles represents a successful draw, a capped broken line - a selective (resampling) event.
+    \textbf{A)} Under neutrality, possible coalescent events imply that number of parental lineages
+    $n_p$ at time $t-1$ is less than or equal to $n_o$ offspring lineages at time $t$. \textbf{B)}
+    With selection, re-sampling events are also possible, thus $n_p \ge n_o$. The net number of
+    selection minus the coalescent events will indicate if the equations close. \textbf{C)} We can
+    also consider the number of gametes ($n_g$) produced. If we posit that production of gametes is
+    neutral, and the passing of gametes to offspring is under the control of selection, we can
+    develop a more intuitive understanding of the interplay of the two forces. }
 \end{figure}
 
 To express the allele-frequency spectrum $\afs{n_o}{t}(i_o)$ for $n_o$ offspring in terms of the
@@ -186,8 +188,8 @@ $P(r(i_p,n_p)) =\afs{n_p}{t} (i_p)$, and we can write:
 \begin{split}
   \afs{n_o}{t}(i_o)
   &=      \sum_{n_p,i_p}                        P_{n_o}(i_o|r(i_p,n_p),n_p) P_{n_o}(n_p|r(i_p,n_p)) P(r(i_p,n_p)) \\
-  &=      \sum_{n_p=1}^{n_p} \sum_{i_p=0}^{n_p} P_{n_o}(i_o,n_p|r(i_p,n_p)) \afs{n_p}{t-1}(i_p)  \\
-  &\equiv \sum_{n_p=1}^{n_p} \mathbf{T}_{n_p,n_o}                         \afs{n_p}{t-1}
+  &=      \sum_{n_p=1}^{n_{p_{max}}} \sum_{i_p=0}^{n_p} P_{n_o}(i_o,n_p|r(i_p,n_p)) \afs{n_p}{t-1}(i_p)  \\
+  &\equiv \sum_{n_p=1}^{n_{p_{max}}} \mathbf{T}_{n_p,n_o}                         \afs{n_p}{t-1}
 \end{split}
 \label{eq:recur}
 \end{equation}
@@ -196,18 +198,18 @@ where the $\mathbf{T}_{n_p,n_o}$ are $(n_o+1) \times (n_p+1)$ matrices whose row
 correspond to the number of derived alleles in the offspring and contributing parental lineages,
 respectively.
 
-Under neutral evolution, $n_p\leq n_o$. Since we can obtain smaller \textit{AFS} from larger
+Under neutral evolution, $n_{p_{max}}\leq n_o$. Since we can obtain smaller \textit{AFS} from larger
 \textit{AFS} through downsampling (\textit{i.e.}, $\afs{n_p}{t} = \mathbf{H}_{n_p,n_o} \afs{n_o}{t}$
-for hypergeometric projection matrix $\mathbf{H}_{n_p,n_o}$ if $n_p\leq n_o$), Equation \eqref{eq:recur}
-provides a closed form recursion for $\Phi_{n_o}.$ This property was used in
+for hypergeometric projection matrix $\mathbf{H}_{n_p,n_o}$ if $n_p\leq n_o$), Equation
+\eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ This property was used in
 \cite{JouganousEtAl2017} to efficiently compute distributions of allele frequencies under the large
 sample size limit.
 
-Under selection, $n_p$ may be larger than $n_o$, leading to an infinite set of coupled equations.
-Our goal here is to take advantage of the fact that selective events can be treated exactly in the
-large sample size limit as long as there are more coalescent than selection events, thus capping
-$n_p \leq n_o$. If we have high confidence that this will be the case, we can restore closure by
-truncating Eq. \eqref{eq:recur}:
+Under selection, $n_{p_{max}}$ may be larger than $n_o$, leading to an infinite set of coupled
+equations. Our goal here is to take advantage of the fact that selective events can be treated
+exactly in the large sample size limit as long as there are more coalescent than selection events,
+thus capping $n_p \leq n_o$. If we have high confidence that this will be the case, we can restore
+closure by truncating Eq. \eqref{eq:recur}:
 
 \begin{equation}
 \begin{split}
@@ -232,20 +234,17 @@ will need to account for multiple coalescent events, which will require some car
 \label{subsec:trans-mat}
 
 Even though $T_{n_p,n_o}$ is a simple combinatorial probability describing a single generation, we
-were unable to compute an analytical expression for it while allowing for multiple coalescences and
+were unable to compute an analytical expression for it, while allowing for multiple coalescences and
 multiple selective events. However, we can obtain fairly simple recursions in terms of the sample
 size $n_o$, by assuming that we know $T_{n_p,n_o-1}$ conditional on the last drawn offspring.
 
-\ikcomment{Need to reconcile $n_p$ (parents) vs $n_p$ (contributors) notation.}
-
 Figure \ref{fig:rec-selection-dynamic-fail} shows the recursion equation in the selection case. The
-summands correspond to types of draws, represented graphically on the right. Filled circles
-correspond to derived alleles, empty to ancestral alleles. A line connecting two circles represents
-a successful draw, a capped broken line - a selective event. Double line represents potentially
-multiple draws. Square brackets represent the events in a smaller ($n_o-1$) sample size.
+summands correspond to types of draws, represented graphically on the right. Here, we use the same
+representation as Figure \ref{fig:schematic}B, with the addition of double lines, which represent
+potentially multiple draws. Square brackets represent the events in a smaller ($n_o-1$) sample size.
 
-The term $T_{r}\Coalc{i_c}{n_p}{i_o}{n_o}$ represents the probability of drawing $i_o$ derived
-alleles into the offspring generation from $i_c$ derived in the parental generation, with exactly
+The term $T_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ represents the probability of drawing $i_o$ derived
+alleles into the offspring generation from $i_p$ derived in the parental generation, with exactly
 $r$ selective events for that lineage. $n_p$ and $n_o$ are the sample sizes of parental and
 offspring generations, respectively.
 
@@ -278,14 +277,15 @@ model for neutral alleles, and a more direct model where $r_{max}=1$.
 
 Using a dynamic programming algorithm, we implement the construction of the exact neutral transition
 matrices $\mathbf{T}$ in $O(n^3)$ operations. The set of selection transition probability matrices
-$\mathbf{T}$ requires $O(n^4+r)$ operations.
+$\mathbf{T}$ requires $O(n^4+r_{max})$ operations.
 
 In practice, we set the maximum number of re-draws per lineage to $r_{max}=4$, which appears to be
-sufficient to consider strong negative selection up to $Ns=50$.
+sufficient to consider strong negative selection up to $Ns=50$. Since these calculations are
+expensive, we also propose a number of approximations in the following sections.
 
-Since these calculations are expensive, we also propose a number of approximations in the following
-sections.
 
+\section{Results}
+\label{sec:results}
 
 \subsection{Missing probability}
 
@@ -296,13 +296,9 @@ occurs for very deleterious alleles at high frequency -- which is an unusual occ
 alternative method of measuring lost probability is by weighing the missed probability by
 $\phi_{n_o}(j)$.
 
-
 In numerical applications, we re-normalize each row of $Q$ to ensure a proper probability
 transition, and we track $1- \sum_i Q_{n_o}(i,n_o)$ to ensure that it remains below a threshold
 \sgcomment{What did we use?}.
-
-\section{Results}
-\label{sec:results}
 
 % \subsection{Markov process construction}
 % \label{subsec:markov}

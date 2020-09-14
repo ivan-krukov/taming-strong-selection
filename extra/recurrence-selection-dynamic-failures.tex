@@ -8,19 +8,19 @@
 
 \begin{equation*}
   \begin{aligned}
-    T_{r=0}\Coalc{i_c}{n_c}{i_o}{n_o}
-    = \left(1-\frac{n_c-1}{N}\right) \frac{n_c-i_c}{n_c}       \sum_{r=0}^{r_{max}}                                                 T_{r}\Coalc{i_c  }{n_c-1}{i_o  }{n_o-1} & (A) \\
-    +                                \frac{n_c-i_c}{N}         \sum_{r=0}^{r_{max}}                                                 T_{r}\Coalc{i_c  }{n_c  }{i_o  }{n_o-1} & (B) \\
-    + \left(1-\frac{n_c-1}{N}\right) \frac{i_c}{n_c}     (1-s) \sum_{r=0}^{r_{max}} \left(\frac{s}{1-s}\right)^{\delta_{r,r_{max}}} T_{r}\Coalc{i_c-1}{n_c-1}{i_o-1}{n_o-1} & (C) \\
-    +                                \frac{i_c}{N}       (1-s) \sum_{r=0}^{r_{max}} \left(\frac{s}{1-s}\right)^{\delta_{r,r_{max}}} T_{r}\Coalc{i_c  }{n_c  }{i_o-1}{n_o-1} & (D) \\
+    T_{r=0}\Coalc{i_p}{n_p}{i_o}{n_o}
+    = \left(1-\frac{n_p-1}{N}\right) \frac{n_p-i_p}{n_p}                              \sum_{r=0}^{r_{max}} T_{r}\Coalc{i_p  }{n_p-1}{i_o  }{n_o-1} & (A) \\
+    +                                \frac{n_p-i_p}{N}                                \sum_{r=0}^{r_{max}} T_{r}\Coalc{i_p  }{n_p  }{i_o  }{n_o-1} & (B) \\
+    + \left(1-\frac{n_p-1}{N}\right) \frac{i_p}{n_p}     (1-s)^{1-\delta_{i,r_{max}}} \sum_{r=0}^{r_{max}} T_{r}\Coalc{i_p-1}{n_p-1}{i_o-1}{n_o-1} & (C) \\
+    +                                \frac{i_p}{N}       (1-s)^{1-\delta_{i,r_{max}}} \sum_{r=0}^{r_{max}} T_{r}\Coalc{i_p  }{n_p  }{i_o-1}{n_o-1} & (D) \\
   \end{aligned}
 \end{equation*}
 
 \begin{equation*}
   \begin{aligned}
-    T_{r}\Coalc{i_c}{n_c}{i_o}{n_o}
-    = \left(1-\frac{n_c-1}{N}\right) \frac{i_c}{n_c} s T_{r-1} \Coalc{i_c-1}{n_c-1}{i_o}{n_o}& (rC) \\
-    +                                \frac{i_c}{N}   s T_{r-1} \Coalc{i_c  }{n_c  }{i_o}{n_o}& (rD) \\
+    T_{r}\Coalc{i_p}{n_p}{i_o}{n_o}
+    = \left(1-\frac{n_p-1}{N}\right) \frac{i_p}{n_p} s T_{r-1} \Coalc{i_p-1}{n_p-1}{i_o}{n_o}& (rC) \\
+    +                                \frac{i_p}{N}   s T_{r-1} \Coalc{i_p  }{n_p  }{i_o}{n_o}& (rD) \\
   \end{aligned}
 \end{equation*}
 
