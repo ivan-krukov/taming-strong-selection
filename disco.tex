@@ -287,41 +287,10 @@ expensive, we also propose a number of approximations in the following sections.
 \section{Results}
 \label{sec:results}
 
-\subsection{Missing probability}
-
-Truncation of the recursion means that some events are not accounted for. Given $j$ derived alleles
-in a sample of size $n_o$, probability lost due to truncation is simply $1- \sum_i Q_{n_o}(i,j),$
-with the maximum loss of probability occurring for $j= n_o$. Thus the maximum loss of probability
-occurs for very deleterious alleles at high frequency -- which is an unusual occurrence. An
-alternative method of measuring lost probability is by weighing the missed probability by
-$\phi_{n_o}(j)$.
-
-In numerical applications, we re-normalize each row of $Q$ to ensure a proper probability
-transition, and we track $1- \sum_i Q_{n_o}(i,n_o)$ to ensure that it remains below a threshold
-\sgcomment{What did we use?}.
-
-% \subsection{Markov process construction}
-% \label{subsec:markov}
-
-% \sgcomment{Do we really need the following two paragraphs?}
-
-% The sample size $n_o$ can range between $1$ and $N$, the size of the entire population. We expect that 
-% when $n\ll N$, the calculations with the present model do not differ substantially from the
-% prediction under the standard coalescent, or \citep{JouganousEtAl2017}. In the limit where
-% $n \ra N$, we expect the transition probabilities in \sgcomment {Call this matrix something else? R? T?} $\mathbf{P}_s$ to approach those in the full
-% Wright-Fisher model (\textit{i.e.} \cite[eq. 1.58]{Ewens2004}).
-
-% Similar to \eqref{eq:op-selection}, the transition probability matrix with selection
-% ($\mathbf{P}_s$), involves considering a large number of intermediate lineages. In practice, we
-% limit the number of selective events to at most one per lineage -- which means that the maximum
-% number of contributing lineages is $2n_o$ -- one selective death for each offspring. This allows us
-% to model strong selection, while limiting the number of coalescent configurations we need to
-% consider when building $\mathbf{P}_s$. 
-
 \subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
 
-Once the truncated matrix $\mathbf{Q}_s$ is constructed, it can be used to calculate the allele
+Once the truncated matrix $\mathbf{Q}_{n_o}$ is constructed, it can be used to calculate the allele
 frequency spectrum. For example, in the infinite sites model at equilibrium, we can approximate the
 equilibrium \textit{AFS} $\Phi$ as a solution to a linear system:
 
@@ -359,27 +328,17 @@ and \texttt{Moments} depart from the Wright-Fisher prediction. The approach pres
  
 \end{figure}
 
-\subsection{Closure properties}
-\label{subsec:closure}
+\subsection{Missing probability}
+\label{subsec:missing}
 
-\sgcomment{I added the closure derivation higher up. So here we can focus on the results. }
+Truncation in equation \ref{eq:truncated} means that if $n_p > n_o$, some lineages will be
+unaccounted for. Since $\mathbf{Q}_{n_o}(i_p, i_o)$ is a probability distribution over $i_o$, we can
+calculate the probability that more than $i_p \dslash n_p$ lineages contributed as
+$1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$. Since only derived lineages experience selection, we
+expect the largest number of resampling events, and therefore unaccounted lineages, when all alleles
+are derived, $i_o = n_o$.
 
-To investigate the closure properties of $\mathbf{P}_s$, we can calculate the total probability that
-more that $n_o$ parental lineages contribute to a sample of size $n_o$. \sgcomment{I'm not sure
- I understand what you describe below. My take:}
-Since $P_{n_o,n_p}(i,j)$ is a probability distribution over $n_p$ and $i$, we can easily compute the probability lost to 
-truncation as $1-\sum_{i=0}^{n_o} \sum_{n_p=0}^{n_o}{P_{n_o,n_p}(i,j)}$. 
-
-
-By construction, the sum
-of rows of $\mathbf{P}_s$ should correspond to the total probability mass that included
-configurations contribute (Fig. \ref{fig:rec-selection}). Thus, the probability that some number of
-configurations are unaccounted for, with $j$ derived alleles in the parental sample, is given by
-$1-\sum_{i=0}^{n}\mathbf{P}_s(i,j)$. This probability depends on the number of derived alleles
-carried by the parental sample: the more derived alleles, the higher the likelihood of a selective
-event. Figure \ref{fig:missing} shows the probability of missing configurations in a sample size of
-$n=200$ in the worst-case scenario, with $j=200$ derived lineages.
-
+Figure \ref{fig:apx:missing} shows this probability as a function of sample size for $i_o = n_o$.
 Since the expected number of drift events increases quadratically and the number of selective events
 increases only linearly, the probability that we need additional lineages decreases rapidly with
 sample sizes.
@@ -389,17 +348,22 @@ sample sizes.
 
 We now want to determine what sample size is sufficient so that the number of coalescent events due
 to drift is almost always larger than the number of selection events, such that the system remains
-closed \eqref{eq:op-selection}. We derive several approximations to the model proposed in the first
+closed \eqref{eq:truncated}. We derive several approximations to the model proposed in the first
 section, in order to get a better understanding of this behavior.
 
-In the following derivations, we are assuming that the derived allele is present at frequency $x$,
-as opposed to explicitly modeling the count of derive alleles \ref{sec:markov}, which simplifies the
-calculations. When looking for the upper bound on the number of rejected lineages, we take $x=1$,
-since only derived alleles experience selection.
+In the following derivations, we are assuming that the derived allele is present in the parental
+generation at frequency $x = \frac{i_p}{n_p}$, instead of the discrete $i_p \dslash n_p$ in section
+\ref{subsec:trans-mat}, which simplifies the calculations. When looking for the upper bound on the
+number of rejected lineages, we take $x=1$, similar to \ref{subsec:missing}.
+
+In addition, we now explicitly consider the number of gametes produced by the parents - Fig.
+\ref{fig:schematic}C. The parental generation ($n_p$), produces a large number of gametes, of which $n_g$ are randomly picked to contribute to the offspring. Each derived allele is then passed to one offspring with probability $1-s$, ancestral with probability $1$. If picking a gamete fails, with probability $s$, we sample a new one.
+
+Here, the number of coalescent events is $n_g - n_p$, and the number of selective deaths is
+$n_g - n_o$.
 
 \subsection{Mean number of contributing lineages}
 \label{sec:mean-contr}
-
 
 For a given sample size, the probability that $n_p$ parents have contributed is:
 
@@ -416,24 +380,26 @@ Using the law of total expectation, we can write the expectation $E[n_p-n_o | n_
 \begin{equation*}
   \begin{aligned}
     \label{eq:lineages-approx}
-    E[n_p -n_o | n_o] &= E[n_p | n_o] - n_o \\
-    &=E_{n_g} E_{n_p}[n_p | n_g] -n_o.
+    E[n_p-n_o | n_o] &=        E[n_p | n_o]       - n_o \\
+                     &=E_{n_g} E_{n_p}[n_p | n_g] - n_o.
   \end{aligned}
 \end{equation*}
-Assuming $x=1$, the expectation over $n_p$ simply given by the occupancy distribution \cite{}. 
+Assuming $x=1$, the expectation over $n_p$ simply given by the occupancy distribution \cite{Wakeley2009}.
 
 \begin{equation*}
   \begin{aligned}
     \label{eq:lineages-derive}
-    \hat{E}[n_p -n_o | n_o] & =   E_{n_g}\left[N\left[1-\left( 1 - \frac{1}{N} \right)^{n_g} \right]\right]- n_o\\
-    & =   N-N  E_{n_g}\left[\left( 1 - \frac{1}{N} \right)^{n_g} \right] -n_o. 
+    \hat{E}[n_p -n_o | n_o]
+    & =   E_{n_g}\left[N\left[1-\left(1 - \frac{1}{N} \right)^{n_g} \right]\right]- n_o\\
+    & =   N-N  E_{n_g}\left[\left(1 - \frac{1}{N} \right)^{n_g} \right] -n_o. 
   \end{aligned}
 \end{equation*}
 
-Since $n_g-n_o$ follows a negative binomial distribution with $n_g$ trials and success rate $1-s$, we can use the moment generating function to show that for any constant $x$,
+Since $n_g-n_o$ follows a negative binomial distribution with $n_g$ trials and success rate $1-s$,
+we can use the moment generating function for any constant $k$,
 
 \begin{equation}
-E_{n_g}[x^{n_g}] = x^{n_o}  \left(\frac{1-s}{1-sx}\right)^{n_o}.
+E_{n_g}[k^{n_g}] = k^{n_o}  \left(\frac{1-s}{1-sk}\right)^{n_o}.
 \label{eq:identity}
 \end{equation} 
 
@@ -441,15 +407,15 @@ Thus we can write
 \begin{equation*}
   \begin{aligned}
     \label{eq:lineages-exact}
-    \hat{E}[n_p -n_o | n_o]    & =   N-N  \left( 1 - \frac{1}{N} \right)^{n_o}\left( \frac{1-s}{1-s \left( 1 - \frac{1}{N} \right)}\right)^{n_o}     -n_o.
+    \hat{E}[n_p -n_o | n_o] &= N-N\left( 1 - \frac{1}{N} \right)^{n_o}\left( \frac{1-s}{1-s \left( 1 - \frac{1}{N} \right)}\right)^{n_o}-n_o.
   \end{aligned}
 \end{equation*}
 
-Taking the terms of order $\frac{1}{N}$ gives
+Taking the terms of order $\frac{1}{N}$ gives,
 
 \begin{equation*}
     \label{eq:lineages-approx}
-    \hat{E}[n_p -n_o | n_o]    =   n_os - \frac{n_o (n_o-1) }{2N}  
+    \hat{E}[n_p-n_o | n_o] = n_os - \frac{n_o (n_o-1) }{2N}  
 \end{equation*}
 
 We thus have the usual result that the increase of the number of lineages due to selection is
@@ -460,53 +426,20 @@ linear, whereas the reduction due to drift is quadratic. Solving for $ \hat{E}[n
   n_o^* \ge 2Nxs.
 \end{equation}
 
-Figure \ref{fig:critical-sample-size} shows the critical sample size for several selection
-coefficients, assuming the entirety of the sample is derived ($x=1$) in a population of $N=1,000$.
-The $Y$ axis shows the fraction of contributing parental lineages to the sample size,
-$\frac{n_p}{n_o}$. Above the horizontal line $\frac{n_p}{n_o} > 1$, selection dominates. Below,
-drift reduces the number of used lineages. The intercept of the line with $\frac{n_p}{n_o} = 1$ is
-the critical sample size, which is well-approximated by $2Nsx$.
+This gives us a convenient expression for the critical sample size, such that there are
+more drift than selection events, on average. In the following section, we derive the distribution of the number of contributing lineages one generation into the past. In this manner, we can find the critical sample size so that $n_p \leq n_o$ almost always.
+
+% Figure \ref{fig:critical-sample-size} shows the critical sample size for several selection
+% coefficients, assuming the entirety of the sample is derived ($x=1$) in a population of $N=1,000$.
+% The $Y$ axis shows the fraction of contributing parental lineages to the sample size,
+% $\frac{n_p}{n_o}$. Above the horizontal line $\frac{n_p}{n_o} > 1$, selection dominates. Below,
+% drift reduces the number of used lineages. The intercept of the line with $\frac{n_p}{n_o} = 1$ is
+% the critical sample size, which is well-approximated by $2Nsx$.
 
 \subsection{Distribution of number of contributing lineages}
 \label{subsec:distribution}
 
-To ensure approximate closure of the recursion, we need a stricter constraint, that is,
-$n_p\leq n_o$ almost always (rather than on average. We therefore need to study the distribution
-$P(n_p|n_0)$.
-
-We can obtain the variance of this distribution by using the law of total variance:
-
-\begin{equation}
-\Var\left[n_p-n_o \right] = \Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right]+  E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] 
-\end{equation}
-
-The expectation in the first term can be derived from the occupancy distribution and the identity \ref{eq:identity}:
-
-\begin{equation}
-\begin{split}
-\Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right] &= \Var_{n_g}\left[E\left[n_p| n_g \right]\right] \\
-&= \Var_{n_g}\left[N\left(1-(1-\frac{1}{N})^{n_g} \right) \right] \\ 
-&= N^2 \Var_{n_g}\left[(1-\frac{1}{N})^{n_g} \right] \\
-&= N^2 \left( E_{n_g}\left[(1-\frac{1}{N})^{2n_g} \right] - E_{n_g}\left[(1-\frac{1}{N})^{n_g} \right]^2\right) \\
-&= N^2 \left( \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o} 
--   \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)}\right)^{2n_o} \right) \\
-\end{split}
-\end{equation}
-
-The variance of the second term is the variance of the occupancy distribution \cite{}:
-
-\begin{equation}
-\begin{split}
-E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] & = E_{n_g}\left[N ((N - 1) (1 - 2/N)^{n_g} + (1 - 1/N)^{n_g} - N (1 - 1/N)^{2 n_g}) \right] \\
-& = N (N-1)  \left(1-\frac{2}{N}\right)^{n_o} \left(\frac{1-s}{1-s  \left(1-\frac{2}{N}\right)}\right)^{n_o} +  \left(1-\frac{1}{N}\right)^{n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)}\right)^{n_o} \\
-&-N  \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o}. 
-\end{split}
-\end{equation}
-
-The two terms can be put together to provide an analytical expression for the variance of $n_p$. 
-
-
-
+The distribution of the number of extra lineages contributing from the parental generation is derived in section \ref{subsec:apx:variance} of the appendix.
 
 The number of parental lineages used by drift can be modelled by the modified occupancy
 (Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}. This is given by:
@@ -515,10 +448,11 @@ The number of parental lineages used by drift can be modelled by the modified oc
   \label{eq:occupancy}
   P(n_p|n_g) = \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}}
 \end{align}
-where $S_2(n_g,n_p)$ is a Stirling number of the second kind, which is the number of ways to partition
-$n_g$ gametes into $n_p$ parents (see \cite{JohnsonEtAl2005} section 10.4 for a thorough treatment).
-Note that the under drift, the number of parents will be smaller or equal to the number of gametes
-$n_p \le n_g$.
+
+where $S_2(n_g,n_p)$ is a Stirling number of the second kind, which is the number of ways to
+partition $n_g$ gametes into $n_p$ parents (see \cite{JohnsonEtAl2005} section 10.4 for a thorough
+treatment). Note that the under drift, the number of parents will be smaller or equal to the number
+of gametes $n_p \le n_g$.
 
 The distribution of the number of gametes, $n_g$ is given by the negative binomial, parameterized by
 probability of resample $s$, and the total number of trials before $n_o$ successes (\textit{i.e.}
@@ -529,7 +463,8 @@ $n_r+n_o$):
   P(n_g|n_o) = \binom{n_g-1}{n_o-1}(1-xs)^{n_o}(xs)^{n_g-n_o}
 \end{align}
 
-Here, the number of gametes can be larger that the sample size $n_o \le n_g$, if selection is present.
+Here, the number of gametes can be larger that the sample size $n_o \le n_g$, if selection is
+present.
 
 Combining the two distributions together through \ref{eq:conditional}, we get:
 
@@ -539,9 +474,9 @@ Combining the two distributions together through \ref{eq:conditional}, we get:
 \end{align}
 
 This distribution does not appear to have a simple analytical form. However, it can be computed
-efficiently using methods presented in \citep{ONeill2019}. Figure \ref{fig:sampling-dist} shows the
+efficiently using methods presented in \citep{ONeill2019}. Figure \ref{fig:combined}A shows the
 distribution of the number of contributing parental lineages for several selection coefficients for
-a sample $n=20$. In the absence of selection, the distribution has zero probability above $n=20$, as
+a sample $n=200$. In the absence of selection, the distribution has zero probability above $n=200$, as
 no extra lineages can be sampled. As the strength of selection is increased, we begin requiring
 larger number of lineages.
 
@@ -656,6 +591,41 @@ genetics.
 \bibliography{disco}
 
 \section{Appendix}
+
+\subsection{Variance of number of contributing lineages}
+\label{subsec:apx:variance}
+
+We can obtain the variance of the distribution $Pr(n_p | n_o)$ by using the law of total variance:
+
+\begin{equation}
+\Var\left[n_p-n_o \right] = \Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right]+  E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] 
+\end{equation}
+
+The expectation in the first term can be derived from the occupancy distribution and the identity \ref{eq:identity}:
+
+\begin{equation}
+\begin{split}
+\Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right] &= \Var_{n_g}\left[E\left[n_p| n_g \right]\right] \\
+&= \Var_{n_g}\left[N\left(1-(1-\frac{1}{N})^{n_g} \right) \right] \\ 
+&= N^2 \Var_{n_g}\left[(1-\frac{1}{N})^{n_g} \right] \\
+&= N^2 \left( E_{n_g}\left[(1-\frac{1}{N})^{2n_g} \right] - E_{n_g}\left[(1-\frac{1}{N})^{n_g} \right]^2\right) \\
+&= N^2 \left( \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o} 
+-   \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)}\right)^{2n_o} \right) \\
+\end{split}
+\end{equation}
+
+The variance of the second term is the variance of the occupancy distribution \cite{}:
+
+\begin{equation}
+\begin{split}
+E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] & = E_{n_g}\left[N ((N - 1) (1 - 2/N)^{n_g} + (1 - 1/N)^{n_g} - N (1 - 1/N)^{2 n_g}) \right] \\
+& = N (N-1)  \left(1-\frac{2}{N}\right)^{n_o} \left(\frac{1-s}{1-s  \left(1-\frac{2}{N}\right)}\right)^{n_o} +  \left(1-\frac{1}{N}\right)^{n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)}\right)^{n_o} \\
+&-N  \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o}. 
+\end{split}
+\end{equation}
+
+The two terms can be summed together to provide an analytical expression for the variance of $n_p$. 
+
 \subsection{Table of symbols}
 
 \label{ssec:tab-symbols}
