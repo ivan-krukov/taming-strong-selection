@@ -54,12 +54,12 @@
 \label{sec:introduciton}
 
 The allele frequency spectrum (\textit{AFS}) is an important summary of genetic diversity that is
-commonly used to infer demographic history and natural selection \citep{}. Given a demographic
-scenario of population size histories and migrations, the diffusion approximation or coalescent
-simulations can be used to obtain a predicted \textit{AFS} \citep{}. By comparing predictions to the
-observed \textit{AFS}, one can compute likelihoods for different demographic scenarios.
+commonly used to infer demographic history and natural selection \citep{GutenkunstEtAl2009}. Given a
+demographic scenario of population size histories and migrations, the diffusion approximation or
+coalescent simulations can be used to obtain a predicted \textit{AFS}. By comparing predictions to
+the observed \textit{AFS}, one can compute likelihoods for different demographic scenarios.
 Unfortunately, the \textit{AFS} calculations can be time consuming with complex demographic models,
-for example with multiple populations, or with large sample sizes \citep{}.
+for example with multiple populations, or with large sample sizes.
 
 In the absence of selection, efficient computational shortcuts can be used. In particular, recursion
 equations have been derived for moments of the allele frequency distribution
@@ -122,6 +122,10 @@ observing $i_o$ copies of the derived allele at a single locus in $n_o$ samples.
     $s$ & Selection advangate of the derived allele\\
     $x$ & Frequency of derived allele at generation $t$\\
     $i_o \dslash n_o$ & A sample with $i_o$ derived alleles ``out of'' $n_o$ total\\
+    $\mathbf{H}\Coalc{i_p}{n_p}{i_o}{n_o}$ & Hypergeometric probability -
+                                             sample $i_o \dslash n_o$ in offspring from $i_p \dslash n_p$ in parental generation\\
+    $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ & Probability of transition from $i_p \dslash n_p$ in parents
+                                                 to $i_o \dslash i_p$ in offspring, with $r$ selective events\\
   \end{tabular}
   \caption{\label{tab:symbols} Table of symbols}
 \end{table}
@@ -233,26 +237,26 @@ will need to account for multiple coalescent events, which will require some car
 \subsection{Constructing the transition matrix}
 \label{subsec:trans-mat}
 
-Even though $T_{n_p,n_o}$ is a simple combinatorial probability describing a single generation, we
+Even though $\mathbf{T}_{n_p,n_o}$ is a simple combinatorial probability describing a single generation, we
 were unable to compute an analytical expression for it, while allowing for multiple coalescences and
 multiple selective events. However, we can obtain fairly simple recursions in terms of the sample
-size $n_o$, by assuming that we know $T_{n_p,n_o-1}$ conditional on the last drawn offspring.
+size $n_o$, by assuming that we know $\mathbf{T}_{n_p,n_o-1}$ conditional on the last drawn offspring.
 
 Figure \ref{fig:rec-selection-dynamic-fail} shows the recursion equation in the selection case. The
 summands correspond to types of draws, represented graphically on the right. Here, we use the same
 representation as Figure \ref{fig:schematic}B, with the addition of double lines, which represent
 potentially multiple draws. Square brackets represent the events in a smaller ($n_o-1$) sample size.
 
-The term $T_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ represents the probability of drawing $i_o$ derived
-alleles into the offspring generation from $i_p$ derived in the parental generation, with exactly
-$r$ selective events for that lineage. $n_p$ and $n_o$ are the sample sizes of parental and
-offspring generations, respectively.
+The term $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ is an entry in $\mathbf{T}_{n_p,n_o-1}$, and
+represents the probability of drawing $i_o$ derived alleles into the offspring generation from $i_p$
+derived in the parental generation, with exactly $r$ selective events for that lineage. $n_p$ and
+$n_o$ are the sample sizes of parental and offspring generations, respectively.
 
 Each of the summands (\textit{A,B,C,D}) represents a particular type of a draw, whereas the
 recursive term describes the events in a smaller sample size. To account for potentially multiple
 selection events per lineage, we also need to consider that the smaller sample size $n_o-1$ had
 anywhere between $0$, and $r_{max}$ selective re-draw events. The probability for $r$ re-draws
-$T_{r}$ is the sum of terms \textit{rC} and \textit{rD}.
+$\mathbf{T}_{r}$ is the sum of terms \textit{rC} and \textit{rD}.
 
 \begin{figure}
   \centering
@@ -532,11 +536,12 @@ can be compensated by loss to genetic drift at another generation. If the expect
 drift events is higher than the expected number of selective deaths, this can reduce the likelihood 
 of chance events. Asymptotic results suggest ... 
 
-Such transition matrices can also be computed iteratively. If  $n_g$ is the number of contributing 
-lineages in the grandparental generation, and $k$ is the number of derived among those, and we define 
- $P(i, n_g | q(k, n_g))$, as above, as the probability of drawing $i$ derived alleles and using exactly $n_g$
- grandparental alleles given the event $q(k, n_g)$ $k$ of the first $n_g$ grandparental alleles are derived, we can 
- condition on the number of contributing alleles $n_c$ and the number of derived alleles $j$ among them in the parental generation:
+Such transition matrices can also be computed iteratively. If $n_g$ is the number of contributing
+lineages in the grandparental generation, and $k$ is the number of derived among those, and we
+define $P(i, n_g | q(k, n_g))$, as above, as the probability of drawing $i$ derived alleles and
+using exactly $n_g$ grandparental alleles given the event $q(k, n_g)$ $k$ of the first $n_g$
+grandparental alleles are derived, we can condition on the number of contributing alleles $n_c$ and
+the number of derived alleles $j$ among them in the parental generation:
  
  \begin{equation}
  \begin{split}
@@ -626,29 +631,6 @@ E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] & = E_{n_g}\left[N ((N - 1) (
 
 The two terms can be summed together to provide an analytical expression for the variance of $n_p$. 
 
-\subsection{Table of symbols}
-
-\label{ssec:tab-symbols}
-\begin{center}
-\begin{tabular}{lll}
-Symbol & Generation & Meaning\\
-\hline
-$p$ & $t-1$ & Parental generation\\
-$c$ & $t-\frac{1}{2}$ & Contributing (intermediate, selection only)\\
-$o$ & $t$ & Offspring (current) generation\\
-\end{tabular}
-\end{center}
-
-\begin{center}
-\begin{tabular}{ll}
-Symbol & Meaning\\
-\hline
-$n$ & Sample size\\
-$i$ & Number of derived alleles in sample $n_{\cdot}$\\
-$\Dfrac{i}{n}$ & $i$ derived \emph{out of} $n$ total alleles\\
-\end{tabular}
-\end{center}
-
 \subsection{Neutral case}
 
 We want to construct the entries in the probability matrix
@@ -700,35 +682,46 @@ The recurrence is calculated while $n>1$, with the following base cases:
 \subsection{Selection case}
 
 Due to selective deaths, the number of lineages ($n_c$) that contribute to the current generation
-can be larger than the number of offspring ($n_o$), and especially so with strong
-selection. Because the number of sampling configurations can be large, we use dynamic programming 
-to estimate $\mathbf{P}_{n_p,n_o}$ by summing over the possibilities for the last successful draw. Using the
-probability interpretation of the transition matrix, $\mathbf{P}_{n_p,n_o}(i,j) = P(i, n_p | r(j, n_p)),$ the
-probability that we draw $i$ derived offspring and exactly $n_p$ parental offspring given that $j$ of the first
-$n_p$ sampled parental alleles are derived.  The last successful draw event can be specified by the number $t \in \{0,\infty\}$ 
-of prior failed draws due to selection since the last successful draw, the allele $a \in {A, D}$ selected, 
-and the event $c$ of whether or not the sampled parental allele was previously drawn $c\in \{True, False\}$. We also consider the event $s \in \{True, False\}$ of whether the last draw was successful. Finally, let us define the event $E_{n_o,t}(i,n_p)$ that we have drawn 
-$i$ derived offspring among $n_o$ successful draws followed by $t$ failures, and that this required exactly $n_p$ parental lineages.   
+can be larger than the number of offspring ($n_o$), and especially so with strong selection. Because
+the number of sampling configurations can be large, we use dynamic programming to estimate
+$\mathbf{P}_{n_p,n_o}$ by summing over the possibilities for the last successful draw. Using the
+probability interpretation of the transition matrix,
+$\mathbf{P}_{n_p,n_o}(i,j) = P(i, n_p | r(j, n_p)),$ the probability that we draw $i$ derived
+offspring and exactly $n_p$ parental offspring given that $j$ of the first $n_p$ sampled parental
+alleles are derived. The last successful draw event can be specified by the number
+$t \in \{0,\infty\}$ of prior failed draws due to selection since the last successful draw, the
+allele $a \in {A, D}$ selected, and the event $c$ of whether or not the sampled parental allele was
+previously drawn $c\in \{True, False\}$. We also consider the event $s \in \{True, False\}$ of
+whether the last draw was successful. Finally, let us define the event $E_{n_o,t}(i,n_p)$ that we
+have drawn $i$ derived offspring among $n_o$ successful draws followed by $t$ failures, and that
+this required exactly $n_p$ parental lineages.
+
 \begin{equation}
 \begin{split}
 P(i, n_p | r(j, n_p)) = P(E_{n_0,0}(i,n_p)  | r(j, n_p)) &=  \sum_{a, c,t} P(a,c,t; E_{n_o,0}(i,n_p)  | r(j, n_p)) 
  \end{split}
 \end{equation}
-Let us consider the term $a=A$, $c=False$ \sgcomment{We could use a better notation here, eg using tikz. }
+
+Let us consider the term $a=A$, $c=False$ \sgcomment{We could use a better notation here, eg using
+  tikz. }
+
 \begin{equation}
-\begin{split}
-P(a=A,c=False,t; E_{n_o,0}(i,n_p)  | r(j, n_p)) &= P(a=A, c=False, t,s=True; E_{n_o,t}(i,n_p-1) | r(j, n_p))\\
-&= P(a=A, c=False, t; E_{n_o,t}(i,n_p-1) | r(j, n_p))\\
-&=P(a=A, c=False, t ; E_{n_o,t}(i,n_p-1); r(j, n_p-1) | r(j, n_p))\\
-&=P(a=A, c=False, t ; E_{n_o,t}(i,n_p-1)| r(j, n_p-1)  r(j, n_p)) P(r(j, n_p-1) |  r(j, n_p))\\
-&=P(c=False, t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)  r(j, n_p)) \frac{n_p-j}{n_p}\\
-&=P(c=False | t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)  r(j, n_p)) P(t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)  r(j, n_p)) \frac{n_p-j}{n_p}\\
-&=\left(1-\frac{n_p-1}{N}\right) P(t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)  r(j, n_p)) \frac{n_p-j}{n_p}\\
-&=\left(1-\frac{n_p-1}{N}\right) P(t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)) \frac{n_p-j}{n_p}
-\end{split}
+  \begin{split}
+    P(a=A,c=False,t; E_{n_o,0}(i,n_p)  | r(j, n_p)) &= P(a=A, c=False, t,s=True; E_{n_o,t}(i,n_p-1) | r(j, n_p))\\
+    &= P(a=A, c=False, t; E_{n_o,t}(i,n_p-1) | r(j, n_p))\\
+    &=P(a=A, c=False, t ; E_{n_o,t}(i,n_p-1); r(j, n_p-1) | r(j, n_p))\\
+    &=P(a=A, c=False, t ; E_{n_o,t}(i,n_p-1)| r(j, n_p-1)  r(j, n_p)) P(r(j, n_p-1) |  r(j, n_p))\\
+    &=P(c=False, t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)  r(j, n_p)) \frac{n_p-j}{n_p}\\
+    &=P(c=False | t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)  r(j, n_p)) P(t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)  r(j, n_p)) \frac{n_p-j}{n_p}\\
+    &=\left(1-\frac{n_p-1}{N}\right) P(t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)  r(j, n_p)) \frac{n_p-j}{n_p}\\
+    &=\left(1-\frac{n_p-1}{N}\right) P(t;  E_{n_o,t}(i,n_p-1) | r(j, n_p-1)) \frac{n_p-j}{n_p}
+  \end{split}
 \end{equation}
-where the fourth line uses Bayes rule, and  most other lines are exercises in rewriting the same event in different ways. 
-Other combinations of $a$ and $c$ also yield expressions in terms of probabilities $P(t;  E_{n_o,t}(i,n_p) | r(j, n_p))$ for the state prior to the successful draw \sgcomment{write down final results?}. 
+
+where the fourth line uses Bayes rule, and most other lines are exercises in rewriting the same
+event in different ways. Other combinations of $a$ and $c$ also yield expressions in terms of
+probabilities $P(t; E_{n_o,t}(i,n_p) | r(j, n_p))$ for the state prior to the successful draw
+\sgcomment{write down final results?}.
 
 
 These can be similarly expressed as recursions over the last draw. Selection only affects derived alleles, but it can occur after both coalescence and non-coalescence events. 
@@ -770,7 +763,13 @@ P(c=False, t;  E_{n_o,t}(i,n_p) | r(j, n_p)) &= P(c=False, a=D, s=False, t;  E_{
 
 
 
-Putting this all together \sgcomment{pseudocode?}, we can perform an iteration over all $n_o.$ For each $n_o,$  we will compute all terms of the form $P(E_{n_0,0}(i,n_p)  | r(j, n_p)),$ for $i\in\{0,\ldots,n_0\}$, $j\in \{0,\ldots,n_p\}$, and $n_p \in\{1,\ldots,n_{p,max}\}.$ We further need to iterate over the possible number of failed selective events. If we only allow a maximum amount of failed selected events of $t_max$ for each successful draw, the number of terms we must compute is of order $t_max n_p^4$. The number of computations for each term is constant and only depends on previously computed terms. 
+Putting this all together \sgcomment{pseudocode?}, we can perform an iteration over all $n_o.$ For
+each $n_o,$ we will compute all terms of the form $P(E_{n_0,0}(i,n_p) | r(j, n_p)),$ for
+$i\in\{0,\ldots,n_0\}$, $j\in \{0,\ldots,n_p\}$, and $n_p \in\{1,\ldots,n_{p,max}\}.$ We further
+need to iterate over the possible number of failed selective events. If we only allow a maximum
+amount of failed selected events of $t_max$ for each successful draw, the number of terms we must
+compute is of order $t_max n_p^4$. The number of computations for each term is constant and only
+depends on previously computed terms.
 
 To ensure that probabilities do sum to one despite the $t_max$ cutoff, we modify the Wright-Fisher model by imposing a successful draw after $t_max-1$ attempt. Thus terms
 
@@ -832,11 +831,13 @@ derived. This gives 12 different cases:
 \begin{figure}
   \centering
   \includegraphics[width=0.9\textwidth]{fig/recurrence-selection-annotated.pdf}
-  \caption{Recurrence defining transition probabilities in a model with selection \sgcomment{I think there are some problems with the way fractions are defined, e.g. the first term should start with $1-\frac{n_c-1}{N}$, not $\frac{1-(n_c-1)}{N}$ }. Right panel
-    shows coalescent events corresponding to each summand. Each transition probability is defined in
-    terms of transition in a smaller sample size. First six terms are conditional on the last
-    offspring having an ancestral state, last six -- derived. Filled circles -- derived alleles;
-    empty circles - ancestral alleles; square brackets -- smaller sample.}
+  \caption{Recurrence defining transition probabilities in a model with selection \sgcomment{I think
+      there are some problems with the way fractions are defined, e.g. the first term should start
+      with $1-\frac{n_c-1}{N}$, not $\frac{1-(n_c-1)}{N}$ }. Right panel shows coalescent events
+    corresponding to each summand. Each transition probability is defined in terms of transition in
+    a smaller sample size. First six terms are conditional on the last offspring having an ancestral
+    state, last six -- derived. Filled circles -- derived alleles; empty circles - ancestral
+    alleles; square brackets -- smaller sample.}
   \label{fig:rec-selection}
 \end{figure}
 

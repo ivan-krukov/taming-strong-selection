@@ -18,9 +18,11 @@ def approx_std_dev(n, N, s):
     kb = 1 - (2/N)
     z = 1 - s
     first = pow(k, 2*n) * pow(N, 2) * (pow(z/(1-(k2*s)),n) - pow(z/(1-(k*s)),2*n))
+    first = max(first, 0)
     second =  (N-1) * pow(kb*z/(1-(kb*s)), n)
     second += pow(k*z / (1 - (k*s)), n)
     second -= N * pow(k2*z / (1-(k2*s)), n)
+    second = max(second, 0)
     return np.sqrt(first + N * second)
 
 if __name__ == "__main__":

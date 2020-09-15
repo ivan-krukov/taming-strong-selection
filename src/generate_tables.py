@@ -3,7 +3,7 @@ from pathlib import Path
 import pickle
 from tqdm import tqdm
 
-N_range = [1000, 100, 200]
+N_range = [1000, 100, 500]
 Ns_range = [0, 10, 50]
 max_t = 4
 n = 100
