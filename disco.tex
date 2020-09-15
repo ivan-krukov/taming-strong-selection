@@ -321,15 +321,13 @@ and \texttt{Moments} depart from the Wright-Fisher prediction. The approach pres
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.7\textheight]{fig/strong_selection_four_panel.pdf}
-  \caption{Normalized allele frequency spectra in a sample of size $n=100$ (B,D), for neutral (Ns=0)
-    (A,B), or highly deleterious alleles ($Ns=50$) (C,D). (A) shows the frequency spectrum in a
-    sample from a large population ($N=1000$), (B) in a small population ($N=100$). (C,D) same, for
-    deleterious allele. Note that for a strongly deleterious allele, the probabilities are extremely
-    small.
-    \label{fig:strong-selection}
-   }
- 
+  \includegraphics[width=0.7\textheight]{fig/strong_selection_six_panel.pdf}
+  \caption{Normalized allele frequency spectra in a sample of size $n=100$, for neutral (Ns=0)
+    (A,B,C), or highly deleterious alleles ($Ns=50$) (D,E,F). (A) shows the frequency spectrum in a
+    sample from a large population ($N=1000$), (B) intermediate ($N=500$), and (C) small population
+    ($N=100$). (D,E,F) same, for deleterious allele. Note that for a strongly deleterious allele,
+    the probabilities are extremely small. }
+  \label{fig:strong-selection}
 \end{figure}
 
 \subsection{Missing probability}
@@ -513,19 +511,16 @@ the normal distribution. In the case of large population size, as required by th
 the occupancy by the normal, we can approximate the total number of contributing lineages as the sum
 of lineages contributed by the two distributions.
 
-The random variable which is a sum of two normally-distributed random variables is also normal, with
-$\mu=\mu_1+\mu_2$ and $\sigma^2 = \sigma^2_1 + \sigma^2_2$. By combining the required expectations
-and variance, we find that the normal approximation then has the form:
+We use the mean and variance calculated in \ref{eq:lineages-exact} and \ref{eq:apx:var} respectively. 
 
-\begin{align}
-  \label{eq:normal-approximation}
-  Pr(\mathcal{R}=r|n) \approx \mathcal{N}( \mu &= \left[(s n)/(1 - s) + N (1 - (1 - 1/N)^n)\right],\\
-  \sigma &= \sqrt{N \left((N-1) \left(1-\frac{2}{N}\right)^n+\left(1-\frac{1}{N}\right)^n-N\left(1-\frac{1}{N}\right)^{2 n}\right)+\frac{n s}{(1-s)^2}})
-\end{align}
+Figure \ref{fig:combined}B shows the critical sample size for a given quantile of the normal
+approximation, as a function of the population-scaled selection coefficient. The $50^{\text{th}}$
+percentile corresponds to the mean calculated in equation \ref{eq:critical-sample} $\approx 2Ns$
+(assuming all alleles are derived). If we want to ascertain that the distribution is closed with
+increased confidence, we require a larger number of lineages. All curves assume $N=1000$.
 
-Figure \ref{fig:normal-approximation} shows the quantiles of the normal approximation. We see that
-up to $99\%$ of the lineages will be contained within the sample of 200 with $Ns=20$. Larger
-percentiles will require larger sample sizes.
+Figure \ref{fig:apx:ciritical-fraction} shows the critical sample size as a fraction of the total
+population size.
 
 \subsection
 {Integrating over few generations} 
@@ -597,12 +592,40 @@ genetics.
 
 \section{Appendix}
 
+\subsection{Missing lineages}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{fig/missing.pdf}
+  \caption{Probability that there are more contributing parents than offspring, $n_p > n_o$.
+    Calculated as $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$}
+  \label{fig:apx:missing}
+\end{figure}
+
+\subsection{Validity of the normal approximation}
+
+We posit that the normal approximation is appropriate as long as $\frac{{n_o^*}^2}{2N} \ge 10$,
+similar to the conditions for the Poisson approximation. Figure \ref{fig:apx:critical-fraction}
+shows critical sample size as a fraction of the total population, such that $n_p < n_o$ with $99\%$
+certainty. The dashed black line shows the boundary below which the normal distribution does not
+approximate the true distribution well. Th
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{fig/critical_normal_fraction.pdf}
+  \caption{Critical sample size as a fraction of the total population size, $\frac{n_o^*}{N}$, as a
+    function of population-scaled selection coefficient. $n_o^*$ is calculated so that $99\%$ of the
+    distribution is contained.}
+  \label{fig:apx:critical-fraction}
+\end{figure}
+
 \subsection{Variance of number of contributing lineages}
 \label{subsec:apx:variance}
 
 We can obtain the variance of the distribution $Pr(n_p | n_o)$ by using the law of total variance:
 
 \begin{equation}
+  \label{eq:apx:var}
 \Var\left[n_p-n_o \right] = \Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right]+  E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] 
 \end{equation}
 

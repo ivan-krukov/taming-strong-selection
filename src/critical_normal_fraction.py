@@ -23,20 +23,20 @@ def solve_boundary(s, N, l=10, q=0.99):
 
 if __name__ == "__main__":
     plot_rc = {"legend.title_fontsize":14}
+    lmb = 10 # lambda
     Ns = np.arange(1/2, 50)
 
     sns.set_style("whitegrid")
     sns.set_context("paper", font_scale=1.5, rc=plot_rc)
     fig, ax = plt.subplots(figsize=(9,6))
 
-    for N in np.array([1_000, 1_500, 2_000, 5_000, 10_000]):
+    for N in np.array([1_000, 2_500, 5_000, 10_000]):
         nstar = np.array([fsolve(solve_critical, N/20, (x/N, N, 0.99)) for x in Ns])
-        mst = masked_array(nstar, nstar**2 / (2*N) <= 10)
+        mst = masked_array(nstar, nstar**2 / (2*N) <= lmb)
         ax.plot(Ns, mst / N, label=f"{N}")
 
     # plot were the normal approximation breaks down
     N_range = np.geomspace(500, 11_000, 50)
-    lmb = 10 # lambda
     s_crit = np.array([fsolve(solve_boundary, 0.02, (N, lmb)) for N in N_range]).reshape(-1)
     n_crit = np.sqrt(2 * lmb * N_range)
     ax.plot(s_crit * N_range, n_crit / N_range, color="k", ls="--")
