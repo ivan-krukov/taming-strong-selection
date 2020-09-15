@@ -50,7 +50,7 @@ def binomial_projection_full(n, N, s=0, u=1e-8):
 
 tmp_store = Path("data")
 
-N_range = [1000, 100]
+N_range = [1000, 500, 100]
 n = 100
 mu = 1e-8
 z = np.zeros(n - 1)
@@ -101,12 +101,12 @@ def relative_error(values, truth):
 
 sns.set_style("whitegrid")
 sns.set_context("paper", font_scale=1.5)
-plot_letters = list("ABCD")
+plot_letters = list("ABCDEF")
 with plot_and_legend(
-        fname="fig/strong_selection_four_panel.pdf",
-        ncol=2,
+        fname="fig/strong_selection_six_panel.pdf",
+        ncol=3,
         nrow=2,
-        figsize=(10, 6),
+        figsize=(15, 6),
         legend_side="bottom",
         legend_ncol=3
 ) as (fig, ax):
