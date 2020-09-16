@@ -24,20 +24,28 @@ def solve_boundary(s, N, l=10, q=0.99):
 if __name__ == "__main__":
     plot_rc = {"legend.title_fontsize":14}
     lmb = 10 # lambda
-    Ns = np.arange(1/2, 50)
+    Ns = np.arange(10, 100)
 
     sns.set_style("whitegrid")
     sns.set_context("paper", font_scale=1.5, rc=plot_rc)
     fig, ax = plt.subplots(figsize=(9,6))
 
-    for N in np.array([1_000, 2_500, 5_000, 10_000]):
+    for i, N in enumerate([1_000, 2_500, 5_000, 10_000]):
         nstar = np.array([fsolve(solve_critical, N/20, (x/N, N, 0.99)) for x in Ns])
-        mst = masked_array(nstar, nstar**2 / (2*N) <= lmb)
-        ax.plot(Ns, mst / N, label=f"{N}")
+        mask = (nstar ** 2) / (2 * N) <= lmb
+        negmask = ~mask
+        # Induce overlap, for plotting
+        first_neg = np.where(negmask)[0][0]
+        mask[first_neg-1] = False
+        
+        right = masked_array(nstar, mask)
+        left  = masked_array(nstar, negmask)
+        ax.plot(Ns, right / N, label=f"{N}", linewidth=3, color=f"C{i}")
+        ax.plot(Ns, left / N, linewidth=1, color=f"C{i}")
 
     # plot were the normal approximation breaks down
-    N_range = np.geomspace(500, 11_000, 50)
-    s_crit = np.array([fsolve(solve_boundary, 0.02, (N, lmb)) for N in N_range]).reshape(-1)
+    N_range = np.geomspace(500, 50_000, 50)
+    s_crit = np.array([fsolve(solve_boundary, 0.01, (N, lmb)) for N in N_range]).reshape(-1)
     n_crit = np.sqrt(2 * lmb * N_range)
     ax.plot(s_crit * N_range, n_crit / N_range, color="k", ls="--")
     

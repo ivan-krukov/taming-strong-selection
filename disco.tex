@@ -526,9 +526,10 @@ $n_o \ll N$. Likewise, can the number of failures ($n_r$) before a given number 
 occupancy by the Gaussian, we can approximate the total number of contributing lineages as the sum
 of lineages contributed by the two distributions. Specifically, we require that the number of
 coalescent events is large, such that the occupancy distribution can be approximated well by the
-Gaussian: $\frac{n_o^2}{2N} \ge 10$.
+Gaussian: $\frac{{n_o^*}^2}{2N} \ge 10$.
 
-We use the mean and variance calculated in Eq. \ref{eq:lineages-exact} and Eq. \ref{eq:apx:var} respectively. 
+We use the mean and variance calculated in Eq. \ref{eq:lineages-exact} and Eq. \ref{eq:apx:var}
+respectively.
 
 Figure \ref{fig:combined}B shows the critical sample size for a given quantile of the normal
 approximation, as a function of the population-scaled selection coefficient. The $50^{\text{th}}$
@@ -625,7 +626,7 @@ We posit that the normal approximation is appropriate as long as $\frac{{n_o^*}^
 similar to the conditions for the Poisson approximation. Figure \ref{fig:apx:critical-fraction}
 shows critical sample size as a fraction of the total population, such that $n_p < n_o$ with $99\%$
 certainty. The dashed black line shows the boundary below which the normal distribution does not
-approximate the true distribution well. Th
+approximate the true distribution well.
 
 \begin{figure}
   \centering
@@ -646,7 +647,8 @@ We can obtain the variance of the distribution $Pr(n_p | n_o)$ by using the law 
 \Var\left[n_p-n_o \right] = \Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right]+  E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] 
 \end{equation}
 
-The expectation in the first term can be derived from the occupancy distribution and the identity \ref{eq:identity}:
+The expectation in the first term can be derived from the occupancy distribution and the identity
+\ref{eq:identity}:
 
 \begin{equation}
 \begin{split}
@@ -688,7 +690,6 @@ recurrence is shown in figure \ref{fig:rec-neutral}. The panel on the right depi
 event for each term. Empty circles represent ancestral alleles, filled circles -- derived. The
 square box represents a sample of size $n-1$. The first three terms in the sum correspond to the
 cases where the last parent that we drew was ancestral, last three -- derived.
-\sgcomment{Would it be worth presenting the non-square transition probabilites as well to prepare the reader for what comes next with selection}
 
 \begin{figure}
   \centering
@@ -721,7 +722,10 @@ The recurrence is calculated while $n>1$, with the following base cases:
 
 \subsection{Selection case}
 
-Due to selective deaths, the number of lineages ($n_c$) that contribute to the current generation
+\ikcomment{I've changed the event $r$ to $c$ in the main text (to avoid the unlikely confusing for
+  $r$, the number of failures). This will need to be propagated in here, too}.
+
+Due to selective deaths, the number of lineages ($n_p$) that contribute to the current generation
 can be larger than the number of offspring ($n_o$), and especially so with strong selection. Because
 the number of sampling configurations can be large, we use dynamic programming to estimate
 $\mathbf{P}_{n_p,n_o}$ by summing over the possibilities for the last successful draw. Using the
@@ -820,88 +824,71 @@ $P(a=D,c,t_{max}; E_{n_o,0}(i,n_p)  | r(j, n_p))$ will lose a factor $(1-s)$.
 
 
 
+% We use $n_c$, the intermediate number of lineages at time $t-\frac{1}{2}$, which can
+% potentially be much larger than the number of parents, $n_p$. This is analogous to the gamete
+% intermediates, as presented in the main text. However, the two are not equivalent, since in this
+% formulation we apply selection \emph{and} drift on the intermediate lineages. We model the
+% intermediate contributing alleles as a random sample from $n_p$ alleles, without replacement.
+
+% \begin{equation}
+%   P_s\left[ \Dfrac{i_o}{n} \cond \Dfrac{i_p}{n} \right] = \sum_{i_c,n_c}P_s\left[ \Dfrac{i_o}{n}
+%     \cond \Dfrac{i_c}{n_c} \right] P_s\left[ \Dfrac{i_c}{n_c} \cond \Dfrac{i_p}{n} \right]
+% \end{equation}
+
+% The probability conditional on the contributing lineages
+% ($P_s\left[ \Dfrac{i_o}{n} \cond \Dfrac{i_c}{n_c} \right]$) is given by equation
+% \ref{fig:rec-selection}, while $P_s\left[ \Dfrac{i_c}{n_c} \cond \Dfrac{i_p}{n} \right]$ is given by
+% the hypergeometric distribution. The support of the hypergeometric distribution means that we can
+% not have $n_c>n$. Note that while $i_c \le n_c \le n$, we can still have $i_c>i_p$ if $i_p$ is
+% small. A formulation where a $n_c$ is potentially infinitely large will be desirable.
+
+% Under the current definition, $P_s$ is not closed, since the cases where $n_c>n$ are not accounted
+% for. However, as we show in the main text, the formulation is asymptotically closed, as $n$ increases.
+
+% The recursive definition in \ref{fig:rec-selection} is analogous to the neutral case, and gives
+% $P_s\left[ \Dfrac{i_o}{n} \cond \Dfrac{i_c}{n_c} \right]$, the probability that $i_o$ out of $n$
+% lineages are derived, given that $i_c$ out of $n_c$ contributed to it. To construct this
+% probability, we condition on the coalescent events involving the last offspring allele. We limit the
+% model to at most $1$ selective death per lineage. However, in the entire sample, there still can be
+% a large number of selective deaths. There are 6 distinct coalescent events with $0$ or $1$ selective
+% deaths, with distinct probabilities based on whether the last offspring allele is ancestral or
+% derived. This gives 12 different cases:
 
 
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=0.9\textwidth]{fig/recurrence-selection-annotated.pdf}
+%   \caption{Recurrence defining transition probabilities in a model with selection \sgcomment{I think
+%       there are some problems with the way fractions are defined, e.g. the first term should start
+%       with $1-\frac{n_c-1}{N}$, not $\frac{1-(n_c-1)}{N}$ }. Right panel shows coalescent events
+%     corresponding to each summand. Each transition probability is defined in terms of transition in
+%     a smaller sample size. First six terms are conditional on the last offspring having an ancestral
+%     state, last six -- derived. Filled circles -- derived alleles; empty circles - ancestral
+%     alleles; square brackets -- smaller sample.}
+%   \label{fig:rec-selection}
+% \end{figure}
 
+% For each calculation, the ranges of the variables are:
 
+% \begin{equation}
+%   \begin{aligned}
+%     n_p &= n \\
+%     i_p &\in [0, n] \\
+%     n_c &\in [1, n] \\
+%     i_c &\in [0, n_c] \\
+%   \end{aligned}
+% \end{equation}
 
+% Note that unlike in the neutral case $n_c$ is now variable. The base cases of the recurrence are:
 
-
-
-
-
-
-
-
-
-
-
-
-We use $n_c$, the intermediate number of lineages at time $t-\frac{1}{2}$, which can
-potentially be much larger than the number of parents, $n_p$. This is analogous to the gamete
-intermediates, as presented in the main text. However, the two are not equivalent, since in this
-formulation we apply selection \emph{and} drift on the intermediate lineages. We model the
-intermediate contributing alleles as a random sample from $n_p$ alleles, without replacement.
-
-\begin{equation}
-  P_s\left[ \Dfrac{i_o}{n} \cond \Dfrac{i_p}{n} \right] = \sum_{i_c,n_c}P_s\left[ \Dfrac{i_o}{n}
-    \cond \Dfrac{i_c}{n_c} \right] P_s\left[ \Dfrac{i_c}{n_c} \cond \Dfrac{i_p}{n} \right]
-\end{equation}
-
-The probability conditional on the contributing lineages
-($P_s\left[ \Dfrac{i_o}{n} \cond \Dfrac{i_c}{n_c} \right]$) is given by equation
-\ref{fig:rec-selection}, while $P_s\left[ \Dfrac{i_c}{n_c} \cond \Dfrac{i_p}{n} \right]$ is given by
-the hypergeometric distribution. The support of the hypergeometric distribution means that we can
-not have $n_c>n$. Note that while $i_c \le n_c \le n$, we can still have $i_c>i_p$ if $i_p$ is
-small. A formulation where a $n_c$ is potentially infinitely large will be desirable.
-
-Under the current definition, $P_s$ is not closed, since the cases where $n_c>n$ are not accounted
-for. However, as we show in the main text, the formulation is asymptotically closed, as $n$ increases.
-
-The recursive definition in \ref{fig:rec-selection} is analogous to the neutral case, and gives
-$P_s\left[ \Dfrac{i_o}{n} \cond \Dfrac{i_c}{n_c} \right]$, the probability that $i_o$ out of $n$
-lineages are derived, given that $i_c$ out of $n_c$ contributed to it. To construct this
-probability, we condition on the coalescent events involving the last offspring allele. We limit the
-model to at most $1$ selective death per lineage. However, in the entire sample, there still can be
-a large number of selective deaths. There are 6 distinct coalescent events with $0$ or $1$ selective
-deaths, with distinct probabilities based on whether the last offspring allele is ancestral or
-derived. This gives 12 different cases:
-
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.9\textwidth]{fig/recurrence-selection-annotated.pdf}
-  \caption{Recurrence defining transition probabilities in a model with selection \sgcomment{I think
-      there are some problems with the way fractions are defined, e.g. the first term should start
-      with $1-\frac{n_c-1}{N}$, not $\frac{1-(n_c-1)}{N}$ }. Right panel shows coalescent events
-    corresponding to each summand. Each transition probability is defined in terms of transition in
-    a smaller sample size. First six terms are conditional on the last offspring having an ancestral
-    state, last six -- derived. Filled circles -- derived alleles; empty circles - ancestral
-    alleles; square brackets -- smaller sample.}
-  \label{fig:rec-selection}
-\end{figure}
-
-For each calculation, the ranges of the variables are:
-
-\begin{equation}
-  \begin{aligned}
-    n_p &= n \\
-    i_p &\in [0, n] \\
-    n_c &\in [1, n] \\
-    i_c &\in [0, n_c] \\
-  \end{aligned}
-\end{equation}
-
-Note that unlike in the neutral case $n_c$ is now variable. The base cases of the recurrence are:
-
-\begin{equation*}
-  \begin{aligned}
-    P\left[ \Dfrac{1}{1} \cond \Dfrac{1}{1} \right] &= 1-s \\
-    P\left[ \Dfrac{0}{1} \cond \Dfrac{0}{1} \right] &= 1 \\
-    P\left[ \Dfrac{1}{1} \cond \Dfrac{2}{2} \right] &= s \\
-    P\left[ \Dfrac{0}{1} \cond \Dfrac{1}{2} \right] &= \frac{1}{s} \\
-    \text{otherwise} &\phantom{{}=} 0
-  \end{aligned}
-\end{equation*}
+% \begin{equation*}
+%   \begin{aligned}
+%     P\left[ \Dfrac{1}{1} \cond \Dfrac{1}{1} \right] &= 1-s \\
+%     P\left[ \Dfrac{0}{1} \cond \Dfrac{0}{1} \right] &= 1 \\
+%     P\left[ \Dfrac{1}{1} \cond \Dfrac{2}{2} \right] &= s \\
+%     P\left[ \Dfrac{0}{1} \cond \Dfrac{1}{2} \right] &= \frac{1}{s} \\
+%     \text{otherwise} &\phantom{{}=} 0
+%   \end{aligned}
+% \end{equation*}
 
 \end{document}
