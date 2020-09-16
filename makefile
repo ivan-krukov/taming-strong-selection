@@ -15,3 +15,4 @@ extra/%.dvi: extra/%.tex
 
 clean:
 	rm -f disco.pdf
+	rm -rf tmp

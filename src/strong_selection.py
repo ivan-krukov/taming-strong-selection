@@ -100,7 +100,7 @@ def relative_error(values, truth):
     return np.abs(values - truth) / truth
 
 sns.set_style("whitegrid")
-sns.set_context("paper", font_scale=1.5)
+sns.set_context("paper", font_scale=1.8)
 plot_letters = list("ABCDEF")
 with plot_and_legend(
         fname="fig/strong_selection_six_panel.pdf",
@@ -135,7 +135,7 @@ with plot_and_legend(
             a.plot(plot_range, ma.masked_array(diffusion, ~large_v), label="Diffusion approximation")
 
             a.set(title=f"n={n}, N={N}, Ns={Ns}")
-            idx = (j * 2) + i
+            idx = (j * 3) + i
             a.text(
                 -0.05, 1.05, plot_letters[idx], fontweight="bold", transform=a.transAxes
             )

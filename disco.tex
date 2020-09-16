@@ -35,13 +35,13 @@
 
   \begin{abstract}
     Neutral models of genetic diversity tend to be easier to study than models including selection.
-    In the Wright-Fisher model, the number of parental lineages that contribute to ancestry of a
-    sample is lower than the number of offspring. As a consequence, useful recursion equations can
-    be derived for patterns of polymorphism. By contrast, under negative selection, the number of
-    relevant lineages can increase as we go back in time, due to selective deaths. As a result, the
-    equivalent recursion equations do not close. However, given a sufficiently large sample size,
-    the expected reduction in the number of contributing lineages due to coalescence is larger than
-    the increase due to selection, so the net number is unlikely to increase. We use this
+    In the neutral Wright-Fisher model, the number of parental lineages that contribute to ancestry
+    of a sample is lower than the number of offspring. As a consequence, useful recursion equations
+    can be derived for patterns of polymorphism. By contrast, under negative selection, the number
+    of relevant lineages can increase as we go back in time, due to selective deaths. As a result,
+    the equivalent recursion equations do not close. However, given a sufficiently large sample
+    size, the expected reduction in the number of contributing lineages due to coalescence is larger
+    than the increase due to selection, so the net number is unlikely to increase. We use this
     observation to derive asymptotically closed recursion equations for the distribution of allele
     frequencies in finite samples. We show that this approach is accurate under strong drift and
     strong natural selection. We derive several asymptotic results to determine when the sample size
@@ -67,9 +67,10 @@ equations have been derived for moments of the allele frequency distribution
 fitting complex demographic models to genetic data \citep{JouganousEtAl2017,KammEtAl2017}.
  
 In the presence of natural selection, the corresponding recursion equations do not close
-\citep{Donnelly, JouganousEtAl2017} -- they form an infinite set of coupled ordinary differential
-equations. Moment-based closure approximation have been developed \citep{JouganousEtAl2017}, but
-these are not robust to strong selection and their convergence properties are not well understood.
+\citep{DonnellyKurtz1999, JouganousEtAl2017} -- they form an infinite set of coupled ordinary
+differential equations. Moment-based closure approximation have been developed
+\citep{JouganousEtAl2017}, but these are not robust to strong selection and their convergence
+properties are not well understood.
 
 Closure of the moment equations under the neutral Wright-Fisher model occurs because the number of
 parental lineages that contribute to the present day sample is equal to or smaller than the sample
@@ -102,9 +103,9 @@ strong selection.
 
 We consider a haploid Wright-Fisher model of size $N$, focusing on a single biallelic locus. For a
 present-day sample with $n_o$ offspring lineages at time $t$, we will be looking for recursion
-equations for the allele frequency spectrum, $\afs{n_o}{t}(i_o)$, by considering the sampling
-process in a finite sample under drift and selection. We define the \textit{AFS} as a probability of
-observing $i_o$ copies of the derived allele at a single locus in $n_o$ samples.
+equations for the allele frequency spectrum, $\afs{n_o}{t}(i_o)$, by considering the process in a
+finite sample under drift and selection. We define the \textit{AFS} as a probability of observing
+$i_o$ copies of the derived allele at $n_o$ samples.
 
 \begin{table}
   \centering
@@ -119,13 +120,14 @@ observing $i_o$ copies of the derived allele at a single locus in $n_o$ samples.
     $i_o$ & Number of derived alleles in offspring\\
     $t$ & Time, in generations\\
     $\Phi_{n_o}^{t}(i_o)$ & Allele frequency spectrum in $n_o$ at generation $t$\\
-    $s$ & Selection advangate of the derived allele\\
+    $s$ & Selection advantage of the derived allele\\
     $x$ & Frequency of derived allele at generation $t$\\
     $i_o \dslash n_o$ & A sample with $i_o$ derived alleles ``out of'' $n_o$ total\\
     $\mathbf{H}\Coalc{i_p}{n_p}{i_o}{n_o}$ & Hypergeometric probability -
                                              sample $i_o \dslash n_o$ in offspring from $i_p \dslash n_p$ in parental generation\\
     $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ & Probability of transition from $i_p \dslash n_p$ in parents
-                                                 to $i_o \dslash i_p$ in offspring, with $r$ selective events\\
+                                                 to $i_o \dslash i_o$ in offspring, with $r$ selective events -
+                                                 see text for a more detailed description\\
   \end{tabular}
   \caption{\label{tab:symbols} Table of symbols}
 \end{table}
@@ -133,25 +135,26 @@ observing $i_o$ copies of the derived allele at a single locus in $n_o$ samples.
 Under neutral evolution, the number of lineages in the sample decreases into the past due to
 coalescent events (Fig.\ref{fig:schematic}A). Specifically, the parental generation carries $n_p$
 alleles, and the offspring generation - $n_o$ alleles. Under neutrality, we have $n_p \le n_o$, with
-$n_o-n_p$ coalescent events per generation.
+$n_o-n_p$ coalescent events.
 
 Under selection, a lineage of a derived allele can be ``rejected'' as a result of selective death
-(Fig. \ref{fig:schematic}B, capped line). To track the number of derived (deleterious) alleles, we
-introduce the notation $i_p \dslash n_p$ to represent that $i_p$ alleles are derived ``out of''
-total $n_p$ parental alleles. $i_o \dslash n_o$ represents the offspring generation.
+(Fig. \ref{fig:schematic}B, capped line). In such case, a new parental lineage is resampled. To
+track the number of derived (deleterious) alleles, we introduce the notation $i_p \dslash n_p$ to
+represent that $i_p$ alleles are derived ``out of'' total $n_p$ parental alleles. $i_o \dslash n_o$
+represents the offspring generation.
 
 In case of a selective death a lineage can be resampled, with probability $1-s$, leading to $1:1-s$
-advantage of the ancestral allele. Under selection, it is possible that $n_p \ge n_o$. We use this
-notation and model in section \ref{subsec:trans-mat}.
+advantage of the ancestral allele. Under selection, it is possible that $n_p > n_o$.
 
 It is also convenient to make the number of gametes produced by the parental generation explicit
 (Fig. \ref{fig:schematic}C). We denote the number of these intermediate gametes with $n_g$. In our
-model, the production of gametes is neutral, thus $n_p \le n_g$. The assortment of gametes into the
+model, the production of gametes is neutral, thus $n_p \le n_g$. The sampling of gametes into the
 offspring is subject to selection, so $n_g \ge n_o$. This two-step process allows us to consider
 effects of drift and selection within a single generation. In the case where there are more
-coalescent selection events, we can have $n_p \le n_o$. We use this observation in section \ref{sec:asympt}.
+coalescent selection events, we can have $n_p \le n_o$. We will use this model with $n_g$ in section
+\ref{sec:asympt}.
 
-\begin{figure}[ht]
+\begin{figure}[h]
   \centering
   \includegraphics[width=1.0\textwidth]{fig/schematic.pdf}
   \caption{\label{fig:schematic} Realizations of sampling parental lineages under neutrality (A) and
@@ -160,11 +163,12 @@ coalescent selection events, we can have $n_p \le n_o$. We use this observation 
     two circles represents a successful draw, a capped broken line - a selective (resampling) event.
     \textbf{A)} Under neutrality, possible coalescent events imply that number of parental lineages
     $n_p$ at time $t-1$ is less than or equal to $n_o$ offspring lineages at time $t$. \textbf{B)}
-    With selection, re-sampling events are also possible, thus $n_p \ge n_o$. The net number of
-    selection minus the coalescent events will indicate if the equations close. \textbf{C)} We can
-    also consider the number of gametes ($n_g$) produced. If we posit that production of gametes is
-    neutral, and the passing of gametes to offspring is under the control of selection, we can
-    develop a more intuitive understanding of the interplay of the two forces. }
+    With selection, re-sampling events are also possible, thus the possibility that $n_p \ge n_o$.
+    The net number of selection minus the coalescent events will indicate if the equations close.
+    \textbf{C)} We can also consider the number of gametes ($n_g$) produced. If we posit that
+    production of gametes is neutral, and the passing of gametes to offspring is under the control
+    of selection, we can develop a more intuitive understanding of the interplay of the two forces.
+    The version of the model with counting gametes is used to derive asymptotic results. }
 \end{figure}
 
 To express the allele-frequency spectrum $\afs{n_o}{t}(i_o)$ for $n_o$ offspring in terms of the
@@ -184,15 +188,15 @@ parental population prior to starting the sampling process, and sampled new pare
 order from this permutation. Thus the event $(i_p,n_p)$ can be reformulated as the joint events that
 the first $n_p$ parental alleles from the random permutation carry $i_p$ derived alleles
 \textit{and} that exactly $n_p$ distinct parents were drawn in the Wright-Fisher sampling of the
-first $n_o$ offspring. Now, let $r(i_p,n_p)$ be the (less specific) event that the first $n_p$
-parental alleles from the random permutation carry $i_p$ derived alleles. Then
-$P(r(i_p,n_p)) =\afs{n_p}{t} (i_p)$, and we can write:
+first $n_o$ offspring. Now, let $c(i_p,n_p)$ be the (less specific) event that the first $n_p$
+parental alleles from the random permutation carry $i_p$ derived alleles (but a number other than
+$n_p$ could have contributed). Then $P(c(i_p,n_p)) =\afs{n_p}{t} (i_p)$, and we can write:
 
 \begin{equation}
 \begin{split}
   \afs{n_o}{t}(i_o)
-  &=      \sum_{n_p,i_p}                        P_{n_o}(i_o|r(i_p,n_p),n_p) P_{n_o}(n_p|r(i_p,n_p)) P(r(i_p,n_p)) \\
-  &=      \sum_{n_p=1}^{n_{p_{max}}} \sum_{i_p=0}^{n_p} P_{n_o}(i_o,n_p|r(i_p,n_p)) \afs{n_p}{t-1}(i_p)  \\
+  &=      \sum_{n_p,i_p}                        P_{n_o}(i_o|c(i_p,n_p),n_p) P_{n_o}(n_p|c(i_p,n_p)) P(c(i_p,n_p)) \\
+  &=      \sum_{n_p=1}^{n_{p_{max}}} \sum_{i_p=0}^{n_p} P_{n_o}(i_o,n_p|c(i_p,n_p)) \afs{n_p}{t-1}(i_p)  \\
   &\equiv \sum_{n_p=1}^{n_{p_{max}}} \mathbf{T}_{n_p,n_o}                         \afs{n_p}{t-1}
 \end{split}
 \label{eq:recur}
@@ -234,29 +238,33 @@ even without requiring a jackknife approximation.
 Our first goal is to obtain an explicit recursion for the matrices in \eqref{eq:recur}. To do so, we
 will need to account for multiple coalescent events, which will require some careful bookkeeping.
 
+\section{Transition probability matrices}
+\label{sec:trans-mat}
+
 \subsection{Constructing the transition matrix}
 \label{subsec:trans-mat}
 
-Even though $\mathbf{T}_{n_p,n_o}$ is a simple combinatorial probability describing a single generation, we
-were unable to compute an analytical expression for it, while allowing for multiple coalescences and
-multiple selective events. However, we can obtain fairly simple recursions in terms of the sample
-size $n_o$, by assuming that we know $\mathbf{T}_{n_p,n_o-1}$ conditional on the last drawn offspring.
+Even though $\mathbf{T}_{n_p,n_o}$ is a simple combinatorial probability describing a single
+generation, we were unable to compute an analytical expression for it, while allowing for multiple
+coalescences and multiple selective events. However, we can obtain fairly simple recursions in terms
+of the sample size $n_o$, by assuming that we know $\mathbf{T}_{n_p,n_o-1}$ conditional on the last
+drawn offspring.
 
 Figure \ref{fig:rec-selection-dynamic-fail} shows the recursion equation in the selection case. The
 summands correspond to types of draws, represented graphically on the right. Here, we use the same
 representation as Figure \ref{fig:schematic}B, with the addition of double lines, which represent
 potentially multiple draws. Square brackets represent the events in a smaller ($n_o-1$) sample size.
 
-The term $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ is an entry in $\mathbf{T}_{n_p,n_o-1}$, and
-represents the probability of drawing $i_o$ derived alleles into the offspring generation from $i_p$
-derived in the parental generation, with exactly $r$ selective events for that lineage. $n_p$ and
-$n_o$ are the sample sizes of parental and offspring generations, respectively.
+The term $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ is an entry in $\mathbf{T}_{n_p,n_o}$, and
+corresponds to the event that exactly $n_p$ parental lineages with $i_p$ derived alleles contributed
+to $i_o // n_o$ offspring alleles, \textit{and} that there were $r$ selective events. This is a more
+specific version of the event $(i_p, n_p)$ in Eq. \ref{eq:recur}.
 
 Each of the summands (\textit{A,B,C,D}) represents a particular type of a draw, whereas the
-recursive term describes the events in a smaller sample size. To account for potentially multiple
-selection events per lineage, we also need to consider that the smaller sample size $n_o-1$ had
-anywhere between $0$, and $r_{max}$ selective re-draw events. The probability for $r$ re-draws
-$\mathbf{T}_{r}$ is the sum of terms \textit{rC} and \textit{rD}.
+recursive term (in square brackets) describes the events in a smaller sample size $n_o-1$. To
+account for potentially multiple selection events per lineage, we consider that the
+smaller sample size $n_o-1$ had anywhere between $0$, and $r_{max}$ selective re-draw events. The
+probability for $r$ re-draws $\mathbf{T}_{r}$ is the sum of terms \textit{rC} and \textit{rD}.
 
 \begin{figure}
   \centering
@@ -265,19 +273,20 @@ $\mathbf{T}_{r}$ is the sum of terms \textit{rC} and \textit{rD}.
   \caption{Recursion construct for transition probability with selection, accounting for multiple
     kinds of coalescent events. The right hand panel represents summands on the left graphically.
     Filled and empty circles represent derived and ancestral alleles. Solid and broken lines are
-    successful lineage draws and re-draws due to selection. Double lines represent potnetially
+    successful lineage draws and re-draws due to selection. Double lines represent potentially
     multiple draws. Square brackets represent events in a smaller sample size ($n_o-1$). Summands
     (\textit{A-D}) are successful draws where the last lineage is ancestral (\textit{A,B}) or
     derived (\textit{C,D}). Note that these terms depend on the probability that there were between
-    $0$ to $r_{max}$ in sample size $n_o-1$. Terms \textit{rC} and \textit{rD} represent the
-    probability that last selection re-draw was due to a lineage from outside (\textit{rC}) or
-    within (\textit{rD}) the sample. See table \ref{tab:symbols} for notation used. }
+    $0$ to $r_{max}$ selective events in sample size $n_o-1$. Terms \textit{rC} and \textit{rD}
+    represent the probability that last selection re-draw was due to a lineage from outside
+    (\textit{rC}) or within (\textit{rD}) the sample. See table \ref{tab:symbols} for notation used.
+  }
 
   \label{fig:rec-selection-dynamic-fail}
 \end{figure}
  
-There are other ways to write down similar recursion equations. In the appendix, we show a simpler
-model for neutral alleles, and a more direct model where $r_{max}=1$.
+% There are other ways to write down similar recursion equations. In the appendix, we show a simpler
+% model for neutral alleles, and a more direct model where $r_{max}=1$.
 
 Using a dynamic programming algorithm, we implement the construction of the exact neutral transition
 matrices $\mathbf{T}$ in $O(n^3)$ operations. The set of selection transition probability matrices
@@ -287,16 +296,14 @@ In practice, we set the maximum number of re-draws per lineage to $r_{max}=4$, w
 sufficient to consider strong negative selection up to $Ns=50$. Since these calculations are
 expensive, we also propose a number of approximations in the following sections.
 
-
-\section{Results}
-\label{sec:results}
-
 \subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
 
-Once the truncated matrix $\mathbf{Q}_{n_o}$ is constructed, it can be used to calculate the allele
-frequency spectrum. For example, in the infinite sites model at equilibrium, we can approximate the
-equilibrium \textit{AFS} $\Phi$ as a solution to a linear system:
+Once the truncated matrix
+$\mathbf{Q}_{n_o} = \sum^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$ is constructed, it can
+be used to calculate the allele frequency spectrum. For example, in the infinite sites model at
+equilibrium, we can approximate the equilibrium \textit{AFS} $\Phi$ as a solution to a linear
+system:
 
 \begin{equation}
   \label{eq:sfs-calc}
@@ -306,18 +313,16 @@ equilibrium \textit{AFS} $\Phi$ as a solution to a linear system:
 where $\mu$ is the per-site mutation rate, and $e_1$ is the first column of the identity matrix of
 size $n$. Figure \ref{fig:strong-selection} shows the comparison of the \textit{AFS} calculated from
 Equation \eqref{eq:coal-recursion, eq:sfs-calc}, the diffusion approximation \cite[eq.
-9.23]{Ewens2004}, and the calculation performed in \texttt{Moments} \citep{JouganousEtAl2017}.
-\sgcomment{Should we give an example for very large sample sizes on panels A and B to show the
-  finite sample effect?} \ikcomment{Is $n=100, N=100$ good here?}. Panels A and B show the
-\textit{AFS} under neutrality, C and D under strong negative selection. Under neutrality, all the
-models agree, yeilding similar \textit{AFS}.
+9.23]{Ewens2004}, and the calculation performed in \texttt{Moments} \citep{JouganousEtAl2017}. .
+Panels A,B,C show the \textit{AFS} under neutrality; D,E,F under strong negative selection. Under
+neutrality, all the models agree, yielding similar \textit{AFS}.
 
-Figure \ref{fig:strong-selection}C shows a comparison at strong negative $Ns=50$, with the
+Figure \ref{fig:strong-selection}D shows a comparison at strong negative $Ns=50$, with the
 population size ($N=1000$), which is substantially larger than the sample size ($n=100$). There is a
 small deviation between the approaches at large allele frequencies. If the sample size is the same
 as the population size ($n=N=100$) (Fig. \ref{fig:strong-selection}D), the diffusion approximation
-and \texttt{Moments} depart from the Wright-Fisher prediction. The approach presented here
-(\ref{eq:coal-recursion}) shows a better match to the Wright-Fisher model.
+and \texttt{Moments} depart from the Wright-Fisher prediction. The approach presented in this work
+(Fig. \ref{fig:rec-selection-dynamic-fail}) shows a better match to the Wright-Fisher model.
 
 \begin{figure}
   \centering
@@ -325,8 +330,9 @@ and \texttt{Moments} depart from the Wright-Fisher prediction. The approach pres
   \caption{Normalized allele frequency spectra in a sample of size $n=100$, for neutral (Ns=0)
     (A,B,C), or highly deleterious alleles ($Ns=50$) (D,E,F). (A) shows the frequency spectrum in a
     sample from a large population ($N=1000$), (B) intermediate ($N=500$), and (C) small population
-    ($N=100$). (D,E,F) same, for deleterious allele. Note that for a strongly deleterious allele,
-    the probabilities are extremely small. }
+    ($N=100$). (D,E,F) same, for deleterious allele. The Y-axes are at different scales between the
+    panels, to better indicate disagreement. The X-axes for panels (D,E,F) were truncated
+    when the \textit{AFS} probability dropped below $10^{-12}$. }
   \label{fig:strong-selection}
 \end{figure}
 
@@ -344,6 +350,8 @@ Figure \ref{fig:apx:missing} shows this probability as a function of sample size
 Since the expected number of drift events increases quadratically and the number of selective events
 increases only linearly, the probability that we need additional lineages decreases rapidly with
 sample sizes.
+
+\ikcomment{This figure needs to be updated}.
 
 \section{Asymptotic closure properties}
 \label{sec:asympt}
