@@ -75,11 +75,10 @@ properties are not well understood.
 Closure of the moment equations under the neutral Wright-Fisher model occurs because the number of
 parental lineages that contribute to the present day sample is equal to or smaller than the sample
 size, which is due to coalescent events back in time \citep{Kingman1982a}. This does not hold under
-negative selection -- due to selective deaths, the number of parental lineages that contribute can
-be larger than the sample size, $n$. As we demonstrate later, this leads to a potentially infinite
-number of terms in the equations. The potential increase in the number of relevant lineages as we go
-back in time is explicit in the ancestral selection graphs (\textit{ASG}),
-\citep{KroneNeuhauser1997}.
+negative selection -- due to selective deaths, the number of parental lineages that are involved can
+be larger than the sample size, $n$. The possible increase in the number of relevant lineages as we go
+back in time is explicit, e.g., in the ancestral selection graphs (\textit{ASG}),
+\citep{KroneNeuhauser1997}, and was discussed in [cite Kurtz and donnely on selection].
 
 The actual increase in the number of lineages as we go back in time depends on the relative
 importance of drift and selection. The number of coalescent events per generation is proportional to
@@ -88,24 +87,24 @@ suggests that with sufficiently large samples, the effect of selection would be 
 drift, which would prevent the increase in the number of lineages -- at least most of the times.
 Thus recursion equations can become almost-closed, in a sense that we will explore below.
 
-An additional complication is multiple and/or simultaneous coalescent events -- which emerge with
-large sample sizes \citep{BhaskarEtAl2014}. The standard coalescent model only allows one event per
-generation, but we also need to consider higher-order events, \textit{e.g.} multiple two-lineage or
-three-lineage mergers. These multiple-lineage coalescent events oppose the effect of selection by
+Large sample sizes bring in the complication of multiple and/or simultaneous coalescent events \citep{BhaskarEtAl2014}. 
+The standard coalescent model only allows pairwise common ancestors, but we also need to consider higher-order events, such as 
+three-way coalescence. These multiple-lineage coalescent events oppose the effect of selection by
 rapidly decreasing the number of contributing lineages \citep{NelsonEtAl2019}.
 
-In this article we derive these asymptotically-closed recursions in the Wright-Fisher model, and
-study their behaviour and applications for modelling the distribution of allele frequencies under
-strong selection.
+
+In this article we derive recursion equations for large sample sizes, and show that these are asymptotically closed 
+even under strong selection. We show that these transition matrices can be used to more accurately model the distribution 
+of allele frequencies in moderate to large samples. 
 
 \section{Background}
 \label{sec:background}
 
-We consider a haploid Wright-Fisher model of size $N$, focusing on a single biallelic locus. For a
+We consider a haploid Wright-Fisher model with $N$ individuals per generation, focusing on a single biallelic locus. For a
 present-day sample with $n_o$ offspring lineages at time $t$, we will be looking for recursion
-equations for the allele frequency spectrum, $\afs{n_o}{t}(i_o)$, by considering the process in a
-finite sample under drift and selection. We define the \textit{AFS} as a probability of observing
-$i_o$ copies of the derived allele at $n_o$ samples.
+equations for the allele frequency spectrum, $\afs{n_o}{t}(i_o)$, which we will define as the probability of observing
+$i_o$ copies of the derived allele in a sample of size $n_o.$ We will do so by considering the process of drawing parental alleles
+for this finite sample. 
 
 \begin{table}
   \centering
@@ -132,24 +131,36 @@ $i_o$ copies of the derived allele at $n_o$ samples.
   \caption{\label{tab:symbols} Table of symbols}
 \end{table}
 
-Under neutral evolution, the number of lineages in the sample decreases into the past due to
-coalescent events (Fig.\ref{fig:schematic}A). Specifically, the parental generation carries $n_p$
-alleles, and the offspring generation - $n_o$ alleles. Under neutrality, we have $n_p \le n_o$, with
-$n_o-n_p$ coalescent events.
+Under neutral evolution, the number $n_p$ of distinct parental lineages drawn in this process is smaller than
+$n_o$  (Fig.\ref{fig:schematic}A). 
 
-Under selection, a lineage of a derived allele can be ``rejected'' as a result of selective death
-(Fig. \ref{fig:schematic}B, capped line). In such case, a new parental lineage is resampled. To
-track the number of derived (deleterious) alleles, we introduce the notation $i_p \dslash n_p$ to
-represent that $i_p$ alleles are derived ``out of'' total $n_p$ parental alleles. $i_o \dslash n_o$
-represents the offspring generation.
 
-In case of a selective death a lineage can be resampled, with probability $1-s$, leading to $1:1-s$
-advantage of the ancestral allele. Under selection, it is possible that $n_p > n_o$.
+To model selection as part of our sampling process, we consider that a parental lineage carrying a derived allele 
+can be ``rejected'' as a result of selective death with probability $s>0$
+(Fig. \ref{fig:schematic}B, capped line). In such case, we keep sampling until a successful draw.  
+This is equivalent to the usual formulation of the Wright-Fisher model, where the probability of drawing 
+the derived allele is $1-s$ times the probability of drawing the ancestral allele. 
 
-It is also convenient to make the number of gametes produced by the parental generation explicit
-(Fig. \ref{fig:schematic}C). We denote the number of these intermediate gametes with $n_g$. In our
-model, the production of gametes is neutral, thus $n_p \le n_g$. The sampling of gametes into the
-offspring is subject to selection, so $n_g \ge n_o$. This two-step process allows us to consider
+In the recursion, we will need to keep track of the number $n_p$ of parental alleles who were sampled,
+(whether or not they contributed). Because of rejection, $n_p$ can be larger than $n_o.$
+
+%We will also need to keep track of the number $i_p,i_o$ of derived alleles
+% in the parent and offspring generation. 
+%track the number of derived (deleterious) alleles, we introduce the notation $i_p \dslash n_p$ to
+%represent that $i_p$ alleles are derived ``out of'' total $n_p$ parental alleles. $i_o \dslash n_o$
+%represents the offspring generation.
+%
+%In case of a selective death a lineage can be resampled, with probability $1-s$, leading to $1:1-s$
+%advantage of the ancestral allele. Under selection, it is possible that $n_p > n_o$.
+
+To disentangle the effects of drift and selection, we will also track the number $n_g$ of gametes sampled in the process
+ (Fig. \ref{fig:schematic}C). The difference $n_g-n_o$ depends only on the number of selective deaths, and
+ is always positive. The difference $n_p-n_o$ depends only on coalescence events, and is always negative.   
+ 
+ 
+% In our model, the production of gametes is neutral, 
+%thus $n_p \le n_g$. The sampling of gametes into the
+%offspring is subject to selection, so $n_g \ge n_o$. This two-step process allows us to consider
 effects of drift and selection within a single generation. In the case where there are more
 coalescent selection events, we can have $n_p \le n_o$. We will use this model with $n_g$ in section
 \ref{sec:asympt}.
