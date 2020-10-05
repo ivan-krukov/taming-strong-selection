@@ -151,7 +151,7 @@ for this finite sample.
   \caption{\label{tab:symbols} Table of symbols}
 \end{table}
 
-Under neutral evolution, each offpring pickes a lineage at random with replacement, and the number $n_p$ of distinct parental lineages is smaller than
+Under neutral evolution, each offspring picks a lineage at random with replacement, and the number $n_p$ of distinct parental lineages is smaller than
 $n_o$  (Fig.\ref{fig:schematic}A). 
 
 
@@ -369,7 +369,7 @@ expensive, we also propose a number of approximations in the following sections.
 \label{subsec:afs}
 
 Once the truncated matrix
-$\mathbf{Q}_{n_o} = \sum^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$ is constructed, it can
+$\mathbf{Q}_{n_o} = \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$ is constructed, it can
 be used to calculate the allele frequency spectrum. 
 To validate the method, we first use the equilibrium distribution where exact solutions are available \cite{Krukov}.
 In the infinite sites model at equilibrium, for example, we can compute the equilibrium 
@@ -408,7 +408,13 @@ and \texttt{Moments} depart from the Wright-Fisher prediction. The approach pres
 \label{subsec:missing}
 
 Truncation in equation \ref{eq:truncated} means that if $n_p > n_o$, some lineages will be
-unaccounted for. Since $\mathbf{Q}_{n_o}(i_p, i_o)$ is a probability distribution over $i_o$ \sgcomment{We have not yet defined $Q$ as a probability distribution}, we can
+unaccounted for. The transition matrix $\mathbf{Q}_{n_o}(i_p, i_o),$ in equation \eqref{eq:truncated}, also has a probabilistic 
+meaning: 
+The $(i_p,i_o)$th element of matrix $Q_{n_o}$  is the probability $P_{n_o}(i_o, \mathcal{S'}_{n_p}| \mathcal{C'}_{n_p}(i_p))$
+  that we observe $i_o$ derived alleles in a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (event $\mathcal{S'}_{n_o}$), 
+  given event $\mathcal{C'}_{n_p}(i_p)$ that $i_p$ that $i_p$ of the first $n_p$ parental alleles are derived. 
+
+Since $\mathbf{Q}_{n_o}(i_p, i_o)$ is a probability distribution over $i_o$ \sgcomment{We have not yet defined $Q$ as a probability distribution}, we can
 calculate the probability that more than $i_p \dslash n_p$ lineages contributed as
 $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$. Since only derived lineages experience selection, we
 expect the largest number of resampling events, and therefore unaccounted lineages, when all alleles
