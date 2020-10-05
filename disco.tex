@@ -414,15 +414,17 @@ The $(i_p,i_o)$th element of matrix $Q_{n_o}$  is the probability $P_{n_o}(i_o, 
   that we observe $i_o$ derived alleles in a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (event $\mathcal{S'}_{n_o}$), 
   given event $\mathcal{C'}_{n_p}(i_p)$ that $i_p$ that $i_p$ of the first $n_p$ parental alleles are derived. 
 
-Since $\mathbf{Q}_{n_o}(i_p, i_o)$ is a probability distribution over $i_o$ \sgcomment{We have not yet defined $Q$ as a probability distribution}, we can
-calculate the probability that more than $i_p \dslash n_p$ lineages contributed as
-$1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$. Since only derived lineages experience selection, we
-expect the largest number of resampling events, and therefore unaccounted lineages, when all alleles
-are derived, $i_o = n_o$.
+By summing $\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o},$ we therefore get the proportion of draws that were 
+not truncated. $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$ is therefore the fraction of unaccounted-for draws 
+due to truncation, given $i_p$ derived among the first $n_o$ parental alleles. Since only derived lineages experience selection,
+ the largest number of resampling events, and therefore the largest number of unaccounted lineages, 
+ occurs when all alleles are derived, $i_o = n_o$.
 
-Figure \ref{fig:apx:missing} shows this probability as a function of sample size for $i_o = n_o$.
-Since the expected number of drift events increases quadratically and the number of selective events
-increases only linearly, the probability that we need additional lineages decreases rapidly with
+Figure \ref{fig:apx:missing} shows this probability under this worst-case scenario.
+The probability of missing lineages first increases with increasing sample size, as 
+the number of draws that can result in selective deaths increases. 
+However, the number of drift events eventually overtakes the number of selective events, 
+and the probability that we need additional lineages decreases rapidly with
 sample sizes.
 
 \ikcomment{This figure needs to be updated}.
@@ -689,8 +691,8 @@ genetics.
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{fig/missing.pdf}
-  \caption{Probability that there are more contributing parents than offspring, $n_p > n_o$.
-    Calculated as $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$}
+  \caption{Probability that there are more contributing parents than offspring, $n_p > n_o$. \sgcomment{Missing information, such as $N$}
+    Calculated as $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}.$}
   \label{fig:apx:missing}
 \end{figure}
 
