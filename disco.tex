@@ -505,8 +505,8 @@ of this distribution, and show that it is accurately described by a Gaussian app
 \section{Asymptotic closure properties}
 \label{sec:asympt}
 
-We now want to estimate the sample size required to ensure that the system in Eq.
-\eqref{eq:truncated} remains almost closed. 
+%We now want to estimate the sample size required to ensure that the system in Eq.
+%\eqref{eq:truncated} remains almost closed. 
 
 
 %In the following derivations, we are assuming that the derived allele is present in the parental
@@ -536,7 +536,7 @@ Using the law of total expectation, we can write the expectation $E[n_p-n_o | n_
                      &=E_{n_g} E_{n_p}[n_p | n_g] - n_o.
   \end{aligned}
 \end{equation*}
-Assuming $x\equiv i_p/n_p=1$, the expectation over $n_p$ is simply given by the occupancy distribution \cite{Wakeley2009}.
+Assuming $x\equiv i_p/n_p=1$ \sgcomment{population or sample?}, the expectation over $n_p$ is simply given by the occupancy distribution \cite{Wakeley2009}.
 
 \begin{equation*}
   \begin{aligned}
@@ -547,8 +547,8 @@ Assuming $x\equiv i_p/n_p=1$, the expectation over $n_p$ is simply given by the 
   \end{aligned}
 \end{equation*}
 
-The number of selective deaths, $n_g-n_o$ follows a negative binomial distribution with $n_g$ trials \sgcomment{I believe that this should be successes?}
-and success rate $1-s$. We can use the moment generating function of the negative binomial to compute the expectation for
+As mentioned above, the number of selective deaths, $n_g-n_o$ follows a negative binomial distribution.
+ We can use the moment generating function of the negative binomial to compute the expectation for
 constant $k$,
 
 \begin{equation}
@@ -566,24 +566,24 @@ Taking the terms of order $\frac{1}{N}$ gives,
 
 \begin{equation*}
     \label{eq:lineages-approx}
-    \hat{E}[n_p-n_o | n_o] \approx n_os - \frac{n_o (n_o-1) }{2N}  
+    \hat{E}[n_p-n_o | n_o] \approx n_os - \frac{n_o (n_o-1) }{2N}. 
 \end{equation*}
 
-We thus have the usual result that the increase of the number of lineages due to selection is
-linear, whereas the reduction due to drift is quadratic. Solving for $ \hat{E}[n_p -n_o | n_o]<0$
+We thus have the usual interplay of selection and drift. Solving for $ \hat{E}[n_p -n_o | n_o]<0$
 yields, to leading order,
 
 \begin{equation}
   \label{eq:critical-sample}
-  n_o^* \ge 2Nxs.
+  n_o^* \ge 2Ns.
 \end{equation}
 
-This gives us a convenient expression for the critical sample size, where there are more drift than
-selection events, on average. However, this only tells us about the average number of each type of
-an event, and does not represent the uncertainty. In the following section, we derive the
-distribution of the number of contributing lineages one generation into the past. In this manner, we
-can find the critical sample size so that $n_p \leq n_o$ almost always (for a specified degree of
-confidence).
+This gives us a simple and convenient expression for the critical sample size, where there are more drift than
+selection events, on average. However, closure of the recursions requires not only that drift occurs more often than selection 
+on average, but almost always. 
+
+Our next step is to compute the variance  $\operatorname{Var}[n_p-n_o | n_o].$ The detailed calculations are provided in the 
+appendix, and the result is : 
+\sgcomment{Provide the equation?} 
 
 % Figure \ref{fig:critical-sample-size} shows the critical sample size for several selection
 % coefficients, assuming the entirety of the sample is derived ($x=1$) in a population of $N=1,000$.
@@ -591,14 +591,6 @@ confidence).
 % $\frac{n_p}{n_o}$. Above the horizontal line $\frac{n_p}{n_o} > 1$, selection dominates. Below,
 % drift reduces the number of used lineages. The intercept of the line with $\frac{n_p}{n_o} = 1$ is
 % the critical sample size, which is well-approximated by $2Nsx$.
-
-\subsection{Distribution of number of contributing lineages}
-\label{subsec:distribution}
-
-The variance of the number of extra lineages contributing from the parental generation is
-derived in section \ref{subsec:apx:variance} of the appendix. \sgcomment{That doesn't seem to be the right place for this. }
-
-As alluded to in the previous section, 
 
 \subsection{Gaussian approximation}
 
