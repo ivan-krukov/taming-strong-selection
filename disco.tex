@@ -642,18 +642,24 @@ define $P(i_o, n_{pp} | q(i_{pp}, n_{pp}))$, as above, as the probability of dra
 using exactly $n_{pp}$ grandparental alleles given the event $q(i_{pp}, n_{pp})$ that $i_{pp}$ of the first $n_{pp}$
 grandparental alleles are derived \sgcomment{We would need to reconcile the notation here with the previous one}, 
 we can condition on the number of contributing parental alleles $n_p$ and
-the number of derived alleles $i_p$ among them in the parental generation:
+the number of derived alleles $i_p$ among them in the parental generation: \sgcomment{define $S'$}
  
  \begin{equation}
  \begin{split}
- P(i_o, n_{pp} | r(i_{pp}, n_{pp})) & = \sum_{i_p,n_p} P(i_o, n_{pp} ; i_p, n_p, r(i_p,n_p)  | q(i_{pp}, n_{pp}))\\
- &= \sum_{i_p,n_p} P(i_o, n_p,  r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))\\
- &= \sum_{i_p,n_p} P(i_o, n_p|   r(i_p,n_p); n_{pp}  ; q(i_{pp}, n_{pp}))  P(r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))\\
- &= \sum_{i_p,n_p} P(i_o, n_p |   r(i_p,n_p))  P( r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))\\
- &= \sum_{i_p,n_p} P(i_o, n_p |   r(i_p,n_p))  P( r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))
+ P(i_o, \mathcal{S}'_{n_pp} | \mathcal{C}'(i_{pp}, n_{pp})) & = \sum_{i_p,n_p} P(i_o, \mathcal{S}'_{n_pp} ; \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{pp}, n_{pp}))\\
+ &= \sum_{i_p,n_p}  P(i_o, \mathcal{S}'_{n_pp} | \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} ; \mathcal{C}'(i_{pp}, n_{pp})) P\mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{pp}, n_{pp}) \\
+ &=  \sum_{i_p,n_p}  P(i_o, \mathcal{S}'_{n_pp} | \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p})) P\mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{pp}, n_{pp}) \\
+ &=   \sum_{n_p} T_{n_p,n_o} T_{n_{pp}, n_p},
  \end{split}
 \end{equation}
-and \sgcomment{despite the crap notation}, this is just the product of quantities we have already computed.
+ %&= \sum_{i_p,n_p} P(i_o, n_p,  r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))\\
+ %&= \sum_{i_p,n_p} P(i_o, n_p|   r(i_p,n_p); n_{pp}  ; q(i_{pp}, n_{pp}))  P(r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))\\
+ %&= \sum_{i_p,n_p} P(i_o, n_p |   r(i_p,n_p))  P( r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))\\
+ %&= \sum_{i_p,n_p} P(i_o, n_p |   r(i_p,n_p))  P( r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))
+where the sum over $i_p$ is party of the product of the transition matrices $T$. 
+Since each matrix product takes \sgcomment{scaling of practical matrix product algos}, and there or $o(n)$
+such products, the computation of this matrix takes at most \sgcomment{...}.
+
 
 
 \section{Conclusion}
