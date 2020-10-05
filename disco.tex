@@ -222,7 +222,7 @@ from properties of Wright-Fisher sampling.
 Concretely, the event $(i_p,n_p)$  can be expressed as the intersection of two events,  $\mathcal{C}_{n_p}(i_p)$ and $\mathcal{S}_{n_p}$. 
 Event $\mathcal{C}_{n_p}(i_p)$ specifies that the first $n_p$
 parental lineages from the random permutation carry $i_p$ derived alleles (that is, $P(\mathcal{C}_{n_p}(i_p)) =\afs{n_p}{t} (i_p)$). 
-Event $\mathcal{S}_{n_p},$ requires that the Wright-Fisher drawing process stops after exactly $n_p$ parental lineages have been drawn.
+Event $\mathcal{S}_{n_p}$ requires that the Wright-Fisher drawing process stops after exactly $n_p$ parental lineages have been drawn.
 \begin{equation}
 \begin{split}
 \afs{n_o}{t}(i_o)&= \sum_{n_p,i_p} P_{n_o}(i_o, \mathcal{S}_{n_p}, \mathcal{C}(i_p,n_p) )\\
@@ -625,30 +625,32 @@ population size.
 
 \subsection
 {Integrating over few generations} 
+
 If the sample size is large enough that $E[n_p-n_o]<0$, but not large enough that $P(n_p>n_o) \ll 1,$
 we can improve the truncation by integrating over more than one generation. 
 Lineages gained by 
-selective death at one generation can can be compensated by loss to genetic drift at another generation.
+selective death at one generation can be compensated for by genetic drift at another generation.
 Informally, the expected change $E[n_g-n_o]$ in the number $n_g$ of lineages in the grandparent generation relative  
 to $n_o,$  and the variance
 $\operatorname{Var}(n_g-n_o)$ will be roughly double those over a single generation. Thus the z-score 
 determining the amount of unnaccounted-for lineages in the normal approximation, $z= E[n_g-n_o] / \sqrt{\operatorname{Var}(n_g-n_o)}$
  will increase roughly by a factor $\sqrt{2}$. 
 
-Such transition matrices can also be computed iteratively. If $n_g$ is the number of contributing
-lineages in the grandparental generation, and $i_g$ is the number of derived among those, and we
-define $P(i_o, n_g | q(i_g, n_g))$, as above, as the probability of drawing $i$ derived alleles and
-using exactly $n_g$ grandparental alleles given the event $q(i_g, n_g)$ that $i_g$ of the first $n_g$
-grandparental alleles are derived \sgcomment{We would need to reconcile the notation here with the previous one}, we can condition on the number of contributing alleles $n_c$ and
-the number of derived alleles $i_c$ among them in the parental generation:
+Such transition matrices can also be computed iteratively. If $n_{pp}$ is the number of contributing
+lineages in the grandparental generation, and $i_{pp}$ is the number of derived alleles among those, and we
+define $P(i_o, n_{pp} | q(i_{pp}, n_{pp}))$, as above, as the probability of drawing $i$ derived alleles and
+using exactly $n_{pp}$ grandparental alleles given the event $q(i_{pp}, n_{pp})$ that $i_{pp}$ of the first $n_{pp}$
+grandparental alleles are derived \sgcomment{We would need to reconcile the notation here with the previous one}, 
+we can condition on the number of contributing parental alleles $n_p$ and
+the number of derived alleles $i_p$ among them in the parental generation:
  
  \begin{equation}
  \begin{split}
- P(i_o, n_g | r(i_g, n_g)) & = \sum_{i_c,n_c} P(i_o, n_g ; i_c, n_c, r(i_c,n_c)  | q(i_g, n_g))\\
- &= \sum_{i_c,n_c} P(i_o, n_c,  r(i_c,n_c); n_g  | q(i_g, n_g))\\
- &= \sum_{i_c,n_c} P(i_o, n_c|   r(i_c,n_c); n_g  ; q(i_g, n_g))  P(r(i_c,n_c); n_g  | q(i_g, n_g))\\
- &= \sum_{i_c,n_c} P(i_o, n_c |   r(i_c,n_c))  P( r(i_c,n_c); n_g  | q(i_g, n_g))\\
- &= \sum_{i_c,n_c} P(i_o, n_c |   r(i_c,n_c))  P( r(i_c,n_c); n_g  | q(i_g, n_g))
+ P(i_o, n_{pp} | r(i_{pp}, n_{pp})) & = \sum_{i_p,n_p} P(i_o, n_{pp} ; i_p, n_p, r(i_p,n_p)  | q(i_{pp}, n_{pp}))\\
+ &= \sum_{i_p,n_p} P(i_o, n_p,  r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))\\
+ &= \sum_{i_p,n_p} P(i_o, n_p|   r(i_p,n_p); n_{pp}  ; q(i_{pp}, n_{pp}))  P(r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))\\
+ &= \sum_{i_p,n_p} P(i_o, n_p |   r(i_p,n_p))  P( r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))\\
+ &= \sum_{i_p,n_p} P(i_o, n_p |   r(i_p,n_p))  P( r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))
  \end{split}
 \end{equation}
 and \sgcomment{despite the crap notation}, this is just the product of quantities we have already computed.
