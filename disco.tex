@@ -594,21 +594,25 @@ appendix, and the result is :
 
 \subsection{Gaussian approximation}
 
-We can construct a Gaussian approximation to the distribution of the number of contributing lineages.
-This approximation will allow us to calculate sample size where, for example, the number of
-contributing lineages is smaller that the sample size $95\%$ of the time, instead of $50\%$, as
-given by $n_o^*$ in equation \eqref{eq:critical-sample}.
+%We can construct a Gaussian approximation to the distribution of the number of contributing lineages.
+%This approximation will allow us to calculate sample size where, for example, the number of
+%contributing lineages is smaller that the sample size $95\%$ of the time, instead of $50\%$, as
+%given by $n_o^*$ in equation \eqref{eq:critical-sample}.
 
-The occupancy distribution is approximated by the Gaussian distribution \citep{ONeill2019} when
-$n_o \ll N$. Likewise, can the number of failures ($n_r$) before a given number of successes
-(negative binomial). In the case of large sample size, as required by the approximation of the
+A Gaussian with mean and variance caluclated above provides an excellent approximation to 
+equation \eqref{}.
+This is not unexpected, since both the number of selective events and the number of drift events 
+are well approximated by normal distributions: The occupancy distribution is approximated by the Gaussian 
+distribution when $n_o \ll N$ \citep{ONeill2019}.
+ Likewise, can the number of failures ($n_r$) before a given number of successes
+(negative binomial) \sgcomment{reference?}. In the case of large sample size, as required by the approximation of the
 occupancy by the Gaussian, we can approximate the total number of contributing lineages as the sum
-of lineages contributed by the two distributions. Specifically, we require that the number of
+of lineages \sgcomment{??}contributed by the two distributions. Specifically, we require that the number of
 coalescent events is large, such that the occupancy distribution can be approximated well by the
-Gaussian: $\frac{{n_o^*}^2}{2N} \ge 10$.
+Gaussian: $\frac{{n_o^*}^2}{2N} \ge 10$. \sgcomment{I am confused by this paragraph.}
 
-We use the mean and variance calculated in Eq. \ref{eq:lineages-exact} and Eq. \ref{eq:apx:var}
-respectively.
+%We use the mean and variance calculated in Eq. \ref{eq:lineages-exact} and Eq. \ref{eq:apx:var}
+%respectively.
 
 Figure \ref{fig:combined}B shows the critical sample size for a given quantile of the normal
 approximation, as a function of the population-scaled selection coefficient. The $50^{\text{th}}$
