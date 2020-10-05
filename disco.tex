@@ -645,10 +645,10 @@ the number of derived alleles $i_c$ among them in the parental generation:
  \begin{equation}
  \begin{split}
  P(i_o, n_g | r(i_g, n_g)) & = \sum_{i_c,n_c} P(i_o, n_g ; i_c, n_c, r(i_c,n_c)  | q(i_g, n_g))\\
- &= \sum_{i_c,n_c} P(i, n_c,  r(i_c,n_c); n_g  | q(i_g, n_g))\\
- &= \sum_{i_c,n_c} P(i, n_c|   r(i_c,n_c); n_g  ; q(i_g, n_g))  P(r(i_c,n_c); n_g  | q(i_g, n_g))\\
- &= \sum_{i_c,n_c} P(i, n_c |   r(i_c,n_c))  P( r(i_c,n_c); n_g  | q(i_g, n_g))\\
- &= \sum_{i_c,n_c} P(i, n_c |   r(i_c,n_c))  P( r(i_c,n_c); n_g  | q(i_g, n_g))
+ &= \sum_{i_c,n_c} P(i_o, n_c,  r(i_c,n_c); n_g  | q(i_g, n_g))\\
+ &= \sum_{i_c,n_c} P(i_o, n_c|   r(i_c,n_c); n_g  ; q(i_g, n_g))  P(r(i_c,n_c); n_g  | q(i_g, n_g))\\
+ &= \sum_{i_c,n_c} P(i_o, n_c |   r(i_c,n_c))  P( r(i_c,n_c); n_g  | q(i_g, n_g))\\
+ &= \sum_{i_c,n_c} P(i_o, n_c |   r(i_c,n_c))  P( r(i_c,n_c); n_g  | q(i_g, n_g))
  \end{split}
 \end{equation}
 and \sgcomment{despite the crap notation}, this is just the product of quantities we have already computed.
