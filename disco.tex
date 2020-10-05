@@ -420,7 +420,7 @@ due to truncation, given $i_p$ derived among the first $n_o$ parental alleles. S
  the largest number of resampling events, and therefore the largest number of unaccounted lineages, 
  occurs when all alleles are derived, $i_o = n_o$.
 
-Figure \ref{fig:apx:missing} shows this probability under this worst-case scenario.
+Figure \ref{fig:apx:missing} \sgcomment{Has figure 4 been mentioned yet?} shows this probability under this worst-case scenario.
 The probability of missing lineages first increases with increasing sample size, as 
 the number of draws that can result in selective deaths increases. 
 However, the number of drift events eventually overtakes the number of selective events, 
@@ -429,39 +429,104 @@ sample sizes.
 
 \ikcomment{This figure needs to be updated}.
 
-\section{Asymptotic closure properties}
-\label{sec:asympt}
 
-We now want to determine what sample size is sufficient so that the number of coalescent events due
-to drift is almost always larger than the number of selection events, such that the system in Eq.
-\eqref{eq:truncated} remains closed. We derive several approximations to the model proposed in the
-first section, in order to get a better understanding of this behaviour.
-
-In the following derivations, we are assuming that the derived allele is present in the parental
-generation at frequency $x = \frac{i_p}{n_p}$, instead of the discrete $i_p \dslash n_p$ in section
-\ref{subsec:trans-mat}, which simplifies the calculations. When looking for the upper bound on the
-number of rejected lineages, we take $x=1$, similar to section \ref{subsec:missing}.
-
-In addition, we now explicitly consider the number of gametes produced by the parents - as
-introduced in Fig. \ref{fig:schematic}C. The parental generation ($n_p$), produces a very large
-number of gametes, of which $n_g$ are randomly picked to contribute to the offspring. Each derived
-allele is then passed to one offspring with probability $1-s$, ancestral with probability $1$. With
-probability $s$, picking a gamete fails, then a new contributing gamete is sampled. The number of
-coalescent events is $n_g - n_p$, and the number of selective deaths is $n_g - n_o$.
-
-\subsection{Mean number of contributing lineages}
-\label{sec:mean-contr}
+\subsection{Distribution of number of contributing lineages}
+\label{subsec:distribution}
 
 For a given sample size, the probability that $n_p$ parents have contributed is:
 
 \begin{align}
   \label{eq:conditional}
-  P(n_p | n_o) = \sum_{n_g} P(n_p | n_g)P(n_g | n_o)
+  P(n_p | n_o) = \sum_{n_g} P(n_p | n_g,n_o)P(n_g | n_o) = \sum_{n_g} P(n_p | n_g)P(n_g | n_o) 
+\end{align}
+where $n_p$ and $n_g$ is the number of contributing parents and gametes, respectively (Fig.
+\ref{fig:schematic}C). 
+
+The distribution of the number of gametes, $n_g$ is given by the negative binomial, parameterized by
+probability of resample $s$, and the total number of trials before $n_o$ successes (\textit{i.e.}
+$n_r+n_o$): \sgcomment{ The parameter is the number of successes -- the number of trials is the random variable:
+The distribution of the number of gametes, $n_g\geq n_o$ is given by the negative binomial, parameterized by
+probability of success $1-s$, and the total number of required successes $n_o$ successes:}
+
+
+
+\begin{align}
+  \label{eq:neg-binomial-trials}
+  P(n_g|n_o) = \binom{n_g-1}{n_o-1}(1-xs)^{n_o}(xs)^{n_g-n_o},
+\end{align}
+where $x$ is the proportion of derived alleles \sgcomment{is this in the parental population or the sample? It would be true for both I think!}. 
+
+
+Given $n_g$, the number of parental lineages follows the modified occupancy (also known as Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}:
+
+\begin{align}
+  \label{eq:occupancy}
+  P(n_p|n_g) = \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}}
+\end{align}
+where $S_2(n_g,n_p)$ is a Stirling number of the second kind, which is the number of ways to
+partition $n_g$ gametes into $n_p$ parents (see \cite{JohnsonEtAl2005} section 10.4 for a thorough
+treatment). %Note that the under drift, the number of parents will be smaller or equal to the number
+%of gametes $n_p \le n_g$.
+
+
+Combining the two distributions together through Eq. \ref{eq:conditional}, we get:
+
+\begin{align}
+  \label{eq:lineages-in-past}
+   Pr(n_p|n_o) = \sum_{n_g=1}^{\infty} \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}} \binom{n_g-1}{n_o-1}(1-xs)^{n_o}(xs)^{n_g-n_o}
 \end{align}
 
-Where $n_p$ and $n_g$ is the number of contributing parents and gametes, respectively (Fig.
-\ref{fig:schematic}C). Note that we consider this backward in time, so $n_o$ is fixed, and we ask
-for the probability of $n_p$ conditional on $n_o$.
+This distribution does not appear to have a simple analytical form. However, it can be computed
+efficiently using methods presented in \citep{ONeill2019}. Figure \ref{fig:combined}A shows the
+distribution of the number of contributing parental lineages for several selection coefficients for
+a sample $n_o=200$. In the absence of selection, the distribution has zero probability above $n_o=200$,
+as no extra lineages can be sampled. As the strength of selection is increased, we begin requiring
+larger number of lineages.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{fig/combined.pdf}
+  \caption{\textbf{A} The distribution of number of required lineages with $n_0=200$. Shaded red
+    area shows missing probability - $n_p > n_o$. Points represent the exact probability one
+    generation into the past (Eq. \ref{eq:lineages-in-past}), solid lines - Gaussian approximation
+    (Eq. \ref{eq:gaussian}). \textbf{B} Critical sample size to contain all lineages, with given
+    confidence. These are the quantile functions of the Gaussian approximation. In both panels,
+    $N=1000$.}
+  \label{fig:combined}
+\end{figure}
+
+The distribution in Eq. \ref{eq:lineages-in-past} can be calculated effectively, but does not
+provide a convenient way to answer the question - when are \textit{almost all} parental lineages
+contained within the sample size $n_0$. For this, we will compute the expectation and variance 
+of this distribution, and show that it is accurately described by a Gaussian approximation.
+
+
+
+\section{Asymptotic closure properties}
+\label{sec:asympt}
+
+We now want to estimate the sample size required to ensure that the system in Eq.
+\eqref{eq:truncated} remains almost closed. 
+
+
+%In the following derivations, we are assuming that the derived allele is present in the parental
+%generation at frequency $x = \frac{i_p}{n_p}$, instead of the discrete $i_p \dslash n_p$ in section
+%\ref{subsec:trans-mat}, which simplifies the calculations. When looking for the upper bound on the
+%number of rejected lineages, we take $x=1$, similar to section \ref{subsec:missing}.
+
+%In addition, we now explicitly consider the number of gametes produced by the parents - as
+%introduced in Fig. \ref{fig:schematic}C. The parental generation ($n_p$), produces a very large
+%number of gametes, of which $n_g$ are randomly picked to contribute to the offspring. Each derived
+%allele is then passed to one offspring with probability $1-s$, ancestral with probability $1$. 
+%\sgcomment{This definition is not consistent with previous one}
+%With
+%probability $s$, picking a gamete fails, then a new contributing gamete is sampled. The number of
+%coalescent events is $n_g - n_p$, and the number of selective deaths is $n_g - n_o$.
+
+%\subsection{Mean number of contributing lineages}
+%\label{sec:mean-contr}
+
+
 
 Using the law of total expectation, we can write the expectation $E[n_p-n_o | n_o]$ as 
 \begin{equation*}
@@ -471,7 +536,7 @@ Using the law of total expectation, we can write the expectation $E[n_p-n_o | n_
                      &=E_{n_g} E_{n_p}[n_p | n_g] - n_o.
   \end{aligned}
 \end{equation*}
-Assuming $x=1$, the expectation over $n_p$ simply given by the occupancy distribution \cite{Wakeley2009}.
+Assuming $x\equiv i_p/n_p=1$, the expectation over $n_p$ is simply given by the occupancy distribution \cite{Wakeley2009}.
 
 \begin{equation*}
   \begin{aligned}
@@ -482,8 +547,8 @@ Assuming $x=1$, the expectation over $n_p$ simply given by the occupancy distrib
   \end{aligned}
 \end{equation*}
 
-The number of selective deaths, $n_g-n_o$ follows a negative binomial distribution with $n_g$ trials
-and success rate $1-s$. We can use the moment generating function of the negative binomial for any
+The number of selective deaths, $n_g-n_o$ follows a negative binomial distribution with $n_g$ trials \sgcomment{I believe that this should be successes?}
+and success rate $1-s$. We can use the moment generating function of the negative binomial to compute the expectation for
 constant $k$,
 
 \begin{equation}
@@ -531,63 +596,9 @@ confidence).
 \label{subsec:distribution}
 
 The variance of the number of extra lineages contributing from the parental generation is
-derived in section \ref{subsec:apx:variance} of the appendix.
+derived in section \ref{subsec:apx:variance} of the appendix. \sgcomment{That doesn't seem to be the right place for this. }
 
-As alluded to in the previous section, the number of parental lineages used by drift can be modelled
-by the modified occupancy (also known as Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}.
-This is given by:
-
-\begin{align}
-  \label{eq:occupancy}
-  P(n_p|n_g) = \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}}
-\end{align}
-
-where $S_2(n_g,n_p)$ is a Stirling number of the second kind, which is the number of ways to
-partition $n_g$ gametes into $n_p$ parents (see \cite{JohnsonEtAl2005} section 10.4 for a thorough
-treatment). Note that the under drift, the number of parents will be smaller or equal to the number
-of gametes $n_p \le n_g$.
-
-The distribution of the number of gametes, $n_g$ is given by the negative binomial, parameterized by
-probability of resample $s$, and the total number of trials before $n_o$ successes (\textit{i.e.}
-$n_r+n_o$):
-
-\begin{align}
-  \label{eq:neg-binomial-trials}
-  P(n_g|n_o) = \binom{n_g-1}{n_o-1}(1-xs)^{n_o}(xs)^{n_g-n_o}
-\end{align}
-
-Here, the number of gametes can be larger that the sample size $n_o \le n_g$, if selection is
-present.
-
-Combining the two distributions together through Eq. \ref{eq:conditional}, we get:
-
-\begin{align}
-  \label{eq:lineages-in-past}
-   Pr(n_p|n_o) = \sum_{n_g=1}^{\infty} \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}} \binom{n_g-1}{n_o-1}(1-xs)^{n_o}(xs)^{n_g-n_o}
-\end{align}
-
-This distribution does not appear to have a simple analytical form. However, it can be computed
-efficiently using methods presented in \citep{ONeill2019}. Figure \ref{fig:combined}A shows the
-distribution of the number of contributing parental lineages for several selection coefficients for
-a sample $n_o=200$. In the absence of selection, the distribution has zero probability above $n_o=200$,
-as no extra lineages can be sampled. As the strength of selection is increased, we begin requiring
-larger number of lineages with non-zero chance.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{fig/combined.pdf}
-  \caption{\textbf{A} The distribution of number of required lineages with $n_0=200$. Shaded red
-    area shows missing probability - $n_p > n_o$. Points represent the exact probability one
-    generation into the past (Eq. \ref{eq:lineages-in-past}), solid lines - Gaussian approximation
-    (Eq. \ref{eq:gaussian}). \textbf{B} Critical sample size to contain all lineages, with given
-    confidence. These are the quantile functions of the Gaussian approximation. In both panels,
-    $N=1000$.}
-  \label{fig:combined}
-\end{figure}
-
-The distribution in Eq. \ref{eq:lineages-in-past} can be calculated rather effectively, but does not
-provide a convenient way to answer the question - when are \textit{almost all} parental lineages
-contained within the sample size $n_0$. For this, we turn to the Gaussian approximation.
+As alluded to in the previous section, 
 
 \subsection{Gaussian approximation}
 
