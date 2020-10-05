@@ -370,9 +370,10 @@ expensive, we also propose a number of approximations in the following sections.
 
 Once the truncated matrix
 $\mathbf{Q}_{n_o} = \sum^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$ is constructed, it can
-be used to calculate the allele frequency spectrum. For example, in the infinite sites model at
-equilibrium, we can approximate the equilibrium \textit{AFS} $\Phi$ as a solution to a linear
-system:
+be used to calculate the allele frequency spectrum. 
+To validate the method, we first use the equilibrium distribution where exact solutions are available \cite{Krukov}.
+In the infinite sites model at equilibrium, for example, we can compute the equilibrium 
+\textit{AFS} $\Phi$ in a finite sample as a solution to a linear system:
 \begin{equation}
   \label{eq:sfs-calc}
   \Phi = Q \Phi  + n \mu e_1
@@ -407,7 +408,7 @@ and \texttt{Moments} depart from the Wright-Fisher prediction. The approach pres
 \label{subsec:missing}
 
 Truncation in equation \ref{eq:truncated} means that if $n_p > n_o$, some lineages will be
-unaccounted for. Since $\mathbf{Q}_{n_o}(i_p, i_o)$ is a probability distribution over $i_o$, we can
+unaccounted for. Since $\mathbf{Q}_{n_o}(i_p, i_o)$ is a probability distribution over $i_o$ \sgcomment{We have not yet defined $Q$ as a probability distribution}, we can
 calculate the probability that more than $i_p \dslash n_p$ lineages contributed as
 $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$. Since only derived lineages experience selection, we
 expect the largest number of resampling events, and therefore unaccounted lineages, when all alleles
