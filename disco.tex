@@ -389,26 +389,27 @@ and \texttt{Moments} depart from the Wright-Fisher prediction. The approach pres
 \label{subsec:missing}
 
 Truncation in equation \ref{eq:truncated} means that if $n_p > n_o$, some lineages will be
-unaccounted for. The transition matrix $\mathbf{Q}_{n_o}(i_p, i_o),$ in equation \eqref{eq:truncated}, also has a probabilistic 
-meaning: 
-The $(i_p,i_o)$th element of matrix $Q_{n_o}$  is the probability $P_{n_o}(i_o, \mathcal{S'}_{n_p}| \mathcal{C'}_{n_p}(i_p))$
-  that we observe $i_o$ derived alleles in a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (event $\mathcal{S'}_{n_o}$), 
-  given event $\mathcal{C'}_{n_p}(i_p)$ that $i_p$ that $i_p$ of the first $n_p$ parental alleles are derived. 
+unaccounted for. The transition matrix $\mathbf{Q}_{n_o}(i_p, i_o),$ in equation
+\eqref{eq:truncated}, also has a probabilistic meaning:
 
-By summing $\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o},$ we therefore get the proportion of draws that were 
-not truncated. $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$ is therefore the fraction of unaccounted-for draws 
-due to truncation, given $i_p$ derived among the first $n_o$ parental alleles. Since only derived lineages experience selection,
- the largest number of resampling events, and therefore the largest number of unaccounted lineages, 
- occurs when all alleles are derived, $i_o = n_o$.
+The $(i_p,i_o)$th element of matrix $Q_{n_o}$ is the probability
+ $P_{n_o}(i_o, \mathcal{S'}_{n_p}| \mathcal{C'}_{n_p}(i_p))$ that we observe $i_o$ derived alleles in
+ a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (event
+ $\mathcal{S'}_{n_o}$), given event $\mathcal{C'}_{n_p}(i_p)$ that $i_p$ that $i_p$ of the first
+ $n_p$ parental alleles are derived.
 
-Figure \ref{fig:apx:missing} \sgcomment{Has figure 4 been mentioned yet?} shows this probability under this worst-case scenario.
-The probability of missing lineages first increases with increasing sample size, as 
-the number of draws that can result in selective deaths increases. 
-However, the number of drift events eventually overtakes the number of selective events, 
-and the probability that we need additional lineages decreases rapidly with
-sample sizes.
+By summing $\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o},$ we therefore get the proportion of draws that
+were not truncated. $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$ is therefore the fraction of
+unaccounted-for draws due to truncation, given $i_p$ derived among the first $n_o$ parental
+alleles. Since only derived lineages experience selection, the largest number of resampling events,
+and therefore the largest number of unaccounted lineages, occurs when all alleles are derived,
+$i_o = n_o$.
 
-\ikcomment{This figure needs to be updated}.
+Figure \ref{fig:apx:missing} shows this probability under this worst-case scenario. The probability
+of missing lineages first increases with increasing sample size, as the number of draws that can
+result in selective deaths increases. However, the number of drift events eventually overtakes the
+number of selective events, and the probability that we need additional lineages decreases rapidly
+with sample sizes.
 
 
 \subsection{Distribution of number of contributing lineages}
@@ -684,14 +685,16 @@ genetics.
 \bibliography{disco}
 
 \section{Appendix}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\setcounter{figure}{0}
 
 \subsection{Missing lineages}
 
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{fig/missing.pdf}
-  \caption{Probability that there are more contributing parents than offspring, $n_p > n_o$. \sgcomment{Missing information, such as $N$}
-    Calculated as $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}.$}
+  \caption{Probability that there are more contributing parents than offspring, $n_p > n_o$.
+    Calculated as $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$, $N=1000$.}
   \label{fig:apx:missing}
 \end{figure}
 
