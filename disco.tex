@@ -51,7 +51,7 @@
   
   Selection becomes more analytically tractable when ...
     
-  
+  \ikcomment{This needs to be re-written}
   
     Neutral models of genetic diversity tend to be easier to study than models including selection.
     In the neutral Wright-Fisher model, the number of parental lineages that contribute to ancestry
@@ -80,51 +80,50 @@ the observed \textit{AFS}, one can compute likelihoods for different demographic
 Unfortunately, the \textit{AFS} calculations can be time consuming with complex demographic models,
 for example with multiple populations, or with large sample sizes.
 
-In the absence of selection, efficient computational shortcuts can be used. Coalescence models such as \sgcomment{
-Fastsimcoal and Momi} can efficiently compute the AFS or subsets of it. In addition, recursion
-equations have been derived for moments of the allele frequency distribution
+In the absence of selection, efficient computational shortcuts can be used. Coalescence models such
+as \citep{fastsimcoal2, KammEtAl2017} can efficiently compute the \textit{AFS} or subsets of it. In addition,
+recursion equations have been derived for moments of the allele frequency distribution
 \citep{KimuraCrow1964,Ewens1972,JouganousEtAl2017}. Recently, these recursions have been useful in
 fitting complex demographic models to genetic data \citep{JouganousEtAl2017,KammEtAl2017}.
  
-In the presence of natural selection, coalescent models become much more complicated, and
- the corresponding recursion equations do not close \citep{DonnellyKurtz1999, JouganousEtAl2017} 
- -- they form an infinite set of coupled ordinary differential equations. Moment-based closure approximations have been developed
-\citep{JouganousEtAl2017}, but these are not robust to strong selection and their convergence
-properties are not well understood.
+In the presence of natural selection, coalescent models become much more complicated, and the
+corresponding recursion equations do not close \citep{DonnellyKurtz1999, JouganousEtAl2017} -- they
+form an infinite set of coupled ordinary differential equations. Moment-based closure approximations
+have been developed \citep{JouganousEtAl2017}, but these are not robust to strong selection and
+their convergence properties are not well understood.
 
-Closure of the moment equations under the neutral Wright-Fisher model occurs because the number of distinct 
-parental lineages that are sampled when drawing $n$ offspring is less than or equal to $n$. 
-This does not hold under
-negative selection -- due to selective deaths, the number of parental lineages that are relevant to a sample of size $n$ can
-be larger than $n$ \sgcomment{Watch out, there are two Kurtz+Donnely 1999: Donnelly, P.,  Kurtz, T. G. (1999). Genealogical processes for Fleming-Viot models with selection and recombination. Annals of Applied Probability, 1091-1148.
-}\citep{DonnellyKurtz1999, JouganousEtAl2017}. This possible increase is explicit, e.g., in in the ancestral selection graphs (\textit{ASG}),
-\citep{KroneNeuhauser1997}.
+Closure of the moment equations under the neutral Wright-Fisher model occurs because the number of
+distinct parental lineages that are sampled when drawing $n$ offspring is less than or equal to $n$.
+This does not hold under negative selection -- due to selective deaths, the number of parental
+lineages that are relevant to a sample of size $n$ can be larger than $n$ \citep{DonnellyKurtz1999a,
+  JouganousEtAl2017}. This possible increase is explicit, \textit{e.g.}, in in the ancestral
+selection graphs (\textit{ASG}), \citep{KroneNeuhauser1997}.
 
 The actual increase in the number of relevant lineages as we go back in time depends on the relative
-importance of drift and selection. Whereas the dynamics of allele frequencies typically 
-depend on the scaled selection coefficient $Ns$, closure properties depend on the sample size:
-The number of in-sample coalescent events per generation is proportional to
-the square of the sample size $n$, while the number of selective deaths is linear in $n$. This
-suggests that with sufficiently large samples, the effect of selection would be smaller than that of
-drift, which would prevent the increase in the number of lineages -- at least most of the times.
-Thus recursion equations can become almost-closed, in a sense that we will explore below.
+importance of drift and selection. Whereas the dynamics of allele frequencies typically depend on
+the scaled selection coefficient $Ns$, closure properties depend on the sample size. The number of
+in-sample coalescent events per generation is proportional to the square of the sample size $n$,
+while the number of selective deaths is linear in $n$. This suggests that with sufficiently large
+samples, the effect of selection would be smaller than that of drift, which would prevent the
+increase in the number of lineages -- at least most of the times. Thus recursion equations can
+become almost-closed, in a sense that we will explore below.
 
-Large sample sizes also bring in the complication of multiple and/or simultaneous coalescent events \citep{BhaskarEtAl2014}. 
-In this article we derive recursion equations for large sample sizes, and show that these are asymptotically closed 
-even under strong selection. We show that these transition matrices can be used to more accurately model the distribution 
-of allele frequencies in moderate to large samples. 
+Large sample sizes also bring in the complication of multiple and/or simultaneous coalescent events
+\citep{BhaskarEtAl2014}. In this article we derive recursion equations for large sample sizes, and
+show that these are asymptotically closed even under strong selection. We show that these transition
+matrices can be used to more accurately model the distribution of allele frequencies in moderate to
+large samples.
 
 In short, modelling large sample sizes makes it easier to account for strong selection. 
-
 
 \section{Background}
 \label{sec:background}
 
-We consider a haploid Wright-Fisher model with $N$ individuals per generation, focusing on a single biallelic locus. For a
-present-day sample with $n_o$ offspring lineages at time $t$, we will be looking for recursion
-equations for the allele frequency spectrum, $\afs{n_o}{t}(i_o)$, which we define as the probability of observing
-$i_o$ copies of the derived allele in a sample of size $n_o.$ We will do so by considering the process of drawing parental alleles
-for this finite sample. 
+We consider a haploid Wright-Fisher model with $N$ individuals per generation, focusing on a single
+biallelic locus. For a present-day sample with $n_o$ offspring lineages at time $t$, we will be
+looking for recursion equations for the allele frequency spectrum, $\afs{n_o}{t}(i_o)$, which we
+define as the probability of observing $i_o$ copies of the derived allele in a sample of size $n_o$.
+We will do so by considering the process of drawing parental alleles for this finite sample.
 
 \begin{table}
   \centering
@@ -151,9 +150,8 @@ for this finite sample.
   \caption{\label{tab:symbols} Table of symbols}
 \end{table}
 
-Under neutral evolution, each offspring picks a lineage at random with replacement, and the number $n_p$ of distinct parental lineages is smaller than
-$n_o$  (Fig.\ref{fig:schematic}A). 
-
+Under neutral evolution, each offspring picks a lineage at random with replacement, and the number
+$n_p$ of distinct parental lineages is smaller than $n_o$ (Fig.\ref{fig:schematic}A).
 
 To model selection as part of our sampling process, we consider that a parental lineage carrying a derived allele 
 is `rejected' as a result of selective death with probability $s>0$
@@ -164,23 +162,11 @@ Because the drawing process depends on the state of both selected and rejected a
 the AFS in the offspring will depend on the state of the $n_p$ distinct parents that were sampled,
 whether or not they contributed. Because of rejection, $n_p$ can be larger than $n_o.$
 
-%We will also need to keep track of the number $i_p,i_o$ of derived alleles
-% in the parent and offspring generation. 
-%track the number of derived (deleterious) alleles, we introduce the notation $i_p \dslash n_p$ to
-%represent that $i_p$ alleles are derived ``out of'' total $n_p$ parental alleles. $i_o \dslash n_o$
-%represents the offspring generation.
-%
-%In case of a selective death a lineage can be resampled, with probability $1-s$, leading to $1:1-s$
-%advantage of the ancestral allele. Under selection, it is possible that $n_p > n_o$.
+To disentangle the effects of drift and selection, we will also track the number $n_g$ of gametes
+sampled in the process (Fig. \ref{fig:schematic}C). The difference $n_g-n_o$ depends only on the
+number of selective deaths, $n_g-n_o \ge 0$. The difference $n_p-n_g$ depends only on
+coalescence events, $n_p-n_g \le 0$.
 
-To disentangle the effects of drift and selection, we will also track the number $n_g$ of gametes sampled in the process
- (Fig. \ref{fig:schematic}C). The difference $n_g-n_o$ depends only on the number of selective deaths, and
- is always positive. The difference $n_p-n_o$ depends only on coalescence events, and is always negative.    
-% In our model, the production of gametes is neutral, 
-%thus $n_p \le n_g$. The sampling of gametes into the
-%offspring is subject to selection, so $n_g \ge n_o$. This two-step process allows us to consider
-%effects of drift and selection within a single generation. In the case where there are more
-%coalescent selection events, we can have $n_p \le n_o$. 
 We will use this model with $n_g$ in section
 \ref{sec:asympt}.
 
@@ -214,15 +200,18 @@ To express the allele-frequency spectrum $\afs{n_o}{t}(i_o)$ for $n_o$ offspring
 \begin{equation}
 \afs{n_o}{t}(i_o)=P_{n_o} (i_o) =\sum_{n_p,i_p} P_{n_o}(i_o,i_p,n_p),
 \end{equation}
-where the subscript $n_o$ indicates dependance on parameter $n_o$.
-To obtain a recursion on the AFS, we note that the order in which we draw new parental lineages in the Wright-Fisher model is random. 
-In other words, we could draw a random permutation of the parental population, and select 
-parents in order from this permutation. We will separate properties of this permutation, which depend only on parental AFSs, 
-from properties of Wright-Fisher sampling.  
-Concretely, the event $(i_p,n_p)$  can be expressed as the intersection of two events,  $\mathcal{C}_{n_p}(i_p)$ and $\mathcal{S}_{n_p}$. 
-Event $\mathcal{C}_{n_p}(i_p)$ specifies that the first $n_p$
-parental lineages from the random permutation carry $i_p$ derived alleles (that is, $P(\mathcal{C}_{n_p}(i_p)) =\afs{n_p}{t} (i_p)$). 
-Event $\mathcal{S}_{n_p}$ requires that the Wright-Fisher drawing process stops after exactly $n_p$ parental lineages have been drawn.
+
+where the subscript $n_o$ indicates dependance on parameter $n_o$. To obtain a recursion on the
+\textit{AFS}, we note that the order in which we draw new parental lineages in the Wright-Fisher
+model is random. In other words, we could draw a random permutation of the parental population, and
+select parents in order from this permutation. We will separate properties of this permutation,
+which depend only on parental \textit{AFS}s, from properties of Wright-Fisher sampling. Concretely,
+the event $(i_p,n_p)$ can be expressed as the intersection of two events, $\mathcal{C}_{n_p}(i_p)$
+and $\mathcal{S}_{n_p}$. Event $\mathcal{C}_{n_p}(i_p)$ specifies that the first $n_p$ parental
+lineages from the random permutation carry $i_p$ derived alleles (that is,
+$P(\mathcal{C}_{n_p}(i_p)) =\afs{n_p}{t} (i_p)$). Event $\mathcal{S}_{n_p}$ requires that the
+Wright-Fisher drawing process stops after exactly $n_p$ parental lineages have been drawn.
+
 \begin{equation}
 \begin{split}
 \afs{n_o}{t}(i_o)&= \sum_{n_p,i_p} P_{n_o}(i_o, \mathcal{S}_{n_p}, \mathcal{C}(i_p,n_p) )\\
@@ -232,29 +221,23 @@ Event $\mathcal{S}_{n_p}$ requires that the Wright-Fisher drawing process stops 
 \end{split}
 \label{eq:recur}
 \end{equation}
-%\begin{equation}
-%\begin{split}
-%  \afs{n_o}{t}(i_o)
-%  &=      \sum_{n_p,i_p}                        P_{n_o}(i_o|c(i_p,n_p),n_p) P_{n_o}(n_p|c(i_p,n_p)) P(c(i_p,n_p)) \\
-%  &=      \sum_{n_p=1}^{n_{p_{max}}} \sum_{i_p=0}^{n_p} P_{n_o}(i_o,n_p|c(i_p,n_p)) \afs{n_p}{t-1}(i_p)  \\
-%  &\equiv \sum_{n_p=1}^{n_{p_{max}}} \mathbf{T}_{n_p,n_o}                         \afs{n_p}{t-1}
-%\end{split}
-%\label{eq:recur}
-%\end{equation}
-where the $\mathbf{T}_{n_p,n_o}$ can be thought of as  $(n_o+1) \times (n_p+1)$ matrices whose row and column indices
-correspond to the number of derived alleles in the offspring and contributing parental lineages,
-respectively.
-Under neutral evolution,  only terms with $n_p\leq n_o$ are nonzero. The corresponding AFS can 
-all be obtained by downsampling from $\afs{n_o}{t-1}$ (\textit{i.e.}, $\afs{n_p}{t-1} = \mathbf{H}_{n_p,n_o} \afs{n_o}{t-1}$
-for hypergeometric projection matrix $\mathbf{H}_{n_p,n_o}$ if $n_p\leq n_o$), and Equation
-\eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}.$ This property was used in
-\cite{JouganousEtAl2017} to efficiently compute distributions of allele frequencies under 
-neutrality and for small sample sizes.
 
-Under selection, $n_{p}$ may be larger than $n_o$, leading to a set of $N$ coupled
-equations that is typically too large to solve numerically (in the diffusion limit, the number of coupled equations is infinite). 
-But if the number of drift events is typically larger than the number of selective deaths, as happens in large sample sizes, 
-the coupling is weak and we can restore approximate closure by truncating Eq. \eqref{eq:recur}:
+where the $\mathbf{T}_{n_p,n_o}$ can be thought of as $(n_o+1) \times (n_p+1)$ matrices whose row
+and column indices correspond to the number of derived alleles in the offspring and contributing
+parental lineages, respectively.
+
+Under neutral evolution, only terms with $n_p\leq n_o$ are nonzero. The corresponding \textit{AFS}
+can all be obtained by downsampling from $\afs{n_o}{t-1}$ (\textit{i.e.}, $\afs{n_p}{t-1} =
+\mathbf{H}_{n_p,n_o} \afs{n_o}{t-1}$ for hypergeometric projection matrix $\mathbf{H}_{n_p,n_o}$ if
+$n_p\leq n_o$), and Equation \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}$.
+This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele
+frequencies under neutrality and for small sample sizes.
+
+Under selection, $n_{p}$ may be larger than $n_o$, leading to a set of $N$ coupled equations that is
+typically too large to solve numerically (in the diffusion limit, the number of coupled equations is
+infinite). But if the number of drift events is typically larger than the number of selective
+deaths, as happens in large sample sizes, the coupling is weak and we can restore approximate
+closure by truncating Eq. \eqref{eq:recur}:
 
 \begin{equation}
 \begin{split}
@@ -266,11 +249,11 @@ the coupling is weak and we can restore approximate closure by truncating Eq. \e
 \label{eq:truncated}
 \end{equation}
 
-A jackknife approximation \cite{Gravel2016jackknife} can be used to simulate the drawing of a small number of additional
-lineages and improve upon this closure approximation ($\afs{n_p}{t} \simeq J_{n_p,n_o} \afs{n_o}{t}$
-with $n_p>n_o$). \cite{JouganousEtAl2017} used this to derive approximate recursion equations under
-weak selection. We will show below that closure is asymptotically maintained for large sample sizes
-even without requiring a jackknife approximation.
+A jackknife approximation \cite{Gravel2016} can be used to simulate the drawing of a small number of
+additional lineages and improve upon this closure approximation
+($\afs{n_p}{t} \simeq J_{n_p,n_o} \afs{n_o}{t}$ with $n_p>n_o$). \cite{JouganousEtAl2017} used this
+to derive approximate recursion equations under weak selection. We will show below that closure is
+asymptotically maintained for large sample sizes even without requiring a jackknife approximation.
 
 Our first goal is to obtain an explicit recursion for the matrices in \eqref{eq:recur}. To do so, we
 will need to account for multiple coalescent events, which will require some careful bookkeeping.
@@ -284,7 +267,7 @@ will need to account for multiple coalescent events, which will require some car
 Even though $\mathbf{T}_{n_p,n_o}$ is a simple combinatorial probability describing a single
 generation in the Wright-Fisher model, we were unable to compute an analytical expression for it, while allowing for multiple
 coalescences and multiple selective events. However, we can obtain fairly simple recursions by noting that properties of a sample of size $n_o$ 
-are related to properties of samples size $n_o-1.$ \sgcomment{Similar recursions on sample size were used, in [[context, I believe small sample size and weak selection?]], in \cite{One of Yun's papers}}.
+are related to properties of samples size $n_o-1.$ \sgcomment{Similar recursions on sample size were used, in [[context, I believe small sample size and weak selection?]], in \cite{OneOfYunsPapers}}.
  Here we provide some intuition for the recursion equation, and a more detailed derivation is provided in methods. 
 
  This recursion exists because the Wright-Fisher sampling can be performed one offspring at a time, and even one draw at a time. 
