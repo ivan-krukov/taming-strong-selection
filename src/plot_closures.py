@@ -24,4 +24,5 @@ with plot_and_legend(fname=fig_store / Path('missing.pdf'), legend_title="Ns") a
                 M = pickle.load(pkl)
                 missing_p.append(1 - (M[-1,:].sum()))
         ax.semilogy(n_range, missing_p, label=Ns, ls="", marker="o")
+        ax.set(xlabel="Number of offspring, $n_o$", ylabel="Probability")
         
