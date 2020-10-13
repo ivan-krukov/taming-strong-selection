@@ -41,13 +41,13 @@ if __name__ == "__main__":
         right = masked_array(nstar, mask)
         left  = masked_array(nstar, negmask)
         ax.plot(Ns, right / N, label=f"{N}", linewidth=3, color=f"C{i}")
-        ax.plot(Ns, left / N, linewidth=1, color=f"C{i}")
+        ax.plot(Ns, left / N, linewidth=1, color=f"C{i}", ls='--')
 
     # plot were the normal approximation breaks down
     N_range = np.geomspace(500, 50_000, 50)
     s_crit = np.array([fsolve(solve_boundary, 0.01, (N, lmb)) for N in N_range]).reshape(-1)
     n_crit = np.sqrt(2 * lmb * N_range)
-    ax.plot(s_crit * N_range, n_crit / N_range, color="k", ls="--")
+    # ax.plot(s_crit * N_range, n_crit / N_range, color="k", ls="--")
     
     ax.legend(title="N")
 
