@@ -139,7 +139,7 @@ We will do so by considering the process of drawing parental alleles for this fi
     $t$ & Time, in generations\\
     $\Phi_{n_o}^{t}(i_o)$ & Allele frequency spectrum in $n_o$ at generation $t$\\
     $s$ & Selection advantage of the derived allele\\
-    $x$ & Frequency of derived allele at generation $t$\\
+    $x_p$ & Frequency of derived allele in parental generation\\
     $i_o \dslash n_o$ & A sample with $i_o$ derived alleles ``out of'' $n_o$ total\\
     $\mathbf{H}\Coalc{i_p}{n_p}{i_o}{n_o}$ & Hypergeometric probability -
                                              sample $i_o \dslash n_o$ in offspring from $i_p \dslash n_p$ in parental generation\\
@@ -162,8 +162,8 @@ Because the drawing process depends on the state of both selected and rejected a
 the AFS in the offspring will depend on the state of the $n_p$ distinct parents that were sampled,
 whether or not they contributed. Because of rejection, $n_p$ can be larger than $n_o.$
 
-To disentangle the effects of drift and selection, we will also track the number $n_g$ of gametes
-sampled in the process (Fig. \ref{fig:schematic}C). The difference $n_g-n_o$ depends only on the
+To disentangle the effects of drift and selection, we may also make explicit the number of gametes
+sampled in the process, $n_g$ (Fig. \ref{fig:schematic}C). The difference $n_g-n_o$ depends only on the
 number of selective deaths, $n_g-n_o \ge 0$. The difference $n_p-n_g$ depends only on
 coalescence events, $n_p-n_g \le 0$.
 
@@ -357,14 +357,11 @@ size $n$. Figure \ref{fig:strong-selection} shows the comparison of the \textit{
 Equation \eqref{eq:coal-recursion, eq:sfs-calc}, the diffusion approximation \cite[eq.
 9.23]{Ewens2004}, and the calculation performed in \texttt{Moments} \citep{JouganousEtAl2017}.
 
-% Panels A,B,C show the \textit{AFS} under neutrality; D,E,F under strong negative selection
-% \sgcomment{This would be in the caption, no?}. Under neutrality, all the models agree, yielding
-% similar \textit{AFS}. \sgcomment{That is not my interpretation...}
-
 Figure \ref{fig:strong-selection}A-C show that there is a disagreement between the exact
 Wright-Fisher and the diffusion solutions for singletons and doubletons. This effect increases as in
-large sample sizes, as $n \ra N$, and has been reported by \citep{BhaskarEtAl2014}. There is a
-similar divergence at high frequency of the derived allele.
+large sample sizes, as $n \ra N$, and has been reported by \citep{BhaskarEtAl2014}. There is a also
+a divergence at high frequency of the derived allele. The Wright-Fisher and the present model are
+both absorbing at fixation of the derived allele, while the diffusion are not. 
 
 Figure \ref{fig:strong-selection}D shows a comparison at strong negative $Ns=50$, with the
 population size ($N=1000$), which is substantially larger than the sample size ($n=100$). There is a
@@ -424,22 +421,22 @@ For a given sample size, the probability that $n_p$ parents have contributed is:
 where $n_p$ and $n_g$ is the number of contributing parents and gametes, respectively (Fig.
 \ref{fig:schematic}C). 
 
-The distribution of the number of gametes, $n_g$ is given by the negative binomial, parameterized by
-probability of resample $s$, and the total number of trials before $n_o$ successes (\textit{i.e.}
-$n_r+n_o$): \sgcomment{ The parameter is the number of successes -- the number of trials is the random variable:
-The distribution of the number of gametes, $n_g\geq n_o$ is given by the negative binomial, parameterized by
-probability of success $1-s$, and the total number of required successes $n_o$ successes:}
+ parameterized by
+probability of resampling - $s$, and the total number of trials before $n_o$ successes (\textit{i.e.}
+$n_r+n_o$):
 
-
+The distribution over the number of gametes, $n_g \geq n_o$, is given by the negative binomial,
+parameterized by the number of successes -- where the probability of a successful draw is $1-s$.
+Then the toual number of doaws required for $n_o$ successes is:
 
 \begin{align}
   \label{eq:neg-binomial-trials}
   P(n_g|n_o) = \binom{n_g-1}{n_o-1}(1-xs)^{n_o}(xs)^{n_g-n_o},
 \end{align}
-where $x$ is the proportion of derived alleles \sgcomment{is this in the parental population or the sample? It would be true for both I think!}. 
+where $x_p$ is the proportion of derived alleles in the parental generation.
 
-
-Given $n_g$, the number of parental lineages follows the modified occupancy (also known as Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}:
+Given $n_g$, the number of parental lineages follows the modified occupancy (also known as
+Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}:
 
 \begin{align}
   \label{eq:occupancy}
@@ -455,25 +452,25 @@ Combining the two distributions together through Eq. \ref{eq:conditional}, we ge
 
 \begin{align}
   \label{eq:lineages-in-past}
-   Pr(n_p|n_o) = \sum_{n_g=1}^{\infty} \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}} \binom{n_g-1}{n_o-1}(1-xs)^{n_o}(xs)^{n_g-n_o}
+   Pr(n_p|n_o) = \sum_{n_g=1}^{\infty} \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}} \binom{n_g-1}{n_o-1}(1-x_ps)^{n_o}(x_ps)^{n_g-n_o}
 \end{align}
 
 This distribution does not appear to have a simple analytical form. However, it can be computed
-efficiently using methods presented in \citep{ONeill2019}. Figure \ref{fig:combined}A shows the
-distribution of the number of contributing parental lineages for several selection coefficients for
-a sample $n_o=200$. In the absence of selection, the distribution has zero probability above $n_o=200$,
-as no extra lineages can be sampled. As the strength of selection is increased, we begin requiring
-larger number of lineages.
+efficiently using methods presented in \citep{ONeill2019}. Figure \ref{fig:combined}A (dots) shows
+the distribution of the number of contributing parental lineages for several selection coefficients
+for a sample, with $n_o=200$, $x_p=1$. In the absence of selection, the distribution has zero
+probability above $n_o=200$, as no extra lineages can be sampled. As the strength of selection is
+increased, we begin requiring larger numbers of lineages.
 
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{fig/combined.pdf}
-  \caption{\textbf{A} The distribution of number of required lineages with $n_0=200$. Shaded red
-    area shows missing probability - $n_p > n_o$. Points represent the exact probability one
+  \caption{\textbf{A} The distribution of number of required lineages with $n_0=200$, $x_p=1$. Shaded
+    red area shows missing probability - $n_p > n_o$. Points represent the exact probability one
     generation into the past (Eq. \ref{eq:lineages-in-past}), solid lines - Gaussian approximation
-    (Eq. \ref{eq:gaussian}). \textbf{B} Critical sample size to contain all lineages, with given
-    confidence. These are the quantile functions of the Gaussian approximation. In both panels,
-    $N=1000$.}
+    (Eq. \ref{eq:gaussian}). \textbf{B} Sample size ($n_c$) as a fraction of population size ($N$)
+    such that we have $99\%$ confidence that no lineages are missing. Derived from the Gaussian
+    approximation. In both panels, $N=1000$.}
   \label{fig:combined}
 \end{figure}
 
@@ -481,8 +478,6 @@ The distribution in Eq. \ref{eq:lineages-in-past} can be calculated effectively,
 provide a convenient way to answer the question - when are \textit{almost all} parental lineages
 contained within the sample size $n_0$. For this, we will compute the expectation and variance 
 of this distribution, and show that it is accurately described by a Gaussian approximation.
-
-
 
 \section{Asymptotic closure properties}
 \label{sec:asympt}
@@ -508,8 +503,6 @@ of this distribution, and show that it is accurately described by a Gaussian app
 %\subsection{Mean number of contributing lineages}
 %\label{sec:mean-contr}
 
-
-
 Using the law of total expectation, we can write the expectation $E[n_p-n_o | n_o]$ as 
 \begin{equation*}
   \begin{aligned}
@@ -518,7 +511,7 @@ Using the law of total expectation, we can write the expectation $E[n_p-n_o | n_
                      &=E_{n_g} E_{n_p}[n_p | n_g] - n_o.
   \end{aligned}
 \end{equation*}
-Assuming $x\equiv i_p/n_p=1$ \sgcomment{population or sample?}, the expectation over $n_p$ is simply given by the occupancy distribution \cite{Wakeley2009}.
+Assuming $x_p\equiv i_p/n_p=1$, the expectation over $n_p$ is simply given by the occupancy distribution \cite{Wakeley2009}.
 
 \begin{equation*}
   \begin{aligned}
@@ -606,39 +599,39 @@ Figure \ref{fig:apx:critical-fraction} shows the critical sample size as a fract
 population size.
 
 \subsection
-{Integrating over few generations} 
+{Integrating over several generations} 
 
-If the sample size is large enough that $E[n_p-n_o]<0$, but not large enough that $P(n_p>n_o) \ll 1,$
-we can improve the truncation by integrating over more than one generation. 
-Lineages gained by 
-selective death at one generation can be compensated for by genetic drift at another generation.
-Informally, the expected change $E[n_g-n_o]$ in the number $n_g$ of lineages in the grandparent generation relative  
-to $n_o,$  and the variance
-$\operatorname{Var}(n_g-n_o)$ will be roughly double those over a single generation. Thus the z-score 
-determining the amount of unnaccounted-for lineages in the normal approximation, $z= E[n_g-n_o] / \sqrt{\operatorname{Var}(n_g-n_o)}$
- will increase roughly by a factor $\sqrt{2}$. 
+If the sample size is large enough that $E[n_p-n_o]<0$, but not large enough that
+$P(n_p>n_o) \ll 1,$ we can improve the truncation by integrating over more than one generation.
+Lineages gained by selective death at one generation can be compensated for by genetic drift at
+another generation. Informally, the expected change $E[n_g-n_o]$ in the number $n_g$ of lineages in
+the grandparent generation relative to $n_o,$ and the variance $\operatorname{Var}(n_g-n_o)$ will be
+roughly double those over a single generation. Thus the z-score determining the amount of
+unnaccounted-for lineages in the normal approximation,
+$z= E[n_g-n_o] / \sqrt{\operatorname{Var}(n_g-n_o)}$ will increase roughly by a factor $\sqrt{2}$.
 
-Such transition matrices can also be computed iteratively. If $n_{pp}$ is the number of contributing
-lineages in the grandparental generation, and $i_{pp}$ is the number of derived alleles among those, and we
-define $P(i_o, n_{pp} | q(i_{pp}, n_{pp}))$, as above, as the probability of drawing $i$ derived alleles and
-using exactly $n_{pp}$ grandparental alleles given the event $q(i_{pp}, n_{pp})$ that $i_{pp}$ of the first $n_{pp}$
-grandparental alleles are derived \sgcomment{We would need to reconcile the notation here with the previous one}, 
-we can condition on the number of contributing parental alleles $n_p$ and
-the number of derived alleles $i_p$ among them in the parental generation: \sgcomment{define $S'$}
+Such transition matrices can also be computed iteratively. If $n_{p'}$ is the number of contributing
+lineages in the grandparental generation, and $i_{p'}$ is the number of derived alleles among those,
+and we define $P(i_o, n_{p'} | q(i_{p'}, n_{p'}))$, as above, as the probability of drawing $i$
+derived alleles and using exactly $n_{p'}$ grandparental alleles given the event $q(i_{p'}, n_{p'})$
+that $i_{p'}$ of the first $n_{p'}$ grandparental alleles are derived \sgcomment{We would need to
+  reconcile the notation here with the previous one}, we can condition on the number of contributing
+parental alleles $n_p$ and the number of derived alleles $i_p$ among them in the parental
+generation: \sgcomment{define $S'$}
  
  \begin{equation}
  \begin{split}
- P(i_o, \mathcal{S}'_{n_pp} | \mathcal{C}'(i_{pp}, n_{pp})) & = \sum_{i_p,n_p} P(i_o, \mathcal{S}'_{n_pp} ; \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{pp}, n_{pp}))\\
- &= \sum_{i_p,n_p}  P(i_o, \mathcal{S}'_{n_pp} | \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} ; \mathcal{C}'(i_{pp}, n_{pp})) P\mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{pp}, n_{pp}) \\
- &=  \sum_{i_p,n_p}  P(i_o, \mathcal{S}'_{n_pp} | \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p})) P\mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{pp}, n_{pp}) \\
- &=   \sum_{n_p} T_{n_p,n_o} T_{n_{pp}, n_p},
+ P(i_o, \mathcal{S}'_{n_p'} | \mathcal{C}'(i_{p'}, n_{p'})) & = \sum_{i_p,n_p} P(i_o, \mathcal{S}'_{n_p'} ; \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{p'}, n_{p'}))\\
+ &= \sum_{i_p,n_p}  P(i_o, \mathcal{S}'_{n_p'} | \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} ; \mathcal{C}'(i_{p'}, n_{p'})) P\mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{p'}, n_{p'}) \\
+ &=  \sum_{i_p,n_p}  P(i_o, \mathcal{S}'_{n_p'} | \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p})) P\mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{p'}, n_{p'}) \\
+ &=   \sum_{n_p} T_{n_p,n_o} T_{n_{p'}, n_p},
  \end{split}
 \end{equation}
- %&= \sum_{i_p,n_p} P(i_o, n_p,  r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))\\
- %&= \sum_{i_p,n_p} P(i_o, n_p|   r(i_p,n_p); n_{pp}  ; q(i_{pp}, n_{pp}))  P(r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))\\
- %&= \sum_{i_p,n_p} P(i_o, n_p |   r(i_p,n_p))  P( r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))\\
- %&= \sum_{i_p,n_p} P(i_o, n_p |   r(i_p,n_p))  P( r(i_p,n_p); n_{pp}  | q(i_{pp}, n_{pp}))
-where the sum over $i_p$ is party of the product of the transition matrices $T$. 
+ %&= \sum_{i_p,n_p} P(i_o, n_p,  r(i_p,n_p); n_{p'}  | q(i_{p'}, n_{p'}))\\
+ %&= \sum_{i_p,n_p} P(i_o, n_p|   r(i_p,n_p); n_{p'}  ; q(i_{p'}, n_{p'}))  P(r(i_p,n_p); n_{p'}  | q(i_{p'}, n_{p'}))\\
+ %&= \sum_{i_p,n_p} P(i_o, n_p |   r(i_p,n_p))  P( r(i_p,n_p); n_{p'}  | q(i_{p'}, n_{p'}))\\
+ %&= \sum_{i_p,n_p} P(i_o, n_p |   r(i_p,n_p))  P( r(i_p,n_p); n_{p'}  | q(i_{p'}, n_{p'}))
+where the sum over $i_p$ is part of the product of the transition matrices $T$. 
 Since each matrix product takes \sgcomment{scaling of practical matrix product algos}, and there or $o(n)$
 such products, the computation of this matrix takes at most \sgcomment{...}.
 

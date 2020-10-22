@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     # plot were the normal approximation breaks down
     N_range = np.geomspace(500, 50_000, 50)
-    s_crit = np.array([fsolve(solve_boundary, 0.01, (N, lmb)) for N in N_range]).reshape(-1)
+    # s_crit = np.array([fsolve(solve_boundary, 0.01, (N, lmb)) for N in N_range]).reshape(-1)
     n_crit = np.sqrt(2 * lmb * N_range)
     # ax.plot(s_crit * N_range, n_crit / N_range, color="k", ls="--")
     

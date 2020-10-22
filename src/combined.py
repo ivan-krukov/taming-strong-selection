@@ -3,6 +3,7 @@ from scipy.optimize import fsolve
 from scipy.stats import norm
 import matplotlib.pyplot as plt
 import seaborn as sns
+from numpy.ma import masked_array
 from indemmar import plot_and_legend
 from occupancy import dist_num_anc, reduced_occupancy
 from normal_approximation import approx_mean, approx_std_dev
@@ -42,13 +43,23 @@ ax[0].set(ylabel="Probability", **shared_args)
 ax[0].text(-0.05, 1.05, "A", fontweight='bold', transform=ax[0].transAxes)
 ax[0].fill_between([n, rmax], [-10, -10], [10, 10], color="red", alpha=0.05)
 
-Ns_range = np.arange(1/2, 50)
-for i, q in enumerate([0.99, 0.95, 0.9, 0.5]):
-    nstar = [fsolve(solve_critical, 50, (Ns/N, N, q)) for Ns in Ns_range]
-    ax[1].plot(Ns_range, nstar, label=f"{int(q*100)}%", color="C0", alpha=q)
+lmb = 10 # lambda
+Ns = np.arange(10, 100)
+for i, N in enumerate([1_000, 2_500, 5_000, 10_000]):
+    nstar = np.array([fsolve(solve_critical, N/20, (x/N, N, 0.99)) for x in Ns])
+    mask = (nstar ** 2) / (2 * N) <= lmb
+    negmask = ~mask
+    # Induce overlap, for plotting
+    first_neg = np.where(negmask)[0][0]
+    mask[first_neg-1] = False
 
-ax[1].set(xlabel="Ns", ylabel="Critical sample size")
-ax[1].legend(title="Confidence", loc="upper left")
+    right = masked_array(nstar, mask)
+    left  = masked_array(nstar, negmask)
+    ax[1].plot(Ns, right / N, label=f"{N}", linewidth=3, color=f"C{i}")
+    ax[1].plot(Ns, left / N, linewidth=1, color=f"C{i}", ls='--')
+
+ax[1].legend(title="N", loc="upper left")
+ax[1].set(xlabel=r"$Ns$", ylabel=r"$n_c / N$")
 ax[1].text(-0.05, 1.05, "B", fontweight='bold', transform=ax[1].transAxes)
 
 fig.tight_layout()

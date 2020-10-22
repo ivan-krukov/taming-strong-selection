@@ -55,7 +55,6 @@ n = 100
 mu = 1e-8
 z = np.zeros(n - 1)
 z[0] = n * mu  # Forward mutation
-# z[-1] = n * mu                  # Backward mutation
 I = np.eye(n - 1)
 
 ns_range = [0, 50]
@@ -82,7 +81,6 @@ def moments_fs(n, N, s):
 def normalize(x):
     return np.array(x) / sum(x)
 
-
 def wright_fisher_sfs(N, s, mu=0):
     w = wright_fisher_haploid(N, s)
     I = np.eye(N - 1)
@@ -97,7 +95,7 @@ def hypergeom_projection_mtx(N, n):
     return np.array([hypergeom(N, i, n).pmf(rn) for i in rN])
 
 def relative_error(values, truth):
-    return np.abs(values - truth) / truth
+    return (values - truth) / truth
 
 sns.set_style("whitegrid")
 sns.set_context("paper", font_scale=1.8)
