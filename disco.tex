@@ -552,13 +552,24 @@ yields, to leading order,
   n_o^* \ge 2Ns.
 \end{equation}
 
-This gives us a simple and convenient expression for the critical sample size, where there are more drift than
-selection events, on average. However, closure of the recursions requires not only that drift occurs more often than selection 
-on average, but almost always. 
+This gives us a simple and convenient expression for the critical sample size, where there are more
+drift than selection events, on average. However, closure of the recursions requires not only that
+drift occurs more often than selection on average, but almost always.
 
-Our next step is to compute the variance  $\operatorname{Var}[n_p-n_o | n_o].$ The detailed calculations are provided in the 
-appendix, and the result is : 
-\sgcomment{Provide the equation?} 
+Our next step is to compute the variance $\operatorname{Var}[n_p-n_o | n_o].$ The detailed
+calculations are provided in the appendix, and the result is:
+
+\newcommand{\vara}[1]{\left(1-\frac{#1}{N}\right)}
+\newcommand{\varb}[1]{\left(\frac{1-s}{1-s #1}\right)}
+
+\begin{equation}
+  \begin{aligned}
+    \operatorname{Var}[n_p-n_o | n_o] &=
+    N^2\left( \vara{1}^{2n_o}\varb{\vara{1}^2}^{n_o}-\vara{1}^{2n_o}\varb{\vara{1}}^{2n_o} \right) + \\
+    &+ N(N-1)\vara{2}^{n_o}\varb{\vara{2}} + \vara{1}^{n_o}\varb{\vara{1}}^{n_o} - \\
+    &- N\vara{1}^{2n_o} \varb{\varb{1}^{2}}^{n_o}
+  \end{aligned}
+\end{equation}
 
 % Figure \ref{fig:critical-sample-size} shows the critical sample size for several selection
 % coefficients, assuming the entirety of the sample is derived ($x=1$) in a population of $N=1,000$.
@@ -574,26 +585,32 @@ appendix, and the result is :
 %contributing lineages is smaller that the sample size $95\%$ of the time, instead of $50\%$, as
 %given by $n_o^*$ in equation \eqref{eq:critical-sample}.
 
-A Gaussian with mean and variance caluclated above provides an excellent approximation to 
-equation \eqref{}.
-This is not unexpected, since both the number of selective events and the number of drift events 
-are well approximated by normal distributions: The occupancy distribution is approximated by the Gaussian 
-distribution when $n_o \ll N$ \citep{ONeill2019}.
- Likewise, can the number of failures ($n_r$) before a given number of successes
-(negative binomial) \sgcomment{reference?}. In the case of large sample size, as required by the approximation of the
-occupancy by the Gaussian, we can approximate the total number of contributing lineages as the sum
-of lineages \sgcomment{??}contributed by the two distributions. Specifically, we require that the number of
-coalescent events is large, such that the occupancy distribution can be approximated well by the
-Gaussian: $\frac{{n_o^*}^2}{2N} \ge 10$. \sgcomment{I am confused by this paragraph.}
+% A Gaussian with mean and variance caluclated above provides an excellent approximation to equation
+% \eqref{}. This is not unexpected, since both the number of selective events and the number of drift
+% events are well approximated by normal distributions: The occupancy distribution is approximated by
+% the Gaussian distribution when $n_o \ll N$ \citep{ONeill2019}. Likewise, can the number of failures
+% ($n_r$) before a given number of successes (negative binomial) \sgcomment{reference?}. In the case
+% of large sample size, as required by the approximation of the occupancy by the Gaussian, we can
+% approximate the total number of contributing lineages as the sum of lineages
+% \sgcomment{??}contributed by the two distributions. Specifically, we require that the number of
+% coalescent events is large, such that the occupancy distribution can be approximated well by the
+% Gaussian: $\frac{{n_o^*}^2}{2N} \ge 10$. \sgcomment{I am confused by this paragraph.}
 
-%We use the mean and variance calculated in Eq. \ref{eq:lineages-exact} and Eq. \ref{eq:apx:var}
-%respectively.
+We use a Gaussian distribution with the mean and variance defined above to approximate the
+distribution of the required parental lineages. Figure \ref{fig:combined}A shows the exact
+distribution as dots, and the Gaussian approximation as solid lines. In this parameter regime, we
+have good agreement between the two computation methods.
 
-Figure \ref{fig:combined}B shows the critical sample size for a given quantile of the normal
-approximation, as a function of the population-scaled selection coefficient. The $50^{\text{th}}$
-percentile corresponds to the mean calculated in equation \ref{eq:critical-sample} ($\approx 2Ns$).
-If we want to ascertain that the distribution is closed with increased confidence, we require a
-larger number of lineages. All curves assume $N=1000$.
+
+For the approximation to work well, we require that the sample size is sufficiently large with
+respect to the population size, namely that $\lambda \equiv \frac{{n_o^*}^2}{2N} \ge 10$, similar to
+the conditions for the Poisson distribution to be approximated with the Gaussian.
+
+We can then numerically compute the quantiles of the Gaussian distribution to find a sample size
+where we are, for example, $99\%$ confident that there will be no missing lineages. Figure
+\ref{fig:combined}B shows this as sample size ($n_o$) over the population size ($N_e$), for
+different population sizes. The dashed lines indicate where the Gaussian approximation may be
+invalid: $\lambda \le 10$.
 
 Figure \ref{fig:apx:critical-fraction} shows the critical sample size as a fraction of the total
 population size.
@@ -691,20 +708,18 @@ genetics.
   \label{fig:apx:missing}
 \end{figure}
 
-\subsection{Validity of the normal approximation}
+\subsection{Quantiles of the Gaussian approximation}
 
-We posit that the normal approximation is appropriate as long as $\frac{{n_o^*}^2}{2N} \ge 10$,
-similar to the conditions for the Poisson approximation. Figure \ref{fig:apx:critical-fraction}
-shows critical sample size as a fraction of the total population, such that $n_p < n_o$ with $99\%$
-certainty. The dashed black line shows the boundary below which the normal distribution does not
-approximate the true distribution well.
+Figure \ref{fig:apx:critical-normal} shows the critical sample size for a given quantile of the normal
+approximation, as a function of the population-scaled selection coefficient. The $50^{\text{th}}$
+percentile corresponds to the mean calculated in equation \ref{eq:critical-sample} ($\approx 2Ns$).
+If we want to ascertain that the distribution is closed with increased confidence, we require a
+larger number of lineages. All curves assume $N=1000$.
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{fig/critical_normal_fraction.pdf}
-  \caption{Critical sample size as a fraction of the total population size, $\frac{n_o^*}{N}$, as a
-    function of population-scaled selection coefficient. $n_o^*$ is calculated so that $99\%$ of the
-    distribution is contained.}
+  \includegraphics[width=\textwidth]{fig/critical_normal.pdf}
+  \caption{Critical sample size that is required for a given closure confidence level. The $50^\text{th}$ percentile corresponds to the mean in the equation \eqref{eq:mean}. Note that the normal approximation is invalid for $Ns=0$, where the occupancy distribution should be used. All lines are calculated with $N_e=1000$.}
   \label{fig:apx:critical-fraction}
 \end{figure}
 
