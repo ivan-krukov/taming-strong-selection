@@ -85,7 +85,7 @@ their convergence properties are not well understood.
 
 Closure of the moment equations under the neutral Wright-Fisher model occurs because the number of
 distinct parental lineages that are sampled when drawing $n_o$ offspring lineages is less than the
-number of parents: $n_p \le n_o$ (see Table \ref{tab:notation} for the notation used). This does not
+number of parents: $n_p \le n_o$ (see Table \ref{tab:symbols} for the notation used). This does not
 hold under negative selection -- due to selective deaths, the number of parental lineages that are
 relevant to a sample of size $n_o$ can be larger: $n_p \ge n_o$ \citep{DonnellyKurtz1999a,
   JouganousEtAl2017}. This possible increase is made explicit, in the framework of the ancestral
@@ -533,7 +533,7 @@ calculations are provided in the appendix, and the result is:
     \operatorname{Var}[n_p-n_o | n_o] &=
     N^2\left( \vara{1}^{2n_o}\varb{\vara{1}^2}^{n_o}-\vara{1}^{2n_o}\varb{\vara{1}}^{2n_o} \right) + \\
     &+ N(N-1)\vara{2}^{n_o}\varb{\vara{2}} + \vara{1}^{n_o}\varb{\vara{1}}^{n_o} - \\
-    &- N\vara{1}^{2n_o} \varb{\varb{1}^{2}}^{n_o}
+    &- N\vara{1}^{2n_o} \varb{\vara{1}^{2}}^{n_o}
     \label{eq:gauss-var}
   \end{aligned}
 \end{equation}
@@ -665,7 +665,10 @@ larger number of lineages. All curves assume $N=1000$.
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{fig/critical_normal.pdf}
-  \caption{Critical sample size that is required for a given closure confidence level. The $50^\text{th}$ percentile corresponds to the mean in the equation \eqref{eq:mean}. Note that the normal approximation is invalid for $Ns=0$, where the occupancy distribution should be used. All lines are calculated with $N_e=1000$.}
+  \caption{Critical sample size that is required for a given closure confidence level. The
+    $50^\text{th}$ percentile corresponds to the mean in the equation \eqref{eq:critical-sample}. Note that the
+    normal approximation is invalid for $Ns=0$, where the occupancy distribution should be used. All
+    lines are calculated with $N_e=1000$.}
   \label{fig:apx:critical-normal}
 \end{figure}
 
