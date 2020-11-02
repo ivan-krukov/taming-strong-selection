@@ -83,31 +83,31 @@ form an infinite set of coupled ordinary differential equations. Moment-based cl
 have been developed \citep{JouganousEtAl2017}, but these are not robust to strong selection and
 their convergence properties are not well understood.
 
-Closure of the moment equations under the neutral Wright-Fisher model occurs because the number of
-distinct parental lineages that are sampled when drawing $n_o$ offspring lineages is less than the
-number of parents: $n_p \le n_o$ (see Table \ref{tab:symbols} for the notation used). This does not
-hold under negative selection -- due to selective deaths, the number of parental lineages that are
-relevant to a sample of size $n_o$ can be larger: $n_p \ge n_o$ \citep{DonnellyKurtz1999a,
-  JouganousEtAl2017}. This possible increase is made explicit, in the framework of the ancestral
-selection graphs, \citep{KroneNeuhauser1997}.
+Closure of the moment equations under the neutral Wright-Fisher model occurs because the number $n_p$ of
+distinct parental lineages that are sampled when drawing $n_o$ offspring lineages is at most $n_o$, and can be less if common ancestors are found (i.e., if there are coalescent events): 
+$n_p \le n_o$ (see Table \ref{tab:symbols} for the notation used). This does not
+hold under negative selection -- selective deaths can require the drawing of $n_p>n_o$  \citep{DonnellyKurtz1999a,
+  JouganousEtAl2017}. This possible increase is made explicit, for example, in the framework of the ancestral
+selection graph \citep{KroneNeuhauser1997}.
 
-The increase in the number of relevant lineages as we go back in time depends on the relative
-importance of drift and selection. Whereas the dynamics of allele frequencies typically depend on
-the scaled selection coefficient $Ns$, closure properties depend on the sample size. The number of
-in-sample coalescent events per generation is proportional to the square of the sample size $n_o$,
-while the number of selective deaths is linear in $n_o$. This suggests that with sufficiently large
-samples, the effect of selection would be smaller than that of drift, which would prevent the
-increase in the number of lineages -- at least most of the times. Thus recursion equations can
-become almost-closed, in a sense that we will explore below.
-
+The number of relevant lineages as we go back in time is a random variable that depends on the relative
+importance of drift (controlled by the population size $N$) and selection (controlled by the selection coefficient $s$), but also on the sample size $n_o$. 
+The number of in-sample coalescent events per generation is proportional to the square of the sample size $n_o$,
+while the number of selective deaths is linear in $n_o$. For sufficiently large
+samples, the expected number of selective deaths will be smaller than common ancestry events, which would prevent the
+increase in the number of lineages. If we can show that this holds not just in expectation, but almost always,  
+we can obtain recursion equations that are almost closed. 
+ 
 Large sample sizes also bring in the complication of multiple and/or simultaneous coalescent events
-\citep{BhaskarEtAl2014}. In this article we derive recursion equations for large sample sizes, and
+\citep{BhaskarEtAl2014}. This makes the computation of transition matrices for recursion equations
+more difficult, but not impossible. In this article we derive these transition matrices, and
 show that these are asymptotically closed even under strong selection. In fact, the multi-way
-coalescent events deplete the number of lineages faster than pairwise events, thus counter-acting
-the selection effects. We derive the transition probability matrices for these processes, which can
-be used to accurately model the distribution of allele frequencies in moderate to large samples.
+coalescent events deplete the number of lineages faster than pairwise events further counter-acting
+the selection effects. We show that these transition matrices can be used to accurately model the 
+distribution of allele frequencies in moderate to large samples and strong selection.
 
 In short, modeling large sample sizes makes it easier to account for strong selection. 
+
 
 \section{Methods}
 \label{sec:methods}
@@ -146,24 +146,24 @@ sample.
 \end{table}
 
 Under neutral evolution, each offspring picks a lineage at random with replacement, and the number
-of distinct parental lineages ($n_p$) is smaller than $n_o$ (Fig.\ref{fig:schematic}A).
+$n_p$ of distinct parental lineages is smaller than $n_o$ (Fig.\ref{fig:schematic}A).
 
 To model selection as part of our sampling process, we consider that a parental lineage carrying a
 derived allele can be `rejected' as a result of selective death with probability $s>0$ (Fig.
 \ref{fig:schematic}B, broken line). In such case, we keep sampling until a successful draw. This is
 equivalent to the usual formulation of the Wright-Fisher model: the probability of drawing the
 derived allele is $1-s$ times the probability of drawing the ancestral allele. Because the drawing
-process depends on the state of both selected and rejected alleles, the \textit{AFS} in the
+process depends on the parental allele of both successful and rejected draws, the \textit{AFS} in the
 offspring will depend on the state of the $n_p$ distinct parental lineages that were sampled,
 whether or not they were an actual parent. Because of selective rejection, $n_p$ can be larger than
-$n_o$. When referring to sampled lineages ($n_p$), we mean any lineages that have been sampled and
-possibly rejected.
+$n_o$. %When referring to sampled lineages ($n_p$), we mean any lineages that have been sampled and
+%possibly rejected.
 
 To disentangle the effects of drift and selection, we may also make explicit the number of gametes
-sampled in the process, $n_g$ (Fig. \ref{fig:schematic}C). In this scheme, the difference $n_g-n_o$
-depends only on the number of selective deaths, $n_g-n_o \ge 0$. The difference $n_p-n_g$ depends
-only on coalescence events, $n_p-n_g \le 0$. We will use this notation with $n_g$ in section
-\ref{sec:asympt}. Note that in Figure \ref{fig:schematic}A,B, the gametes are implicit.
+sampled in the process, $n_g$ (Fig. \ref{fig:schematic}C). The difference $n_g-n_o  \ge 0$
+depends only on the number of selective deaths, whereas the difference $n_p-n_g \le 0$ depends
+only on coalescence events. We will use this notation with $n_g$ in section
+\ref{sec:asympt}. %Note that in Figure \ref{fig:schematic}A,B, the gametes are implicit.
 
 \begin{figure}[h]
   \centering
@@ -176,24 +176,29 @@ only on coalescence events, $n_p-n_g \le 0$. We will use this notation with $n_g
 \end{figure}
 
 To express the allele-frequency spectrum $\afs{n_o}{t}(i_o)$ for $n_o$ offspring in terms of the parental
-\textit{AFS} at $t-1$, we can sum over $n_p$ and the number $i_p$ of distinct derived alleles
+\textit{AFS} at $t-1$, we can sum over random variables $n_p$ and the number $i_p$ of distinct derived alleles
 among them:
 
 \begin{equation}
   \afs{n_o}{t}(i_o)=P_{n_o} (i_o) =\sum_{n_p,i_p} P_{n_o}(i_o,i_p,n_p),
 \end{equation}
-
 where the subscript $n_o$ indicates dependence on parameter $n_o$. To obtain a recursion on the
-\textit{AFS}, we note that the order in which we draw new parental lineages in the Wright-Fisher
-model is random. In other words, we could draw a random permutation of the parental population, and
+\textit{AFS}, we use an exchangeability property of the parental lineages: the order
+ in which we draw previously unsampled parental lineages in the Wright-Fisher
+model is random. 
+In other words, we could draw a random permutation of the parental population, and
 select parents in order from this permutation. We will separate properties of this permutation,
 which depend only on parental \textit{AFS}, from properties of Wright-Fisher sampling. Concretely,
 the event $(i_p,n_p)$ can be expressed as the intersection of two events, $\mathcal{C}_{n_p}(i_p)$
 and $\mathcal{S}_{n_p}$. Event $\mathcal{C}_{n_p}(i_p)$ specifies that the first $n_p$ parental
-lineages from the random permutation carry $i_p$ derived alleles (that is,
-$P(\mathcal{C}_{n_p}(i_p)) =\afs{n_p}{t} (i_p)$, \textit{AFS} property). Event $\mathcal{S}_{n_p}$
+lineages from the random permutation carry $i_p$ derived alleles. Event $\mathcal{S}_{n_p}$
 requires that the Wright-Fisher drawing process \textit{stops} after exactly $n_p$ parental lineages
-have been drawn.
+have been drawn. Event $\mathcal{C}_{n_p}(i_p)$ is a property of the allele frequency distribution 
+in the parental generation, 
+and in fact $P(\mathcal{C}_{n_p}(i_p)) =\afs{n_p}{t} (i_p)$, by definition of the \textit{AFS}. Thus \sgcomment{Notation inconsitent
+$\mathcal{C}_{n_p}(i_p)$ vs $\mathcal{C}(i_p,n_p)$}
+
+
 
 \begin{equation}
   \begin{split}
@@ -204,7 +209,6 @@ have been drawn.
   \end{split}
   \label{eq:recur}
 \end{equation}
-
 where the $\mathbf{T}_{n_p,n_o}$ can be thought of as $(n_o+1) \times (n_p+1)$ transition
 probability matrix, whose row and column indices correspond to the number of derived alleles in the
 offspring and contributing parental lineages, respectively.
@@ -232,7 +236,7 @@ closure by truncating the summation in Eq. \ref{eq:recur}:
 \label{eq:truncated}
 \end{equation}
 
-A jackknife approximation \citep{Gravel2016} can be used to simulate the drawing of a small number
+A jackknife approximation \citep{Gravel2016} \sgcomment{The reference is misinterpreted by bibtex} can be used to simulate the drawing of a small number
 of additional lineages and improve upon this closure approximation
 ($\afs{n_p}{t} \simeq J_{n_p,n_o} \afs{n_o}{t}$ with $n_p>n_o$). \cite{JouganousEtAl2017} used the
 jackknife to derive approximate recursion equations under weak selection. We will show below that
@@ -248,20 +252,21 @@ will need to account for multiple coalescent events, which will require some car
 \subsection{Constructing the transition matrix}
 \label{subsec:trans-mat}
 
-Even though $\mathbf{T}_{n_p,n_o}$ Eq. \ref{eq:recur} is a simple combinatorial probability
+Even though $\mathbf{T}_{n_p,n_o}$ Eq. \ref{eq:recur} is a combinatorial probability
 describing a single generation in the Wright-Fisher model, we were unable to compute an analytical
-expression for it, while allowing for multiple coalescences and multiple selective events. However,
+expression for it, while allowing for multiple coalescences and multiple selective events. 
+However,
 we can obtain fairly simple recursions by noting that properties of a sample of size $n_o$ are
 related to properties of samples size $n_o-1.$ Similar recursions on sample size were used for
 describing large sample size effects without selection in \citep{BhaskarEtAl2014}. In this section,
 we provide some intuition for the recursion equation, and a more detailed derivation is provided in
-the appendix \ref{subsec:apx:tpm}.
+Appendix \ref{subsec:apx:tpm}.
 
 This recursion exists because the Wright-Fisher sampling can be performed one offspring at a time,
 and even one draw at a time. The number of derived and ancestral alleles among the parents and the
 offspring after a draw is related in a simple manner to the number of derived and ancestral alleles
 prior to this draw. The transition from $n_o-1$ to $n_o$ successfully drawn offspring can involve an
-arbitrary number ($r$) of selective deaths. 
+arbitrary number ($r$) of selective deaths. \sgcomment{Previous paragraph could be simplified a bit}
 
 To keep track of this, we define $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ as the probability
 $P_{n_o}(\mathbf{Q}(i_o,r) | i_p, n_p)$ of the event $\mathbf{Q}(i_o,r)$ that exactly $i_o$ of the
@@ -271,31 +276,38 @@ the number of relevant parental lineages (at the top) and offspring lineages (at
 cost of obscuring their different probabilistic role.
   
 The recursion over $r$ in $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ is shown at the bottom of
-Figure \ref{fig:rec-selection-dynamic-fail} (\textit{rC,rD}). To obtain $r$ selective deaths, we
+Figure \ref{fig:rec-selection-dynamic-fail} (cases \textit{rC,rD}). To obtain $r$ selective deaths, we
 must first have obtained $r-1$ selective deaths, followed by an additional selective death. We
-simply keep track of whether the last failure was from a previously drawn lineage (case
+must track whether the last failure was from a previously drawn parental lineage (case
 \textit{rD}), in which case the number of parental lineages is unchanged, or of a new lineage (case
-\textit{rC}), in which case $n_p$ and $i_p$ must have been one smaller in the last draw.
+\textit{rC}), in which case the sample of size $n_o-1$ must have had exactly one fewer parent and 
+one fewer derived parental allele than the full sample.  
  
 Thus we can obtain $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ from
 $\mathbf{T}_{r-1}\Coalc{i_p-1}{n_p-1}{i_o}{n_o}$ and $\mathbf{T}_{r-1}\Coalc{i_p}{n_p}{i_o}{n_o},$
 and recursively back to terms of the form $\mathbf{T}_{0}\Coalc{\cdot}{\cdot}{i_o}{n_o}$.
   
 To progress further, we must express $\mathbf{T}_{0}\Coalc{\cdot}{\cdot}{i_o}{n_o}$ in terms of
-$\mathbf{T}_{r}\Coalc{\cdot}{\cdot}{\cdot}{n_o-1}$, that is, we want to condition on the last
-successful draws. This last successful draw can be a previously sampled parental lineage (A,B), or
-unsampled (A,C); and can be derived (A,B), or ancestral (C,D), giving rise to the four cases shown on Figure
-\ref{fig:rec-selection-dynamic-fail}.
+$\mathbf{T}_{r}\Coalc{\cdot}{\cdot}{\cdot}{n_o-1}$. We can do this by conditioning on the last
+successful draw. This last successful draw can be a previously sampled parental lineage (cases B,D on Figure \ref{fig:rec-selection-dynamic-fail}), or
+unsampled (cases A,C); and can be derived (cases A,B), or ancestral (cases C,D), giving rise to four cases.
   
-Combining these two recursions, and using caching to avoid re-computing previously computed values,
-we can systematically compute all the terms in Equation \ref{fig:rec-selection-dynamic-fail}.
-
-Unfortunately, the number of rejected lineages can be infinite in the Wright-Fisher process.
-However, the probability of having multiple selective deaths for a single successful draw decreases
+A last barrier to overcome to compute the transition matrices is that  
+the number of rejected lineages $r$ for individual draws can be infinite in the Wright-Fisher process.
+ However, the probability of having multiple selective deaths for a single successful draw decreases
 rapidly as $s^r.$ We therefore modify the Wright-Fisher model such that at most $r_{max}$ failed
 draws \emph{per offpsring lineage} are allowed, after which the next draw is immune to selection. Given
-$s<1$, we can easily pick $r_{max}$ to ensure excellent convergence. We found that $r_{max}=4$, was
-amply sufficient to consider strong negative selection up to $Ns=50$.
+$s<1$, we can easily pick $r_{max}$ to ensure excellent convergence. We found empirically that 
+$r_{max}=4$, was amply sufficient to consider strong negative selection up to $Ns=50$ 
+\sgcomment{Here perhaps give an example in terms of $s$ and the number of remaining lineages: 
+For example, with $s=0.01$, which corresponds to $Ns=100$ with $N=10 000$, the probability of having more than 
+four selective deaths is less than $10^{-10}$}.
+  
+These two recursions, and using caching to avoid re-computing previously computed values,
+we can systematically compute all the terms in Equation \ref{fig:rec-selection-dynamic-fail}.
+
+
+
 
 \begin{figure}
   \centering
