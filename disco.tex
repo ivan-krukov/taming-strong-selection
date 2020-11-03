@@ -49,7 +49,7 @@
     distributions of allele frequencies, and discuss the boundaries of this analytically tractable
     regime.
   
-    Selection becomes more analytically tractable when the sample size is larger than twice the
+    Selection becomes more analytically tractable when the sample size $n$ is larger than twice the
     population-scaled selection coefficient: $n \ge 2Ns$ ($4Ns$ in diploids). In this regime, the
     expected number of coalescent events is larger than the number of selective events. We also
     derive the exact distribution of the number of sampled lineages, and offer a Gaussian
@@ -92,21 +92,23 @@ selection graph \citep{KroneNeuhauser1997}.
 
 The number of relevant lineages as we go back in time is a random variable that depends on the relative
 importance of drift (controlled by the population size $N$) and selection (controlled by the selection coefficient $s$), but also on the sample size $n_o$. 
-The number of in-sample coalescent events per generation is proportional to the square of the sample size $n_o$,
+The number of in-sample coalescent events per generation scales as the square of the sample size $n_o$,
 while the number of selective deaths is linear in $n_o$. For sufficiently large
 samples, the expected number of selective deaths will be smaller than common ancestry events, which would prevent the
 increase in the number of lineages. If we can show that this holds not just in expectation, but almost always,  
 we can obtain recursion equations that are almost closed. 
  
-Large sample sizes also bring in the complication of multiple and/or simultaneous coalescent events
-\citep{BhaskarEtAl2014}. This makes the computation of transition matrices for recursion equations
-more difficult, but not impossible. In this article we derive these transition matrices, and
-show that these are asymptotically closed even under strong selection. In fact, the multi-way
-coalescent events deplete the number of lineages faster than pairwise events further counter-acting
-the selection effects. We show that these transition matrices can be used to accurately model the 
+Large sample sizes also bring in the complication of simultaneous coalescent events
+\citep{BhaskarEtAl2014}. The additional combinatorial possibilities make the computation 
+of transition matrices for recursion equations more difficult. 
+In this article we derive these transition matrices, and
+show that these are asymptotically closed even under strong selection. %In fact, the multi-way
+%coalescent events deplete the number of lineages faster than pairwise events further counter-acting
+%the selection effects. 
+We show that these transition matrices can be used to accurately model the 
 distribution of allele frequencies in moderate to large samples and strong selection.
 
-In short, modeling large sample sizes makes it easier to account for strong selection. 
+In short, modeling large sample sizes makes it easier to accurately account for strong selection. 
 
 
 \section{Methods}
@@ -149,13 +151,13 @@ Under neutral evolution, each offspring picks a lineage at random with replaceme
 $n_p$ of distinct parental lineages is smaller than $n_o$ (Fig.\ref{fig:schematic}A).
 
 To model selection as part of our sampling process, we consider that a parental lineage carrying a
-derived allele can be `rejected' as a result of selective death with probability $s>0$ (Fig.
+derived allele can be `rejected' as a result of selective death with probability $s\ge0$ (Fig.
 \ref{fig:schematic}B, broken line). In such case, we keep sampling until a successful draw. This is
-equivalent to the usual formulation of the Wright-Fisher model: the probability of drawing the
-derived allele is $1-s$ times the probability of drawing the ancestral allele. Because the drawing
+equivalent to the usual formulation of the Wright-Fisher model: the probability of drawing a copy of the
+derived allele is $1-s$ times the probability of drawing a copy of the ancestral allele. Because the drawing
 process depends on the parental allele of both successful and rejected draws, the \textit{AFS} in the
-offspring will depend on the state of the $n_p$ distinct parental lineages that were sampled,
-whether or not they were an actual parent. Because of selective rejection, $n_p$ can be larger than
+offspring will depend on the state of the $n_p$ distinct parental lineages that were sampled. 
+Because of selective rejection, $n_p$ can be larger than
 $n_o$. %When referring to sampled lineages ($n_p$), we mean any lineages that have been sampled and
 %possibly rejected.
 
@@ -177,7 +179,7 @@ only on coalescence events. We will use this notation with $n_g$ in section
 
 To express the allele-frequency spectrum $\afs{n_o}{t}(i_o)$ for $n_o$ offspring in terms of the parental
 \textit{AFS} at $t-1$, we can sum over random variables $n_p$ and the number $i_p$ of distinct derived alleles
-among them:
+among the parents:
 
 \begin{equation}
   \afs{n_o}{t}(i_o)=P_{n_o} (i_o) =\sum_{n_p,i_p} P_{n_o}(i_o,i_p,n_p),
@@ -189,16 +191,12 @@ model is random.
 In other words, we could draw a random permutation of the parental population, and
 select parents in order from this permutation. We will separate properties of this permutation,
 which depend only on parental \textit{AFS}, from properties of Wright-Fisher sampling. Concretely,
-the event $(i_p,n_p)$ can be expressed as the intersection of two events, $\mathcal{C}_{n_p}(i_p)$
-and $\mathcal{S}_{n_p}$. Event $\mathcal{C}_{n_p}(i_p)$ specifies that the first $n_p$ parental
+the event $(i_p,n_p)$ can be expressed as the intersection of two events, $\mathcal{C}(i_p,n_p)$
+and $\mathcal{S}_{n_p}$. Event $\mathcal{C}(i_p,n_p)$ specifies that the first $n_p$ parental
 lineages from the random permutation carry $i_p$ derived alleles. Event $\mathcal{S}_{n_p}$
 requires that the Wright-Fisher drawing process \textit{stops} after exactly $n_p$ parental lineages
-have been drawn. Event $\mathcal{C}_{n_p}(i_p)$ is a property of the allele frequency distribution 
-in the parental generation, 
-and in fact $P(\mathcal{C}_{n_p}(i_p)) =\afs{n_p}{t} (i_p)$, by definition of the \textit{AFS}. Thus \sgcomment{Notation inconsitent
-$\mathcal{C}_{n_p}(i_p)$ vs $\mathcal{C}(i_p,n_p)$}
-
-
+have been drawn. Event $\mathcal{C}(i_p, n_p)$ is a property of the allele frequency distribution 
+in the parental generation: $P(\mathcal{C}_{n_p}(i_p)) =\afs{n_p}{t} (i_p)$ by definition of the \textit{AFS}. Thus 
 
 \begin{equation}
   \begin{split}
@@ -213,10 +211,9 @@ where the $\mathbf{T}_{n_p,n_o}$ can be thought of as $(n_o+1) \times (n_p+1)$ t
 probability matrix, whose row and column indices correspond to the number of derived alleles in the
 offspring and contributing parental lineages, respectively.
 
-Under neutral evolution, only terms with $n_p\leq n_o$ are nonzero. The corresponding \textit{AFS}
-can all be obtained by downsampling from $\afs{n_o}{t-1}$ (\textit{i.e.}, $\afs{n_p}{t-1} =
+The AFS for $n_p\leq n_o$ can be obtained by downsampling from $\afs{n_o}{t-1}$ (\textit{i.e.}, $\afs{n_p}{t-1} =
 \mathbf{H}_{n_p,n_o} \afs{n_o}{t-1}$ for hypergeometric projection matrix $\mathbf{H}_{n_p,n_o}$ if
-$n_p\leq n_o$), and Equation \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}$.
+$n_p\leq n_o$), so Equation \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}$ under neutrality.
 This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele
 frequencies under neutrality and in small sample sizes.
 
@@ -303,7 +300,7 @@ $r_{max}=4$, was amply sufficient to consider strong negative selection up to $N
 For example, with $s=0.01$, which corresponds to $Ns=100$ with $N=10 000$, the probability of having more than 
 four selective deaths is less than $10^{-10}$}.
   
-These two recursions, and using caching to avoid re-computing previously computed values,
+Using these two recursions, and using caching to avoid re-computing previously computed values,
 we can systematically compute all the terms in Equation \ref{fig:rec-selection-dynamic-fail}.
 
 
@@ -329,9 +326,14 @@ we can systematically compute all the terms in Equation \ref{fig:rec-selection-d
 \end{figure}
  
 The set of selection transition probability matrices $\mathbf{T}$ requires $O(r_{max}n^4)$
-operations to construct, as it implicitly constructs all the matrices for smaller sample sizes. In
-the simpler neutral case, it is possible to calculate these matrices more efficiently - $O(n^3)$,
-similar to \cite{BhaskarEtAl2014}.
+operations to construct, as it implicitly constructs all the matrices for smaller sample sizes \sgcomment{Perhaps give a bit more detail? 
+Since each term $\mathbf{T}_{r}$, r>0  in the recursion requires a constant number of operations, 
+the computational complexity depends on the number of terms we need to calculate. We will need to compute terms of the form 
+ $\mathbf{T}_{r}\Coalc{i_p'}{n_p'}{i_o'}{n_o'}$, with $1 \leq n_o'<n_o$, $i_o' \leq n_o'$, $0\leq i_p'$, and $0\leq n_p' \leq \alpha n_o$, 
+ and $0\leq r \leq r_{max}.$ The terms  $\mathbf{T}_{0}$ have a bound of the same form (i.e., there are $O(n_o^4)$ terms, each requiring $r_{max}$ computations.  
+ If we assume that $\alpha$ is order 1, the number of required terms is at most $O(r_{max} n_o^4)$.   }. In
+the simpler neutral case, it is possible to calculate these matrices in $O(n^3)$,
+similar to \cite{BhaskarEtAl2014} \sgcomment{"Similar to" or "as in"?}.
 
 \subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
@@ -340,14 +342,13 @@ Once the truncated matrix
 $\mathbf{Q}_{n_o} = \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$
 \eqref{eq:truncated} is constructed, it can be used to calculate the allele frequency spectrum. To
 validate the method, we first use the equilibrium distribution where exact solutions are available
-\citep{Krukov2016}. In the infinite sites model at equilibrium, for example, we can compute the
+\citep{Krukov2016}. In the infinite sites model at equilibrium, we can compute the
 equilibrium \textit{AFS} $\Phi$ in a finite sample as a solution to a linear system:
 
 \begin{equation}
   \label{eq:sfs-calc}
   \Phi = \mathbf{Q}\Phi  + n \mu e_1
 \end{equation}
-
 where $\mu$ is the per-site (forward) mutation rate, and $e_1$ is the first column of the identity
 matrix of size $n$. Figure \ref{fig:strong-selection} shows the comparison of the \textit{AFS}
 calculated from Equation \eqref{eq:sfs-calc}, the diffusion approximation
@@ -357,16 +358,20 @@ calculated from Equation \eqref{eq:sfs-calc}, the diffusion approximation
 Figures \ref{fig:strong-selection}A-C show that there is a disagreement between the exact
 Wright-Fisher and the diffusion solutions for singletons and doubletons. This effect increases as in
 large sample sizes, as $n \ra N$, and has been reported by \citep{BhaskarEtAl2014}. There is a also
-a divergence at high frequency of the derived allele. The Wright-Fisher and the present model are
-both absorbing at fixation of the derived allele, while the diffusion models are not. 
+a divergence at high frequency of the derived allele. %The Wright-Fisher and the present model are
+%both absorbing at fixation of the derived allele, while the diffusion models are not. 
 
-Figure \ref{fig:strong-selection}D shows a comparison at strong negative $Ns=50$, with the
-population size ($N=1000$), which is substantially larger than the sample size ($n=100$). There is a
-small deviation between the approaches at large allele frequencies. If the sample size is the same
-as the population size ($n=N=100$) (Fig. \ref{fig:strong-selection}D), the diffusion approximation
-and \texttt{Moments} depart from the Wright-Fisher prediction substantially. The approach presented
-in this work (Fig. \ref{fig:rec-selection-dynamic-fail}) shows a better match to the Wright-Fisher
-model.
+Figure \ref{fig:strong-selection}D-F shows a comparison at strong negative $Ns=50$, with a
+sample size of $100$ and population sizes ranging from $N=100$ to  $N=1000.$  
+The recursions presented here provide excellent agreement with the analytical result even 
+where the diffusion-based approaches depart considerably from the exact result. 
+
+When the sample is the entire population, as in panel F, the present method is not needed since
+exact recursion equations can be obtained from the binomial distribution (also not that in this case, $n_p\leq n_o$). 
+The present approach will be useful if exact recursions can be obtained for sample sizes that are appreciably smaller
+than $N$. We therefore seek asymptotic results for the convergence of the recursion approach.
+
+
 
 \begin{figure}
   \centering
@@ -390,11 +395,11 @@ unaccounted for. The transition matrix $\mathbf{Q}_{n_o}(i_p, i_o),$ in equation
 The $(i_p,i_o)^\text{th}$ element of matrix $Q_{n_o}$ is the probability
 $P_{n_o}(i_o, \mathcal{S'}_{n_p}| \mathcal{C'}_{n_p}(i_p))$ that we observe $i_o$ derived alleles in
 a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (event
-$\mathcal{S'}_{n_o}$), given event $\mathcal{C'}_{n_p}(i_p)$ that $i_p$ that $i_p$ of the first
+$\mathcal{S'}_{n_o}$), given event $\mathcal{C'}_{n_p}(i_p)$ that $i_p$ of the first
 $n_p$ parental alleles are derived.
 
-By summing $\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o},$ we therefore get the proportion of draws that
-were not truncated. $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$ is therefore the fraction of
+By summing $\sum_{i_o} \mathbf{Q}_{n_o}(i_p, i_o),$ we therefore get the proportion of draws that
+were not truncated. $1-\sum_{i_o} \mathbf{Q}_{n_o}(i_p, i_o)$ is therefore the fraction of
 unaccounted-for draws due to truncation, given $i_p$ derived among the first $n_o$ parental
 alleles. Since only derived lineages experience selection, the largest number of resampling events,
 and therefore the largest number of unaccounted lineages, occurs when all alleles are derived,
@@ -411,7 +416,6 @@ better representation of the full Wright-Fisher model.
 \label{subsec:distribution}
 
 For a given sample size, the probability that $n_p$ parents have been sampled is:
-
 \begin{align}
   \label{eq:conditional}
   P(n_p | n_o) = \sum_{n_g} P(n_p | n_g,n_o)P(n_g | n_o) = \sum_{n_g} P(n_p | n_g)P(n_g | n_o) 
@@ -420,23 +424,21 @@ where $n_p$ and $n_g$ is the number of sampled parents and gametes, respectively
 \ref{fig:schematic}C). 
 
 The distribution over the number of gametes, $n_g$, is given by the negative binomial,
-parameterized by the number of successes -- where the probability of a successful draw is $1-s$.
-Then the toual number of doaws required for $n_o$ successes is:
-
+parameterized by the number of successes $n_o$, and the probability of a successful draw is $1-x_ps$, where $x_p$ is
+the derived allele frequency in the parental population,
 \begin{align}
   \label{eq:neg-binomial-trials}
-  P(n_g|n_o) = \binom{n_g-1}{n_o-1}(1-xs)^{n_o}(xs)^{n_g-n_o},
+  P(n_g|n_o) = \binom{n_g-1}{n_o-1}(1-x_ps)^{n_o}(x_ps)^{n_g-n_o},
 \end{align}
 where $x_p$ is the proportion of derived alleles in the parental generation.
 
-Then, given $n_g$, the number of parental lineages follows the modified occupancy (also known as
+Given $n_g$, the number of parental lineages $n_p$ follows the modified occupancy (also known as
 Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}:
 
 \begin{align}
   \label{eq:occupancy}
   P(n_p|n_g) = \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}}
 \end{align}
-
 where $S_2(n_g,n_p)$ is a Stirling number of the second kind, which is the number of ways to
 partition $n_g$ gametes into $n_p$ parents (see \cite{JohnsonEtAl2005} section 10.4 for a thorough
 treatment).
@@ -464,7 +466,8 @@ there is a decrease in required lineages due to coalescent events.
     generation into the past (Eq. \ref{eq:lineages-in-past}), solid lines - Gaussian approximation
     (Eq. \ref{eq:gaussian}). \textbf{B} Sample size ($n_o$) as a fraction of population size ($N$)
     such that we have $99\%$ confidence that no lineages are missing, derived from the Gaussian
-    approximation. In both panels, $N=1000$.}
+    approximation. The dotted line indicates regimes where the Gaussian approximation is likely inaccurate. 
+     In both panels, $N=1000$.}
   \label{fig:combined}
 \end{figure}
 
@@ -499,20 +502,18 @@ Assuming $x_p\equiv i_p/n_p=1$, the expectation over $n_p$ is simply given by th
 
 As mentioned above, the number of selective deaths, $n_g-n_o$ follows a negative binomial
 distribution. We can use the moment generating function of the negative binomial to compute the
-expectation for constant $k$,
+expectation of $k^{n_g}$ for any constant $k$:
 
 \begin{equation}
 E_{n_g}[k^{n_g}] = k^{n_o}  \left(\frac{1-s}{1-sk}\right)^{n_o}.
 \label{eq:identity}
 \end{equation} 
-
 Thus we can write 
 \begin{align}
   \label{eq:gauss-mean}
   \hat{E}[n_p -n_o | n_o] &= N-N\left( 1 - \frac{1}{N} \right)^{n_o}\left( \frac{1-s}{1-s \left( 1 - \frac{1}{N} \right)}\right)^{n_o}-n_o.
 \end{align}
-
-Taking the terms of order $\frac{1}{N}$ gives,
+Taking the terms of order up to $\frac{1}{N}$ gives
 
 \begin{equation*}
     \label{eq:lineages-approx}
@@ -527,15 +528,15 @@ yields, to leading order,
   n_o^* \ge 2Ns.
 \end{equation}
 
-This gives us a simple and convenient expression for the critical sample size (Fig.
-\ref{fig:apx:critical-normal}), where there are more drift than selection events, on average. Note
-that if we want to include the derived allele frequency in the parental generation,
-\eqref{eq:critical-sample} becomes $2Nsx_p$, or $4Nsx_p$ in a diploid model. However, closure of
+This critical sample size (Fig.
+\ref{fig:apx:critical-normal}), is where there are more drift than selection events, on average. 
+(If we want to include the derived allele frequency in the parental generation,
+\eqref{eq:critical-sample} becomes $2Nsx_p$, or $4Nsx_p$ in a diploid model). However, closure of
 the recursions requires not only that drift occurs more often than selection on average, but almost
 always.
 
 Our next step is to compute the variance $\operatorname{Var}[n_p-n_o | n_o].$ The detailed
-calculations are provided in the appendix, and the result is:
+calculations using the moment generating function are provided in the appendix, and the result is:
 
 \newcommand{\vara}[1]{\left(1-\frac{#1}{N}\right)}
 \newcommand{\varb}[1]{\left(\frac{1-s}{1-s #1}\right)}
@@ -545,38 +546,50 @@ calculations are provided in the appendix, and the result is:
     \operatorname{Var}[n_p-n_o | n_o] &=
     N^2\left( \vara{1}^{2n_o}\varb{\vara{1}^2}^{n_o}-\vara{1}^{2n_o}\varb{\vara{1}}^{2n_o} \right) + \\
     &+ N(N-1)\vara{2}^{n_o}\varb{\vara{2}} + \vara{1}^{n_o}\varb{\vara{1}}^{n_o} - \\
-    &- N\vara{1}^{2n_o} \varb{\vara{1}^{2}}^{n_o}
+    &- N\vara{1}^{2n_o} \varb{\vara{1}^{2}}^{n_o}.
     \label{eq:gauss-var}
   \end{aligned}
 \end{equation}
 
 \subsection{Gaussian approximation}
 
-We use a Gaussian distribution with the mean \eqref{eq:gauss-mean} and variance \eqref{eq:gauss-var}
-to approximate the distribution of the sampled parental lineages:
+In a large sample with $1\ll n_o \ll N,$ we can think of the $n_p-n_o$ as the result of $n_o$ steps of a random walk. 
+Each draw of a new sample defines a step, corresponding to the number of lineages gained or lost compared to the 
+infinite-population size and no selection model. The step size can be zero (if no coalescence or selective death occurs), $-1$ (if a coalescence 
+to a previously drawn lineage occurs), $+k$ (if $k$ selective deaths and no coalescence occurs), etc. When $n_o \ll N$ and $s\ll1,$ 
+most steps are zero, and we can think of steps as approximately independent of each other.   
+
+The selective deaths occurring for each drawn offspring are drawn completely independently, and 
+the coalescence events are almost independent. 
+
+Given a mean and variance, we can use a Gaussian distribution to approximate the distribution of the sampled parental lineages:
 
 \begin{equation}
   P(n_p|n_o) \sim \mathcal{N}(\mu, \sigma)
   \label{eq:gaussian}
 \end{equation}
 
-Figure \ref{fig:combined}A shows the exact distribution as dots, and the Gaussian approximation as
+Figure \ref{fig:combined}A shows the excellent agreement exact distribution as dots, and the Gaussian approximation as
 solid lines. In this parameter regime, we have good agreement between the two computation methods.
+\sgcomment{I thought that we had citations here that showed why the gaussian approximation made sense?}
 
-For the approximation to work well, we require that the sample size is sufficiently large with
+
+For the approximation to work well, we require \sgcomment{It not up to us :)} that the sample size is sufficiently large with
 respect to the population size, namely that $\lambda \equiv \frac{{n_o^*}^2}{2N} \ge 10$, similar to
 the conditions for the Poisson distribution to be approximated with the Gaussian.
 
 We can then numerically compute the quantiles of the Gaussian distribution to find a sample size
-where we are, for example, $99\%$ confident that there will be no missing lineages -- $n_p < n_o$.
-Figure \ref{fig:combined}B shows this as sample size ($n_o$) over the population size ($N_e$), for
-different population sizes. The dashed lines indicate where the Gaussian approximation may be
-invalid: $\lambda < 10$. This shows that the approximation works well in large samples, even with
-strong selection. For smaller sample size, the exact distribution \eqref{eq:lineages-in-past} can be used.
+where we are, for example, $99\%$ confident that there will be no missing lineages -- $n_p < n_o$. 
+\sgcomment{It would be worth explaingin why/whether this is a reasonable criterion. 
+Would this mean that we are loosing 1\% of probability at each generation?
+ }
 
-Figure \ref{fig:apx:critical-normal} shows the required sample size for a given confidence. The
-$50^\text{th}$ percentile is the mean calculated from \eqref{eq:critical-sample}, which is
-approximately $\approx 2Ns$. The more confident we want to be, the more lineages we need to sample.
+Figure \ref{fig:combined}B shows the ratio of sample size to population size ($n_o/N_e$), for the $99\%$  
+confidence for different values of $N.$ The dashed lines indicate where the Gaussian approximation may be
+invalid: $\lambda < 10$. This shows that the truncation can be accurate even for strong selection 
+and sample sizes much smaller than the full population size. The required sample size as a function 
+of the desired confidence is shown on Figure \ref{fig:apx:critical-normal}.
+%For smaller sample size, the exact distribution \eqref{eq:lineages-in-past} can be used.
 
 \subsection{Integrating over several generations} 
 
