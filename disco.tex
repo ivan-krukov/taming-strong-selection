@@ -233,7 +233,7 @@ closure by truncating the summation in Eq. \ref{eq:recur}:
 \label{eq:truncated}
 \end{equation}
 
-A jackknife approximation \citep{Gravel2016} \sgcomment{The reference is misinterpreted by bibtex} can be used to simulate the drawing of a small number
+A jackknife approximation \citep{Gravel2016} can be used to simulate the drawing of a small number
 of additional lineages and improve upon this closure approximation
 ($\afs{n_p}{t} \simeq J_{n_p,n_o} \afs{n_o}{t}$ with $n_p>n_o$). \cite{JouganousEtAl2017} used the
 jackknife to derive approximate recursion equations under weak selection. We will show below that
@@ -249,56 +249,55 @@ will need to account for multiple coalescent events, which will require some car
 \subsection{Constructing the transition matrix}
 \label{subsec:trans-mat}
 
-Even though $\mathbf{T}_{n_p,n_o}$ Eq. \ref{eq:recur} is a combinatorial probability
+Even though $\mathbf{T}_{n_p,n_o}$ in Eq. \ref{eq:recur} is a combinatorial probability
 describing a single generation in the Wright-Fisher model, we were unable to compute an analytical
 expression for it, while allowing for multiple coalescences and multiple selective events. 
 However,
 we can obtain fairly simple recursions by noting that properties of a sample of size $n_o$ are
-related to properties of samples size $n_o-1.$ Similar recursions on sample size were used for
+related to properties of samples of size $n_o-1.$ Similar recursions on sample size were used for
 describing large sample size effects without selection in \citep{BhaskarEtAl2014}. In this section,
 we provide some intuition for the recursion equation, and a more detailed derivation is provided in
 Appendix \ref{subsec:apx:tpm}.
 
-This recursion exists because the Wright-Fisher sampling can be performed one offspring at a time,
-and even one draw at a time. The number of derived and ancestral alleles among the parents and the
-offspring after a draw is related in a simple manner to the number of derived and ancestral alleles
-prior to this draw. The transition from $n_o-1$ to $n_o$ successfully drawn offspring can involve an
-arbitrary number ($r$) of selective deaths. \sgcomment{Previous paragraph could be simplified a bit}
-
-To keep track of this, we define $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ as the probability
+We can think of Wright-Fisher sampling as being performed one offspring at a time,
+and even one draw at a time. We will define recursions by conditioning on the last draw, 
+whether it is successful or failed. 
+To keep track of the number $r$ of unsuccessful draws for the current offspring, we define $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ as the probability
 $P_{n_o}(\mathbf{Q}(i_o,r) | i_p, n_p)$ of the event $\mathbf{Q}(i_o,r)$ that exactly $i_o$ of the
 first $n_o$ successfully drawn offspring are derived, and that the following $r$ draws are selective
 deaths - Figure \ref{fig:rec-selection-dynamic-fail}. This bracket notation is convenient to keep track of
 the number of relevant parental lineages (at the top) and offspring lineages (at the bottom), at the
 cost of obscuring their different probabilistic role.
-  
-The recursion over $r$ in $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ is shown at the bottom of
-Figure \ref{fig:rec-selection-dynamic-fail} (cases \textit{rC,rD}). To obtain $r$ selective deaths, we
-must first have obtained $r-1$ selective deaths, followed by an additional selective death. We
-must track whether the last failure was from a previously drawn parental lineage (case
+
+The recursion can be broken down in a recursion over $r$, determined by failed draws, 
+and a recursion over $n_o$, determined by successful draws.  
+The recursion over $r$ is shown at the bottom of
+Figure \ref{fig:rec-selection-dynamic-fail} (cases \textit{rC,rD}). If the last draw was rejected, the sampling 
+prior to the last draw must have ended with $r-1$ rejected draws. We
+must simply track whether the last rejected draw was from a previously drawn parental lineage (case
 \textit{rD}), in which case the number of parental lineages is unchanged, or of a new lineage (case
-\textit{rC}), in which case the sample of size $n_o-1$ must have had exactly one fewer parent and 
+\textit{rC}), in which case the sample with $r-1$ rejections must have had exactly one fewer distinct parent and 
 one fewer derived parental allele than the full sample.  
  
 Thus we can obtain $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ from
 $\mathbf{T}_{r-1}\Coalc{i_p-1}{n_p-1}{i_o}{n_o}$ and $\mathbf{T}_{r-1}\Coalc{i_p}{n_p}{i_o}{n_o},$
-and recursively back to terms of the form $\mathbf{T}_{0}\Coalc{\cdot}{\cdot}{i_o}{n_o}$.
+and recursively back to terms of the form $\mathbf{T}_{0}\Coalc{i_p'}{n_p'}{i_o}{n_o}$, with $n_p'\leq n_p$
   
-To progress further, we must express $\mathbf{T}_{0}\Coalc{\cdot}{\cdot}{i_o}{n_o}$ in terms of
-$\mathbf{T}_{r}\Coalc{\cdot}{\cdot}{\cdot}{n_o-1}$. We can do this by conditioning on the last
+To progress further and express $\mathbf{T}_{0}\Coalc{\cdot}{\cdot}{i_o}{n_o}$ in terms of
+$\mathbf{T}_{r}\Coalc{\cdot}{\cdot}{\cdot}{n_o-1}$, we condition on the last
 successful draw. This last successful draw can be a previously sampled parental lineage (cases B,D on Figure \ref{fig:rec-selection-dynamic-fail}), or
 unsampled (cases A,C); and can be derived (cases A,B), or ancestral (cases C,D), giving rise to four cases.
   
-A last barrier to overcome to compute the transition matrices is that  
-the number of rejected lineages $r$ for individual draws can be infinite in the Wright-Fisher process.
- However, the probability of having multiple selective deaths for a single successful draw decreases
-rapidly as $s^r.$ We therefore modify the Wright-Fisher model such that at most $r_{max}$ failed
+A challenge with this recursion is that the number of rejected lineages $r$ for each individual draws 
+can be infinite.
+ However, the probability of having multiple selective deaths for a single successful draw decreases,
+rapidly, as $s^r.$ We therefore modify the Wright-Fisher model such that at most $r_{max}$ failed
 draws \emph{per offpsring lineage} are allowed, after which the next draw is immune to selection. Given
-$s<1$, we can easily pick $r_{max}$ to ensure excellent convergence. We found empirically that 
-$r_{max}=4$, was amply sufficient to consider strong negative selection up to $Ns=50$ 
-\sgcomment{Here perhaps give an example in terms of $s$ and the number of remaining lineages: 
-For example, with $s=0.01$, which corresponds to $Ns=100$ with $N=10 000$, the probability of having more than 
-four selective deaths is less than $10^{-10}$}.
+$s<1$, we can easily pick $r_{max}$ to ensure excellent convergence. For example, with $s=0.01$, 
+which corresponds to $Ns=100$ with $N=10 000$, the probability of having more than 
+four selective deaths is less than $10^{-10}$, and the probability of having more than 8 selective deaths is 
+less than $10^{-20}.$ We have used $r_{max}=4$ in numerical calculations presented below. 
+
   
 Using these two recursions, and using caching to avoid re-computing previously computed values,
 we can systematically compute all the terms in Equation \ref{fig:rec-selection-dynamic-fail}.
@@ -325,15 +324,18 @@ we can systematically compute all the terms in Equation \ref{fig:rec-selection-d
   \label{fig:rec-selection-dynamic-fail}
 \end{figure}
  
-The set of selection transition probability matrices $\mathbf{T}$ requires $O(r_{max}n^4)$
-operations to construct, as it implicitly constructs all the matrices for smaller sample sizes \sgcomment{Perhaps give a bit more detail? 
-Since each term $\mathbf{T}_{r}$, r>0  in the recursion requires a constant number of operations, 
+The set of selection transition probability matrices $\mathbf{T}$ requires $O(r_{max}n_o^2 n_p^2)$
+operations to construct: Since each term $\mathbf{T}_{r}$ (with $r>0$)  in the recursion requires a constant number of operations, 
 the computational complexity depends on the number of terms we need to calculate. We will need to compute terms of the form 
- $\mathbf{T}_{r}\Coalc{i_p'}{n_p'}{i_o'}{n_o'}$, with $1 \leq n_o'<n_o$, $i_o' \leq n_o'$, $0\leq i_p'$, and $0\leq n_p' \leq \alpha n_o$, 
- and $0\leq r \leq r_{max}.$ The terms  $\mathbf{T}_{0}$ have a bound of the same form (i.e., there are $O(n_o^4)$ terms, each requiring $r_{max}$ computations.  
- If we assume that $\alpha$ is order 1, the number of required terms is at most $O(r_{max} n_o^4)$.   }. In
-the simpler neutral case, it is possible to calculate these matrices in $O(n^3)$,
-similar to \cite{BhaskarEtAl2014} \sgcomment{"Similar to" or "as in"?}.
+ $\mathbf{T}_{r}\Coalc{i_p'}{n_p'}{i_o'}{n_o'}$, with $1 \leq n_o'<n_o$, $i_o' \leq n_o'$, $0\leq i_p' \leq n_p' \leq n_p$, and $0\leq n_p' \leq \alpha n_o$, 
+ and $0\leq r \leq r_{max},$ leading to the bound $O(r_{max}n_o^2 n_p^2).$   
+ 
+ 
+ 
+ The terms  $\mathbf{T}_{0}$ have a bound of the same form (i.e., there are at most $O(n_o^2 n_p^2)$ terms, each requiring $r_{max}$ computations).  
+Finally, the truncated matrix $\mathbf{Q}_{n_o} = \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$ can be constructed in $O(n_o^4)$.
+
+This is more complex than in the neutral case, where recursions can be computed in $O(n^3)$ as in \cite{BhaskarEtAl2014}.
 
 \subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
@@ -363,11 +365,12 @@ a divergence at high frequency of the derived allele. %The Wright-Fisher and the
 
 Figure \ref{fig:strong-selection}D-F shows a comparison at strong negative $Ns=50$, with a
 sample size of $100$ and population sizes ranging from $N=100$ to  $N=1000.$  
-The recursions presented here provide excellent agreement with the analytical result even 
-where the diffusion-based approaches depart considerably from the exact result. 
+The recursions presented here provide excellent agreement with the exact result even 
+where the diffusion-based approaches fail. 
 
 When the sample is the entire population, as in panel F, the present method is not needed since
-exact recursion equations can be obtained from the binomial distribution (also not that in this case, $n_p\leq n_o$). 
+exact recursion equations can be obtained from the binomial distribution 
+(i.e., there is no numerical benefit to consider a subsample that is as large as the entire population). 
 The present approach will be useful if exact recursions can be obtained for sample sizes that are appreciably smaller
 than $N$. We therefore seek asymptotic results for the convergence of the recursion approach.
 
@@ -388,14 +391,16 @@ than $N$. We therefore seek asymptotic results for the convergence of the recurs
 \subsection{Missing probability}
 \label{subsec:missing}
 
-Truncation in equation \ref{eq:truncated} means that if $n_p > n_o$, some lineages will be
-unaccounted for. The transition matrix $\mathbf{Q}_{n_o}(i_p, i_o),$ in equation
-\eqref{eq:truncated}, also has a probabilistic meaning:
+Truncation in equation \ref{eq:truncated} means that if $n_p > n_o$, some probability will be lost. 
+\sgcomment{Did you do re-normalization of the truncated matrix?} 
+
+%The transition matrix $\mathbf{Q}_{n_o}(i_p, i_o),$ in equation
+%\eqref{eq:truncated}, also has a probabilistic meaning:
 
 The $(i_p,i_o)^\text{th}$ element of matrix $Q_{n_o}$ is the probability
-$P_{n_o}(i_o, \mathcal{S'}_{n_p}| \mathcal{C'}_{n_p}(i_p))$ that we observe $i_o$ derived alleles in
+$P_{n_o}(i_o, \mathcal{S'}_{n_o}| \mathcal{C'}(i_p,n_p))$ that we observe $i_o$ derived alleles in
 a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (event
-$\mathcal{S'}_{n_o}$), given event $\mathcal{C'}_{n_p}(i_p)$ that $i_p$ of the first
+$\mathcal{S'}_{n_o}$), given event $\mathcal{C'}(i_p,n_p)$ that $i_p$ of the first
 $n_p$ parental alleles are derived.
 
 By summing $\sum_{i_o} \mathbf{Q}_{n_o}(i_p, i_o),$ we therefore get the proportion of draws that
@@ -409,13 +414,13 @@ Figure \ref{fig:apx:missing} shows this probability under this worst-case scenar
 of missing lineages first increases with increasing sample size, as the number of draws that can
 result in selective deaths increases. However, the number of drift events eventually overtakes the
 number of selective events, and the probability that we need additional lineages decreases rapidly
-with sample sizes. This indicates that with larger samples, the truncation probability matrix is a
-better representation of the full Wright-Fisher model.
+with sample sizes. With large enough sample sizes, the missing probability can be made very small.
 
 \subsection{Distribution of number of sampled lineages}
 \label{subsec:distribution}
 
-For a given sample size, the probability that $n_p$ parents have been sampled is:
+To get an analytical expression for the probability of missing lineages,
+we consider the probability that $n_p$ parents have been sampled,
 \begin{align}
   \label{eq:conditional}
   P(n_p | n_o) = \sum_{n_g} P(n_p | n_g,n_o)P(n_g | n_o) = \sum_{n_g} P(n_p | n_g)P(n_g | n_o) 
@@ -450,11 +455,12 @@ Combining the two distributions together through Eq. \ref{eq:conditional}, we ge
    P(n_p|n_o) = \sum_{n_g=1}^{\infty} \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}} \binom{n_g-1}{n_o-1}(1-x_ps)^{n_o}(x_ps)^{n_g-n_o}
 \end{align}
 
-This distribution does not appear to have a simple analytical form. However, it can be computed
+We did not find an analytical expresion for this sum, but it can be computed
 efficiently using methods presented in \citep{ONeill2019}. Figure \ref{fig:combined}A (dots) shows
-the distribution of the number of contributing parental lineages for several selection coefficients
-for a sample, with $n_o=200$, $x_p=1$. In the absence of selection (not shown), the distribution has
-zero probability above $n_o=200$, as no extra lineages can be sampled. As the strength of selection
+the distribution of the number of contributing parental lineages for several selection coefficients with $n_o=200$ 
+and $x_p=1$. %In the absence of selection (not shown), the distribution has
+%zero probability above $n_o=200$, as no extra lineages can be sampled. 
+As the strength of selection
 is increased, we begin requiring larger numbers of lineages, while with increasing sample size,
 there is a decrease in required lineages due to coalescent events.
 
@@ -472,10 +478,9 @@ there is a decrease in required lineages due to coalescent events.
 \end{figure}
 
 The distribution in Eq. \ref{eq:lineages-in-past} can quickly be calculated numerically, but
-provides little intuition. We want to answer the following question: ``when are \textit{almost all}
-parental lineages contained within the sample size $n_0$?''. For this, we will compute the
-expectation and variance of this distribution, and show that it is accurately described by a
-Gaussian approximation.
+provides little intuition. To get more intuition, we will compute the
+expectation and variance of this distribution, and show that it can be accurately approximated by a
+Gaussian distribution in useful parameter regimes.
 
 \section{Asymptotic closure properties}
 \label{sec:asympt}
@@ -489,7 +494,7 @@ Using the law of total expectation, we can write the expectation $E[n_p-n_o | n_
                      &=E_{n_g} E_{n_p}[n_p | n_g] - n_o.
   \end{aligned}
 \end{equation*}
-Assuming $x_p\equiv i_p/n_p=1$, the expectation over $n_p$ is simply given by the occupancy distribution \cite{Wakeley2009}.
+Assuming $x_p=1$, the expectation over $n_p$ is simply that of the occupancy distribution \cite{Wakeley2009}.
 
 \begin{equation*}
   \begin{aligned}
@@ -528,67 +533,77 @@ yields, to leading order,
   n_o^* \ge 2Ns.
 \end{equation}
 
-This critical sample size (Fig.
-\ref{fig:apx:critical-normal}), is where there are more drift than selection events, on average. 
+This represents a critical sample size (Fig.
+\ref{fig:apx:critical-normal}) where there is more drift than selection events, on average. 
 (If we want to include the derived allele frequency in the parental generation,
-\eqref{eq:critical-sample} becomes $2Nsx_p$, or $4Nsx_p$ in a diploid model). However, closure of
-the recursions requires not only that drift occurs more often than selection on average, but almost
-always.
+\eqref{eq:critical-sample} becomes $2Nsx_p$, or $4Nsx_p$ in a diploid model). %However, closure of
+%the recursions requires not only that drift occurs more often than selection on average, but almost
+%always.
 
-Our next step is to compute the variance $\operatorname{Var}[n_p-n_o | n_o].$ The detailed
-calculations using the moment generating function are provided in the appendix, and the result is:
+To ensure closure of the recursions, our next step is to compute the variance of this distribution, $\operatorname{Var}[n_p-n_o | n_o].$ The detailed
+calculations using the moment generating function and the exact result are provided in the Appendix. To leading order in $s,$ $n_o/N,$ and $1/N,$ the variance is 
 
-\newcommand{\vara}[1]{\left(1-\frac{#1}{N}\right)}
-\newcommand{\varb}[1]{\left(\frac{1-s}{1-s #1}\right)}
 
 \begin{equation}
   \begin{aligned}
-    \operatorname{Var}[n_p-n_o | n_o] &=
-    N^2\left( \vara{1}^{2n_o}\varb{\vara{1}^2}^{n_o}-\vara{1}^{2n_o}\varb{\vara{1}}^{2n_o} \right) + \\
-    &+ N(N-1)\vara{2}^{n_o}\varb{\vara{2}} + \vara{1}^{n_o}\varb{\vara{1}}^{n_o} - \\
-    &- N\vara{1}^{2n_o} \varb{\vara{1}^{2}}^{n_o}.
+    \operatorname{Var}[n_p-n_o | n_o] &\simeq
+   N(  \frac{n_o}{N} s + n_o (n_o-1)^2/(2 N^2)) = n_o s +   n_o (n_o-1)^2/(2 N).
     \label{eq:gauss-var}
   \end{aligned}
 \end{equation}
 
-\subsection{Gaussian approximation}
-
-In a large sample with $1\ll n_o \ll N,$ we can think of the $n_p-n_o$ as the result of $n_o$ steps of a random walk. 
-Each draw of a new sample defines a step, corresponding to the number of lineages gained or lost compared to the 
-infinite-population size and no selection model. The step size can be zero (if no coalescence or selective death occurs), $-1$ (if a coalescence 
-to a previously drawn lineage occurs), $+k$ (if $k$ selective deaths and no coalescence occurs), etc. When $n_o \ll N$ and $s\ll1,$ 
-most steps are zero, and we can think of steps as approximately independent of each other.   
-
-The selective deaths occurring for each drawn offspring are drawn completely independently, and 
-the coalescence events are almost independent. 
-
-Given a mean and variance, we can use a Gaussian distribution to approximate the distribution of the sampled parental lineages:
+Thus the mean and variance to leading order are those of the Skellam distribution: the increase in lineages can be modelled, to lowest order, as the number of lineages 
+gained through selection (modelled as Poisson with mean  $ n_o (n_o-1)^2/(2 N)$) minus the number of lineages lost to drift (modelled as Poisson 
+with mean  $ n_o (n_o-1)^2/(2 N)$). As the number of drift and selection events get larger,
+the Skellam distribution can be approximated as a Gaussian.
 
 \begin{equation}
   P(n_p|n_o) \sim \mathcal{N}(\mu, \sigma)
   \label{eq:gaussian}
 \end{equation}
 
-Figure \ref{fig:combined}A shows the excellent agreement exact distribution as dots, and the Gaussian approximation as
-solid lines. In this parameter regime, we have good agreement between the two computation methods.
-\sgcomment{I thought that we had citations here that showed why the gaussian approximation made sense?}
-
-
-For the approximation to work well, we require \sgcomment{It not up to us :)} that the sample size is sufficiently large with
-respect to the population size, namely that $\lambda \equiv \frac{{n_o^*}^2}{2N} \ge 10$, similar to
-the conditions for the Poisson distribution to be approximated with the Gaussian.
-
-We can then numerically compute the quantiles of the Gaussian distribution to find a sample size
-where we are, for example, $99\%$ confident that there will be no missing lineages -- $n_p < n_o$. 
-\sgcomment{It would be worth explaingin why/whether this is a reasonable criterion. 
-Would this mean that we are loosing 1\% of probability at each generation?
+Figure \ref{fig:combined}A shows the excellent agreement between the exact distribution and the Gaussian approximation 
+(using the exact variance from Equation \eqref{eq:exact-var}.
+%\sgcomment{I thought that we had citations here that showed why the gaussian approximation made sense?}
+By contrast, we don't expect this approximation to work well if the sample size is so small that few 
+drift events occur at a given generation, (say,  $\frac{{n_o}^2}{2N} < 10$).
+ 
+Under the Gaussian approximation, we can numerically compute the quantiles of the Gaussian distribution to find a sample size
+where we are, for example, $99\%$ confident that there will be no missing lineages --- i.e.,  $P(n_p -n_o >0) < 0.01$. 
+\sgcomment{It would be worth explaining why/whether this is a reasonable criterion. 
+Would this mean that we are loosing 1\% of probability at each generation? That sounds pretty bad.
  }
 
-Figure \ref{fig:combined}B shows the ratio of sample size to population size ($n_o/N_e$), for the $99\%$  
-confidence for different values of $N.$ The dashed lines indicate where the Gaussian approximation may be
-invalid: $\lambda < 10$. This shows that the truncation can be accurate even for strong selection 
-and sample sizes much smaller than the full population size. The required sample size as a function 
-of the desired confidence is shown on Figure \ref{fig:apx:critical-normal}.
+
+The Gaussian approximation using leading order terms provides intuition about regimes where we expect drift to 
+almost always overtake selection. 
+Concretely, if we solve for the sample size $n_z$ required such that the ratio of the mean to the standard deviation is $z$,
+we get, for $n_z>>1$,
+ \begin{equation}
+ n_z \leq 2 \sqrt{N} z + 2N x s.
+\label{eq:nz}
+\end{equation}
+ \sgcomment{There is an approximation here -- put derivation in appendix}
+The second term is just the condition that there are more coalescence events than selection events, on average. The first term is independent of $s$ and 
+can be interpreted as a condition that there are sufficient drift events per generation to ensure that the probability 
+of having zero drift event is weak: $n_z = 2 \sqrt N z$ implies $\frac{n^2}{2N}= 2 z.$ One interpretation is that 
+we need at least a few expected coalescence events per generation to ensure that every selective event is 
+compensated by a coalescence event. 
+
+ \sgcomment{
+Figure  \ref{fig:combined}B shows a comparison of leading-order terms to computations using the exact
+expressions for the mean and variance.}
+
+%Figure \ref{fig:combined}B shows the ratio of sample size to population size ($n_o/N_e$), for the $99\%$  
+%confidence for different values of $N.$ The dashed lines indicate where the Gaussian approximation may be
+%invalid: $\lambda < 10$.
+
+Equation \eqref{eq:nz} and Figure  \ref{fig:combined}B show that the truncation can be accurate even for strong selection 
+and sample sizes much smaller than the full population size. 
+
+
+%The required sample size as a function 
+%of the desired confidence is shown on Figure \ref{fig:apx:critical-normal}.
 %For smaller sample size, the exact distribution \eqref{eq:lineages-in-past} can be used.
 
 \subsection{Integrating over several generations} 
@@ -596,32 +611,53 @@ of the desired confidence is shown on Figure \ref{fig:apx:critical-normal}.
 If the sample size is large enough that $E[n_p-n_o]<0$, but not large enough that
 $P(n_p>n_o) \ll 1,$ we can improve the truncation by integrating over more than one generation.
 Lineages gained by selective death at one generation can be compensated for by genetic drift at
-another generation. Informally, the expected change $E[n_g-n_o]$ in the number $n_g$ of lineages in
-the grandparent generation relative to $n_o,$ and the variance $\operatorname{Var}[n_g-n_o]$ will be
-roughly double those over a single generation. Thus the $z$-score determining the amount of
-unnaccounted-for lineages in the normal approximation,
-$z= E[n_g-n_o] / \sqrt{\operatorname{Var}(n_g-n_o)}$ will increase roughly by a factor $\sqrt{2}$.
+another generation.
+If we restrict our attention to a small number $g$ of generations, we approximate the change 
+in the number of lineages as we go back in time as a random walk with constant mean and 
+variance. In this case, both the mean and variance will be scaled by a factor $g$ relative 
+to the single-generation case, and Equation \eqref{eq:nz} becomes 
+\begin{equation}
+ n_z \lessapprox 2 z\sqrt{N/g} + 2N x s.
+\label{eq:nz}
+\end{equation}
+ 
 
-Such transition matrices can also be computed iteratively. If $n_{p'}$ is the number of sampled
+Thus we expect to find asymptotic closure for $n_o> 2Ns$ given enough generations. 
+ 
+
+% Informally, the expected change $E[n_g-n_o]$ in the number $n_g$ of lineages in
+%the grandparent generation relative to $n_o,$ and the variance $\operatorname{Var}[n_g-n_o]$ will be
+%roughly double those over a single generation. Thus the $z$-score determining the amount of
+%unnaccounted-for lineages in the normal approximation,
+%$z= E[n_g-n_o] / \sqrt{\operatorname{Var}(n_g-n_o)}$ will increase roughly by a factor $\sqrt{2}$.
+
+
+Such multi-generation transition matrices can also be computed iteratively. If $n_{p'}$ is the number of sampled
 lineages in the grandparental generation, and $i_{p'}$ is the number of derived alleles among those,
-and we define $P(i_o, n_{p'} | \mathcal{C}'(i_{p'}, n_{p'}))$, as above, as the probability of
-drawing $i$ derived alleles and using exactly $n_{p'}$ grandparental alleles given the event
+and we define $P(i_o, \mathcal{S'}_{n_{p'}} | \mathcal{C}'(i_{p'}, n_{p'}))$, as above, as the probability of
+drawing $i$ derived alleles and  the event $\mathcal{S'}_{n_{p'}}$ that we are using exactly $n_{p'}$ grandparental alleles given the event
 $\mathcal{C'}(i_{p'}, n_{p'})$ that $i_{p'}$ of the first $n_{p'}$ grandparental alleles are
 derived, we can condition on the number of contributing parental alleles $n_p$ and the number of
 derived alleles $i_p$ among them in the parental generation:
 
 \begin{equation}
   \begin{split}
-    P(i_o, \mathcal{S}'_{n_p'} | \mathcal{C}'(i_{p'}, n_{p'})) & = \sum_{i_p,n_p} P(i_o, \mathcal{S}'_{n_p'} ; \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{p'}, n_{p'}))\\
-    &= \sum_{i_p,n_p}  P(i_o, \mathcal{S}'_{n_p'} | \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} ; \mathcal{C}'(i_{p'}, n_{p'})) P(\mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{p'}, n_{p'})) \\
-    &=  \sum_{i_p,n_p}  P(i_o, \mathcal{S}'_{n_{p'}} | \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p})) P(\mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{p'}, n_{p'})) \\
+    P(i_o, \mathcal{S}'_{n_{p'}} | \mathcal{C}'(i_{p'}, n_{p'})) & = \sum_{i_p,n_p} P(i_o, \mathcal{S}'_{n_{p'}} ; \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{p'}, n_{p'}))\\
+    &= \sum_{i_p,n_p}  P(i_o, \mathcal{S}_{n_{p}} | \mathcal{C}(i_p,n_p), \mathcal{S'}_{n_p'} ; \mathcal{C}'(i_{p'}, n_{p'})) P(\mathcal{C}(i_p,n_p), \mathcal{S'}_{n_{p'}} | \mathcal{C}'(i_{p'}, n_{p'})) \\
+    &=  \sum_{i_p,n_p}  P(i_o, \mathcal{S}_{n_{p}} | \mathcal{C}(i_p,n_p))) P(\mathcal{C}(i_p,n_p), \mathcal{S'}_{n_{p'}} | \mathcal{C}'(i_{p'}, n_{p'})) \\
     &=   \sum_{n_p} T_{n_p,n_o} T_{n_{p'}, n_p},
   \end{split}
 \end{equation}
 
+\sgcomment{This must be about correct, but am not sure about the transition from line 3 to line 4. }
 where the sum over $i_p$ is part of the product of the transition matrices $T$. Since each matrix
-product takes $\approx O(n^{2.807})$, and there or $O(n)$ such products, the computation of this
-matrix takes at most $\approx O(n^{3.807} + r_{max}n^4) = O(r_{max}n^4)$. The components are added,
+product takes $O(n_o n_p n_{p'})$, and there are at most $O(n_p)$ such products, the computation of this
+matrix takes at most $O(n_o n_p^2 n_{p'})$. In addition, we need to build the matrices $T_{n_p', n_p}$. 
+In the recursive approach, the computation of the matrix for the largest sample includes the computation of matrices for
+smaller sample sizes. 
+ 
+
+The components are added,
 since the calculation in \ref{fig:rec-selection-dynamic-fail} implicitly computes the matrices of
 any $n'<n_o$.
 
@@ -731,7 +767,22 @@ E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] & = E_{n_g}\left[N ((N - 1) (
 \end{split}
 \end{equation}
 
-The two terms can be summed together to provide an analytical expression for the variance of $n_p$. 
+The two terms can be summed together to provide an analytical expression for the variance of $n_p$, and we get
+
+
+\newcommand{\vara}[1]{\left(1-\frac{#1}{N}\right)}
+\newcommand{\varb}[1]{\left(\frac{1-s}{1-s #1}\right)}
+
+\begin{equation}
+  \begin{aligned}
+    \operatorname{Var}[n_p-n_o | n_o] &=
+    N^2\left( \vara{1}^{2n_o}\varb{\vara{1}^2}^{n_o}-\vara{1}^{2n_o}\varb{\vara{1}}^{2n_o} \right) + \\
+    &+ N(N-1)\vara{2}^{n_o}\varb{\vara{2}} + \vara{1}^{n_o}\varb{\vara{1}}^{n_o} - \\
+    &- N\vara{1}^{2n_o} \varb{\vara{1}^{2}}^{n_o}.
+    \label{eq:exact-var}
+  \end{aligned}
+\end{equation}
+
 
 
 \subsection{Selection case}
