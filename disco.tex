@@ -334,6 +334,7 @@ the computational complexity depends on the number of terms we need to calculate
  
  The terms  $\mathbf{T}_{0}$ have a bound of the same form (i.e., there are at most $O(n_o^2 n_p^2)$ terms, each requiring $r_{max}$ computations).  
 Finally, the truncated matrix $\mathbf{Q}_{n_o} = \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$ can be constructed in $O(n_o^4)$.
+\sgcomment{I think some of these $n_o$ might be $n_p$'s}
 
 This is more complex than in the neutral case, where recursions can be computed in $O(n^3)$ as in \cite{BhaskarEtAl2014}.
 
@@ -645,37 +646,39 @@ derived alleles $i_p$ among them in the parental generation:
     P(i_o, \mathcal{S}'_{n_{p'}} | \mathcal{C}'(i_{p'}, n_{p'})) & = \sum_{i_p,n_p} P(i_o, \mathcal{S}'_{n_{p'}} ; \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{p'}, n_{p'}))\\
     &= \sum_{i_p,n_p}  P(i_o, \mathcal{S}_{n_{p}} | \mathcal{C}(i_p,n_p), \mathcal{S'}_{n_p'} ; \mathcal{C}'(i_{p'}, n_{p'})) P(\mathcal{C}(i_p,n_p), \mathcal{S'}_{n_{p'}} | \mathcal{C}'(i_{p'}, n_{p'})) \\
     &=  \sum_{i_p,n_p}  P(i_o, \mathcal{S}_{n_{p}} | \mathcal{C}(i_p,n_p))) P(\mathcal{C}(i_p,n_p), \mathcal{S'}_{n_{p'}} | \mathcal{C}'(i_{p'}, n_{p'})) \\
-    &=   \sum_{n_p} T_{n_p,n_o} T_{n_{p'}, n_p},
+    &=   \sum_{n_p}^{n_{p,max}} T_{n_p,n_o} T_{n_{p'}, n_p},
   \end{split}
 \end{equation}
-
-\sgcomment{This must be about correct, but am not sure about the transition from line 3 to line 4. }
 where the sum over $i_p$ is part of the product of the transition matrices $T$. Since each matrix
-product takes $O(n_o n_p n_{p'})$, and there are at most $O(n_p)$ such products, the computation of this
-matrix takes at most $O(n_o n_p^2 n_{p'})$. In addition, we need to build the matrices $T_{n_p', n_p}$. 
+product takes $O(n_o n_p n_{p'})$, and there are at most $O(n_{p,max})$ such products, the computation of this
+matrix product takes at most $O(n_o n_{p,max}^2 n_{p'}).$ We expect that this scaling can be improved upon in numerical 
+implementations by summing over values of $n_p$ that contribute appreciably. 
+In addition, we need to build the matrices $T_{n_p', n_p}$. 
 In the recursive approach, the computation of the matrix for the largest sample includes the computation of matrices for
-smaller sample sizes. 
- 
+smaller sample sizes, so the computation time is at most $O(r_{max} n_{p,max}^2, n_{p',max}^2).$ 
+If we construct a truncated matrix, $n_{p',max} =n_o$, and we find  $O(r_{max} n_{p,max}^2, n_{o}^2).$
+In the exact formulation, $n_p$ can be as large as $ r_{max} n_o,$ however in numerical application 
+with $s< 0.5$ we expect that using a cutoff with $n_{p,max}= 2 n_o$ would provide excellent convergence, 
+hence an overall scaling of   $O(r_{max} n_{o}^4)$ for the construction of the matrices and $O(n_o^4)$ for the matrix product.
+Thus a naive construction of a transition matrix over $g$ generations would require  $O( (t + r_{max} ) n_o^4).$
 
-The components are added,
-since the calculation in \ref{fig:rec-selection-dynamic-fail} implicitly computes the matrices of
-any $n'<n_o$.
+
 
 \section{Conclusion}
 \label{sec:conclusion}
+\sgcomment{This conclusion needs some work.}
 
-Classically, the coalescent considers models in the absence of natural selection. Since selection
-can increase the number of contributing lineages back in time, the coalescent can no longer be
-represented by trees, but instead acquires a graph structure. The ancestral selection graphs
-\citep{KroneNeuhauser1997} deal with this in the limit of large population size ($N$).
+%Classically, the coalescent considers models in the absence of natural selection. Since selection
+%can increase the number of contributing lineages back in time, the coalescent can no longer be
+%represented by trees, but instead acquires a graph structure. The ancestral selection graphs
+%\citep{KroneNeuhauser1997} deal with this in the limit of large population size ($N$).
 
 The large population size approximation implies that the sample size $n$ is much smaller than the
 whole population ($n \ll N$), so it is unlikely that more than one coalescent event will happen per
 generation. However, recent work \citep{BhaskarEtAl2014,NelsonEtAl2019} pointed out that this
-assumption is unreasonable with sample sizes pertinent to modern experiments. As a results, models
+assumption is unreasonable with sample sizes pertinent to modern experiments. As a result, models
 that consider multiple coalescent events per generation are gaining increased relevance in the field
-\citep{DonnellyKurtz1999a}.
-
+.
 In this work we show that increasing the sample size has another unexpected consequence. As sample
 size increases, the larger number of lineages needed due to selection can be masked by coalescent
 events. In this sense, the large sample size rescues the model from effects of selection. This means
