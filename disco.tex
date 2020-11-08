@@ -78,8 +78,8 @@ been useful in fitting complex demographic models to genetic data
 \citep{JouganousEtAl2017,KammEtAl2017}.
  
 In the presence of natural selection, coalescent models become much more complicated, and the
-corresponding recursion equations do not close \citep{DonnellyKurtz1999, JouganousEtAl2017} -- they
-form an infinite set of coupled ordinary differential equations. Moment-based closure approximations
+corresponding recursion equations do not close but
+form a very large or infinite set of coupled equations \citep{DonnellyKurtz1999, JouganousEtAl2017}. Moment-based closure approximations
 have been developed \citep{JouganousEtAl2017}, but these are not robust to strong selection and
 their convergence properties are not well understood.
 
@@ -120,7 +120,6 @@ looking for recursion equations for the allele frequency spectrum, $\afs{n_o}{t}
 define as the probability of observing $i_o$ copies of the derived allele in a sample of size $n_o$.
 We will do so by considering the process of drawing parental alleles (at time $t-1$) for this finite
 sample.
-
 \begin{table}
   \centering
   \begin{tabular}{l|p{100mm}}
@@ -146,15 +145,14 @@ sample.
   \end{tabular}
   \caption{\label{tab:symbols} Table of symbols}
 \end{table}
-
-Under neutral evolution, each offspring picks a lineage at random with replacement, and the number
-$n_p$ of distinct parental lineages is smaller than $n_o$ (Fig.\ref{fig:schematic}A).
+%Under neutral evolution, each offspring picks a lineage at random with replacement, and the number
+%$n_p$ of distinct parental lineages is smaller than $n_o$ (Fig.\ref{fig:schematic}A).
 
 To model selection as part of our sampling process, we consider that a parental lineage carrying a
 derived allele can be `rejected' as a result of selective death with probability $s\ge0$ (Fig.
 \ref{fig:schematic}B, broken line). In such case, we keep sampling until a successful draw. This is
 equivalent to the usual formulation of the Wright-Fisher model: the probability of drawing a copy of the
-derived allele is $1-s$ times the probability of drawing a copy of the ancestral allele. Because the drawing
+derived allele is $1-s$ times the probability of drawing a copy of the ancestral allele. And, because the drawing
 process depends on the parental allele of both successful and rejected draws, the \textit{AFS} in the
 offspring will depend on the state of the $n_p$ distinct parental lineages that were sampled. 
 Because of selective rejection, $n_p$ can be larger than
@@ -164,7 +162,7 @@ $n_o$. %When referring to sampled lineages ($n_p$), we mean any lineages that ha
 To disentangle the effects of drift and selection, we may also make explicit the number of gametes
 sampled in the process, $n_g$ (Fig. \ref{fig:schematic}C). The difference $n_g-n_o  \ge 0$
 depends only on the number of selective deaths, whereas the difference $n_p-n_g \le 0$ depends
-only on coalescence events. We will use this notation with $n_g$ in section
+only on the number of coalescence events. We will use this notation with $n_g$ in section
 \ref{sec:asympt}. %Note that in Figure \ref{fig:schematic}A,B, the gametes are implicit.
 
 \begin{figure}[h]
@@ -190,8 +188,8 @@ where the subscript $n_o$ indicates dependence on parameter $n_o$. To obtain a r
 model is random. 
 In other words, we could draw a random permutation of the parental population, and
 select parents in order from this permutation. We will separate properties of this permutation,
-which depend only on parental \textit{AFS}, from properties of Wright-Fisher sampling. Concretely,
-the event $(i_p,n_p)$ can be expressed as the intersection of two events, $\mathcal{C}(i_p,n_p)$
+which depend only on parental \textit{AFS}, from properties of Wright-Fisher sampling, which depend on population size and selection coefficients.
+ Concretely, the event $(i_p,n_p)$ that we draw exactly $i_p$ derived alleles and $n_p$ distinct parents can be expressed as the intersection of two events, $\mathcal{C}(i_p,n_p)$
 and $\mathcal{S}_{n_p}$. Event $\mathcal{C}(i_p,n_p)$ specifies that the first $n_p$ parental
 lineages from the random permutation carry $i_p$ derived alleles. Event $\mathcal{S}_{n_p}$
 requires that the Wright-Fisher drawing process \textit{stops} after exactly $n_p$ parental lineages
@@ -211,7 +209,7 @@ where the $\mathbf{T}_{n_p,n_o}$ can be thought of as $(n_o+1) \times (n_p+1)$ t
 probability matrix, whose row and column indices correspond to the number of derived alleles in the
 offspring and contributing parental lineages, respectively.
 
-The AFS for $n_p\leq n_o$ can be obtained by downsampling from $\afs{n_o}{t-1}$ (\textit{i.e.}, $\afs{n_p}{t-1} =
+The AFS  $\afs{n_p}{t-1}(i_p)$ for any  $n_p\leq n_o$ can be obtained by downsampling from $\afs{n_o}{t-1}$ (\textit{i.e.}, $\afs{n_p}{t-1} =
 \mathbf{H}_{n_p,n_o} \afs{n_o}{t-1}$ for hypergeometric projection matrix $\mathbf{H}_{n_p,n_o}$ if
 $n_p\leq n_o$), so Equation \eqref{eq:recur} provides a closed form recursion for $\Phi_{n_o}$ under neutrality.
 This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele
@@ -256,7 +254,7 @@ However,
 we can obtain fairly simple recursions by noting that properties of a sample of size $n_o$ are
 related to properties of samples of size $n_o-1.$ Similar recursions on sample size were used for
 describing large sample size effects without selection in \citep{BhaskarEtAl2014}. In this section,
-we provide some intuition for the recursion equation, and a more detailed derivation is provided in
+we provide some mathematical intuition for the recursion equation, and a more detailed derivation is provided in
 Appendix \ref{subsec:apx:tpm}.
 
 We can think of Wright-Fisher sampling as being performed one offspring at a time,
@@ -336,7 +334,7 @@ the computational complexity depends on the number of terms we need to calculate
 Finally, the truncated matrix $\mathbf{Q}_{n_o} = \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$ can be constructed in $O(n_o^4)$.
 \sgcomment{I think some of these $n_o$ might be $n_p$'s}
 
-This is more complex than in the neutral case, where recursions can be computed in $O(n^3)$ as in \cite{BhaskarEtAl2014}.
+This is moderately more complex than in the neutral case, where recursions can be computed in $O(n^3)$ as in \cite{BhaskarEtAl2014}.
 
 \subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
@@ -371,7 +369,7 @@ where the diffusion-based approaches fail.
 
 When the sample is the entire population, as in panel F, the present method is not needed since
 exact recursion equations can be obtained from the binomial distribution 
-(i.e., there is no numerical benefit to consider a subsample that is as large as the entire population). 
+(i.e., there is no computational benefit to consider a subsample that is as large as the entire population). 
 The present approach will be useful if exact recursions can be obtained for sample sizes that are appreciably smaller
 than $N$. We therefore seek asymptotic results for the convergence of the recursion approach.
 
