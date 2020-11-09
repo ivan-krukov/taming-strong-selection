@@ -163,7 +163,7 @@ To disentangle the effects of drift and selection, we may also make explicit the
 sampled in the process, $n_g$ (Fig. \ref{fig:schematic}C). The difference $n_g-n_o  \ge 0$
 depends only on the number of selective deaths, whereas the difference $n_p-n_g \le 0$ depends
 only on the number of coalescence events. We will use this notation with $n_g$ in section
-\ref{sec:asympt}. %Note that in Figure \ref{fig:schematic}A,B, the gametes are implicit.
+\ref{subsec:distribution}. %Note that in Figure \ref{fig:schematic}A,B, the gametes are implicit.
 
 \begin{figure}[h]
   \centering
@@ -481,10 +481,6 @@ provides little intuition. To get more intuition, we will compute the
 expectation and variance of this distribution, and show that it can be accurately approximated by a
 Gaussian distribution in useful parameter regimes.
 
-\section{Asymptotic closure properties}
-\label{sec:asympt}
-
-
 Using the law of total expectation, we can write the expectation $E[n_p-n_o | n_o]$ as 
 \begin{equation*}
   \begin{aligned}
@@ -493,7 +489,9 @@ Using the law of total expectation, we can write the expectation $E[n_p-n_o | n_
                      &=E_{n_g} E_{n_p}[n_p | n_g] - n_o.
   \end{aligned}
 \end{equation*}
-Assuming $x_p=1$, the expectation over $n_p$ is simply that of the occupancy distribution \cite{Wakeley2009}.
+%Assuming $x_p=1$ \sgcomment{Not sure why we would need to assume $x=1$. Perhaps this is used later?},
+
+The expectation over $n_p$ is simply that of the occupancy distribution \cite{Wakeley2009}.
 
 \begin{equation*}
   \begin{aligned}
@@ -505,23 +503,36 @@ Assuming $x_p=1$, the expectation over $n_p$ is simply that of the occupancy dis
 \end{equation*}
 
 As mentioned above, the number of selective deaths, $n_g-n_o$ follows a negative binomial
-distribution. We can use the moment generating function of the negative binomial to compute the
+distribution with success probability $1-s x_p$. We can use the moment generating function of the negative binomial to compute the
 expectation of $k^{n_g}$ for any constant $k$:
 
+%\begin{equation}
+%E_{n_g}[k^{n_g}] = k^{n_o}  \left(\frac{1-s}{1-sk}\right)^{n_o}.
+%\label{eq:identity}
+%\end{equation} 
+%\sgcomment{I believe that the general case is:}
 \begin{equation}
-E_{n_g}[k^{n_g}] = k^{n_o}  \left(\frac{1-s}{1-sk}\right)^{n_o}.
+E_{n_g}[k^{n_g}] = k^{n_o}  \left(\frac{1-sx_p}{1-sx_pk}\right)^{n_o}.
 \label{eq:identity}
 \end{equation} 
+
+
 Thus we can write 
+%\begin{align}
+ % \label{eq:gauss-mean}
+ % \hat{E}[n_p -n_o | n_o] &= N-N\left( 1 - \frac{1}{N} \right)^{n_o}\left( \frac{1-s}{1-s \left( 1 - \frac{1}{N} \right)}\right)^{n_o}-n_o.
+%\end{align}
+%\sgcomment{General case}
 \begin{align}
   \label{eq:gauss-mean}
-  \hat{E}[n_p -n_o | n_o] &= N-N\left( 1 - \frac{1}{N} \right)^{n_o}\left( \frac{1-s}{1-s \left( 1 - \frac{1}{N} \right)}\right)^{n_o}-n_o.
+  \hat{E}[n_p -n_o | n_o] &= N-N\left( 1 - \frac{1}{N} \right)^{n_o}\left( \frac{1-sx}{1-sx \left( 1 - \frac{1}{N} \right)}\right)^{n_o}-n_o.
 \end{align}
+
 Taking the terms of order up to $\frac{1}{N}$ gives
 
 \begin{equation*}
     \label{eq:lineages-approx}
-    \hat{E}[n_p-n_o | n_o] \approx n_os - \frac{n_o (n_o-1) }{2N}. 
+    \hat{E}[n_p-n_o | n_o] \approx n_o x s - \frac{n_o (n_o-1) }{2N}. 
 \end{equation*}
 
 We thus have the usual interplay of selection and drift. Solving for $ \hat{E}[n_p -n_o | n_o]<0$
@@ -529,63 +540,65 @@ yields, to leading order,
 
 \begin{equation}
   \label{eq:critical-sample}
-  n_o^* \ge 2Ns.
+  n_o^* \ge 2N x s.
 \end{equation}
 
 This represents a critical sample size (Fig.
 \ref{fig:apx:critical-normal}) where there is more drift than selection events, on average. 
-(If we want to include the derived allele frequency in the parental generation,
-\eqref{eq:critical-sample} becomes $2Nsx_p$, or $4Nsx_p$ in a diploid model). %However, closure of
+As expected, the most challenging situation occurs if all parents carry the derived allele $x_p=1.$
+%(If we want to include the derived allele frequency in the parental generation,
+%\eqref{eq:critical-sample} becomes $2Nsx_p$, or $4Nsx_p$ in a diploid model). %However, closure of
 %the recursions requires not only that drift occurs more often than selection on average, but almost
 %always.
 
-To ensure closure of the recursions, our next step is to compute the variance of this distribution, $\operatorname{Var}[n_p-n_o | n_o].$ The detailed
-calculations using the moment generating function and the exact result are provided in the Appendix. To leading order in $s,$ $n_o/N,$ and $1/N,$ the variance is 
+The appendix outlines a similar approach to compute the variance of this distribution, $\operatorname{Var}[n_p-n_o | n_o].$ 
+To leading order in $s,$ $n_o/N,$ and $1/N,$ the variance is 
 
 
 \begin{equation}
   \begin{aligned}
     \operatorname{Var}[n_p-n_o | n_o] &\simeq
-   N(  \frac{n_o}{N} s + n_o (n_o-1)^2/(2 N^2)) = n_o s +   n_o (n_o-1)^2/(2 N).
+   n_o x s +   n_o (n_o-1)^2/(2 N).
     \label{eq:gauss-var}
   \end{aligned}
 \end{equation}
-
+% N(  \frac{n_o}{N} x s + n_o (n_o-1)^2/(2 N^2)) =
 Thus the mean and variance to leading order are those of the Skellam distribution: the increase in lineages can be modelled, to lowest order, as the number of lineages 
-gained through selection (modelled as Poisson with mean  $ n_o (n_o-1)^2/(2 N)$) minus the number of lineages lost to drift (modelled as Poisson 
-with mean  $ n_o (n_o-1)^2/(2 N)$). As the number of drift and selection events get larger,
-the Skellam distribution can be approximated as a Gaussian.
+gained through selection (modelled as Poisson with mean  $ n_o x s$) minus the number of lineages lost to drift (modelled as an independent Poisson 
+variable with mean  $ n_o (n_o-1)^2/(2 N)$). As the number of drift and selection events get larger,
+the Skellam distribution can be approximated as a Gaussian
 
 \begin{equation}
-  P(n_p|n_o) \sim \mathcal{N}(\mu, \sigma)
+  P(n_p|n_o) \sim \mathcal{N}(\mu, \sigma).
   \label{eq:gaussian}
 \end{equation}
 
 Figure \ref{fig:combined}A shows the excellent agreement between the exact distribution and the Gaussian approximation 
-(using the exact variance from Equation \eqref{eq:exact-var}.
+(using the exact variance from Equation \eqref{eq:exact-var}).
 %\sgcomment{I thought that we had citations here that showed why the gaussian approximation made sense?}
 By contrast, we don't expect this approximation to work well if the sample size is so small that few 
-drift events occur at a given generation, (say,  $\frac{{n_o}^2}{2N} < 10$).
+drift events occur at a given generation, (say,  $\frac{{n_o}^2}{2N} < 10$), where the Skellam distribution is a better fit \sgcomment{add supplementary figure?}. 
  
 Under the Gaussian approximation, we can numerically compute the quantiles of the Gaussian distribution to find a sample size
 where we are, for example, $99\%$ confident that there will be no missing lineages --- i.e.,  $P(n_p -n_o >0) < 0.01$. 
 \sgcomment{It would be worth explaining why/whether this is a reasonable criterion. 
-Would this mean that we are loosing 1\% of probability at each generation? That sounds pretty bad.
+Would this mean that we are loosing 1\% of probability at each generation? That sounds pretty bad. We can probab ly discard that paragraph
  }
 
 
 The Gaussian approximation using leading order terms provides intuition about regimes where we expect drift to 
 almost always overtake selection. 
-Concretely, if we solve for the sample size $n_z$ required such that the ratio of the mean to the standard deviation is $z$,
-we get, for $n_z>>1$,
+Concretely, if we solve for the sample size $n_z$ required such that the ratio of the mean to the standard deviation is $z$, such that 
+a value of $z=3$ would entail that $99.9\%$ of lineages are accounted for under the Gaussian approximation, 
+we get, for $n_z\gg 1$,
  \begin{equation}
  n_z \leq 2 \sqrt{N} z + 2N x s.
 \label{eq:nz}
 \end{equation}
  \sgcomment{There is an approximation here -- put derivation in appendix}
-The second term is just the condition that there are more coalescence events than selection events, on average. The first term is independent of $s$ and 
+The second term encodes the condition that there are more coalescence events than selection events, on average. The first term is independent of $s$ and 
 can be interpreted as a condition that there are sufficient drift events per generation to ensure that the probability 
-of having zero drift event is weak: $n_z = 2 \sqrt N z$ implies $\frac{n^2}{2N}= 2 z.$ One interpretation is that 
+of having zero drift event is weak: $n_z = 2 \sqrt N z$ implies $\frac{n_z^2}{2N}= 2 z.$ One interpretation is that 
 we need at least a few expected coalescence events per generation to ensure that every selective event is 
 compensated by a coalescence event. 
 
@@ -607,23 +620,20 @@ and sample sizes much smaller than the full population size.
 
 \subsection{Integrating over several generations} 
 
-If the sample size is large enough that $E[n_p-n_o]<0$, but not large enough that
-$P(n_p>n_o) \ll 1,$ we can improve the truncation by integrating over more than one generation.
+If $n_z$ is still too large for easy computation because of the $2 \sqrt{N} z$ term, we can improve 
+the truncation by integrating over more than one generation.
 Lineages gained by selective death at one generation can be compensated for by genetic drift at
 another generation.
-If we restrict our attention to a small number $g$ of generations, we approximate the change 
-in the number of lineages as we go back in time as a random walk with constant mean and 
+To get an idea of the truncation behavior for small number $g$ of generations, we can approximate 
+the change  in the number of lineages as we go back in time as a random walk with constant mean and 
 variance. In this case, both the mean and variance will be scaled by a factor $g$ relative 
 to the single-generation case, and Equation \eqref{eq:nz} becomes 
 \begin{equation}
  n_z \lessapprox 2 z\sqrt{N/g} + 2N x s.
 \label{eq:nz}
 \end{equation}
- 
-
-Thus we expect to find asymptotic closure for $n_o> 2Ns$ given enough generations. 
- 
-
+If we have enough generations before this approximation breaks down, we can obtain nearly-closed recursions if $n_o> 2Nxs.$  
+\sgcomment{Put the following paragraph in appendix?}
 % Informally, the expected change $E[n_g-n_o]$ in the number $n_g$ of lineages in
 %the grandparent generation relative to $n_o,$ and the variance $\operatorname{Var}[n_g-n_o]$ will be
 %roughly double those over a single generation. Thus the $z$-score determining the amount of
@@ -638,7 +648,6 @@ drawing $i$ derived alleles and  the event $\mathcal{S'}_{n_{p'}}$ that we are u
 $\mathcal{C'}(i_{p'}, n_{p'})$ that $i_{p'}$ of the first $n_{p'}$ grandparental alleles are
 derived, we can condition on the number of contributing parental alleles $n_p$ and the number of
 derived alleles $i_p$ among them in the parental generation:
-
 \begin{equation}
   \begin{split}
     P(i_o, \mathcal{S}'_{n_{p'}} | \mathcal{C}'(i_{p'}, n_{p'})) & = \sum_{i_p,n_p} P(i_o, \mathcal{S}'_{n_{p'}} ; \mathcal{C}(i_p,n_p), \mathcal{S}_{n_p} | \mathcal{C}'(i_{p'}, n_{p'}))\\
@@ -671,34 +680,49 @@ Thus a naive construction of a transition matrix over $g$ generations would requ
 %represented by trees, but instead acquires a graph structure. The ancestral selection graphs
 %\citep{KroneNeuhauser1997} deal with this in the limit of large population size ($N$).
 
-The large population size approximation implies that the sample size $n$ is much smaller than the
-whole population ($n \ll N$), so it is unlikely that more than one coalescent event will happen per
-generation. However, recent work \citep{BhaskarEtAl2014,NelsonEtAl2019} pointed out that this
-assumption is unreasonable with sample sizes pertinent to modern experiments. As a result, models
-that consider multiple coalescent events per generation are gaining increased relevance in the field
-.
-In this work we show that increasing the sample size has another unexpected consequence. As sample
-size increases, the larger number of lineages needed due to selection can be masked by coalescent
-events. In this sense, the large sample size rescues the model from effects of selection. This means
-that recursion equations needed to calculate sample properties are asymptotically closed with large
-population size.
+Classical coalescent models in population genetics neglect the possibility that multiple coalescent events 
+can co-occur within a single generation. 
+Recent work \citep{BhaskarEtAl2014,NelsonEtAl2019} pointed out that this
+assumption is problematic for sample sizes found in modern experiments. As a result, models
+that consider multiple coalescent events per generation are gaining increased relevance in the field.
+However, generalized coalescent models that can handle multi-way mergers are difficult to reconcile 
+with selection models.
 
-At first approximation, $n_o^*=2Nsx_p$ is a critical sample size, where the decrease of lineages due to
-coalescent back in time out-competes the increase due to selection (eq. \ref{eq:critical-sample}).
-Further, we derive the full probability distribution for the number lineages needed with given
-selection coefficient and sample size (Eq. \ref{eq:lineages-in-past}). Unfortunately, the
-distribution does not have a closed form, so we derive a normal approximation to the number of
-lineages that contribute to a sample (Eq. \ref{eq:gaussian}). The normal approximation
-then allows us to get a quantile function that we use to find if the model preserves closure with
-some confidence level.
+In this work we show that increasing the sample size has another beneficial consequence. 
+As sample size increases, the number of distinct parents relevant to a sample becomes, 
+with high probability, smaller than the sample itself. Even though this does not rescue
+all desirable properties of coalescent models, it means that recursion equations 
+needed to calculate sample properties become nearly closed. 
 
-This work has several implications. First, we can combine the model described here with the
-jackknife approximation \citep{JouganousEtAl2017}. This will allow us to construct a more robust
-inference framework that can account for large sample size and strong selection.
+The recursion equations themselves  are expressed in terms of combinatorial probabilities 
+that can themselves be computed recursively in polynomial time. These computations 
+remain costly, especially if transition matrices must be computed for time-dependent
+population sizes and selection coefficients. It is likely that computational 
+speed ups, possibly involving approximations, can be derived for such cases.  
 
-Further, the results here suggest that effect of weak selection may be detectable in studies with
-large sample sizes. This may open up a way for new investigations of natural selection in population
-genetics.
+
+Closure of recursions require the simulated sample size to be above a critical size of $2N s.$ 
+Below this threshold, the number of relevant lineages tends to grow as we go back in time. 
+Above this threshold, the number of lineages tends to decrease, and it decreases with high 
+probability if we are willing to wait a few generations. 
+
+A limitation of the present approach is that it is relevant in a rather specific parameter regime, 
+roughly $\sqrt{N}\leq n \ll N$:  it matters if we want sample sizes large enough that multiple coalescences 
+occur in a single generation, becomes irrelevant if we can just simulate the entire population. 
+As argued in \citep{BhaskarEtAl2014},  this is a parameter regime relevant to present-day human samples.  
+
+We have presented the current approach as an alternative to jackknife approximations in 
+achieving moment closure. The two approaches are, however, not mutually exclusive. 
+Even though we have focused here on showing that closure could be reached within 
+a finite sample to high confidence, sampling instances that do not close can still be handled 
+using jackknife approximations. Whereas the jackknife approach of  \citep{JouganousEtAl2017} requires 
+jackknifing a new lineage out of thin air every time a selection event occurs, the approach presented
+here allows one to draw a new lineage only when such a new lineage is required. 
+It may not be necessary to reach closure at extremely high accuracy to achieve high accuracy
+gains. 
+
+\sgcomment{I think we are missing one concluding sentence here. }
+
 
 \bibliography{disco}
 
