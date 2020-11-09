@@ -735,7 +735,7 @@ and backward approaches \cite{KammEtAl2017}, the can help genetic models catch u
 \renewcommand{\thefigure}{S\arabic{figure}}
 \setcounter{figure}{0}
 
-\subsection{Missing lineages}
+%\subsection{Missing lineages}
 
 \begin{figure}
   \centering
@@ -745,18 +745,18 @@ and backward approaches \cite{KammEtAl2017}, the can help genetic models catch u
   \label{fig:apx:missing}
 \end{figure}
 
-\subsection{Quantiles of the Gaussian approximation}
+%\subsection{Quantiles of the Gaussian approximation}
 
-Figure \ref{fig:apx:critical-normal} shows the critical sample size for a given quantile of the normal
-approximation, as a function of the population-scaled selection coefficient. The $50^{\text{th}}$
-percentile corresponds to the mean calculated in equation \ref{eq:critical-sample} ($\approx 2Ns$).
-If we want to ascertain that the distribution is closed with increased confidence, we require a
-larger number of lineages. All curves assume $N=1000$.
+%Figure \ref{fig:apx:critical-normal} shows the critical sample size for a given quantile of the normal
+%approximation, as a function of the population-scaled selection coefficient. The $50^{\text{th}}$
+%percentile corresponds to the mean calculated in equation \ref{eq:critical-sample} ($\approx 2Ns$).
+%If we want to ascertain that the distribution is closed with increased confidence, we require a
+%larger number of lineages. All curves assume $N=1000$.
 
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{fig/critical_normal.pdf}
-  \caption{Critical sample size that is required for a given closure confidence level. The
+  \caption{Critical sample size that is required \sgcomment{To ensure that a given proportion of simulated draws are included?} for a given closure confidence level. The
     $50^\text{th}$ percentile corresponds to the mean in the equation \eqref{eq:critical-sample}. Note that the
     normal approximation is invalid for $Ns=0$, where the occupancy distribution should be used. All
     lines are calculated with $N_e=1000$.}
@@ -782,8 +782,8 @@ The expectation in the first term can be derived from the occupancy distribution
 &= \Var_{n_g}\left[N\left(1-(1-\frac{1}{N})^{n_g} \right) \right] \\ 
 &= N^2 \Var_{n_g}\left[(1-\frac{1}{N})^{n_g} \right] \\
 &= N^2 \left( E_{n_g}\left[(1-\frac{1}{N})^{2n_g} \right] - E_{n_g}\left[(1-\frac{1}{N})^{n_g} \right]^2\right) \\
-&= N^2 \left( \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o} 
--   \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)}\right)^{2n_o} \right) \\
+&= N^2 \left( \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-x_ps}{1-x_ps  \left(1-\frac{1}{N}\right)^2}\right)^{n_o} 
+-   \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-x_ps}{1-x_ps  \left(1-\frac{1}{N}\right)}\right)^{2n_o} \right) \\
 \end{split}
 \end{equation}
 
@@ -792,8 +792,8 @@ The variance of the second term is the variance of the occupancy distribution \c
 \begin{equation}
 \begin{split}
 E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] & = E_{n_g}\left[N ((N - 1) (1 - 2/N)^{n_g} + (1 - 1/N)^{n_g} - N (1 - 1/N)^{2 n_g}) \right] \\
-& = N (N-1)  \left(1-\frac{2}{N}\right)^{n_o} \left(\frac{1-s}{1-s  \left(1-\frac{2}{N}\right)}\right)^{n_o} +  \left(1-\frac{1}{N}\right)^{n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)}\right)^{n_o} \\
-&-N  \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o}. 
+& = N (N-1)  \left(1-\frac{2}{N}\right)^{n_o} \left(\frac{1-x_p s}{1-x_p s  \left(1-\frac{2}{N}\right)}\right)^{n_o} +  \left(1-\frac{1}{N}\right)^{n_o} \left(\frac{1-x_p s}{1-x_p s  \left(1-\frac{1}{N}\right)}\right)^{n_o} \\
+&-N  \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1- x_p s}{1-x_p s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o}. 
 \end{split}
 \end{equation}
 
@@ -801,7 +801,7 @@ The two terms can be summed together to provide an analytical expression for the
 
 
 \newcommand{\vara}[1]{\left(1-\frac{#1}{N}\right)}
-\newcommand{\varb}[1]{\left(\frac{1-s}{1-s #1}\right)}
+\newcommand{\varb}[1]{\left(\frac{1-xs}{1-xs #1}\right)}
 
 \begin{equation}
   \begin{aligned}
@@ -815,7 +815,7 @@ The two terms can be summed together to provide an analytical expression for the
 
 
 
-\subsection{Selection case}
+\subsection{Worked example of the transition matrix}
 \label{subsec:apx:tpm}
 
 \ikcomment{I've changed the event $r$ to $c$ in the main text (to avoid the unlikely confusing for
