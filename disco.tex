@@ -641,8 +641,8 @@ If we have enough generations before this approximation breaks down, we can obta
 %$z= E[n_g-n_o] / \sqrt{\operatorname{Var}(n_g-n_o)}$ will increase roughly by a factor $\sqrt{2}$.
 
 
-Such multi-generation transition matrices can also be computed iteratively. If $n_{p'}$ is the number of sampled
-lineages in the grandparental generation, and $i_{p'}$ is the number of derived alleles among those,
+Such multi-generation transition matrices can also be computed iteratively by taking the product of single-generation matrices. 
+If $n_{p'}$ is the number of sampled lineages in the grandparental generation, and $i_{p'}$ is the number of derived alleles among those,
 and we define $P(i_o, \mathcal{S'}_{n_{p'}} | \mathcal{C}'(i_{p'}, n_{p'}))$, as above, as the probability of
 drawing $i$ derived alleles and  the event $\mathcal{S'}_{n_{p'}}$ that we are using exactly $n_{p'}$ grandparental alleles given the event
 $\mathcal{C'}(i_{p'}, n_{p'})$ that $i_{p'}$ of the first $n_{p'}$ grandparental alleles are
@@ -656,24 +656,22 @@ derived alleles $i_p$ among them in the parental generation:
     &=   \sum_{n_p}^{n_{p,max}} T_{n_p,n_o} T_{n_{p'}, n_p},
   \end{split}
 \end{equation}
-where the sum over $i_p$ is part of the product of the transition matrices $T$. Since each matrix
+where the sum over $i_p$ in the last row is included as part of the product of transition matrices $T$. Since each matrix
 product takes $O(n_o n_p n_{p'})$, and there are at most $O(n_{p,max})$ such products, the computation of this
-matrix product takes at most $O(n_o n_{p,max}^2 n_{p'}).$ We expect that this scaling can be improved upon in numerical 
-implementations by summing over values of $n_p$ that contribute appreciably. 
-In addition, we need to build the matrices $T_{n_p', n_p}$. 
+matrix product takes at most $O(n_o n_{p,max}^2 n_{p'}).$ This scaling can be improved upon in numerical 
+implementations by summing only over values of $n_p$ that contribute appreciably. 
+In addition, we need to build the matrices $T_{n_p', n_p}$ themsleves. 
 In the recursive approach, the computation of the matrix for the largest sample includes the computation of matrices for
-smaller sample sizes, so the computation time is at most $O(r_{max} n_{p,max}^2, n_{p',max}^2).$ 
-If we construct a truncated matrix, $n_{p',max} =n_o$, and we find  $O(r_{max} n_{p,max}^2, n_{o}^2).$
-In the exact formulation, $n_p$ can be as large as $ r_{max} n_o,$ however in numerical application 
-with $s< 0.5$ we expect that using a cutoff with $n_{p,max}= 2 n_o$ would provide excellent convergence, 
-hence an overall scaling of   $O(r_{max} n_{o}^4)$ for the construction of the matrices and $O(n_o^4)$ for the matrix product.
-Thus a naive construction of a transition matrix over $g$ generations would require  $O( (t + r_{max} ) n_o^4).$
-
-
+smaller sample sizes, so the computation time is at most that of the largest possible matrix, $O(r_{max} n_{p,max}^2, n_{p',max}^2).$ 
+In the exact formulation of our model, $n_p$ can be as large as $ r_{max} n_o,$ however this would require every draw to be rejected by selection and
+ only contribute terms of order $s^{n_o r_{max}}.$ A numerically appropriate cutoff for a given $n_o$ and $s$ can be computed dynamically 
+ by keeping track of the proportion of unaccounted-for lineages. In most practical applications with $s<0.1$ we expect that choosing, e.g.,  
+ $n_{p,max}=  2 n_o$ would provide excellent convergence, hence an overall scaling of   $O(r_{max} n_{o}^4)$ for the construction of 
+ the matrices and $O(n_o^4)$ for the matrix product.
+Thus a naive construction of a transition matrix over $g$ generations would require  $O( (g + r_{max} ) n_o^4).$ 
 
 \section{Conclusion}
 \label{sec:conclusion}
-\sgcomment{This conclusion needs some work.}
 
 %Classically, the coalescent considers models in the absence of natural selection. Since selection
 %can increase the number of contributing lineages back in time, the coalescent can no longer be
@@ -688,7 +686,7 @@ that consider multiple coalescent events per generation are gaining increased re
 However, generalized coalescent models that can handle multi-way mergers are difficult to reconcile 
 with selection models.
 
-In this work we show that increasing the sample size has another beneficial consequence. 
+In this work, we show that increasing the sample size has an unexpected beneficial consequence. 
 As sample size increases, the number of distinct parents relevant to a sample becomes, 
 with high probability, smaller than the sample itself. Even though this does not rescue
 all desirable properties of coalescent models, it means that recursion equations 
@@ -697,31 +695,38 @@ needed to calculate sample properties become nearly closed.
 The recursion equations themselves  are expressed in terms of combinatorial probabilities 
 that can themselves be computed recursively in polynomial time. These computations 
 remain costly, especially if transition matrices must be computed for time-dependent
-population sizes and selection coefficients. It is likely that computational 
+population sizes and selection coefficients. It is likely that further computational 
 speed ups, possibly involving approximations, can be derived for such cases.  
 
-
-Closure of recursions require the simulated sample size to be above a critical size of $2N s.$ 
-Below this threshold, the number of relevant lineages tends to grow as we go back in time. 
-Above this threshold, the number of lineages tends to decrease, and it decreases with high 
-probability if we are willing to wait a few generations. 
-
-A limitation of the present approach is that it is relevant in a rather specific parameter regime, 
-roughly $\sqrt{N}\leq n \ll N$:  it matters if we want sample sizes large enough that multiple coalescences 
-occur in a single generation, becomes irrelevant if we can just simulate the entire population. 
-As argued in \citep{BhaskarEtAl2014},  this is a parameter regime relevant to present-day human samples.  
-
 We have presented the current approach as an alternative to jackknife approximations in 
-achieving moment closure. The two approaches are, however, not mutually exclusive. 
-Even though we have focused here on showing that closure could be reached within 
+achieving moment closure. The two approaches are not mutually exclusive. 
+Even though we have focused here on showing that approximate closure can be reached within 
 a finite sample to high confidence, sampling instances that do not close can still be handled 
 using jackknife approximations. Whereas the jackknife approach of  \citep{JouganousEtAl2017} requires 
 jackknifing a new lineage out of thin air every time a selection event occurs, the approach presented
-here allows one to draw a new lineage only when such a new lineage is required. 
-It may not be necessary to reach closure at extremely high accuracy to achieve high accuracy
+here can be used to draw a new lineage only when no drift event has occurred. 
+thus it may not be necessary to reach closure at extremely high accuracy to achieve high accuracy
 gains. 
 
-\sgcomment{I think we are missing one concluding sentence here. }
+Approximate closure of recursions requires the simulated sample size to be above a critical size of $2N_e s.$ 
+It is not uncommon to perform simulations of allele frequencies to model datasets with hundreds or 
+thousands of samples \cite{Gravel:2011bg, Tennessen:2012ck}. 
+Such simulations would already be in the regime where even strong selection will be overcome by drift. For
+example, $2N_e s = 100$ corresponds to a fixation probability reduced by a factor $4\times 10^{-42}$ relative 
+to the neutral expectation \cite{Kimura:1962um}. 
+ 
+The probability that selective events are reliably compensated by drift events is a more challenging requirement. 
+Even if we chose to include drift over multiple generations, the present approach is relevant when 
+$\sqrt{N}\lessapprox n \ll N$, that is, when the sample size is large enough that coalescences  are likely to
+occur at each generation, but small enough that focusing on the finite sample provides a useful speedup 
+relative to modelling the entire population. As argued in \citep{BhaskarEtAl2014},  this is a parameter regime
+ relevant to present-day human samples.  
+
+One of the main benefits of studying large sample sizes of whole-genome
+genetic data is to refine our understanding of strongly deleterious variation \cite{karczewski2020mutational}. Performing 
+quantitative inference for such datasets will require models that can handle both strong selection and large sample sizes.  
+Since the transition matrices defined here can be used in both forward \citep{JouganousEtAl2017} 
+and backward approaches \cite{KammEtAl2017}, the can help genetic models catch up with the requirements of genetic data.
 
 
 \bibliography{disco}
