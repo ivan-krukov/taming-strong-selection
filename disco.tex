@@ -40,7 +40,8 @@
     the nearly neutral model, and strong drift coupled with large sample sizes breaks the
     Kingman's coalescent model.
   
-    Thus, the regime with strong selection and large sample sizes appears particularly daunting.
+    Thus, the regime with strong selection and large sample sizes, relevant 
+    to the study of pathogenic variation, appears particularly daunting.
     However, we find that the competition between drift and natural selection in this regime can be
     used to define asymptotically closed recursions for the distribution of allele
     frequencies -- well beyond the strong selection limit.
@@ -162,7 +163,7 @@ $n_o$. %When referring to sampled lineages ($n_p$), we mean any lineages that ha
 To disentangle the effects of drift and selection, we may also make explicit the number of gametes
 sampled in the process, $n_g$ (Fig. \ref{fig:schematic}C). The difference $n_g-n_o  \ge 0$
 depends only on the number of selective deaths, whereas the difference $n_p-n_g \le 0$ depends
-only on the number of coalescence events. We will use this notation with $n_g$ in section
+only on the number of coalescence events. This distinction will be bcome particularly relevant in Section
 \ref{subsec:distribution}. %Note that in Figure \ref{fig:schematic}A,B, the gametes are implicit.
 
 \begin{figure}[h]
@@ -334,7 +335,7 @@ the computational complexity depends on the number of terms we need to calculate
 Finally, the truncated matrix $\mathbf{Q}_{n_o} = \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$ can be constructed in $O(n_o^4)$.
 \sgcomment{I think some of these $n_o$ might be $n_p$'s}
 
-This is moderately more complex than in the neutral case, where recursions can be computed in $O(n^3)$ as in \cite{BhaskarEtAl2014}.
+This is moderately more complex than in the neutral case, where recursions can be computed in $O(n_o^3)$ as in \cite{BhaskarEtAl2014}.
 
 \subsection{Calculation of allele frequency spectra}
 \label{subsec:afs}
@@ -391,7 +392,7 @@ than $N$. We therefore seek asymptotic results for the convergence of the recurs
 \label{subsec:missing}
 
 Truncation in equation \ref{eq:truncated} means that if $n_p > n_o$, some probability will be lost. 
-\sgcomment{Did you do re-normalization of the truncated matrix?} 
+ \sgcomment{Did you do re-normalization of the truncated matrix?} 
 
 %The transition matrix $\mathbf{Q}_{n_o}(i_p, i_o),$ in equation
 %\eqref{eq:truncated}, also has a probabilistic meaning:
@@ -407,7 +408,7 @@ were not truncated. $1-\sum_{i_o} \mathbf{Q}_{n_o}(i_p, i_o)$ is therefore the f
 unaccounted-for draws due to truncation, given $i_p$ derived among the first $n_o$ parental
 alleles. Since only derived lineages experience selection, the largest number of resampling events,
 and therefore the largest number of unaccounted lineages, occurs when all alleles are derived,
-$i_o = n_o$.
+$i_p = n_o$.
 
 Figure \ref{fig:apx:missing} shows this probability under this worst-case scenario. The probability
 of missing lineages first increases with increasing sample size, as the number of draws that can
@@ -418,11 +419,12 @@ with sample sizes. With large enough sample sizes, the missing probability can b
 \subsection{Distribution of number of sampled lineages}
 \label{subsec:distribution}
 
-To get an analytical expression for the probability of missing lineages,
-we consider the probability that $n_p$ parents have been sampled,
+To get an analytical expression for the probability of missing lineages, in the worst-case scenario 
+where the proportion $x_p$ of derived alleles in the parental generation is one, we consider the 
+probability that $n_p$ parents have been sampled,
 \begin{align}
   \label{eq:conditional}
-  P(n_p | n_o) = \sum_{n_g} P(n_p | n_g,n_o)P(n_g | n_o) = \sum_{n_g} P(n_p | n_g)P(n_g | n_o) 
+  P_{n_o}(n_p) = \sum_{n_g} P_{n_o}(n_p | n_g)P_{n_o}(n_g) 
 \end{align}
 where $n_p$ and $n_g$ is the number of sampled parents and gametes, respectively (Fig.
 \ref{fig:schematic}C). 
@@ -432,12 +434,13 @@ parameterized by the number of successes $n_o$, and the probability of a success
 the derived allele frequency in the parental population,
 \begin{align}
   \label{eq:neg-binomial-trials}
-  P(n_g|n_o) = \binom{n_g-1}{n_o-1}(1-x_ps)^{n_o}(x_ps)^{n_g-n_o},
+  P_{n_o}(n_g) = \binom{n_g-1}{n_o-1}(1-x_ps)^{n_o}(x_ps)^{n_g-n_o},
 \end{align}
 where $x_p$ is the proportion of derived alleles in the parental generation.
 
 Given $n_g$, the number of parental lineages $n_p$ follows the modified occupancy (also known as
-Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}:
+Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}: \sgcomment{I don't think that this is quite
+true, since the result will depend on the number of derived alleles. But it will be true if $x_p=1$, so we can rescue by treating it as an approximation otherise}
 
 \begin{align}
   \label{eq:occupancy}
@@ -766,7 +769,7 @@ and backward approaches \cite{KammEtAl2017}, the can help genetic models catch u
 \subsection{Variance of number of contributing lineages}
 \label{subsec:apx:variance}
 
-We can obtain the variance of the distribution $P(n_p | n_o)$ by using the law of total variance:
+We can obtain the variance of the distribution of the number of parental lineages $P(n_p | n_o)$ by using the law of total variance:
 
 \begin{equation}
   \label{eq:apx:var}
@@ -775,7 +778,6 @@ We can obtain the variance of the distribution $P(n_p | n_o)$ by using the law o
 
 The expectation in the first term can be derived from the occupancy distribution and the identity
 \ref{eq:identity}:
-
 \begin{equation}
 \begin{split}
 \Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right] &= \Var_{n_g}\left[E\left[n_p| n_g \right]\right] \\
@@ -787,7 +789,7 @@ The expectation in the first term can be derived from the occupancy distribution
 \end{split}
 \end{equation}
 
-The variance of the second term is the variance of the occupancy distribution \cite{}:
+The variance of the second term of Equation \eqref{eq:apx:var} is the variance of the occupancy distribution \cite{ref}:
 
 \begin{equation}
 \begin{split}
@@ -797,7 +799,7 @@ E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] & = E_{n_g}\left[N ((N - 1) (
 \end{split}
 \end{equation}
 
-The two terms can be summed together to provide an analytical expression for the variance of $n_p$, and we get
+Combining the two terms in Equation \eqref{eq:apx:var}, we get
 
 
 \newcommand{\vara}[1]{\left(1-\frac{#1}{N}\right)}
@@ -813,6 +815,15 @@ The two terms can be summed together to provide an analytical expression for the
   \end{aligned}
 \end{equation}
 
+Taking series expansion in Mathematica, we can show that  
+
+\begin{equation}
+  \begin{aligned}
+    \operatorname{Var}[n_p-n_o | n_o] &= n x_p s + \frac{n (n-1)}{2 N_e}  + \cdots
+    \label{eq:exact-var}
+  \end{aligned}
+\end{equation}
+where missing terms are of at least second order in products of  $s$, $\frac{n}{N}$,  and $\frac{1}{N}.$
 
 
 \subsection{Worked example of the transition matrix}
