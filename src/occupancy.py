@@ -1,53 +1,58 @@
+"""Calculation of the exact occupancy distribution, using the O'Neill reduced occupancy"""
 import numpy as np
-from scipy.special import binom, logsumexp, gammaln
+from scipy.special import gammaln
 
 # Occupancy stuff
 def reduced_occupancy(N):
-    rocc = np.full((N+1,N+1), -np.inf)
+    "Reduced occupancy distribution in [1, N]"
+    rocc = np.full((N + 1, N + 1), -np.inf)
 
-    for n in range(1, N+1):
-        rocc[1,n] = (1-n) * np.log(n)
-    for n in range(2, N+1):
-        rocc[n,n] = (n-1) * np.log(1-(1/n)) + rocc[n-1, n-1]
+    for n in range(1, N + 1):
+        rocc[1, n] = (1 - n) * np.log(n)
+    for n in range(2, N + 1):
+        rocc[n, n] = (n - 1) * np.log(1 - (1 / n)) + rocc[n - 1, n - 1]
 
     for i in range(2, N):
-        for k in range(2, N-i+2):
+        for k in range(2, N - i + 2):
             n = k + i - 1
-            l1 = np.log(k) - np.log(n-k) + rocc[k, n-1]
-            l2 = rocc[k-1, n-1]
-            rocc[k,n] = ((n-1) * np.log(1-(1/n))) + np.logaddexp(l1, l2)
+            l1 = np.log(k) - np.log(n - k) + rocc[k, n - 1]
+            l2 = rocc[k - 1, n - 1]
+            rocc[k, n] = ((n - 1) * np.log(1 - (1 / n))) + np.logaddexp(l1, l2)
 
     return rocc
 
 
 def log_occupancy(k, n, M, rocc):
+    "Log of the occupanycy distribution"
     const = n * (np.log(n) - np.log(M))
-    
     i = np.arange(0, k)
     s = np.sum(np.log(n - i) - np.log(M - i))
     return rocc[k, n] + const - s
 
 
 def log_occupancy_gamma(k, n, M, rocc):
+    "Log of the occupancy distribution, using the gammaln function"
     a = n * (np.log(n) - np.log(M))
-    b = gammaln(M+1) - gammaln(M-k+1)
-    c = gammaln(n+1) - gammaln(n-k+1)
+    b = gammaln(M + 1) - gammaln(M - k + 1)
+    c = gammaln(n + 1) - gammaln(n - k + 1)
     return rocc[k, n] + a + b - c
-    
+
 
 def log_occupancy_vec(n, M, rocc):
+    "Vectorized log occupancy in [1, n]"
     occ = np.zeros(n)
     const = n * (np.log(n) - np.log(M))
     s = 0
     for i in range(0, n):
-        s += np.log(n-i) - np.log(M-i)
-        occ[i] = rocc[i+1, n] + const - s
+        s += np.log(n - i) - np.log(M - i)
+        occ[i] = rocc[i + 1, n] + const - s
 
     return occ
 
 
 def binomln(n, k):
-    return gammaln(n+1) - gammaln(k+1) - gammaln(n-k+1)
+    "Log of the binomial distribution"
+    return gammaln(n + 1) - gammaln(k + 1) - gammaln(n - k + 1)
 
 
 def dist_num_anc(a, n, x, s, M, rocc):
@@ -61,15 +66,15 @@ def dist_num_anc(a, n, x, s, M, rocc):
     p = 0
     xs = x * s
     for i in range(a, M + 1):
-        
+
         occ = log_occupancy_gamma(a, i, M, rocc)
-        
-        sel = binomln(i-1, n-1) + (n * np.log(1-xs)) + ((i-n) * np.log(xs))
-        
+
+        sel = binomln(i - 1, n - 1) + (n * np.log(1 - xs)) + ((i - n) * np.log(xs))
+
         if occ < -100:
-            break    
+            break
         lp = occ + sel
-        
+
         p += np.exp(lp)
-        
+
     return p
