@@ -417,48 +417,61 @@ with sample sizes. With large enough sample sizes, the missing probability can b
 \subsection{Distribution of number of sampled lineages}
 \label{subsec_distribution}
 
-To get an analytical expression for the probability of missing lineages, in the worst-case scenario 
-where the proportion $x_p$ of derived alleles in the parental generation is one, we consider the 
-probability that $n_p$ parents have been sampled,
-\begin{align}
-  \label{eq_conditional}
-  P_{n_o}(n_p) = \sum_{n_g} P_{n_o}(n_p | n_g)P_{n_o}(n_g) 
-\end{align}
+To get an analytical expression for the probability of missing lineages, in the worst-case scenario
+all the parental alleles are derived, we consider the probability that $n_p$ parents have been
+sampled,
+
+\begin{equation}
+  \begin{aligned}
+    \label{eq_conditional}
+    P_{n_o}(n_p) = \sum_{n_g} P_{n_o}(n_p | n_g)P_{n_o}(n_g) 
+  \end{aligned}
+\end{equation}
+
 where $n_p$ and $n_g$ is the number of sampled parents and gametes, respectively (Fig.
 \ref{fig_schematic}C). 
 
 The distribution over the number of gametes, $n_g$, is given by the negative binomial,
-parameterized by the number of successes $n_o$, and the probability of a successful draw is $1-x_ps$, where $x_p$ is
-the derived allele frequency in the parental population,
-\begin{align}
-  \label{eq_neg_binomial_trials}
-  P_{n_o}(n_g) = \binom{n_g-1}{n_o-1}(1-x_ps)^{n_o}(x_ps)^{n_g-n_o},
-\end{align}
-where $x_p$ is the proportion of derived alleles in the parental generation.
+parameterized by the number of successes $n_o$, and the probability of a successful draw is $1-s$.
+
+\begin{equation}
+  \begin{aligned}
+    \label{eq_neg_binomial_trials}
+    P_{n_o}(n_g) = \binom{n_g-1}{n_o-1}(1-s)^{n_o}(s)^{n_g-n_o},
+  \end{aligned}
+\end{equation}
 
 Given $n_g$, the number of parental lineages $n_p$ follows the modified occupancy (also known as
-Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}: \sgcomment{I don't think that this is quite
-true, since the result will depend on the number of derived alleles. But it will be true if $x_p=1$, so we can rescue by treating it as an approximation otherise} \ikcomment{I think this is true if we assume the formation of the gametes is neutral. We apply selection in the re-sampling step - eq. \eqref{eq_neg_binomial_trials}. It is definitively true if $x_p=1$.}
+Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}: 
 
-\begin{align}
-  \label{eq_occupancy}
-  P(n_p|n_g) = \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}}
-\end{align}
+\begin{equation}
+  \begin{aligned}
+    \label{eq_occupancy}
+    P(n_p|n_g) = \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}}
+  \end{aligned}
+\end{equation}
+
 where $S_2(n_g,n_p)$ is a Stirling number of the second kind, which is the number of ways to
 partition $n_g$ gametes into $n_p$ parents (see \cite{JohnsonEtAl2005} section 10.4 for a thorough
 treatment).
+Note that the occupancy distribution requires exchangeability of the alleles, which we satisfy by
+assuming that all the alleles are derived, looking for the upper bound on the number of the
+required lineages.
 
 Combining the two distributions together through Eq. \ref{eq_conditional}, we get:
 
-\begin{align}
-  \label{eq_lineages_in_past}
-   P(n_p|n_o) = \sum_{n_g=1}^{\infty} \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}} \binom{n_g-1}{n_o-1}(1-x_ps)^{n_o}(x_ps)^{n_g-n_o}
-\end{align}
+\begin{equation}
+  \begin{aligned}
+    \label{eq_lineages_in_past}
+    P(n_p|n_o) = \sum_{n_g=1}^{\infty} \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}} \binom{n_g-1}{n_o-1}(1-s)^{n_o}(s)^{n_g-n_o}
+  \end{aligned}
+\end{equation}
 
 We did not find an analytical expresion for this sum, but it can be computed
 efficiently using methods presented in \citep{ONeill2019}. Figure \ref{fig_combined}A (dots) shows
-the distribution of the number of contributing parental lineages for several selection coefficients with $n_o=200$ 
-and $x_p=1$. %In the absence of selection (not shown), the distribution has
+the distribution of the number of contributing parental lineages for several selection coefficients
+with $n_o=200$.
+%In the absence of selection (not shown), the distribution has
 %zero probability above $n_o=200$, as no extra lineages can be sampled. 
 As the strength of selection
 is increased, we begin requiring larger numbers of lineages, while with increasing sample size,
@@ -467,7 +480,7 @@ there is a decrease in required lineages due to coalescent events.
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{fig/combined.pdf}
-  \caption{\textbf{A} The distribution of number of required lineages with $n_0=200$, $x_p=1$. Shaded
+  \caption{\textbf{A} The distribution of number of required lineages with $n_0=200$. Shaded
     red area shows missing probability, where $n_p > n_o$. Points represent the exact probability one
     generation into the past (Eq. \ref{eq_lineages_in_past}), solid lines - Gaussian approximation
     (Eq. \ref{eq_gaussian}). \textbf{B} Sample size ($n_o$) as a fraction of population size ($N$)
@@ -504,7 +517,7 @@ The expectation over $n_p$ is simply that of the occupancy distribution \cite{Wa
 \end{equation*}
 
 As mentioned above, the number of selective deaths, $n_g-n_o$ follows a negative binomial
-distribution with success probability $1-s x_p$. We can use the moment generating function of the negative binomial to compute the
+distribution with success probability $1-s$. We can use the moment generating function of the negative binomial to compute the
 expectation of $k^{n_g}$ for any constant $k$:
 
 %\begin{equation}
@@ -513,27 +526,34 @@ expectation of $k^{n_g}$ for any constant $k$:
 %\end{equation} 
 %\sgcomment{I believe that the general case is:}
 \begin{equation}
-E_{n_g}[k^{n_g}] = k^{n_o}  \left(\frac{1-sx_p}{1-sx_pk}\right)^{n_o}.
+E_{n_g}[k^{n_g}] = k^{n_o}  \left(\frac{1-s}{1-sk}\right)^{n_o}.
 \label{eq_identity}
 \end{equation} 
 
 
 Thus we can write 
-%\begin{align}
- % \label{eq_gauss_mean}
- % \hat{E}[n_p -n_o | n_o] &= N-N\left( 1 - \frac{1}{N} \right)^{n_o}\left( \frac{1-s}{1-s \left( 1 - \frac{1}{N} \right)}\right)^{n_o}-n_o.
-%\end{align}
+
+% \begin{equation}
+%\begin{aligned}
+% \label{eq_gauss_mean}
+% \hat{E}[n_p -n_o | n_o] &= N-N\left( 1 - \frac{1}{N} \right)^{n_o}\left( \frac{1-s}{1-s \left( 1 - \frac{1}{N} \right)}\right)^{n_o}-n_o.
+%\end{aligned}
+% \end{equation}
+
 %\sgcomment{General case}
-\begin{align}
-  \label{eq_gauss_mean}
-  \hat{E}[n_p -n_o | n_o] &= N-N\left( 1 - \frac{1}{N} \right)^{n_o}\left( \frac{1-sx}{1-sx \left( 1 - \frac{1}{N} \right)}\right)^{n_o}-n_o.
-\end{align}
+
+\begin{equation}
+  \begin{aligned}
+    \label{eq_gauss_mean}
+    \hat{E}[n_p -n_o | n_o] &= N-N\left( 1 - \frac{1}{N} \right)^{n_o}\left( \frac{1-s}{1-s \left( 1 - \frac{1}{N} \right)}\right)^{n_o}-n_o.
+  \end{aligned}
+\end{equation}
 
 Taking the terms of order up to $\frac{1}{N}$ gives
 
 \begin{equation*}
     \label{eq_lineages_approx}
-    \hat{E}[n_p-n_o | n_o] \approx n_o x s - \frac{n_o (n_o-1) }{2N}. 
+    \hat{E}[n_p-n_o | n_o] \approx n_o  s - \frac{n_o (n_o-1) }{2N}. 
 \end{equation*}
 
 We thus have the usual interplay of selection and drift. Solving for $ \hat{E}[n_p -n_o | n_o]<0$
@@ -541,16 +561,11 @@ yields, to leading order,
 
 \begin{equation}
   \label{eq_critical_sample}
-  n_o^* \ge 2N x s.
+  n_o^* \ge 2N s.
 \end{equation}
 
 This represents a critical sample size (Fig.
 \ref{fig_apx_critical_normal}) where there is more drift than selection events, on average. 
-As expected, the most challenging situation occurs if all parents carry the derived allele $x_p=1.$
-%(If we want to include the derived allele frequency in the parental generation,
-%\eqref{eq_critical_sample} becomes $2Nsx_p$, or $4Nsx_p$ in a diploid model). %However, closure of
-%the recursions requires not only that drift occurs more often than selection on average, but almost
-%always.
 
 The appendix outlines a similar approach to compute the variance of this distribution, $\operatorname{Var}[n_p-n_o | n_o].$ 
 To leading order in $s,$ $n_o/N,$ and $1/N,$ the variance is 
@@ -559,7 +574,7 @@ To leading order in $s,$ $n_o/N,$ and $1/N,$ the variance is
 \begin{equation}
   \begin{aligned}
     \operatorname{Var}[n_p-n_o | n_o] &\simeq
-   n_o x s +   n_o (n_o-1)^2/(2 N).
+   n_o  s +   n_o (n_o-1)/(2 N).
     \label{eq_gauss_var}
   \end{aligned}
 \end{equation}
@@ -567,7 +582,7 @@ To leading order in $s,$ $n_o/N,$ and $1/N,$ the variance is
 
 Thus the mean and variance to leading order are those of the Skellam distribution: the
 \textit{increase} in lineages can be modelled, to lowest order, as the number of lineages gained
-through selection (modelled as Poisson with mean  $ n_o x s$) minus the number of lineages lost to
+through selection (modelled as Poisson with mean  $ n_o s$) minus the number of lineages lost to
 drift (modelled as an independent Poisson variable with mean  $ n_o (n_o-1)/(2 N)$).
 \ikcomment{This was $n_o (n_{o}-1)^2/(2 N)$, erroneously, I think}. As the
 number of drift and selection events get larger, the Skellam distribution can be approximated as a
@@ -600,23 +615,34 @@ of $z=3$ would entail that $99.9\%$ of lineages are accounted for under the Gaus
 we get, for $n_z\gg 1$,
 
 \begin{equation}
-  n_z \leq 2 \sqrt{N} z + 2N x s.
+  n_z \leq 2 \sqrt{N} z + 2N s.
 \label{eq_nz}
 \end{equation}
 
-\sgcomment{There is an approximation here -- put derivation in appendix} The second term encodes the
-condition that there are more coalescence events than selection events, on average. The first term
-is independent of $s$ and can be interpreted as a condition that there are sufficient drift events
-per generation to ensure that the probability of having zero drift event is weak: $n_z = 2 \sqrt N
-z$ implies $\frac{n_z^2}{2N}= 2 z.$ One interpretation is that we need at least a few expected
-coalescence events per generation to ensure that every selective event is compensated by a
-coalescence event. 
+The assumptions of this approximation are outlined in \ref{subsec_apx_gauss}\ikcomment{I seem to be
+getting $n_z > 2Ns - 2\sqrt{N}z$ here.} The second term encodes the condition that there are more
+coalescence events than selection events, on average. The first term is independent of $s$ and can
+be interpreted as a condition that there are sufficient drift events per generation to ensure that
+the probability of having zero drift event is weak: $n_z = 2 \sqrt N z$ implies $\frac{n_z^2}{2N}=
+2 z.$ One interpretation is that we need at least a few expected coalescence events per generation
+to ensure that every selective event is compensated by a coalescence event. 
 
 Alternatively, we can solve for the quantiles of the Gaussian approximation \eqref{eq_gaussian}
 numerically. For a fixed $z=3$, Figure \ref{fig_combined}B shows how $n_c/N$ (sample as a fraction
 of the population size) increases with stronger selection. Together with \eqref{eq_nz}, this shows
 that the truncation can be accurate even for strong selection and sample sizes much smaller than
 the full population size. 
+
+The action of selection can me modulated by the proprtion of the derived lineages $x_p$ in the parental
+generation. Until now, we have regarded all the parental lineages as derived: $x_p=1$. We can add
+this approximate this effect in equation \eqref{eq_nz} by modifying the selection term:
+
+\begin{equation*}
+  n_z \leq 2 \sqrt{N} z + 2Nsx_p
+\end{equation*}
+
+So in cases where ancestral alleles exist in the population, the effect of selection will be
+diminished further.
 
 \subsection{Integrating over several generations} 
 
@@ -631,11 +657,11 @@ variance. In this case, both the mean and variance will be scaled by a factor $g
 to the single-generation case, and Equation \eqref{eq_nz} becomes:
 
 \begin{equation}
-  n_z \lessapprox 2 z\sqrt{N/g} + 2N x s.
+  n_z \lessapprox 2 z\sqrt{N/g} + 2N s x_p.
 \label{eq_nzg}
 \end{equation}
 
-If we have enough generations before this approximation breaks down, we can obtain nearly-closed recursions if $n_o> 2Nxs.$  
+If we have enough generations before this approximation breaks down, we can obtain nearly-closed recursions if $n_o> 2Ns.$  
 \sgcomment{Put the following paragraph in appendix?}
 % Informally, the expected change $E[n_g-n_o]$ in the number $n_g$ of lineages in
 %the grandparent generation relative to $n_o,$ and the variance $\operatorname{Var}[n_g-n_o]$ will be
@@ -833,6 +859,24 @@ Taking series expansion in Mathematica, we can show that
   \end{aligned}
 \end{equation}
 where missing terms are of at least second order in products of  $s$, $\frac{n}{N}$,  and $\frac{1}{N}.$
+
+\subsection{Simplifying gaussian approximation}
+\label{subsec_apx_gauss}
+
+\begin{equation}
+\begin{aligned}
+  z &= \frac{n_zs - \frac{n_z(n_z-1)}{2N}}	{\sqrt{n_zs + \frac{n_z(n_z-1)}{2N}}} \\
+  z &\approx \frac{n_zs - \frac{n_z^2}{2N}}	{\sqrt{n_zs + \frac{n_z^2}{2N}}} \\
+  z &\geq \frac{n_zs - \frac{n_z^2}{2N}}{n_z / \sqrt{N}} \\
+  \frac{z}{\sqrt{N}} &\geq s - \frac{n_z}{2N} \\
+  2\sqrt{N}z &\geq 2Ns - n_z \\
+  n_z &\geq 2Ns - 2\sqrt{N}z
+\end{aligned}
+\end{equation}
+
+The approximation on line 3 is made assuming that there is more drift than selection, so that $n_zs
+\leq \frac{n_z^2}{2N}$. Thus, the variance is smaller than twice the drift term: $\left(n_zs +
+\frac{n_z^2}{2N} \right) \leq \left(\frac{n_z^2}{2N} + \frac{n_z^2}{2N} \right)$.
 
 \subsection{Worked example of the transition matrix}
 \label{subsec_apx_tpm}
