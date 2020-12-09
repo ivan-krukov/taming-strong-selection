@@ -419,8 +419,7 @@ with sample sizes. With large enough sample sizes, the missing probability can b
 \subsection{Distribution of number of sampled lineages}
 \label{subsec:distribution}
 
-To get an analytical expression for the probability of missing lineages, in the worst-case scenario 
-where the proportion $x_p$ of derived alleles in the parental generation is one, we consider the 
+To get an analytical expression for the probability of missing lineages, we consider the 
 probability that $n_p$ parents have been sampled,
 \begin{align}
   \label{eq:conditional}
@@ -438,23 +437,26 @@ the derived allele frequency in the parental population,
 \end{align}
 where $x_p$ is the proportion of derived alleles in the parental generation.
 
-Given $n_g$, the number of parental lineages $n_p$ follows the modified occupancy (also known as
-Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}: \sgcomment{I don't think that this is quite
-true, since the result will depend on the number of derived alleles. But it will be true if $x_p=1$, so we can rescue by treating it as an approximation otherise}
-
+If the $n_g$ gametes draw parents uniformly at random, as happens when 
+$x_p=0$ or $x_p=1,$  the number of parental lineages $n_p$ 
+follow the modified occupancy (also known as Arfwedson) distribution 
+\citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}:
 \begin{align}
   \label{eq:occupancy}
   P(n_p|n_g) = \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}}
 \end{align}
 where $S_2(n_g,n_p)$ is a Stirling number of the second kind, which is the number of ways to
 partition $n_g$ gametes into $n_p$ parents (see \cite{JohnsonEtAl2005} section 10.4 for a thorough
-treatment).
+treatment). This distribution will not be exact for intermediate values of $x_p$, since the reference 
+and derived alleles have different coalescence probabilities. Here we therefore focus on the 
+worst-case scenario in terms of lost lineages, which occurs when $x_p=1$.  
+
 
 Combining the two distributions together through Eq. \ref{eq:conditional}, we get:
 
 \begin{align}
   \label{eq:lineages-in-past}
-   P(n_p|n_o) = \sum_{n_g=1}^{\infty} \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}} \binom{n_g-1}{n_o-1}(1-x_ps)^{n_o}(x_ps)^{n_g-n_o}
+   P(n_p|n_o) = \sum_{n_g=1}^{\infty} \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}} \binom{n_g-1}{n_o-1}(1-s)^{n_o}(s)^{n_g-n_o}
 \end{align}
 
 We did not find an analytical expresion for this sum, but it can be computed
