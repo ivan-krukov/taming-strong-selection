@@ -183,19 +183,23 @@ among the parents:
 \begin{equation}
   \afs{n_o}{t}(i_o)=P_{n_o} (i_o) =\sum_{n_p,i_p} P_{n_o}(i_o,i_p,n_p),
 \end{equation}
+
 where the subscript $n_o$ indicates dependence on parameter $n_o$. To obtain a recursion on the
 \textit{AFS}, we use an exchangeability property of the parental lineages: the order
  in which we draw previously unsampled parental lineages in the Wright-Fisher
 model is random. 
-In other words, we could draw a random permutation of the parental population, and
-select parents in order from this permutation. We will separate properties of this permutation,
-which depend only on parental \textit{AFS}, from properties of Wright-Fisher sampling, which depend on population size and selection coefficients.
- Concretely, the event $(i_p,n_p)$ that we draw exactly $i_p$ derived alleles and $n_p$ distinct parents can be expressed as the intersection of two events, $\mathcal{C}(i_p,n_p)$
-and $\mathcal{S}(n_p)$. Event $\mathcal{C}(i_p,n_p)$ specifies that the first $n_p$ parental
-lineages from the random permutation carry $i_p$ derived alleles. Event $\mathcal{S}(n_p)$
-requires that the Wright-Fisher drawing process \textit{stops} after exactly $n_p$ parental lineages
-have been drawn. Event $\mathcal{C}(i_p, n_p)$ is a property of the allele frequency distribution 
-in the parental generation: $P(\mathcal{C}_{n_p}(i_p)) =\afs{n_p}{t} (i_p)$ by definition of the \textit{AFS}. Thus 
+
+In other words, we could draw a random permutation of the parental population, and select parents
+in order from this permutation. We will separate properties of this permutation, which depend only
+on parental \textit{AFS}, from properties of Wright-Fisher sampling, which depend on population
+size and selection coefficients.  Concretely, the event $(i_p,n_p)$ that we draw exactly $i_p$
+derived alleles and $n_p$ distinct parents can be expressed as the intersection of two events,
+$\mathcal{C}(i_p,n_p)$ and $\mathcal{S}(n_p)$. Event $\mathcal{C}(i_p,n_p)$ specifies that the
+first $n_p$ parental lineages from the random permutation carry $i_p$ derived alleles. Event
+$\mathcal{S}(n_p)$ requires that the Wright-Fisher drawing process \textit{stops} after exactly
+$n_p$ parental lineages have been drawn. Event $\mathcal{C}(i_p, n_p)$ is a property of the allele
+frequency distribution in the parental generation: $P(\mathcal{C}(i_p,n_p)) =\afs{n_p}{t} (i_p)$
+by definition of the \textit{AFS}. Thus 
 
 \begin{equation}
   \begin{split}
@@ -206,6 +210,7 @@ in the parental generation: $P(\mathcal{C}_{n_p}(i_p)) =\afs{n_p}{t} (i_p)$ by d
   \end{split}
   \label{eq_recur}
 \end{equation}
+
 where the $\mathbf{T}_{n_p,n_o}$ can be thought of as $(n_o+1) \times (n_p+1)$ transition
 probability matrix, whose row and column indices correspond to the number of derived alleles in the
 offspring and contributing parental lineages, respectively.
@@ -832,12 +837,13 @@ where missing terms are of at least second order in products of  $s$, $\frac{n}{
 
 \begin{equation}
 \begin{aligned}
-  z &= \frac{n_zs - \frac{n_z(n_z-1)}{2N}}	{\sqrt{n_zs + \frac{n_z(n_z-1)}{2N}}} \\
-  z &\approx \frac{n_zs - \frac{n_z^2}{2N}}	{\sqrt{n_zs + \frac{n_z^2}{2N}}} \\
-  z &\geq \frac{n_zs - \frac{n_z^2}{2N}}{n_z / \sqrt{N}} \\
-  \frac{z}{\sqrt{N}} &\geq s - \frac{n_z}{2N} \\
-  2\sqrt{N}z &\geq 2Ns - n_z \\
-  n_z &\geq 2Ns - 2\sqrt{N}z
+  z &= \frac{X-\mu}{\sqrt{\sigma^2}} \\
+  z &= \frac{-\left(  n_zs - \frac{n_z(n_z-1)}{2N} \right)}	{\sqrt{n_zs + \frac{n_z(n_z-1)}{2N}}} \\
+  z &\approx \frac{\frac{n_z^2}{2N} - n_z s}	{\sqrt{n_zs + \frac{n_z^2}{2N}}} \\
+  z &\geq \frac{\frac{n_z^2}{2N} - n_z s}{n_z / \sqrt{N}} \\
+  \frac{z}{\sqrt{N}} &\geq \frac{n_z}{2N} - s \\
+  2\sqrt{N}z &\geq n_z - 2Ns \\
+  n_z &\leq 2\sqrt{N}z + 2Ns
 \end{aligned}
 \end{equation}
 
