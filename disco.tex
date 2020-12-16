@@ -40,7 +40,7 @@
     The fate of mutations and the genetic load of populations depend on the relative importance of
     genetic drift and natural selection. In addition, the accuracy of numerical models of evolution
     depends on the strength of both selection and drift: strong selection breaks the assumptions of
-    the nearly neutral model, and strong drift coupled with large sample sizes breaks the
+    the nearly neutral model, and strong drift coupled with large sample sizes breaks
     Kingman's coalescent model.
   
     Thus, the regime with strong selection and large sample sizes, relevant 
@@ -49,15 +49,12 @@
     used to define asymptotically closed recursions for the distribution of allele
     frequencies -- well beyond the strong selection limit.
  
-    We construct the relevant transition matrices, show how they can be used to accurately compute
-    distributions of allele frequencies, and discuss the boundaries of this analytically tractable
-    regime.
-  
     Selection becomes more analytically tractable when the sample size $n$ is larger than twice the
     population-scaled selection coefficient: $n \ge 2Ns$ ($4Ns$ in diploids). In this regime, the
-    expected number of coalescent events is larger than the number of selective events. We also
-    derive the exact distribution of the number of sampled lineages, and offer a Gaussian
-    approximation for a more intuitive solution.
+    expected number of coalescent events is larger than the number of selective events. 
+    We construct the relevant transition matrices, show how they can be used to accurately compute
+    distributions of allele frequencies, and discuss the boundaries of this analytically tractable
+    regime. 
   \end{abstract}
 
 \end{frontmatter}
@@ -186,13 +183,12 @@ among the parents:
 \begin{equation}
   \afs{n_o}{t}(i_o)=P_{n_o} (i_o) =\sum_{n_p,i_p} P_{n_o}(i_o,i_p,n_p),
 \end{equation}
-
 where the subscript $n_o$ indicates dependence on parameter $n_o$. To obtain a recursion on the
 \textit{AFS}, we use an exchangeability property of the parental lineages: the order
  in which we draw previously unsampled parental lineages in the Wright-Fisher
 model is random. 
 
-In other words, we could draw a random permutation of the parental lineages, and select parents
+In other words, we could draw a random permutation of the parental population, and select unsampled parents
 in order from this permutation. We will separate properties of this permutation, which depend only
 on parental \textit{AFS}, from properties of Wright-Fisher sampling, which depend on population
 size and selection coefficients.  Concretely, the event $(i_p,n_p)$ that we draw exactly $i_p$
@@ -213,7 +209,6 @@ by definition of the \textit{AFS}. Thus
   \end{split}
   \label{eq_recur}
 \end{equation}
-
 where the $\mathbf{T}_{n_p,n_o}$ can be thought of as $(n_o+1) \times (n_p+1)$ transition
 probability matrix, whose row and column indices correspond to the number of derived alleles in the
 offspring and contributing parental lineages, respectively.
@@ -268,7 +263,7 @@ the appendix: \ref{subsec_apx_tpm_deriv}.
 
 We can think of Wright-Fisher sampling as being performed one offspring at a time,
 and even one draw at a time. We will define recursions by conditioning on the last draw, 
-whether it is successful or failed. 
+whether it is accepted or rejected.
 To keep track of the number $r$ of unsuccessful draws for the current offspring, we define $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ as the probability
 $P_{n_o}\left[\mathcal{Q}_{n_o}(i_o,r) | i_p, n_p\right]$ of the event $\mathcal{Q}_{n_o}(i_o,r)$ that exactly $i_o$ of the
 first $n_o$ successfully drawn offspring are derived, and that the following $r$ draws are selective
@@ -276,7 +271,7 @@ deaths - Figure \ref{fig_rec_selection_dynamic_fail}. This bracket notation is c
 the number of relevant parental lineages (at the top) and offspring lineages (at the bottom), at the
 cost of obscuring their different probabilistic role.
 
-The recursion can be broken down in a recursion over $r$, determined by failed draws, 
+The recursion can be broken down in a recursion over $r$, determined by rejected draws, 
 and a recursion over $n_o$, determined by successful draws.  
 The recursion over $r$ is shown at the bottom of
 Figure \ref{fig_rec_selection_dynamic_fail} (cases \textit{rC,rD}). If the last draw was rejected, the sampling 
@@ -934,7 +929,6 @@ The event  $\CC'$ is fully determined by  $\CC$ and $\ell$, so that we can write
     &=\sum_\ell \sum_{r' \in R_\ell}P(\ell |Q', \ms', \CC', \CC ) P(\CC' |\CC)  \mathbf{T}_{r}\Coalc{i'_p}{n'_p}{i'_o}{n'_o}
   \end{split}
 \end{equation}
-
 where the third line is an application of the chain rule and the fourth line uses the independence
 of primed events on the last draw.  We now simply need to enumerate all the distinct types of
 events for the last draw and compute the corresponding probabilities, which we do on Figure
