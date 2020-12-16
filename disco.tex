@@ -57,7 +57,7 @@
     population-scaled selection coefficient: $n \ge 2Ns$ ($4Ns$ in diploids). In this regime, the
     expected number of coalescent events is larger than the number of selective events. We also
     derive the exact distribution of the number of sampled lineages, and offer a Gaussian
-    approximation for a more tractable solution.
+    approximation for a more intuitive solution.
   \end{abstract}
 
 \end{frontmatter}
@@ -88,7 +88,8 @@ have been developed \citep{JouganousEtAl2017}, but these are not robust to stron
 their convergence properties are not well understood.
 
 Closure of the moment equations under the neutral Wright-Fisher model occurs because the number $n_p$ of
-distinct parental lineages that are sampled when drawing $n_o$ offspring lineages is at most $n_o$, and can be less if common ancestors are found (i.e., if there are coalescent events): 
+distinct parental lineages that are sampled when drawing $n_o$ offspring lineages is at most $n_o$,
+and can be less if common ancestors are found (\textit{i.e.}, if there are coalescent events): 
 $n_p \le n_o$ (see Table \ref{tab_symbols} for the notation used). This does not
 hold under negative selection -- selective deaths can require the drawing of $n_p>n_o$  \citep{DonnellyKurtz1999a,
   JouganousEtAl2017}. This possible increase is made explicit, for example, in the framework of the ancestral
@@ -103,20 +104,17 @@ increase in the number of lineages. If we can show that this holds not just in e
 we can obtain recursion equations that are almost closed. 
  
 Large sample sizes also bring in the complication of simultaneous coalescent events
-\citep{BhaskarEtAl2014}. The additional combinatorial possibilities make the computation 
-of transition matrices for recursion equations more difficult. 
-In this article we derive these transition matrices, and
-show that these are asymptotically closed even under strong selection. %In fact, the multi-way
-%coalescent events deplete the number of lineages faster than pairwise events further counter-acting
-%the selection effects. 
-We show that these transition matrices can be used to accurately model the 
-distribution of allele frequencies in moderate to large samples and strong selection.
+\citep{BhaskarEtAl2014}. The additional combinatorial possibilities make the computation of
+transition matrices for recursion equations more difficult.  In this article we derive these
+transition matrices, and show that these are asymptotically closed even under strong selection. We
+show that these transition matrices can be used to accurately model the distribution of allele
+frequencies in moderate to large samples and strong selection.
 
 In short, modeling large sample sizes makes it easier to accurately account for strong selection. 
 
 
-\section{Methods}
-\label{sec_methods}
+\section{Background}
+\label{sec_background}
 
 We consider a haploid Wright-Fisher model with $N$ individuals per generation, focusing on a single
 biallelic locus. For a present-day sample with $n_o$ offspring lineages at time $t$, we will be
@@ -146,15 +144,14 @@ sample.
     $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ & Probability of transition from $i_p \dslash n_p$ in parents
                                                  to $i_o \dslash n_o$ in offspring, with $r$ selective events -
                                                  see text for a more detailed description\\
+    \hline
     $(i_p, n_p)$ & Event of \textit{drawing} exactly $i_p$ derived out of $n_p$ distinct parental lineages \\
-    $C(i_p, n_p)$ & Event of $n_p$ parental lineages \textit{containing} $i_p$ derived alleles \\
-    $S(n_p)$ & Event of \textit{stopping} draws after $n_p$ parental lineages \\
-    $Q(i_o, n_o, r)$ & Event of $i_o$ of $n_o$ successfully drawn offspring lineages drawn with $r$ selective deaths\\
+    $\mathcal{C}(i_p, n_p)$ & Event of $n_p$ parental lineages \textit{containing} $i_p$ derived alleles \\
+    $\mathcal{S}(n_p)$ & Event of \textit{stopping} draws after $n_p$ parental lineages \\
+    $\mathcal{Q}(i_o, n_o, r)$ & Event of $i_o$ of $n_o$ successfully drawn offspring lineages drawn with $r$ selective deaths\\
   \end{tabular}
   \caption{\label{tab_symbols} Table of symbols}
 \end{table}
-%Under neutral evolution, each offspring picks a lineage at random with replacement, and the number
-%$n_p$ of distinct parental lineages is smaller than $n_o$ (Fig.\ref{fig_schematic}A).
 
 To model selection as part of our sampling process, we consider that a parental lineage carrying a
 derived allele can be `rejected' as a result of selective death with probability $s\ge0$ (Fig.
@@ -164,14 +161,13 @@ derived allele is $1-s$ times the probability of drawing a copy of the ancestral
 process depends on the parental allele of both successful and rejected draws, the \textit{AFS} in the
 offspring will depend on the state of the $n_p$ distinct parental lineages that were sampled. 
 Because of selective rejection, $n_p$ can be larger than
-$n_o$. %When referring to sampled lineages ($n_p$), we mean any lineages that have been sampled and
-%possibly rejected.
+$n_o$. 
 
 To disentangle the effects of drift and selection, we may also make explicit the number of gametes
 sampled in the process, $n_g$ (Fig. \ref{fig_schematic}C). The difference $n_g-n_o  \ge 0$
-depends only on the number of selective deaths, whereas the difference $n_p-n_g \le 0$ depends
-only on the number of coalescence events. This distinction will be become particularly relevant in Section
-\ref{subsec_distribution}. %Note that in Figure \ref{fig_schematic}A,B, the gametes are implicit.
+depends on the number of selective deaths, whereas the difference $n_p-n_g \le 0$ depends
+on the number of coalescence events. This distinction will be become particularly relevant in Section
+\ref{subsec_distribution}. 
 
 \begin{figure}[h]
   \centering
@@ -196,7 +192,7 @@ where the subscript $n_o$ indicates dependence on parameter $n_o$. To obtain a r
  in which we draw previously unsampled parental lineages in the Wright-Fisher
 model is random. 
 
-In other words, we could draw a random permutation of the parental population, and select parents
+In other words, we could draw a random permutation of the parental lineages, and select parents
 in order from this permutation. We will separate properties of this permutation, which depend only
 on parental \textit{AFS}, from properties of Wright-Fisher sampling, which depend on population
 size and selection coefficients.  Concretely, the event $(i_p,n_p)$ that we draw exactly $i_p$
@@ -224,7 +220,7 @@ offspring and contributing parental lineages, respectively.
 
 The AFS  $\afs{n_p}{t-1}(i_p)$ for any  $n_p\leq n_o$ can be obtained by downsampling from $\afs{n_o}{t-1}$ (\textit{i.e.}, $\afs{n_p}{t-1} =
 \mathbf{H}_{n_p,n_o} \afs{n_o}{t-1}$ for hypergeometric projection matrix $\mathbf{H}_{n_p,n_o}$ if
-$n_p\leq n_o$), so Equation \eqref{eq_recur} provides a closed form recursion for $\Phi_{n_o}$ under neutrality.
+$n_p\leq n_o$). Thus, equation \eqref{eq_recur} provides a closed form recursion for $\Phi_{n_o}$ under neutrality.
 This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele
 frequencies under neutrality and in small sample sizes.
 
@@ -254,27 +250,27 @@ approximation.
 Our first goal is to obtain an explicit recursion for the matrices in \eqref{eq_recur}. To do so, we
 will need to account for multiple coalescent events, which will require some careful bookkeeping.
 
-\section{Transition probability matrices}
-\label{sec_trans_mat}
+\section{Methods}
+\label{sec_methods}
 
 \subsection{Constructing the transition matrix}
 \label{subsec_trans_mat}
 
-Even though $\mathbf{T}_{n_p,n_o}$ in Eq. \ref{eq_recur} is a combinatorial probability
+Even though $\mathbf{T}_{n_p,n_o}$ in equation \ref{eq_recur} is a combinatorial probability
 describing a single generation in the Wright-Fisher model, we were unable to compute an analytical
-expression for it, while allowing for multiple coalescences and multiple selective events. 
+expression for it, while simultaneously allowing for multiple coalescences and multiple selective events. 
 However,
 we can obtain fairly simple recursions by noting that properties of a sample of size $n_o$ are
 related to properties of samples of size $n_o-1.$ Similar recursions on sample size were used for
 describing large sample size effects without selection in \citep{BhaskarEtAl2014}. In this section,
 we provide some mathematical intuition for the recursion equation, and a more detailed derivation is provided in
-Appendix \ref{subsec_apx_tpm}.
+the appendix: \ref{subsec_apx_tpm_deriv}.
 
 We can think of Wright-Fisher sampling as being performed one offspring at a time,
 and even one draw at a time. We will define recursions by conditioning on the last draw, 
 whether it is successful or failed. 
 To keep track of the number $r$ of unsuccessful draws for the current offspring, we define $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ as the probability
-$P_{n_o}\left[\mathbf{Q}(i_o,r) | i_p, n_p\right]$ of the event $\mathbf{Q}(i_o,r)$ that exactly $i_o$ of the
+$P_{n_o}\left[\mathcal{Q}_{n_o}(i_o,r) | i_p, n_p\right]$ of the event $\mathcal{Q}_{n_o}(i_o,r)$ that exactly $i_o$ of the
 first $n_o$ successfully drawn offspring are derived, and that the following $r$ draws are selective
 deaths - Figure \ref{fig_rec_selection_dynamic_fail}. This bracket notation is convenient to keep track of
 the number of relevant parental lineages (at the top) and offspring lineages (at the bottom), at the
@@ -439,7 +435,7 @@ sampled,
     P_{n_o}(n_p) = \sum_{n_g} P_{n_o}(n_p | n_g)P_{n_o}(n_g) 
   \end{aligned}
 \end{equation}
-
+%
 where $n_p$ and $n_g$ is the number of sampled parents and gametes, respectively (Fig.
 \ref{fig_schematic}C). 
 
@@ -452,7 +448,7 @@ parameterized by the number of successes $n_o$, and the probability of a success
     P_{n_o}(n_g) = \binom{n_g-1}{n_o-1}(1-s)^{n_o}(s)^{n_g-n_o},
   \end{aligned}
 \end{equation}
-
+%
 Given $n_g$, the number of parental lineages $n_p$ follows the modified occupancy (also known as
 Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}: 
 
@@ -462,7 +458,7 @@ Arfwedson) distribution \citep{Wakeley2009,ONeill2019,JohnsonEtAl2005}:
     P(n_p|n_g) = \frac{S_2(n_g,n_p) N!}{(N-n_p)! N^{n_g}}
   \end{aligned}
 \end{equation}
-
+%
 where $S_2(n_g,n_p)$ is a Stirling number of the second kind, which is the number of ways to
 partition $n_g$ gametes into $n_p$ parents (see \cite{JohnsonEtAl2005} section 10.4 for a thorough
 treatment).
@@ -479,7 +475,7 @@ Combining the two distributions together through Eq. \ref{eq_conditional}, we ge
   \end{aligned}
 \end{equation}
 
-We did not find an analytical expresion for this sum, but it can be computed
+We did not find an analytical expression for this sum, but it can be computed
 efficiently using methods presented in \citep{ONeill2019}. Figure \ref{fig_combined}A (dots) shows
 the distribution of the number of contributing parental lineages for several selection coefficients
 with $n_o=200$.
@@ -515,7 +511,6 @@ Using the law of total expectation, we can write the expectation $E[n_p-n_o | n_
                      &=E_{n_g} E_{n_p}[n_p | n_g] - n_o.
   \end{aligned}
 \end{equation*}
-%Assuming $x_p=1$ \sgcomment{Not sure why we would need to assume $x=1$. Perhaps this is used later?},
 
 The expectation over $n_p$ is simply that of the occupancy distribution \cite{Wakeley2009}.
 
@@ -653,7 +648,7 @@ this approximate this effect in equation \eqref{eq_nz} by modifying the selectio
   n_z \leq 2 \sqrt{N} z + 2Nsx_p
 \end{equation*}
 
-So in cases where ancestral alleles exist in the population, the effect of selection will be
+So in cases where ancestral alleles exist in the sample, the effect of selection will be
 diminished further.
 
 \subsection{Integrating over several generations} 
@@ -891,9 +886,10 @@ In the exact formulation of our model, $n_p$ can be as large as $ r_{max} n_o,$ 
 Thus a naive construction of a transition matrix over $g$ generations would require  $O( (g + r_{max} ) n_o^4).$ 
 
 \subsection{Deriving the recursion on the transition matrices}
+\label{subsec_apx_tpm_deriv}
 
 The transition matrices $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ are defined in terms of sampling
-probabilities $P(Q_{n_o}(i_o,r) \ms_{n_o,r}(n_p) | \CC{i_p,n_p} ),$ where $Q_{n_o}(i_o,r)$ is the
+probabilities $P(Q_{n_o}(i_o,r) \ms_{n_o,r}(n_p) | \CC{(i_p,n_p)} ),$ where $Q_{n_o}(i_o,r)$ is the
 probability that $i_o$ of the first $n_o$ offspring carry the derived allele, and that the $r$
 draws following the $n_o$th drawn offspring are rejected. Our goal here is to derive a recursion
 over the last event $\ell$. We characterize the last draw event in terms of whether it is
@@ -942,7 +938,7 @@ The event  $\CC'$ is fully determined by  $\CC$ and $\ell$, so that we can write
 where the third line is an application of the chain rule and the fourth line uses the independence
 of primed events on the last draw.  We now simply need to enumerate all the distinct types of
 events for the last draw and compute the corresponding probabilities, which we do on Figure
-\ref{fig:rec-selection-dynamic-fail}.  \sgcomment{Please check the math on that ! } 
+\ref{fig_rec_selection_dynamic_fail}.  \sgcomment{Please check the math on that ! } 
 
 \subsection{Worked example of the transition matrix}
 \label{subsec_apx_tpm}
