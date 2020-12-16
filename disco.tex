@@ -7,6 +7,7 @@
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{natbib}
+\usepackage{float}
 \bibliographystyle{elsarticle-harv}
 \biboptions{authoryear}
 
@@ -719,7 +720,7 @@ and backward approaches \cite{KammEtAl2017}, the can help genetic models catch u
 
 %\subsection{Missing lineages}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{fig/missing.pdf}
   \caption{Probability that there are more contributing parents than offspring, $n_p > n_o$.
@@ -735,7 +736,7 @@ and backward approaches \cite{KammEtAl2017}, the can help genetic models catch u
 %If we want to ascertain that the distribution is closed with increased confidence, we require a
 %larger number of lineages. All curves assume $N=1000$.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{fig/critical_normal.pdf}
   \caption{Critical sample size that is required to ensure that a given proportion of simulated
@@ -746,7 +747,7 @@ and backward approaches \cite{KammEtAl2017}, the can help genetic models catch u
   \label{fig_apx_critical_normal}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.5\textwidth]{fig/skellam.pdf}
   \caption{Skellam approximation to the number of required lineages where $n_o$ is small:
