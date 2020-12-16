@@ -261,18 +261,25 @@ we can obtain fairly simple recursions by noting that properties of a sample of 
 related to properties of samples of size $n_o-1.$ Similar recursions on sample size were used for
 describing large sample size effects without selection in \citep{BhaskarEtAl2014}. In this section,
 we provide some mathematical intuition for the recursion equation, and a more detailed derivation is provided in
-the appendix: \ref{subsec_apx_tpm_deriv}.
+Appendix \ref{subsec_apx_tpm_deriv}.
 
 We can think of Wright-Fisher sampling as being performed one offspring at a time,
 and even one draw at a time. We will define recursions by conditioning on the last draw, 
-whether it is accepted or rejected.
-To keep track of the number $r$ of unsuccessful draws for the current offspring, we define $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ as the probability
-$P_{n_o}\left[\mathcal{Q}_{n_o}(i_o,r) | i_p, n_p\right]$ of the event $\mathcal{Q}_{n_o}(i_o,r)$ that exactly $i_o$ of the
-first $n_o$ successfully drawn offspring are derived, and that the following $r$ draws are selective
-deaths - Figure \ref{fig_rec_selection_dynamic_fail}. This bracket notation is convenient to keep track of
+whether it is accepted or rejected. 
+The recursion will be over $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o},$ defined as the probability
+$P_{n_o}\left[\mathcal{Q}_{n_o}(i_o,r), \ms_{n_o,r}(n_p) | \mathcal{C}(i_p, n_p)\right]$ of two events conditional on 
+$\mathcal{C}(i_p, n_p)$: the event $\mathcal{Q}_{n_o}(i_o,r)$ that exactly $i_o$ of the
+first $n_o$ successfully drawn offspring are derived, and that the following $r$ draws are rejected, 
+and the event  $\ms_{n_o,r}(n_p)$ that $n_o$ successful draws and $r$ failures require exactly $n_p$ 
+distinct parental draws. \sgcomment{do we ever separate Q and S? If not merge?} 
+
+
+- Figure \ref{fig_rec_selection_dynamic_fail}. This bracket notation is convenient to keep track of
 the number of relevant parental lineages (at the top) and offspring lineages (at the bottom), at the
 cost of obscuring their different probabilistic role.
 
+Figure \ref{fig_rec_selection_dynamic_fail} shows a graphical representation of the recursion 
+-- a mathematical deivation is provided in the appendix. 
 The recursion can be broken down in a recursion over $r$, determined by rejected draws, 
 and a recursion over $n_o$, determined by successful draws.  
 The recursion over $r$ is shown at the bottom of
@@ -327,16 +334,15 @@ we can systematically compute all the terms in Equation \ref{fig_rec_selection_d
 The set of selection transition probability matrices $\mathbf{T}$ requires $O(r_{max}n_o^2 n_p^2)$
 operations to construct: Since each term $\mathbf{T}_{r}$ (with $r>0$)  in the recursion requires a constant number of operations, 
 the computational complexity depends on the number of terms we need to calculate. We will need to compute terms of the form 
- $\mathbf{T}_{r}\Coalc{i_p'}{n_p'}{i_o'}{n_o'}$, with $1 \leq n_o'<n_o$, $i_o' \leq n_o'$, $0\leq i_p' \leq n_p' \leq n_p$, and $0\leq n_p' \leq \alpha n_o$, 
- and $0\leq r \leq r_{max},$ leading to the bound $O(r_{max}n_o^2 n_p^2).$   
-\ikcomment{What does the $\alpha$ represent above?} .
+ $\mathbf{T}_{r}\Coalc{i_p'}{n_p'}{i_o'}{n_o'}$, with $1 \leq n_o'<n_o$, $i_o' \leq n_o'$, $0\leq i_p' \leq n_p' \leq n_p$, and $0\leq n_p' \leq (r_{max}+1) n_o$, 
+ and $0\leq r \leq r_{max},$ leading to the bound $O(r_{max}n_o^2 n_p^2).$  
  
  
  The terms  $\mathbf{T}_{0}$ have a bound of the same form (i.e., there are at most $O(n_o^2 n_p^2)$ terms, each requiring $r_{max}$ computations).  
 Finally, the truncated matrix $\mathbf{Q}_{n_o} = \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$ can be constructed in $O(n_o^4)$.
-\sgcomment{I think some of these $n_o$ might be $n_p$'s} \ikcomment{I think it's okay?}
 
-This is moderately more complex than in the neutral case, where recursions can be computed in $O(n_o^3)$ as in \cite{BhaskarEtAl2014}.
+
+This is moderately more complex than in the neutral case, where recursions (first derived in \cite{BhaskarEtAl2014}) can be computed in $O(n_o^3)$.
 
 \subsection{Calculation of allele frequency spectra}
 \label{subsec_afs}
@@ -838,26 +844,21 @@ The approximation on line 3 is made assuming that there is more drift than selec
 \subsection{Construction of transition probability matrices with multiple generations}
 \label{subsec_apx_multi}
 
-Such multi-generation transition matrices can also be computed iteratively by taking the product of single-generation matrices. 
-If $n_{p'}$ is the number of sampled lineages in the grandparental generation, and $i_{p'}$ is the number of derived alleles among those,
-and we define $P(i_o, \mathcal{S'}(n_{p'}) | \mathcal{C}'(i_{p'}, n_{p'}))$, as above, as the probability of
-drawing $i$ derived alleles and  the event $\mathcal{S'}(n_{p'})$ that we are using exactly $n_{p'}$ grandparental alleles given the event
-$\mathcal{C'}(i_{p'}, n_{p'})$ that $i_{p'}$ of the first $n_{p'}$ grandparental alleles are
-derived, we can condition on the number of contributing parental alleles $n_p$ and the number of
-derived alleles $i_p$ among them in the parental generation:
+Such multi-generation transition matrices can also be computed by iterating equation \eqref{eq_recur}. 
+Assuming, for simplicity, that the population sizes and selection coefficients are constant over the last two generations, 
+and using matrix products to account for sums over the number $i_p$ of parental derived alleles, we find 
 \begin{equation}
-  \begin{split}
-    P(i_o, \mathcal{S'}(n_{p'}) | \mathcal{C}'(i_{p'}, n_{p'})) & = \sum_{i_p,n_p} P(i_o, \mathcal{S'}(n_{p'}) ; \mathcal{C}(i_p,n_p), \mathcal{S}(n_p) | \mathcal{C}'(i_{p'}, n_{p'}))\\
-    &= \sum_{i_p,n_p}  P(i_o, \mathcal{S}(n_p) | \mathcal{C}(i_p,n_p), \mathcal{S'}(n_{p'}) ; \mathcal{C}'(i_{p'}, n_{p'})) P(\mathcal{C}(i_p,n_p), \mathcal{S'}(n_{p'}) | \mathcal{C}'(i_{p'}, n_{p'})) \\
-    &=  \sum_{i_p,n_p}  P(i_o, \mathcal{S}(n_p) | \mathcal{C}(i_p,n_p))) P(\mathcal{C}(i_p,n_p), \mathcal{S'}(n_{p'}) | \mathcal{C}'(i_{p'}, n_{p'})) \\
-    &=   \sum_{n_p}^{n_{p,max}} T_{n_p,n_o} T_{n_{p'}, n_p},
-  \end{split}
+\begin{split}
+\afs{n_o}{t} &=  \sum_{n_p=1}^{n_{p,max}}  \mathbf{T}_{n_p,n_o}     \afs{n_p}{t-1}\\
+&=  \sum_{n_p=1}^{n_{p,max}} \mathbf{T}_{n_p,n_o}     \sum_{n'_p=1}^{n'_{p,max}}  \mathbf{T}_{n'_p,n_p}\afs{n'_p}{t-2}\\
+&=  \sum_{n'_p=1}^{n'_{p,max}}  \left(\sum_{n_p=1}^{n_{p,max}} \mathbf{T}_{n_p,n_o}      \mathbf{T}_{n'_p,n_p} \right)\afs{n'_p}{t-2}\\
+&\equiv  \sum_{n'_p=1}^{n'_{p,max}}  T^{(2)}_{n_p',n_o} \afs{n'_p}{t-2}.
+\end{split}
 \end{equation}
-where the sum over $i_p$ in the last row is included as part of the product of transition matrices
-$\mathbf{T}$. 
+where $n'_{p'}$ is the number of sampled lineages in the grandparental generation, and $n_{p,max}$ is the maximum number of 
+sampled parental alleles considered. 
 
-Since each matrix
-product takes $O(n_o n_p n_{p'})$, and there are at most $O(n_{p,max})$ such products, the computation of this
+Since each matrix product takes $O(n_o n_p n_{p'})$, and there are at most $O(n_{p,max})$ such products, the computation of this
 matrix product takes at most $O(n_o n_{p,max}^2 n_{p'}).$ This scaling can be improved upon in numerical 
 implementations by summing only over values of $n_p$ that contribute appreciably. 
 In addition, we need to build the matrices $T_{n_p', n_p}$ themsleves. 
@@ -874,7 +875,7 @@ Thus a naive construction of a transition matrix over $g$ generations would requ
 \label{subsec_apx_tpm_deriv}
 
 The transition matrices $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ are defined in terms of sampling
-probabilities $P(\QQ_{n_o}(i_o,r) \ms_{n_o,r}(n_p) | \CC{(i_p,n_p)} ),$ where $\QQ_{n_o}(i_o,r)$ is the
+probabilities $P(\QQ_{n_o}(i_o,r), \ms_{n_o,r}(n_p) | \CC{(i_p,n_p)} ),$ where $\QQ_{n_o}(i_o,r)$ is the
 probability that $i_o$ of the first $n_o$ offspring carry the derived allele, and that the $r$
 draws following the $n_o$th drawn offspring are rejected. Our goal here is to derive a recursion
 over the last event $\ell$. We characterize the last draw event in terms of whether it is
