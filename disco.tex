@@ -833,56 +833,57 @@ where missing terms are of at least second order in products of  $s$, $\frac{n}{
 
 \subsection{Deriving the recursion on the transition matrices}
 
+The transition matrices $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ are defined in terms of sampling
+probabilities $P(Q_{n_o}(i_o,r) \ms_{n_o,r}(n_p) | \CC{i_p,n_p} ),$ where $Q_{n_o}(i_o,r)$ is the
+probability that $i_o$ of the first $n_o$ offspring carry the derived allele, and that the $r$
+draws following the $n_o$th drawn offspring are rejected. Our goal here is to derive a recursion
+over the last event $\ell$. We characterize the last draw event in terms of whether it is
+successful ($\sigma_\ell=1$) or not ($\sigma_\ell=0$); whether it draws a derived allele
+($\gamma_\ell=1$) or not ($\gamma_\ell=0$), and whether it draws a previously undrawn parental
+allele ($\delta_\ell=1$) or not ($\delta_\ell=0$).
 
-The transition matrices $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ are defined in terms of sampling probabilities 
-$P(Q_{n_o}(i_o,r) \ms_{n_o,r}(n_p) | \CC{i_p,n_p} ),$
-where $Q_{n_o}(i_o,r)$ is the probability that $i_o$ of the first $n_o$ offspring carry the derived allele, 
-and that the $r$ draws following the $n_o$th drawn offspring are rejected. Our goal here is to derive 
-a recursion over the last event $\ell$. We characterize the last draw event in terms of whether it is successful 
-($\sigma_\ell=1$) or not ($\sigma_\ell=0$); whether it draws a derived allele ($\gamma_\ell=1$) or not 
-($\gamma_\ell=0$), and whether it draws a previously undrawn parental allele ($\delta_\ell=1$) or not ($\delta_\ell=0$).
 With this notation in place, we can write our recursion as: 
  \begin{equation}
   P(Q_{n_o}(i_o,r) \ms_{n_o,r}(n_p) | \CC{(i_p,n_p)} ) = \sum_\ell P(Q_{n_o}(i_o,r) \ms_{n_o,r}(n_p),\ell | \CC(i_p,n_p) ) . 
  \end{equation}
 Now that we have explicitly specified the last draw $\ell,$ we can remove the corresponding information from events $Q$ and $\ms,$ 
 
-  \begin{equation}
+\begin{equation}
   P(Q_{n_o}(i_o,r), \ms_{n_o,r}(n_p) | \CC{(i_p,n_p)} ) = \sum_\ell \sum_{r' \in R_\ell} P(Q_{n'_o}(i'_o,r'), \ms_{n'_o,r'}(n'_p),\ell | \CC{(i_p,n_p)} ) . 
- \end{equation}
+\end{equation}
+
 where $i_o' = i_o-\gamma_\ell$,  $n_o' = n_o-\sigma_\ell,$ $i'_p= i_p - \delta_\ell \gamma_\ell,$  and $n'_p  = n_p - \delta_\ell$ represent the 
 counts of derived and total alleles among the offspring and parents prior to the last draw. 
  The number of failures $r'$ can take more than one value if the last draw was a success,
 so that 
+
 \begin{equation}
-R_\ell = \begin{cases} 
-\{r-1\} & \text{for } \sigma_\ell = 0, \\
- \mathbb{N} & \text{for } \sigma_\ell = 1.
-\end{cases}
+  R_\ell = \begin{cases} 
+    \{r-1\}    & \text{for } \sigma_\ell = 0, \\
+    \mathbb{N} & \text{for } \sigma_\ell = 1.
+  \end{cases}
 \end{equation} 
 
+We can further simplify the notation by defining shorthand for events prior to the last draw, $Q' =
+Q_{n'_o}(i'_o,r'),$   $\ms' = \ms_{n'_o,r'}(n'_p)$, and $\CC' = \CC{(i'_p,n'_p)}$, and after the
+last draw $Q = Q_{n_o}(i_o,r),$ $\ms = \ms_{n_o,r}(n_p)$, and $\CC = \CC{(i_p,n_p)}$
 
-We can further simplify the notation by defining
-shorthand for events prior to the last draw, $Q' = Q_{n'_o}(i'_o,r'),$   $\ms' = \ms_{n'_o,r'}(n'_p)$, and $\CC' = \CC{(i'_p,n'_p)}$, and after the last draw $Q = Q_{n_o}(i_o,r),$ $\ms = \ms_{n'_o,r'}(n'_p)$   $\CC = \CC{(i_p,n_p)}$
+The event  $\CC'$ is fully determined by  $\CC$ and $\ell$, so that we can write
 
-
-
-
- The event  $\CC'$ is fully determined by  $\CC$ and $\ell$, so that we can write
-
-  \begin{equation}
+\begin{equation}
   \begin{split}
-   \mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o} = P(Q, \ms| \CC) &= \sum_\ell \sum_{r' \in R_\ell} P(Q', \ms',\ell | \CC) \\ 
- &=\sum_\ell \sum_{r' \in R_\ell}P(Q', \ms',\ell,  \CC'  |\CC) \\
- &=\sum_\ell \sum_{r' \in R_\ell}P(\ell |Q', \ms' , \CC',  \CC ) P(Q', \ms'|  \CC',   \CC)  P( \CC' |\CC) \\
-&=\sum_\ell \sum_{r' \in R_\ell}P(\ell |Q', \ms' , \CC',  \CC ) P(Q', \ms'|  \CC')    P( \CC'  |\CC) \\
-&=\sum_\ell \sum_{r' \in R_\ell}P(\ell |Q', \ms' , \CC',  \CC )   P( \CC'  |\CC)  \mathbf{T}_{r}\Coalc{i'_p}{n'_p}{i'_o}{n'_o}
- \end{split}
- \end{equation}
-where the third line is an application of the chain rule and the fourth line uses the independence of primed events on the last draw. 
-We now simply need to enumerate all the distinct types of events for the last draw and compute the corresponding probabilities, 
-which we do on Figure \ref{fig:rec-selection-dynamic-fail}.
-\sgcomment{Please check the math on that ! } 
+    \mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o} = P(Q, \ms| \CC) &= \sum_\ell \sum_{r' \in R_\ell} P(Q', \ms',\ell | \CC) \\ 
+    &=\sum_\ell \sum_{r' \in R_\ell}P(Q', \ms',\ell, \CC' |\CC) \\
+    &=\sum_\ell \sum_{r' \in R_\ell}P(\ell |Q', \ms', \CC', \CC ) P(Q', \ms'| \CC', \CC)  P(\CC' |\CC) \\
+    &=\sum_\ell \sum_{r' \in R_\ell}P(\ell |Q', \ms', \CC', \CC ) P(Q', \ms'| \CC')       P(\CC' |\CC) \\
+    &=\sum_\ell \sum_{r' \in R_\ell}P(\ell |Q', \ms', \CC', \CC ) P(\CC' |\CC)  \mathbf{T}_{r}\Coalc{i'_p}{n'_p}{i'_o}{n'_o}
+  \end{split}
+\end{equation}
+
+where the third line is an application of the chain rule and the fourth line uses the independence
+of primed events on the last draw.  We now simply need to enumerate all the distinct types of
+events for the last draw and compute the corresponding probabilities, which we do on Figure
+\ref{fig:rec-selection-dynamic-fail}.  \sgcomment{Please check the math on that ! } 
 
 \subsection{Worked example of the transition matrix}
 \label{subsec:apx:tpm}
