@@ -24,9 +24,9 @@ if __name__ == "__main__":
     sns.set_context("paper", font_scale=1.5, rc=plot_rc)
     fig, ax = plt.subplots(figsize=(9,6))
 
-    for q in [0.99, 0.95, 0.9, 0.75, 0.5]:
+    for q in [0.999, 0.99, 0.9, 0.5]:
         nstar = [fsolve(solve_critical, 50, (x/N, N, q)) for x in Ns]
-        ax.plot(Ns, nstar, label=f"{int(q*100)}%")
+        ax.plot(Ns, nstar, label=f"{np.round(q*100, 3)}%")
     ax.legend(title="Confidence")
 
     ax.set(xlabel="Ns", ylabel="Critical sample size",

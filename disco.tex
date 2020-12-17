@@ -363,7 +363,7 @@ where $\mu$ is the per-site (forward) mutation rate, and $e_1$ is the first colu
 matrix of size $n$. Figure \ref{fig_strong-selection} shows the comparison of the \textit{AFS}
 calculated from Equation \ref{eq_sfs_calc}, the diffusion approximation
 \cite[eq. 9.23]{Ewens2004}, and the calculation performed in \texttt{Moments}
-\citep{JouganousEtAl2017}.
+\citep{JouganousEtAl2017}. All the vectors are normalized such that $\sum_{i_o} \textit{AFS} = 1$.
 
 Figures \ref{fig_strong-selection}A-C show that there is a disagreement between the exact
 Wright-Fisher and the diffusion solutions for singletons and doubletons. This effect increases as in
@@ -398,8 +398,6 @@ than $N$. We therefore seek asymptotic results for the convergence of the recurs
 \label{subsec_missing}
 
 Truncation in equation \ref{eq_truncated} means that if $n_p > n_o$, some probability will be lost. 
- \sgcomment{Did you do re-normalization of the truncated matrix?} \ikcomment{I did for figure 3, yes}
-% add a sentence about normalizing
 
 The $(i_p,i_o)^\text{th}$ element of matrix $\mathbf{Q}_{n_o}$ is the probability
 $P_{n_o}(\mathcal{S'}_{n_o} (i_o)| \mathcal{C'}(i_p,n_p))$ of event $\ms'_{n_o}(i_o)$ that we observe $i_o$ derived alleles in
@@ -730,13 +728,10 @@ and backward approaches \cite{KammEtAl2017}, the can help genetic models catch u
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{fig/missing.pdf}
-  \caption{Probability that there are more contributing parents than offspring, $n_p > n_o$.
-    Calculated as $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$, $N=1000$.}
+  \caption{Probability that there are more contributing parents than offspring: $n_p > n_o$.
+    Calculated as $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$, with $N=1000$.}
   \label{fig_apx_missing}
 \end{figure}
-
-\ikcomment{Better notation}
-\ikcomment{Better normalization}
 
 %\subsection{Quantiles of the Gaussian approximation}
 
@@ -756,8 +751,6 @@ and backward approaches \cite{KammEtAl2017}, the can help genetic models catch u
     lines are calculated with $N_e=1000$.}
   \label{fig_apx_critical_normal}
 \end{figure}
-
-\ikcomment{Change the quantiles}
 
 \begin{figure}[H]
   \centering
