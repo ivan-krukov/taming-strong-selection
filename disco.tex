@@ -147,7 +147,7 @@ sample.
     $(i_p, n_p)$ & Event of \textit{drawing} exactly $i_p$ derived out of $n_p$ distinct parental lineages \\
     $\mathcal{C}(i_p, n_p)$ & Event of $n_p$ parental lineages \textit{containing} $i_p$ derived alleles \\
     $\mathcal{S}(i_o, n_p)$ & Event that  $i_o$ offpring carry the derived allele and that $n_p$ distinct parental alleles were drawn \\
-    $\ms_{n_o,r}(i_o, n_p)$ & Event that  $i_o$ out of $n_o$ offspring carry the derived allele, that the first $r$ draws for the 
+    $\ms_{n_o}(i_o, n_p, r)$ & Event that  $i_o$ out of $n_o$ offspring carry the derived allele, that the first $r$ draws for the 
     $n_o+1$th offspring were rejected, 
     and that $n_p$ distinct parental alleles were drawn (across all draws).
     %$\mathcal{Q}_{n_o}(i_o, r)$ & Event of $i_o$ of $n_o$ successfully drawn offspring lineages drawn with $r$ selective deaths\\
@@ -270,7 +270,7 @@ We can think of Wright-Fisher sampling as being performed one offspring at a tim
 and even one draw at a time. We will define recursions by conditioning on the last draw, 
 whether it is accepted or rejected. 
 The recursion will be over $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o},$ defined as the probability
-$P_{n_o}\left[\ms_{n_o,r}(i_o, n_p) | \mathcal{C}(i_p, n_p)\right]$ where $\ms_{n_o,r}(i_o, n_p),$ 
+$P_{n_o}\left[\ms_{n_o}(i_o, n_p, r) | \mathcal{C}(i_p, n_p)\right]$ where $\ms_{n_o}(i_o, n_p, r),$ 
 a generalization of  $\ms(i_o, n_p),$ 
 is the event that $i_o$ of the first $n_o$ successfully drawn offspring are derived, 
 that the following $r$ draws are rejected, and that the $n_o$ successful draws
@@ -882,7 +882,7 @@ Thus a naive construction of a transition matrix over $g$ generations would requ
 \label{subsec_apx_tpm_deriv}
 
 The transition matrices $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ are defined in terms of sampling
-probabilities $P(\ms_{n_o,r}(i_o, n_p) | \CC{(i_p,n_p)} ),$ where $\ms_{n_o,r}(i_o,n_p)$ is the
+probabilities $P(\ms_{n_o}(i_o, n_p, r) | \CC{(i_p,n_p)} ),$ where $\ms_{n_o}(i_o,n_p, r)$ is the
 event that $i_o$ of the first $n_o$ offspring carry the derived allele, that the $r$
 draws following the $n_o$th drawn offspring are rejected, and that at the end of the $r$th
 rejection we have drawn exactly $n_p$ parents . Our goal here is to derive a recursion
@@ -893,14 +893,15 @@ allele ($\delta_\ell=1$) or not ($\delta_\ell=0$).
 
 With this notation in place, we can write our recursion as: 
  \begin{equation}
-  P( \ms_{n_o,r}(i_o, n_p) | \CC{(i_p,n_p)} ) = \sum_\ell P( \ms_{i_o, n_o,r}(n_p),\ell | \CC(i_p,n_p) ) . 
+  P( \ms_{n_o}(i_o, n_p, r) | \CC{(i_p,n_p)} ) = \sum_\ell P( \ms_{i_o, n_o}(n_p, r),\ell | \CC(i_p,n_p) ) . 
  \end{equation}
 
 Now that we have explicitly specified the last draw $\ell,$ we can remove the corresponding
 information from event $\ms,$ 
 
 \begin{equation}
-  P(\ms_{n_o,r}(i_o, n_p) | \CC{(i_p,n_p)} ) = \sum_\ell \sum_{r' \in R_\ell} P(\ms_{n'_o,r'}(i_o', n'_p),\ell | \CC{(i_p,n_p)} ) . 
+  P(\ms_{n_o}(i_o, n_p, r) | \CC{(i_p,n_p)} ) = \sum_\ell \sum_{r' \in R_\ell} P(\ms_{n'_o}(i_o',
+  n'_p, r),\ell | \CC{(i_p,n_p)} ) . 
 \end{equation}
 where $i_o' = i_o-\gamma_\ell$,  $n_o' = n_o-\sigma_\ell,$ $i'_p= i_p - \delta_\ell \gamma_\ell,$  and $n'_p  = n_p - \delta_\ell$ represent the 
 counts of derived and total alleles among the offspring and parents prior to the last draw. 
@@ -915,8 +916,8 @@ so that
 \end{equation} 
 
 We can further simplify the notation by defining shorthand for events prior to the last draw,
- $\ms' = \ms_{n'_o,r'}(i_o', n'_p)$, and $\CC' = \CC{(i'_p,n'_p)}$, and after the
-last draw $\ms = \ms_{n_o,r}(i_o, n_p)$, and $\CC = \CC{(i_p,n_p)}$
+ $\ms' = \ms_{n'_o}(i_o', n'_p, r)$, and $\CC' = \CC{(i'_p,n'_p)}$, and after the
+last draw $\ms = \ms_{n_o}(i_o, n_p, r)$, and $\CC = \CC{(i_p,n_p)}$
 
 The event  $\CC'$ is fully determined by  $\CC$ and $\ell$, so that we can write
 
