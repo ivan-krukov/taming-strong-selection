@@ -49,7 +49,7 @@
     to the study of pathogenic variation, appears particularly daunting.
     However, we find that the competition between drift and natural selection in this regime can be
     used to define asymptotically closed recursions for the distribution of allele
-    frequencies -- well beyond the strong selection limit.
+    frequencies that are accurate well beyond the strong selection limit.
  
     Selection becomes more analytically tractable when the sample size $n$ is larger than twice the
     population-scaled selection coefficient: $n \ge 2Ns$ ($4Ns$ in diploids). In this regime, the
@@ -192,33 +192,36 @@ where the subscript $n_o$ indicates dependence on parameter $n_o$. To obtain a r
 \textit{AFS}, we use an exchangeability property of the parental lineages: the order
  in which we draw previously unsampled parental lineages in the Wright-Fisher
 model is random. 
-
 In other words, we could draw a random permutation of the parental population, and select unsampled parents
 in order from this permutation. We will separate properties of this permutation, which depend only
 on parental \textit{AFS}, from properties of Wright-Fisher sampling, which depend on population
 size and selection coefficients.  Concretely, the event $(i_o, i_p,n_p)$ that we draw $i_o$ derived offspring 
 alleles from $n_p$ distinct parents of which $i_p$ are derived can be expressed as the intersection of two events,
-$\mathcal{C}(i_p,n_p)$ and $\mathcal{S}(i_o, n_p)$. Event $\mathcal{C}(i_p,n_p)$ specifies that the
+$\mathcal{C}(i_p,n_p)$ and $\mathcal{S}_{n_o}(i_o, n_p)$. Event $\mathcal{C}(i_p,n_p)$ specifies that the
 first $n_p$ parental lineages from the random permutation carry $i_p$ derived alleles. Event
-$\mathcal{S}(i_o, n_p)$ requires that the Wright-Fisher drawing process draws $i_o$ offspring alleles 
-while drawing from exactly $n_p$ distinct parental lineages. Event $\mathcal{C}(i_p, n_p)$ is a property of the allele
+$\mathcal{S}_{n_o}(i_o, n_p)$ requires that the Wright-Fisher drawing process of $n_o$ offspring drew $i_o$ derived offspring alleles 
+and sampled exactly $n_p$ distinct parental lineages. Event $\mathcal{C}(i_p, n_p)$ depends on the allele
 frequency distribution in the parental generation: $P(\mathcal{C}(i_p,n_p)) =\afs{n_p}{t} (i_p)$
 by definition of the \textit{AFS}. Thus 
 
 \begin{equation}
   \begin{split}
-    \afs{n_o}{t}(i_o)&= \sum_{n_p,i_p} P_{n_o}(\mathcal{S}(i_o, n_p), \mathcal{C}(i_p,n_p) )\\
-    &=   \sum_{n_p,i_p} P_{n_o}(\mathcal{S}(i_o, n_p)| \mathcal{C}(i_p,n_p) ) P(\mathcal{C}(i_p,n_p))\\
-    &=   \sum_{n_p,i_p} P_{n_o}(\mathcal{S}(i_o, n_p)| \mathcal{C}(i_p,n_p) )  \afs{n_p}{t-1}(i_p)\\
-    &\equiv  \sum_{n_p,i_p}  \mathbf{T}_{n_p,n_o}     \afs{n_p}{t-1}(i_p).
+    \afs{n_o}{t}(i_o)&= \sum_{n_p,i_p} P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p), \mathcal{C}(i_p,n_p) )\\
+    &=   \sum_{n_p,i_p} P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p)| \mathcal{C}(i_p,n_p) ) P(\mathcal{C}(i_p,n_p))\\
+    &=   \sum_{n_p,i_p} P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p)| \mathcal{C}(i_p,n_p) )  \afs{n_p}{t-1}(i_p)%\\
+%    \afs{n_o}{t} &\equiv  \sum_{n_p}  \mathbf{T}_{n_p,n_o}     \afs{n_p}{t-1}.
   \end{split}
-  \label{eq_recur}
 \end{equation}
-where the $\mathbf{T}_{n_p,n_o}$ can be thought of as $(n_o+1) \times (n_p+1)$ transition
+Using matrix notation to account for the sum over $i_p,$ we have 
+\begin{equation}
+  \afs{n_o}{t} = \sum_{n_p}  \mathbf{T}_{n_p,n_o}     \afs{n_p}{t-1}
+    \label{eq_recur}
+  \end{equation}
+where $\mathbf{T}_{n_p,n_o}(i_o,i_p) = P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p)| \mathcal{C}(i_p,n_p) ) $ can be thought of as $(n_o+1) \times (n_p+1)$ transition
 probability matrix, whose row and column indices correspond to the number of derived alleles in the
 offspring and contributing parental lineages, respectively.
 
-The AFS  $\afs{n_p}{t-1}(i_p)$ for any  $n_p\leq n_o$ can be obtained by downsampling from $\afs{n_o}{t-1}$ (\textit{i.e.}, $\afs{n_p}{t-1} =
+The AFS  $\afs{n_p}{t-1}$ for any  $n_p\leq n_o$ can be obtained by downsampling from $\afs{n_o}{t-1}$ (\textit{i.e.}, $\afs{n_p}{t-1} =
 \mathbf{H}_{n_p,n_o} \afs{n_o}{t-1}$ for hypergeometric projection matrix $\mathbf{H}_{n_p,n_o}$ if
 $n_p\leq n_o$). Thus, equation \eqref{eq_recur} provides a closed form recursion for $\Phi_{n_o}$ under neutrality.
 This property was used in \cite{JouganousEtAl2017} to efficiently compute distributions of allele
@@ -271,46 +274,57 @@ and even one draw at a time. We will define recursions by conditioning on the la
 whether it is accepted or rejected. 
 The recursion will be over $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o},$ defined as the probability
 $P_{n_o}\left[\ms_{n_o}(i_o, n_p, r) | \mathcal{C}(i_p, n_p)\right]$ where $\ms_{n_o}(i_o, n_p, r),$ 
-a generalization of  $\ms(i_o, n_p),$ 
+a generalization of  $\ms_{n_o}(i_o, n_p),$ 
 is the event that $i_o$ of the first $n_o$ successfully drawn offspring are derived, 
-that the following $r$ draws are rejected, and that the $n_o$ successful draws
-and $r$ failures require exactly $n_p$ distinct parental draws. 
+that the following $r$ draws are rejected, and that the $n_o$ offspring and subsequent $r$ failures 
+required exactly $n_p$ distinct parental draws. 
 This bracket notation is convenient to keep track of
 the number of relevant parental lineages (at the top) and offspring lineages (at the bottom), at the
 cost of obscuring their different probabilistic role.
 
-Figure \ref{fig_rec_selection_dynamic_fail} shows a graphical representation of the recursion 
--- a mathematical deivation is provided in the appendix. 
-The recursion can be broken down in a recursion over $r$, determined by rejected draws, 
-and a recursion over $n_o$, determined by successful draws.  
-The recursion over $r$ is shown at the bottom of
-Figure \ref{fig_rec_selection_dynamic_fail} (cases \textit{rC,rD}). If the last draw was rejected, the sampling 
-prior to the last draw must have ended with $r-1$ rejected draws. We
-must simply track whether the last rejected draw was from a previously drawn parental lineage (case
-\textit{rD}), in which case the number of parental lineages is unchanged, or of a new lineage (case
-\textit{rC}), in which case the sample with $r-1$ rejections must have had exactly one fewer distinct parent and 
-one fewer derived parental allele than the full sample.  
+The last draw can be characterized by whether it was successful or rejected, whether it drew a 
+derived or ancestral allele, and whether it drew a previously drawn parental lineage or not. 
+The state of the sampling process prior to the last draw can be described by a number of successfully draws 
+offspring $n'_o$, of which $i'_o$ are derived, a number of distinct parental lineages 
+$n'_p$ of which $i'_p$ are derived, and a number of failures since last successful draw $r'$.
+We show in the appendix and illustrate in Figure \ref{fig_rec_selection_dynamic_fail}  that we 
+can express $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ as a sum over a small number of terms 
+of the form $\mathbf{T}_{r'}\Coalc{i'_p}{n'_p}{i'_o}{n'_o}.$ If $r>0,$ the last draw must be a failure 
+and $r' = r - 1$ (leading to cases \textit{rC,rD} in Figure \ref{fig_rec_selection_dynamic_fail}).
+If $r=0,$ the last draw must be a success and $n_o' = n_o-1$ (cases \textit{A} to \textit{D})
+
+% Figure \ref{fig_rec_selection_dynamic_fail} shows a graphical representation of the recursion, and 
+%A mathematical derivation is provided in the appendix. 
+%The recursion can be broken down in a recursion over $r$, determined by rejected draws, 
+%and a recursion over $n_o$, determined by successful draws.  
+%The recursion over $r$ is shown at the bottom of
+%Figure \ref{fig_rec_selection_dynamic_fail} (cases \textit{rC,rD}). If the last draw was rejected, the sampling 
+%prior to the last draw must have ended with $r-1$ rejected draws. We
+%must simply track whether the last rejected draw was from a previously drawn parental lineage (case
+%\textit{rD}), in which case the number of parental lineages is unchanged, or of a new lineage (case
+%\textit{rC}), in which case the sample with $r-1$ rejections must have had exactly one fewer distinct parent and 
+%one fewer derived parental allele than the full sample.  
  
-Thus we can obtain $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ from
-$\mathbf{T}_{r-1}\Coalc{i_p-1}{n_p-1}{i_o}{n_o}$ and $\mathbf{T}_{r-1}\Coalc{i_p}{n_p}{i_o}{n_o},$
-and recursively back to terms of the form $\mathbf{T}_{0}\Coalc{i_p'}{n_p'}{i_o}{n_o}$, with $n_p'\leq n_p$
+%Thus we can obtain $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ from
+%$\mathbf{T}_{r-1}\Coalc{i_p-1}{n_p-1}{i_o}{n_o}$ and $\mathbf{T}_{r-1}\Coalc{i_p}{n_p}{i_o}{n_o},$
+%and recursively back to terms of the form $\mathbf{T}_{0}\Coalc{i_p'}{n_p'}{i_o}{n_o}$, with $n_p'\leq n_p$
   
-To progress further and express $\mathbf{T}_{0}\Coalc{\cdot}{\cdot}{i_o}{n_o}$ in terms of
-$\mathbf{T}_{r}\Coalc{\cdot}{\cdot}{\cdot}{n_o-1}$, we condition on the last successful draw. This
-last successful draw can be (Figure \ref{fig_rec_selection_dynamic_fail}) previously unsampled
-derived (A), sampled derived (B), unsampled ancestral (C), or sampled ancestral (D).
+%To progress further and express $\mathbf{T}_{0}\Coalc{\cdot}{\cdot}{i_o}{n_o}$ in terms of
+%$\mathbf{T}_{r}\Coalc{\cdot}{\cdot}{\cdot}{n_o-1}$, we condition on the last successful draw. This
+%last successful draw can be (Figure \ref{fig_rec_selection_dynamic_fail}) previously unsampled
+%derived (A), sampled derived (B), unsampled ancestral (C), or sampled ancestral (D).
   
-A challenge with this recursion is that the number of rejected lineages $r$ for each individual draws 
-can be infinite.
- However, the probability of having multiple selective deaths for a single successful draw decreases,
-rapidly, as $s^r.$ We therefore modify the Wright-Fisher model such that at most $r_{max}$ failed
-draws \emph{per offpsring lineage} are allowed, after which the next draw is immune to selection. Given
+A challenge with this recursion is that the number of rejected lineages $r$ leading to each successful 
+draw can be infinite, in principle.
+ However, the probability of having $r$ selective deaths for a single successful draw decreases
+rapidly with $r$, as $s^r.$ We therefore modify the Wright-Fisher model such that at most $r_{max}$ failed
+draws \emph{per offpsring} are allowed, after which the next draw is immune to selection. Given
 $s<1$, we can easily pick $r_{max}$ to ensure excellent convergence. For example, with $s=0.01$, 
 which corresponds to $Ns=100$ with $N=10,000$, the probability of having more than 
 four selective deaths is less than $10^{-10}$, and the probability of having more than 8 selective deaths is 
 less than $10^{-20}.$ We have used $r_{max}=4$ in numerical calculations presented below. 
 
-Using these two recursions, and using caching to avoid re-computing previously computed values,
+The number of terms to compute in this recursion is finite. Using caching to avoid re-computing previously computed values,
 we can systematically compute all the terms in Equation \ref{fig_rec_selection_dynamic_fail}.
 
 \begin{figure}
