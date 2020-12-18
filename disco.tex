@@ -752,7 +752,7 @@ and backward approaches \cite{KammEtAl2017}, the can help genetic models catch u
   \centering
   \includegraphics[width=\textwidth]{fig/missing.pdf}
   \caption{Probability that there are more contributing parents than offspring: $n_p > n_o$.
-    Calculated as $1-\sum_{i_o} \mathbf{Q}_{n_o}{i_p, i_o}$, with $N=1000$.}
+    Calculated as $1-\sum_{i_o} \mathbf{Q}_{n_o}{(i_p, i_o)}$, with $N=1000$.}
   \label{fig_apx_missing}
 \end{figure}
 
@@ -783,117 +783,6 @@ and backward approaches \cite{KammEtAl2017}, the can help genetic models catch u
   of offspring lineages $n_o$, and parental lineages $n_p$. }
   \label{fig_apx_skellam}
 \end{figure}
-
-\subsection{Variance of number of contributing lineages}
-\label{subsec_apx_variance}
-
-We can obtain the variance of the distribution of the number of parental lineages $P(n_p | n_o)$ by using the law of total variance:
-
-\begin{equation}
-  \label{eq_apx_var}
-\Var\left[n_p-n_o \right] = \Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right]+  E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] 
-\end{equation}
-
-As previously, we are assuming that all the parental alleles are derived.
-
-The expectation in the first term can be derived from the occupancy distribution and the identity
-\ref{eq_identity}:
-\begin{equation}
-\begin{split}
-\Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right] &= \Var_{n_g}\left[E\left[n_p| n_g \right]\right] \\
-&= \Var_{n_g}\left[N\left(1-(1-\frac{1}{N})^{n_g} \right) \right] \\ 
-&= N^2 \Var_{n_g}\left[(1-\frac{1}{N})^{n_g} \right] \\
-&= N^2 \left( E_{n_g}\left[(1-\frac{1}{N})^{2n_g} \right] - E_{n_g}\left[(1-\frac{1}{N})^{n_g} \right]^2\right) \\
-&= N^2 \left( \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o} 
--   \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)}\right)^{2n_o} \right) \\
-\end{split}
-\end{equation}
-
-The variance of the second term of Equation \eqref{eq_apx_var} is the variance of the modified occupancy
-distribution \cite{JohnsonEtAl2005}:
-
-\begin{equation}
-\begin{split}
-E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] & = E_{n_g}\left[N ((N - 1) (1 - 2/N)^{n_g} + (1 - 1/N)^{n_g} - N (1 - 1/N)^{2 n_g}) \right] \\
-& = N (N-1)  \left(1-\frac{2}{N}\right)^{n_o} \left(\frac{1- s}{1- s  \left(1-\frac{2}{N}\right)}\right)^{n_o} +  \left(1-\frac{1}{N}\right)^{n_o} \left(\frac{1- s}{1- s  \left(1-\frac{1}{N}\right)}\right)^{n_o} \\
-&-N  \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-  s}{1- s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o}. 
-\end{split}
-\end{equation}
-
-Combining the two terms in Equation \eqref{eq_apx_var}, we get
-
-\newcommand{\vara}[1]{\left(1-\frac{#1}{N}\right)}
-\newcommand{\varb}[1]{\left(\frac{1-s}{1-s #1}\right)}
-
-\begin{equation}
-  \begin{aligned}
-    \operatorname{Var}[n_p-n_o | n_o] &=
-    N^2\left( \vara{1}^{2n_o}\varb{\vara{1}^2}^{n_o}-\vara{1}^{2n_o}\varb{\vara{1}}^{2n_o} \right) + \\
-    &+ N(N-1)\vara{2}^{n_o}\varb{\vara{2}} + \vara{1}^{n_o}\varb{\vara{1}}^{n_o} - \\
-    &- N\vara{1}^{2n_o} \varb{\vara{1}^{2}}^{n_o}.
-    \label{eq_exact_var}
-  \end{aligned}
-\end{equation}
-
-Taking series expansion in Mathematica, we can show that  
-
-\begin{equation}
-  \begin{aligned}
-    \operatorname{Var}[n_p-n_o | n_o] &= n s + \frac{n (n-1)}{2 N_e}  + \cdots
-    \label{eq_exact_var}
-  \end{aligned}
-\end{equation}
-where missing terms are of at least second order in products of  $s$, $\frac{n}{N}$,  and $\frac{1}{N}.$
-
-\subsection{Simplifying Gaussian approximation}
-\label{subsec_apx_gauss}
-
-\begin{equation}
-\begin{aligned}
-  z &= \frac{X-\mu}{\sqrt{\sigma^2}} \\
-  z &= \frac{-\left(  n_zs - \frac{n_z(n_z-1)}{2N} \right)}	{\sqrt{n_zs + \frac{n_z(n_z-1)}{2N}}} \\
-  z &\approx \frac{\frac{n_z^2}{2N} - n_z s}	{\sqrt{n_zs + \frac{n_z^2}{2N}}} \\
-  z &\geq \frac{\frac{n_z^2}{2N} - n_z s}{n_z / \sqrt{N}} \\
-  \frac{z}{\sqrt{N}} &\geq \frac{n_z}{2N} - s \\
-  2\sqrt{N}z &\geq n_z - 2Ns \\
-  n_z &\leq 2\sqrt{N}z + 2Ns
-\end{aligned}
-\end{equation}
-
-The approximation on line 3 is made assuming that there is more drift than selection, so that $n_zs
-\leq \frac{n_z^2}{2N}$. Thus, the variance is smaller than twice the drift term: $\left(n_zs +
-\frac{n_z^2}{2N} \right) \leq \left(\frac{n_z^2}{2N} + \frac{n_z^2}{2N} \right)$.
-
-\subsection{Construction of transition probability matrices with multiple generations}
-\label{subsec_apx_multi}
-
-Such multi-generation transition matrices can also be computed by iterating equation \eqref{eq_recur}. 
-Assuming, for simplicity, that the population sizes and selection coefficients are constant over the last two generations, 
-and using matrix products to account for sums over the number $i_p$ of parental derived alleles, we find 
-\begin{equation}
-\begin{split}
-\afs{n_o}{t} &=  \sum_{n_p=1}^{n_{p,max}}  \mathbf{T}_{n_p,n_o}     \afs{n_p}{t-1}\\
-&=  \sum_{n_p=1}^{n_{p,max}} \mathbf{T}_{n_p,n_o}     \sum_{n'_p=1}^{n'_{p,max}}  \mathbf{T}_{n'_p,n_p}\afs{n'_p}{t-2}\\
-&=  \sum_{n'_p=1}^{n'_{p,max}}  \left(\sum_{n_p=1}^{n_{p,max}} \mathbf{T}_{n_p,n_o}      \mathbf{T}_{n'_p,n_p} \right)\afs{n'_p}{t-2}\\
-&\equiv  \sum_{n'_p=1}^{n'_{p,max}}  T^{(2)}_{n_p',n_o} \afs{n'_p}{t-2}.
-\end{split}
-\end{equation}
-where $n'_{p'}$ is the number of sampled lineages in the grandparental generation, and $n_{p,max}$ and $n'_{p,max}$ are the maximum number of 
-sampled parental alleles considered in the parental and grandparental generations, respectively.  We can choose $n_{p,max}>n_o$ and
-$n_{p,max} = n_o$  to preserve closure of the moment equation while allowing for drift to cancel out selection events over the course of two generations. 
-
-Since each matrix product takes $O(n_o n_p n_{p'})$, and there are at most $O(n_{p,max})$ such products, the computation of this
-matrix product takes at most $O(n_o n_{p,max}^2 n_{p'}).$ This scaling can be improved upon in numerical 
-implementations by summing only over values of $n_p$ that contribute appreciably. 
-In addition, we need to build the matrices $T_{n_p', n_p}$ themsleves. 
-In the recursive approach, the computation of the matrix for the largest sample includes the computation of matrices for
-smaller sample sizes, so the computation time is at most that of the largest possible matrix, $O(r_{max} n_{p,max}^2, n_{p',max}^2).$ 
-In the exact formulation of our model, $n_p$ can be as large as $ r_{max} n_o,$ however this would require every draw to be rejected by selection and
- only contribute terms of order $s^{n_o r_{max}}.$ A numerically appropriate cutoff for a given $n_o$ and $s$ can be computed dynamically 
- by keeping track of the proportion of unaccounted-for lineages. In most practical applications with $s<0.1$ we expect that choosing, e.g.,  
- $n_{p,max}=  2 n_o$ would provide excellent convergence, hence an overall scaling of   $O(r_{max} n_{o}^4)$ for the construction of 
- the matrices and $O(n_o^4)$ for the matrix product.
-Thus a naive construction of a transition matrix over $g$ generations would require  $O( (g + r_{max} ) n_o^4).$ 
 
 \subsection{Deriving the recursion on the transition matrices}
 \label{subsec_apx_tpm_deriv}
@@ -952,5 +841,119 @@ where the third line is an application of the chain rule and the fourth line use
 of primed events on the last draw.  We now simply need to enumerate all the distinct types of
 events for the last draw and compute the corresponding probabilities, which we do on Figure
 \ref{fig_rec_selection_dynamic_fail}.
+
+
+\subsection{Variance of number of contributing lineages}
+\label{subsec_apx_variance}
+
+We can obtain the variance of the distribution of the number of parental lineages $P(n_p | n_o)$ by using the law of total variance:
+
+\begin{equation}
+  \label{eq_apx_var}
+\Var\left[n_p-n_o \right] = \Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right]+  E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] 
+\end{equation}
+As previously, we are assuming that all the parental alleles are derived.
+The expectation in the first term can be derived from the occupancy distribution and the identity
+\ref{eq_identity}:
+\begin{equation}
+\begin{split}
+\Var_{n_g}\left[E\left[n_p-n_o | n_g \right]\right] &= \Var_{n_g}\left[E\left[n_p| n_g \right]\right] \\
+&= \Var_{n_g}\left[N\left(1-(1-\frac{1}{N})^{n_g} \right) \right] \\ 
+&= N^2 \Var_{n_g}\left[(1-\frac{1}{N})^{n_g} \right] \\
+&= N^2 \left( E_{n_g}\left[(1-\frac{1}{N})^{2n_g} \right] - E_{n_g}\left[(1-\frac{1}{N})^{n_g} \right]^2\right) \\
+&= N^2 \left( \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o} 
+-   \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)}\right)^{2n_o} \right) \\
+\end{split}
+\end{equation}
+The variance of the second term of Equation \eqref{eq_apx_var} is the variance of the modified occupancy
+distribution \cite{JohnsonEtAl2005}:
+\begin{equation}
+\begin{split}
+E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] & = E_{n_g}\left[N ((N - 1) (1 - 2/N)^{n_g} + (1 - 1/N)^{n_g} - N (1 - 1/N)^{2 n_g}) \right] \\
+& = N (N-1)  \left(1-\frac{2}{N}\right)^{n_o} \left(\frac{1- s}{1- s  \left(1-\frac{2}{N}\right)}\right)^{n_o} +  \left(1-\frac{1}{N}\right)^{n_o} \left(\frac{1- s}{1- s  \left(1-\frac{1}{N}\right)}\right)^{n_o} \\
+&-N  \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-  s}{1- s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o}. 
+\end{split}
+\end{equation}
+
+Combining the two terms in Equation \eqref{eq_apx_var}, we get
+
+\newcommand{\vara}[1]{\left(1-\frac{#1}{N}\right)}
+\newcommand{\varb}[1]{\left(\frac{1-s}{1-s #1}\right)}
+
+\begin{equation}
+  \begin{aligned}
+    \operatorname{Var}[n_p-n_o | n_o] &=
+    N^2\left( \vara{1}^{2n_o}\varb{\vara{1}^2}^{n_o}-\vara{1}^{2n_o}\varb{\vara{1}}^{2n_o} \right) + \\
+    &+ N(N-1)\vara{2}^{n_o}\varb{\vara{2}} + \vara{1}^{n_o}\varb{\vara{1}}^{n_o} - \\
+    &- N\vara{1}^{2n_o} \varb{\vara{1}^{2}}^{n_o}.
+    \label{eq_exact_var}
+  \end{aligned}
+\end{equation}
+
+Taking series expansion in Mathematica \sgcomment{it would be nice to give the command here}, we can show that  
+
+\begin{equation}
+  \begin{aligned}
+    \operatorname{Var}[n_p-n_o | n_o] &= n s + \frac{n (n-1)}{2 N_e}  + \cdots
+    \label{eq_exact_var}
+  \end{aligned}
+\end{equation}
+where missing terms are of at least second order in products of  $s$, $\frac{n}{N}$,  and $\frac{1}{N}.$
+
+\subsection{Simplifying Gaussian approximation}
+\label{subsec_apx_gauss}
+Given a $z$ for the cahnge in the number of lineages of $ z = \frac{-\mu}{\sqrt{\sigma^2}},$ 
+we use $\mu=\left(  n_zs - \frac{n_z(n_z-1)}{2N} \right)$ and $\sigma = \sqrt{n_zs + \frac{n_z(n_z-1)}{2N}}$ from Equations \sgcomment{\eqref{}} to obtain a bound for $n_z$: 
+
+
+\begin{equation}
+\begin{aligned}
+  z &= \frac{-\left(  n_zs - \frac{n_z(n_z-1)}{2N} \right)}	{\sqrt{n_zs + \frac{n_z(n_z-1)}{2N}}} \\
+  z &\approx \frac{\frac{n_z^2}{2N} - n_z s}	{\sqrt{n_zs + \frac{n_z^2}{2N}}} \geq \frac{\frac{n_z^2}{2N} - n_z s}{n_z / \sqrt{N}} \\
+ \end{aligned}
+\end{equation}
+ The latter inequality uses the fact that we are in the regime where the expected number of drift events is larger than the number of 
+ selection events. Thus $\left(n_zs +
+\frac{n_z^2}{2N} \right) \leq \left(\frac{n_z^2}{2N} + \frac{n_z^2}{2N} \right)$.
+ 
+ This can now be trivially solved for $n_z$ to yield
+ \begin{equation}
+  n_z \leq 2\sqrt{N}z + 2Ns
+\end{equation}
+
+
+
+\subsection{Construction of transition probability matrices with multiple generations}
+\label{subsec_apx_multi}
+
+Multi-generation transition matrices can simply be computed by iterating equation \eqref{eq_recur}. 
+Assuming, for simplicity, that the population sizes and selection coefficients are constant over the last two generations, 
+and using matrix products to account for sums over the number $i_p$ of parental derived alleles, we find 
+\begin{equation}
+\begin{split}
+\afs{n_o}{t} &=  \sum_{n_p=1}^{n_{p,max}}  \mathbf{T}_{n_p,n_o}     \afs{n_p}{t-1}\\
+&=  \sum_{n_p=1}^{n_{p,max}} \mathbf{T}_{n_p,n_o}     \sum_{n'_p=1}^{n'_{p,max}}  \mathbf{T}_{n'_p,n_p}\afs{n'_p}{t-2}\\
+&=  \sum_{n'_p=1}^{n'_{p,max}}  \left(\sum_{n_p=1}^{n_{p,max}} \mathbf{T}_{n_p,n_o}      \mathbf{T}_{n'_p,n_p} \right)\afs{n'_p}{t-2}\\
+&\equiv  \sum_{n'_p=1}^{n'_{p,max}}  T^{(2)}_{n_p',n_o} \afs{n'_p}{t-2}.
+\end{split}
+\end{equation}
+where $n'_{p'}$ is the number of sampled lineages in the grandparental generation, and $n_{p,max}$ and $n'_{p,max}$ are the maximum number of 
+sampled parental alleles considered in the parental and grandparental generations, respectively.  We can choose $n_{p,max}>n_o$ and
+$n_{p,max} = n_o$  to preserve closure of the moment equation while allowing for drift to cancel out selection events over the course of two generations. 
+
+Since each matrix product takes $O(n_o n_p n_{p'})$, and there are at most $O(n_{p,max})$ such products, the computation of this
+matrix product takes at most $O(n_o n_{p,max}^2 n_{p'}).$ This scaling can be improved upon in numerical 
+implementations by summing only over values of $n_p$ that contribute appreciably. 
+In addition, we need to build the matrices $T_{n_p', n_p}$ themsleves. 
+In the recursive approach, the computation of the matrix for the largest sample includes the computation of matrices for
+smaller sample sizes, so the computation time is at most that of the largest possible matrix, $O(r_{max} n_{p,max}^2, n_{p',max}^2).$ 
+In the exact formulation of our model, $n_p$ can be as large as $ r_{max} n_o,$ however this would require every draw to be rejected by selection and
+ only contribute terms of order $s^{n_o r_{max}}.$ A numerically appropriate cutoff for a given $n_o$ and $s$ can be computed dynamically 
+ by keeping track of the proportion of unaccounted-for lineages. In most practical applications with $s<0.1$ we expect that choosing, e.g.,  
+ $n_{p,max}=  2 n_o$ would provide excellent convergence, hence an overall scaling of   $O(r_{max} n_{o}^4)$ for the construction of 
+ the matrices and $O(n_o^4)$ for the matrix product.
+Thus a naive construction of a transition matrix over $g$ generations would require  $O( (g + r_{max} ) n_o^4).$ 
+
+
 
 \end{document}
