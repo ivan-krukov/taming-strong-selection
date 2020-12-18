@@ -232,19 +232,18 @@ typically too large to solve numerically (in the diffusion limit, the number of 
 infinite). But if the number of drift events is typically larger than the number of selective
 deaths, as happens in large sample sizes, the coupling is weak and we can restore approximate
 closure by truncating the summation in Eq. \ref{eq_recur}:
-
 \begin{equation}
 \begin{split}
   \afs{n_o}{t}(i_o)
-  &\simeq \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o}                      \afs{n_p}{t-1}\\
-  &=      \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o} \afs{n_o}{t-1}\\
-  &\equiv \mathbf{Q}_{n_o}                                               \afs{n_o}{t-1}\\
+  &= \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o}  \afs{n_p}{t-1}+ \sum_{n_p> n_o }  \mathbf{T}_{n_p,n_o} \afs{n_p}{t-1} \\
+  &=      \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o} \afs{n_o}{t-1}+ \sum_{n_p> n_o }  \mathbf{T}_{n_p,n_o} \afs{n_p}{t-1} \\
+  &\equiv \mathbf{Q}_{n_o}                                               \afs{n_o}{t-1}+\epsilon
 \end{split}
 \label{eq_truncated}
 \end{equation}
-
-A jackknife approximation \citep{Gravel2016} can be used to simulate the drawing of a small number
-of additional lineages and improve upon this closure approximation
+where $\mathbf{Q}_{n_o} =  \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$ is a square matrix
+and $\epsilon =  \sum_{n_p> n_o }  \mathbf{T}_{n_p,n_o} \afs{n_p}{t-1}$ is the truncation error. 
+A jackknife approximation \citep{Gravel2016} can be used to simulate the drawing of additional lineages
 ($\afs{n_p}{t} \simeq J_{n_p,n_o} \afs{n_o}{t}$ with $n_p>n_o$). \cite{JouganousEtAl2017} used the
 jackknife to derive approximate recursion equations under weak selection. We will show below that
 closure is asymptotically maintained for large sample sizes even without requiring a jackknife
@@ -704,18 +703,15 @@ speed ups, possibly involving approximations, can be derived for such cases.
 We have presented the current approach as an alternative to jackknife approximations in 
 achieving moment closure. The two approaches are not mutually exclusive. 
 Even though we have focused here on showing that approximate closure can be reached within 
-a finite sample to high confidence, sampling instances that do not close can still be approximatively closed
+a finite sample to high confidence by truncation, sampling instances that do not close can still be approximatively closed
 using jackknife approximations. Whereas the jackknife approach of \cite{JouganousEtAl2017} requires 
 jackknifing a new lineage every time a selection event occurs, the approach presented
-here can be used to draw a new lineage only when drift fails to the task. Concretely, we have
-\begin{equation}
-\begin{split}
-\afs{n_o}{t} = \sum_{n_p}  \mathbf{T}_{n_p,n_o}     \afs{n_p}{t-1} &= \sum_{n_p\leq n_o }  \mathbf{T}_{n_p,n_o}   \afs{n_p}{t-1} + \sum_{n_p> n_o }  \mathbf{T}_{n_p,n_o} \afs{n_p}{t-1} \\
-&=\mathbf{Q}  \afs{n_o}{t-1} + \sum_{n_p> n_o }  \mathbf{T}_{n_p,n_o} \afs{n_p}{t-1} 
-\end{split}
-\end{equation}
+here can be used to draw a new lineage only when drift fails to overcome selection 
+(that is, only within small truncation term $\epsilon$ in Equation \eqref{eq_truncated}).
+
+
 Here we have shown that setting the second term to zero can lead to asymptotically accurate computations. 
-A jackknife approximation of the form $\afs{n_p}{t-1} \simeq J_{n_p, n_o} \afs{n_o}{t-1},$ as in \cite{Gravel2016}, 
+A jackknife approximation of the form $\afs{n_p}{t-1} \simeq J_{n_p, n_o} \afs{n_o}{t-1}$ for $n_p>n_o$ as in \cite{Gravel2016}, 
 would only require an approximation for the already small proportion of samplings that required $n_p>n_o.$
 
 
