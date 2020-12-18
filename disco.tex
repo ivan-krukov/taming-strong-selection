@@ -637,27 +637,29 @@ coalescence event.
 that the truncation can be accurate even for strong selection and sample sizes much smaller than
 the full population size. 
 
-The action of selection can me modulated by the proprtion of the derived lineages $x_p$ in the
-parental generation. Until now, we have regarded all the parental lineages as derived: $x_p=1$ (or
-equivalently  $i_p = n_p$). We can add this approximate this effect in equation \eqref{eq_nz} by
-modifying the selection term:
+As we have argued above, the number of rejections is highest when $x_p=1$. 
+Under strong  negative selection, this is unlikely, and we may hope that the
+criterion for practical convergence will occur earlier. 
+If we extrapolate the Poisson interpretation of the drift vs selection, 
+we can approximate the critical sample size for a given parental frequency as:
 
 \begin{equation*}
-  n_z \leq 2 \sqrt{N} z + 2Nsx_p
+  n_z \leq 2 \sqrt{N} z + 2Nsx_p.
 \end{equation*}
 
-So in cases where ancestral alleles exist in the sample, the effect of selection will be
-diminished further.
+
+If $n_z$ is still too large for easy computation because of the $2 \sqrt{N} z$ term, we 
+can use a jackknife approximation to create an additional lineage.  To keep things 
+under better control, we can compute transition probabilities over a few generations, 
+allowing for drift events to cancel selection events over the course of multiple generations.  
 
 \subsection{Integrating over several generations} 
 
-If $n_z$ is still too large for easy computation because of the $2 \sqrt{N} z$ term, we can improve 
-the truncation by integrating over more than one generation.
-Lineages gained by selective death at one generation can be compensated for by genetic drift at
-another generation.
-
-To get an idea of the truncation behavior for small number $g$ of generations, we can approximate 
-the change  in the number of lineages as we go back in time as a random walk with constant mean and 
+Computing accurate multi-generation transition matrices is reasonably straightforward 
+and not significantly more costly than computing single-generation matrices 
+(Appendix \ref{subsec_apx_multi}). To get an idea of the truncation behavior 
+for small number $g \\ll N$ of generations, we can approximate the change  in the number 
+of lineages as we go back in time as a random walk with (approximately) constant mean and 
 variance. In this case, both the mean and variance will be scaled by a factor $g$ relative 
 to the single-generation case, and Equation \eqref{eq_nz} becomes:
 
@@ -666,10 +668,13 @@ to the single-generation case, and Equation \eqref{eq_nz} becomes:
 \label{eq_nzg}
 \end{equation}
 
-If we have enough generations before this approximation breaks down, we can obtain nearly-closed
-recursions if $n_o> 2Ns$. The computation of multi-generational matrices is described in
-\ref{subsec_apx_multi}.
-
+For example, consider a population of size $N=10,000$ with strong selection
+of $2Ns = 100,$ corresponding to a fixation probability reduced by a factor $4\times 10^{-42}$ relative 
+to the neutral expectation \cite{Kimura:1962um}.  If we set setting $z=5$ and $g=100,$ we require a sample size of at most $0.02 N.$
+ If we choose to limit ourselves to smaller numbers of generations (say, $g=10$), the critical sample 
+ size is still much smaller than the entire population $0.04N$.
+ 
+ 
 \section{Conclusion}
 \label{sec_conclusion}
 
@@ -701,26 +706,29 @@ speed ups, possibly involving approximations, can be derived for such cases.
 We have presented the current approach as an alternative to jackknife approximations in 
 achieving moment closure. The two approaches are not mutually exclusive. 
 Even though we have focused here on showing that approximate closure can be reached within 
-a finite sample to high confidence, sampling instances that do not close can still be handled 
+a finite sample to high confidence, sampling instances that do not close can still be approximatively closed
 using jackknife approximations. Whereas the jackknife approach of \cite{JouganousEtAl2017} requires 
-jackknifing a new lineage out of thin air every time a selection event occurs, the approach presented
-here can be used to draw a new lineage only when no drift event has occurred. 
-Thus it may not be necessary to reach closure at extremely high accuracy to achieve high accuracy
-gains. 
+jackknifing a new lineage every time a selection event occurs, the approach presented
+here can be used to draw a new lineage only when drift fails to the task. 
+
 
 Approximate closure of recursions requires the simulated sample size to be above a critical size of $2N_e s.$ 
 It is not uncommon to perform simulations of allele frequencies to model datasets with hundreds or 
 thousands of samples \citep{Gravel:2011bg, Tennessen:2012ck}. 
-Such simulations would already be in the regime where even strong selection will be overcome by drift. For
-example, $2N_e s = 100$ corresponds to a fixation probability reduced by a factor $4\times 10^{-42}$ relative 
-to the neutral expectation \cite{Kimura:1962um}. 
+ As argued in \citep{BhaskarEtAl2014},  this is a regime where diffusion-based approaches 
+ struggle even under neutrality, and accurate simulations require accounting for multiple coalescence events.  
+ Conveniently, such simulations would also be in the regime where the present approaches would be accurate, 
+ meaning that selection can also be accounted for.
+
  
-The probability that selective events are reliably compensated by drift events is a more challenging requirement. 
-Even if we chose to include drift over multiple generations, the present approach is relevant when 
-$\sqrt{N}\lessapprox n \ll N$, that is, when the sample size is large enough that coalescences  are likely to
-occur at each generation, but small enough that focusing on the finite sample provides a useful speedup 
-relative to modelling the entire population. As argued in \citep{BhaskarEtAl2014},  this is a parameter regime
- relevant to present-day human samples.  
+% relevant to present-day human samples.  
+%The probability that selective events are \emph{reliably} compensated by drift events, to the level of accuracy 
+%expected in most numerical approaches, is a more challenging requirement. 
+%Even if we chose to include drift over multiple generations, the present approach is relevant when 
+%$\sqrt{N}\lessapprox n \ll N$, that is, when the sample size is large enough that coalescences  are likely to
+%occur at each generation, but small enough that focusing on the finite sample provides a useful speedup 
+%relative to modelling the entire population. As argued in \citep{BhaskarEtAl2014},  this is a parameter regime
+% relevant to present-day human samples.  
 
 One of the main benefits of studying large sample sizes of whole-genome
 genetic data is to refine our understanding of strongly deleterious variation \cite{karczewski2020mutational}. Performing 
