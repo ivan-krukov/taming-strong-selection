@@ -349,7 +349,7 @@ we can systematically compute all the terms in Equation \ref{fig_rec_selection_d
 The set of selection transition probability matrices $\mathbf{T}$ requires $O(r_{max}n_o^2 n_p^2)$
 operations to construct: Since each term $\mathbf{T}_{r}$ (with $r>0$)  in the recursion requires a constant number of operations, 
 the computational complexity depends on the number of terms we need to calculate. We will need to compute terms of the form 
- $\mathbf{T}_{r}\Coalc{i_p'}{n_p'}{i_o'}{n_o'}$, with $1 \leq n_o'<n_o$, $i_o' \leq n_o'$, $0\leq i_p' \leq n_p' \leq n_p$, and $0\leq n_p' \leq (r_{max}+1) n_o$, 
+ $\mathbf{T}_{r}\Coalc{i_p'}{n_p'}{i_o'}{n_o'}$, with $1 \leq n_o'<n_o$, $i_o' \leq n_o'$, and $0\leq i_p' \leq n_p' \leq n_p$, 
  and $0\leq r \leq r_{max},$ leading to the bound $O(r_{max}n_o^2 n_p^2).$  
  
  
@@ -363,9 +363,8 @@ This is moderately more complex than in the neutral case, where recursions (firs
 \label{subsec_afs}
 
 Once the truncated matrix
-$\mathbf{Q}_{n_o} = \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$
-(eq. \ref{eq_truncated}) is constructed, it can be used to calculate the allele frequency spectrum. To
-validate the method, we first use the equilibrium distribution where exact solutions are available
+$\mathbf{Q}_{n_o}$ from Eq. \ref{eq_truncated} is constructed, it can be used to calculate the allele frequency spectrum. To
+validate the method, we first estimate the equilibrium distribution where exact solutions are available
 \citep{Krukov2016}. In the infinite sites model at equilibrium, we can compute the
 equilibrium \textit{AFS} $\Phi$ in a finite sample as a solution to a linear system:
 
@@ -373,16 +372,19 @@ equilibrium \textit{AFS} $\Phi$ in a finite sample as a solution to a linear sys
   \label{eq_sfs_calc}
   \Phi = \mathbf{Q}\Phi  + n \mu e_1
 \end{equation}
-where $\mu$ is the per-site (forward) mutation rate, and $e_1$ is the first column of the identity
-matrix of size $n$. Figure \ref{fig_strong-selection} shows the comparison of the \textit{AFS}
+where $\mu$ is the per-site (forward) mutation rate, $e_1$ is the second column of the identity
+matrix of size $n+1.$ Since the infinite-sites model does not account for fixed sites, 
+we only report frequency spectra for polymorphic sites.
+  
+Figure \ref{fig_strong-selection} shows the comparison of the \textit{AFS}
 calculated from Equation \ref{eq_sfs_calc}, the diffusion approximation
 \cite[eq. 9.23]{Ewens2004}, and the calculation performed in \texttt{Moments}
 \citep{JouganousEtAl2017}. All the vectors are normalized such that $\sum_{i_o} \textit{AFS} = 1$.
 
 Figures \ref{fig_strong-selection}A-C show that there is a disagreement between the exact
-Wright-Fisher and the diffusion solutions for singletons and doubletons. This effect increases as in
-large sample sizes, as $n \ra N$, and has been reported by \citep{BhaskarEtAl2014}. There is a also
-a divergence at high frequency of the derived allele. %The Wright-Fisher and the present model are
+Wright-Fisher and the diffusion solutions for singletons and doubletons. This effect increases with sample sizes, 
+as reported by \citep{BhaskarEtAl2014}. There is a also
+a strong divergence at high frequency of the derived allele. %The Wright-Fisher and the present model are
 %both absorbing at fixation of the derived allele, while the diffusion models are not. 
 
 Figures \ref{fig_strong-selection}D-F show a comparison at strong negative $Ns=50$, with a
@@ -411,11 +413,11 @@ than $N$. We therefore seek asymptotic results for the convergence of the recurs
 \subsection{Missing probability}
 \label{subsec_missing}
 
-Truncation in equation \ref{eq_truncated} means that if $n_p > n_o$, some probability will be lost. 
+%Truncation in equation \ref{eq_truncated} means that if $n_p > n_o$, some probability will be lost. 
 
 The $(i_p,i_o)^\text{th}$ element of matrix $\mathbf{Q}_{n_o}$ is the probability
 $P_{n_o}(\mathcal{S'}_{n_o} (i_o)| \mathcal{C'}(i_p,n_p))$ of event $\ms'_{n_o}(i_o)$ that we observe $i_o$ derived alleles in
-a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (see \ref{subsec_apx_tpm_deriv}), 
+a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (see Appendix \ref{subsec_apx_tpm_deriv}), 
 given event $\mathcal{C'}(i_p,n_p)$ that $i_p$ of the first $n_p$ parental alleles are derived.
 
 By summing $\sum_{i_o} \mathbf{Q}_{n_o}(i_p, i_o),$ we therefore get the proportion of draws that
@@ -453,7 +455,7 @@ parameterized by the number of successes $n_o$, and the probability of a success
 \begin{equation}
   \begin{aligned}
     \label{eq_neg_binomial_trials}
-    P_{n_o}(n_g) = \binom{n_g-1}{n_o-1}(1-s)^{n_o}(s)^{n_g-n_o},
+    P_{n_o}(n_g) = \binom{n_g-1}{n_o-1}(1-s)^{n_o}(s)^{n_g-n_o}.
   \end{aligned}
 \end{equation}
 Given $n_g$, the number of parental lineages $n_p$ follows the modified occupancy distribution
@@ -468,12 +470,10 @@ Given $n_g$, the number of parental lineages $n_p$ follows the modified occupanc
 where $S_2(n_g,n_p)$ is a Stirling number of the second kind, which is the number of ways to
 partition $n_g$ gametes into $n_p$ parents (see \cite{JohnsonEtAl2005} section 10.4 for a thorough
 treatment).
-Note that the occupancy distribution requires exchangeability of the alleles, which we satisfy by
-assuming that all the alleles are derived, looking for the upper bound on the number of the
-required lineages.
+The occupancy distribution requires exchangeability of the alleles, which is satisfied by the 
+condition that all parental alleles are derived. 
 
 Combining the two distributions together through equation \ref{eq_conditional}, we get:
-
 \begin{equation}
   \begin{aligned}
     \label{eq_lineages_in_past}
@@ -506,9 +506,9 @@ there is a decrease in required lineages due to coalescent events.
 \label{subsec_gaussian}
 
 The distribution in equation \ref{eq_lineages_in_past} can quickly be calculated numerically, but
-provides little intuition. To get more intuition, we will first compute the
-expectation and variance of this distribution, and then show that it can be accurately approximated by a
-Gaussian distribution in useful parameter regimes.
+provides little intuition. We therefore compute the
+expectation and variance of this distribution, and show that it can be accurately approximated by
+Skellam and Gaussian distributions in useful parameter regimes.
 
 Using the law of total expectation, we can write the expectation $E[n_p-n_o | n_o]$ as 
 \begin{equation*}
@@ -612,15 +612,15 @@ distribution is a better fit - Figure \ref{fig_apx_skellam}.
  
 The Gaussian approximation using leading order terms provides intuition about regimes where we
 expect drift to almost always overtake selection.  Concretely, if we solve for the sample size
-$n_z$ required such that the ratio of the mean to the standard deviation is $z$, such that a value
-of $z=3$ would entail that $99.9\%$ of lineages are accounted for under the Gaussian approximation,
+$n_z$ required such that the expected loss in the number of lineages is $z$ times its standard deviation,
+such that a value of $z=3$ would entail that $99.9\%$ of lineages are accounted for under the Gaussian approximation,
 we get, for $n_z\gg 1$,
 
 \begin{equation}
   n_z \lessapprox 2 \sqrt{N} z + 2N s.
 \label{eq_nz}
 \end{equation}
-with assumptions of the approximation are outlined in \ref{subsec_apx_gauss}. 
+with assumptions of the approximation are outlined in Appendix \ref{subsec_apx_gauss}. 
 
 The second term
 encodes the condition that there are more coalescence events than selection events, on average. The
@@ -630,9 +630,10 @@ drift events per generation to ensure that the probability of having zero drift 
 expected coalescence events per generation to ensure that every selective event is compensated by a
 coalescence event. 
 
-Alternatively, we can solve for the quantiles of the Gaussian approximation (eq. \ref{eq_gaussian})
-numerically. For a fixed $z=3$, Figure \ref{fig_combined}B shows how $n_c/N$ (sample as a fraction
-of the population size) increases with stronger selection. Together with equation \ref{eq_nz}, this shows
+%Alternatively, we can solve for the quantiles of the Gaussian approximation (eq. \ref{eq_gaussian})
+%numerically.
+ For a fixed $z=3$, Figure \ref{fig_combined}B shows the critical sample size relative to the population size 
+ $(n_c/N)$. Together with equation \ref{eq_nz}, this shows
 that the truncation can be accurate even for strong selection and sample sizes much smaller than
 the full population size. 
 
