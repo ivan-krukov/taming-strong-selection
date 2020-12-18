@@ -647,18 +647,16 @@ we can approximate the critical sample size for a given parental frequency as:
   n_z \leq 2 \sqrt{N} z + 2Nsx_p.
 \end{equation*}
 
-
 If $n_z$ is still too large for easy computation because of the $2 \sqrt{N} z$ term, we 
-can use a jackknife approximation to create an additional lineage.  To keep things 
-under better control, we can compute transition probabilities over a few generations, 
-allowing for drift events to cancel selection events over the course of multiple generations.  
+can reach similar confidence that drift will compensate for selection at smaller sample sizes
+by computing transition probabilities over a few generations. 
 
 \subsection{Integrating over several generations} 
 
 Computing accurate multi-generation transition matrices is reasonably straightforward 
 and not significantly more costly than computing single-generation matrices 
 (Appendix \ref{subsec_apx_multi}). To get an idea of the truncation behavior 
-for small number $g \\ll N$ of generations, we can approximate the change  in the number 
+for small number $g \ll N$ of generations, we can approximate the change  in the number 
 of lineages as we go back in time as a random walk with (approximately) constant mean and 
 variance. In this case, both the mean and variance will be scaled by a factor $g$ relative 
 to the single-generation case, and Equation \eqref{eq_nz} becomes:
@@ -709,7 +707,16 @@ Even though we have focused here on showing that approximate closure can be reac
 a finite sample to high confidence, sampling instances that do not close can still be approximatively closed
 using jackknife approximations. Whereas the jackknife approach of \cite{JouganousEtAl2017} requires 
 jackknifing a new lineage every time a selection event occurs, the approach presented
-here can be used to draw a new lineage only when drift fails to the task. 
+here can be used to draw a new lineage only when drift fails to the task. Concretely, we have
+\begin{equation}
+\begin{split}
+\afs{n_o}{t} = \sum_{n_p}  \mathbf{T}_{n_p,n_o}     \afs{n_p}{t-1} &= \sum_{n_p\leq n_o }  \mathbf{T}_{n_p,n_o}   \afs{n_p}{t-1} + \sum_{n_p> n_o }  \mathbf{T}_{n_p,n_o} \afs{n_p}{t-1} \\
+&=\mathbf{Q}  \afs{n_o}{t-1} + \sum_{n_p> n_o }  \mathbf{T}_{n_p,n_o} \afs{n_p}{t-1} 
+\end{split}
+\end{equation}
+Here we have shown that setting the second term to zero can lead to asymptotically accurate computations. 
+A jackknife approximation of the form $\afs{n_p}{t-1} \simeq J_{n_p, n_o} \afs{n_o}{t-1},$ as in \cite{Gravel2016}, 
+would only require an approximation for the already small proportion of samplings that required $n_p>n_o.$
 
 
 Approximate closure of recursions requires the simulated sample size to be above a critical size of $2N_e s.$ 
