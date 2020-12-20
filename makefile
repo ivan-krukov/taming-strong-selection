@@ -1,5 +1,5 @@
 .PHONY: default
-default: disco.pdf
+default: taming-strong-selection.pdf
 
 %.pdf: %.tex
 	mkdir -p tmp
@@ -14,5 +14,5 @@ extra/%.dvi: extra/%.tex
 
 
 clean:
-	rm -f disco.pdf
+	rm -f taming-strong-selection.pdf
 	rm -rf tmp
