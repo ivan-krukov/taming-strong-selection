@@ -871,11 +871,16 @@ The expectation in the first term can be derived from the occupancy distribution
 \end{equation}
 The variance of the second term of Equation \eqref{eq_apx_var} is the variance of the modified occupancy
 distribution \cite{JohnsonEtAl2005}:
+% I think there was a mistake in here: changed this to be consistent with the code and mathematica
+% notebook
 \begin{equation}
 \begin{split}
 E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] & = E_{n_g}\left[N ((N - 1) (1 - 2/N)^{n_g} + (1 - 1/N)^{n_g} - N (1 - 1/N)^{2 n_g}) \right] \\
-& = N (N-1)  \left(1-\frac{2}{N}\right)^{n_o} \left(\frac{1- s}{1- s  \left(1-\frac{2}{N}\right)}\right)^{n_o} +  \left(1-\frac{1}{N}\right)^{n_o} \left(\frac{1- s}{1- s  \left(1-\frac{1}{N}\right)}\right)^{n_o} \\
-&-N  \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-  s}{1- s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o}. 
+% & = N (N-1)  \left(1-\frac{2}{N}\right)^{n_o} \left(\frac{1- s}{1- s  \left(1-\frac{2}{N}\right)}\right)^{n_o} +  \left(1-\frac{1}{N}\right)^{n_o} \left(\frac{1- s}{1- s  \left(1-\frac{1}{N}\right)}\right)^{n_o} \\
+% &-N  \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-  s}{1- s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o}. 
+&= N (N-1) \left( \frac{ (1-s)\left( 1-\frac{2}{N} \right) }{ 1-s\left( 1-\frac{2}{N} \right) } \right)^{n_o} + \\
+&+ N \left( \frac{(1-s)\left( 1-\frac{1}{N} \right)}{1-s\left( 1-\frac{1}{N} \right)}\right)^{n_o} - \\
+&- N^2 \left( \frac{(1-s)\left( 1-\frac{1}{N} \right)^2}{1-s\left( 1-\frac{1}{N} \right)^2}\right)^{n_o} \\
 \end{split}
 \end{equation}
 
@@ -888,8 +893,7 @@ Combining the two terms in Equation \eqref{eq_apx_var}, we get
   \begin{aligned}
     \operatorname{Var}[n_p-n_o | n_o] &=
     N^2\left( \vara{1}^{2n_o}\varb{\vara{1}^2}^{n_o}-\vara{1}^{2n_o}\varb{\vara{1}}^{2n_o} \right) + \\
-    &+ N(N-1)\vara{2}^{n_o}\varb{\vara{2}} + \vara{1}^{n_o}\varb{\vara{1}}^{n_o} - \\
-    &- N\vara{1}^{2n_o} \varb{\vara{1}^{2}}^{n_o}.
+    &+ N (N-1) \left( \frac{ (1-s)\left( 1-\frac{2}{N} \right) }{ 1-s\left( 1-\frac{2}{N} \right) } \right)^{n_o} + N \left( \frac{(1-s)\left( 1-\frac{1}{N} \right)}{1-s\left( 1-\frac{1}{N} \right)}\right)^{n_o} - N^2 \left( \frac{(1-s)\left( 1-\frac{1}{N} \right)^2}{1-s\left( 1-\frac{1}{N} \right)^2}\right)^{n_o}.
     \label{eq_exact_var}
   \end{aligned}
 \end{equation}
