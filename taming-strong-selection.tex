@@ -1,4 +1,4 @@
-\documentclass[review]{elsarticle}
+\documentclass[review,nonatbib]{elsarticle}
 
 \usepackage[]{geometry}
 \usepackage{amsmath}
@@ -6,10 +6,13 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{hyperref}
-\usepackage{natbib}
 \usepackage{float}
-\bibliographystyle{elsarticle-harv}
-\biboptions{authoryear}
+% biblatex + elsarticle fix
+\makeatletter
+\let\c@author\relax
+\makeatother
+\usepackage[natbib=true,citestyle=authoryear]{biblatex}
+\addbibresource{taming-strong-selection.biblatex}
 
 \newcommand{\ra}{\rightarrow}
 \newcommand{\afs}[2]{\Phi_{#1}^{(#2)}}
@@ -741,7 +744,8 @@ Since the transition matrices defined here can be used in both forward \citep{Jo
 and backward approaches \cite{KammEtAl2017}, the can help genetic models catch up with the requirements of genetic data.
 
 
-\bibliography{taming-strong-selection}
+% \bibliography{taming-strong-selection}
+\printbibliography
 
 \section{Appendix}
 % \renewcommand{\thefigure}{S\arabic{figure}}
