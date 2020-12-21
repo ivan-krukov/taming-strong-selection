@@ -105,7 +105,7 @@ we can obtain recursion equations that are almost closed.
 Large sample sizes also bring in the complication of simultaneous coalescent events
 \citep{BhaskarEtAl2014}. The additional combinatorial possibilities make the computation of
 transition matrices for recursion equations more difficult. In this article we derive these
-transition matrices, and show that these are asymptotically closed even under strong selection. We
+transition matrices, and show that these can be asymptotically closed even under strong selection. We
 show that these transition matrices can be used to accurately model the distribution of allele
 frequencies in moderate to large samples and strong selection. The implementation of our methods,
 and the source code for the figures are available at
@@ -248,7 +248,7 @@ A jackknife approximation \citep{Gravel2016} can be used to simulate the drawing
 ($\afs{n_p}{t} \simeq J_{n_p,n_o} \afs{n_o}{t}$ with $n_p>n_o$). \cite{JouganousEtAl2017} used the
 jackknife to derive approximate recursion equations under weak selection. We will show below that
 closure is asymptotically maintained for large sample sizes even without requiring a jackknife
-approximation.
+approximation, i.e., by setting $\epsilon=0$. 
 
 Our first goal is to obtain an explicit recursion for the matrices in \eqref{eq_recur}. To do so, we
 will need to account for multiple coalescent events, which will require some careful bookkeeping.
@@ -364,7 +364,7 @@ This is moderately more complex than in the neutral case, where recursions (firs
 
 Once the truncated matrix
 $\mathbf{Q}_{n_o}$ from Eq. \ref{eq_truncated} is constructed, it can be used to calculate the allele frequency spectrum. To
-validate the method, we first estimate the equilibrium distribution where exact solutions are available
+validate the method, we estimate the equilibrium distribution where exact solutions are available
 \citep{Krukov2016}. In the infinite sites model at equilibrium, we can compute the
 equilibrium \textit{AFS} $\Phi$ in a finite sample as a solution to a linear system:
 
@@ -374,20 +374,20 @@ equilibrium \textit{AFS} $\Phi$ in a finite sample as a solution to a linear sys
 \end{equation}
 where $\mu$ is the per-site (forward) mutation rate, $e_1$ is the second column of the identity
 matrix of size $n+1.$ Since the infinite-sites model does not account for fixed sites, 
-we only report frequency spectra for polymorphic sites.
+we only report frequency spectra for polymorphic sites below.
   
 Figure \ref{fig_strong-selection} shows the comparison of the \textit{AFS}
 calculated from Equation \ref{eq_sfs_calc}, the diffusion approximation
-\cite[eq. 9.23]{Ewens2004}, and the calculation performed in \texttt{Moments}
-\citep{JouganousEtAl2017}. All the vectors are normalized such that $\sum_{i_o} \textit{AFS} = 1$.
+\cite[eq. 9.23]{Ewens2004}, and the numerical calculation performed in \texttt{Moments}
+\citep{JouganousEtAl2017}. %We show normalized such that $\sum_{i_o=1}^{n_o-1}  \Phi  = 1$.
 
 Figures \ref{fig_strong-selection}A-C show that there is a disagreement between the exact
 Wright-Fisher and the diffusion solutions for singletons and doubletons. This effect increases with sample sizes, 
-as reported by \citep{BhaskarEtAl2014}. There is a also
+and has been analyzed in \citep{BhaskarEtAl2014}. There is a also
 a strong divergence at high frequency of the derived allele. %The Wright-Fisher and the present model are
 %both absorbing at fixation of the derived allele, while the diffusion models are not. 
 
-Figures \ref{fig_strong-selection}D-F show a comparison at strong negative $Ns=50$, with a
+Figures \ref{fig_strong-selection}D-F show a comparison at strong negative selection, $Ns=50$, with a
 sample size of $100$ and population sizes ranging from $N=100$ to  $N=1000.$  
 The recursions presented here provide excellent agreement with the exact result even 
 where the diffusion-based approaches fail. 
@@ -416,12 +416,12 @@ than $N$. We therefore seek asymptotic results for the convergence of the recurs
 %Truncation in equation \ref{eq_truncated} means that if $n_p > n_o$, some probability will be lost. 
 
 The $(i_p,i_o)^\text{th}$ element of matrix $\mathbf{Q}_{n_o}$ is the probability
-$P_{n_o}(\mathcal{S'}_{n_o} (i_o)| \mathcal{C'}(i_p,n_p))$ of event $\ms'_{n_o}(i_o)$ that we observe $i_o$ derived alleles in
+$P_{n_o}(\mathcal{S'}_{n_o} (i_o)| \mathcal{C}(i_p,n_p))$ of event $\ms'_{n_o}(i_o)$ that we observe $i_o$ derived alleles in
 a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (see Appendix \ref{subsec_apx_tpm_deriv}), 
-given event $\mathcal{C'}(i_p,n_p)$ that $i_p$ of the first $n_p$ parental alleles are derived.
+given event $\mathcal{C}(i_p,n_p)$ that $i_p$ of the first $n_p$ parental alleles are derived.
 
 By summing $\sum_{i_o} \mathbf{Q}_{n_o}(i_p, i_o),$ we therefore get the proportion of draws that
-were not truncated. $1-\sum_{i_o} \mathbf{Q}_{n_o}(i_p, i_o)$ is therefore the fraction of
+were not truncated as a function for different values of $i_p$. $1-\sum_{i_o} \mathbf{Q}_{n_o}(i_p, i_o)$ is therefore the fraction of
 unaccounted-for draws due to truncation, given $i_p$ derived among the first $n_o$ parental
 alleles. Since only derived lineages experience selection, the largest number of resampling events,
 and therefore the largest number of unaccounted lineages, occurs when all alleles are derived,
