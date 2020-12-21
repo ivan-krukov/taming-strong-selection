@@ -243,8 +243,11 @@ closure by truncating the summation in Eq. \ref{eq_recur}:
 \label{eq_truncated}
 \end{equation}
 where $\mathbf{Q}_{n_o} =  \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$ is a square matrix
-and $\epsilon =  \sum_{n_p> n_o }  \mathbf{T}_{n_p,n_o} \afs{n_p}{t-1}$ is the truncation error. 
-A jackknife approximation \citep{Gravel2016} can be used to simulate the drawing of additional lineages
+whose $(i_p,i_o)^\text{th}$ element is the probability
+$P_{n_o}(\mathcal{S}_{\leq n_o} (i_o)| \mathcal{C}(i_p,n_p))$ of event $\ms_{\leq n_o}(i_o)$ that we observe $i_o$ derived alleles in
+a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (see Appendix \ref{subsec_apx_tpm_deriv}), 
+given event $\mathcal{C}(i_p,n_p)$ that $i_p$ of the first $n_p$ parental alleles are derived.
+The term $\epsilon$ accounts for samplings with $n_p>n_o.$ A jackknife approximation \citep{Gravel2016} can be used to simulate the drawing of additional lineages
 ($\afs{n_p}{t} \simeq J_{n_p,n_o} \afs{n_o}{t}$ with $n_p>n_o$). \cite{JouganousEtAl2017} used the
 jackknife to derive approximate recursion equations under weak selection. We will show below that
 closure is asymptotically maintained for large sample sizes even without requiring a jackknife
@@ -415,15 +418,10 @@ than $N$. We therefore seek asymptotic results for the convergence of the recurs
 
 %Truncation in equation \ref{eq_truncated} means that if $n_p > n_o$, some probability will be lost. 
 
-The $(i_p,i_o)^\text{th}$ element of matrix $\mathbf{Q}_{n_o}$ is the probability
-$P_{n_o}(\mathcal{S'}_{n_o} (i_o)| \mathcal{C}(i_p,n_p))$ of event $\ms'_{n_o}(i_o)$ that we observe $i_o$ derived alleles in
-a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (see Appendix \ref{subsec_apx_tpm_deriv}), 
-given event $\mathcal{C}(i_p,n_p)$ that $i_p$ of the first $n_p$ parental alleles are derived.
-
-By summing $\sum_{i_o} \mathbf{Q}_{n_o}(i_p, i_o),$ we therefore get the proportion of draws that
-were not truncated as a function for different values of $i_p$. $1-\sum_{i_o} \mathbf{Q}_{n_o}(i_p, i_o)$ is therefore the fraction of
+Given that $ \mathbf{Q}_{n_o}(i_p, i_o) = P_{n_o}(\mathcal{S}_{\leq n_o} (i_o)| \mathcal{C}(i_p,n_p)),$ 
+we can compute the fraction of
 unaccounted-for draws due to truncation, given $i_p$ derived among the first $n_o$ parental
-alleles. Since only derived lineages experience selection, the largest number of resampling events,
+alleles, as $1-\sum_{i_o} \mathbf{Q}_{n_o}(i_p, i_o).$ Since only derived lineages experience selection, the largest number of resampling events,
 and therefore the largest number of unaccounted lineages, occurs when all alleles are derived,
 $i_p = n_o$.
 
@@ -570,7 +568,7 @@ Taking the terms of order up to $\frac{1}{N}$ gives
     \hat{E}[n_p-n_o | n_o] \approx n_o  s - \frac{n_o (n_o-1) }{2N}. 
 \end{equation}
 
-We thus have the usual interplay of selection and drift. Solving for $ \hat{E}[n_p -n_o | n_o]<0$
+We thus have the usual interplay of selection and drift. Solving for $ \hat{E}[n_p -n_o | n_o]\leq0$
 yields, to leading order,
 
 \begin{equation}
