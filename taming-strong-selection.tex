@@ -147,7 +147,7 @@ sample.
     \hline
     $(i_p, n_p)$ & Event of \textit{drawing} exactly $i_p$ derived out of $n_p$ distinct parental lineages \\
     $\mathcal{C}(i_p, n_p)$ & Event of $n_p$ parental lineages \textit{containing} $i_p$ derived alleles \\
-    $\mathcal{S}(i_o, n_p)$ & Event that  $i_o$ offpring carry the derived allele and that $n_p$ distinct parental alleles were drawn \\
+    $\mathcal{S}_{n_o}(i_o, n_p)$ & Event that  $i_o$ out of $n_o$ offpring carry the derived allele and that $n_p$ distinct parental alleles were drawn \\
     $\ms_{n_o}(i_o, n_p, r)$ & Event that  $i_o$ out of $n_o$ offspring carry the derived allele, that the first $r$ draws for the 
     $n_o+1$th offspring were rejected, 
     and that $n_p$ distinct parental alleles were drawn (across all draws).
@@ -741,7 +741,7 @@ Since the transition matrices defined here can be used in both forward \citep{Jo
 and backward approaches \cite{KammEtAl2017}, the can help genetic models catch up with the requirements of genetic data.
 
 
-\bibliography{disco}
+\bibliography{taming-strong-selection}
 
 \section{Appendix}
 % \renewcommand{\thefigure}{S\arabic{figure}}
@@ -803,7 +803,7 @@ allele ($\delta_\ell=1$) or not ($\delta_\ell=0$).
 
 With this notation in place, we can write our recursion as: 
  \begin{equation}
-  P( \ms_{n_o}(i_o, n_p, r) | \CC{(i_p,n_p)} ) = \sum_\ell P( \ms_{i_o, n_o}(n_p, r),\ell | \CC(i_p,n_p) ) . 
+  P( \ms_{n_o}(i_o, n_p, r) | \CC{(i_p,n_p)} ) = \sum_\ell P( \ms_{n_o}(i_o, n_p, r),\ell | \CC(i_p,n_p) ) . 
  \end{equation}
 
 Now that we have explicitly specified the last draw $\ell,$ we can remove the corresponding
