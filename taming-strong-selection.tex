@@ -492,8 +492,8 @@ there is a decrease in required lineages due to coalescent events.
   \includegraphics[width=\textwidth]{fig/combined.pdf}
   \caption{\textbf{A} The distribution of number of required lineages with $n_0=200$. Shaded
     red area shows missing probability, where $n_p > n_o$. Points represent the exact probability one
-    generation into the past (Eq. \ref{eq_lineages_in_past}), solid lines - Gaussian approximation
-    (Eq. \ref{eq_gaussian}). \textbf{B} Sample size ($n_o$) as a fraction of population size ($N$)
+    generation into the past (Eq. \ref{eq_lineages_in_past}), solid lines - Gaussian approximation.
+     \textbf{B} Sample size ($n_o$) as a fraction of population size ($N$)
     such that we have $99\%$ confidence that no lineages are missing, derived from the Gaussian
     approximation. The dotted line indicates regimes where the Gaussian approximation is likely inaccurate. 
      In both panels, $N=1000$.}
@@ -595,12 +595,12 @@ Thus the mean and variance to leading order are those of the Skellam distributio
 through selection (modelled as Poisson with mean  $ n_o s$) minus the number of lineages lost to
 drift (modelled as an independent Poisson variable with mean  $ n_o (n_o-1)/(2 N)$).
 As the number of drift and selection events get larger, the Skellam distribution can be approximated as a
-Gaussian:
+Gaussian with corresponding mean and variance. 
 
-\begin{equation}
-  P(n_p|n_o) \sim \mathcal{N}(\mu, \sigma).
-  \label{eq_gaussian}
-\end{equation}
+%\begin{equation}
+ % P(n_p|n_o) \sim \mathcal{N}(\mu, \sigma).
+%  \label{eq_gaussian}
+%\end{equation}
 
 Figure \ref{fig_combined}A shows the excellent agreement between the exact distribution and the
 Gaussian approximation (using the exact variance from Equation \ref{eq_exact_var}). By contrast,
@@ -609,16 +609,16 @@ events occur at a given generation, (say, $\frac{{n_o}^2}{2N} < 10$), where the 
 distribution is a better fit - Figure \ref{fig_apx_skellam}.
  
 The Gaussian approximation using leading order terms provides intuition about regimes where we
-expect drift to almost always overtake selection.  Concretely, if we solve for the sample size
+expect drift to almost always overtake selection.  Appendix \ref{subsec_apx_gauss} shows that the sample size
 $n_z$ required such that the expected loss in the number of lineages is $z$ times its standard deviation,
 such that a value of $z=3$ would entail that $99.9\%$ of lineages are accounted for under the Gaussian approximation,
-we get, for $n_z\gg 1$,
+obeys 
 
 \begin{equation}
   n_z \lessapprox 2 \sqrt{N} z + 2N s.
 \label{eq_nz}
 \end{equation}
-with assumptions of the approximation are outlined in Appendix \ref{subsec_apx_gauss}. 
+ 
 
 The second term
 encodes the condition that there are more coalescence events than selection events, on average. The
@@ -626,7 +626,7 @@ first term is independent of $s$ and can be interpreted as a condition that ther
 drift events per generation to ensure that the probability of having zero drift event is weak: $n_z
 = 2 \sqrt N z$ implies $\frac{n_z^2}{2N}= 2 z$. One interpretation is that we need at least a few
 expected coalescence events per generation to ensure that every selective event is compensated by a
-coalescence event. 
+coalescence event at the same generation. 
 
 %Alternatively, we can solve for the quantiles of the Gaussian approximation (eq. \ref{eq_gaussian})
 %numerically.
