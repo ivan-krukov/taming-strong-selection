@@ -10,9 +10,9 @@ def basecases_t(io, no, ic, nc, s, t):
         or (ic < 0)
         or (io > no) # There cannot be more derived offspring than offspring
         or (ic > nc) # There cannot be more derived contributors than contributors
-        or (no > 0 and nc == 0) # There cannot be offspring without contributors
-        or (io>0 and ic==0) # There cannot be derived offspring without derived parent
-        or (io<no and ic == nc) # There cannot be ancestral offspring without derived ancestors
+        or (no > 0  and nc == 0) # There cannot be offspring without contributors
+        or (io > 0  and ic == 0) # There cannot be derived offspring without derived parent
+        or (io < no and ic == nc) # There cannot be ancestral offspring without derived ancestors
     ):
         return 0  # TODO: check if nc>N is also a concern
     elif (io, no, ic, nc) == (0, 0, 0, 0): # Not sure what that means.
@@ -26,7 +26,7 @@ def basecases_t(io, no, ic, nc, s, t):
 def Pf(io, no, ic, nc, s, N, t, max_t, cache):
     # v = cache[io, no, ic, nc, t]
     z = cache[t][nc][no]
-    print(t, nc, no, ic, io, z.shape)
+    # print(t, nc, no, ic, io, z.shape)
 
 
     v = basecases_t(io, no, ic, nc, s, t)
@@ -47,8 +47,9 @@ def Pf(io, no, ic, nc, s, N, t, max_t, cache):
 
     if (nc >= 0) and (no >= 0) and (ic >= 0) and (io >= 0) and (ic <= nc) and (io <= no):
         cache[t][nc][no][ic, io] = v
-            # cache[io, no, ic, nc, t] = v
-    print(v)
+        # cache[io, no, ic, nc, t] = v
+        pass
+    # print(v)
     return v
 
 def P0(io, no, ic, nc, s, N, max_t, cache):
@@ -96,7 +97,7 @@ def P0(io, no, ic, nc, s, N, max_t, cache):
 def matrix_explicit(no=5, s=1/1000, N=1000, max_t=1):
     mtx = np.zeros((no+1, no+1))
     # cache = np.full((no+1, no+1, no+1, no+1, max_t+1), np.nan)
-    cache = [[[np.full((i+1, j+1), np.nan) for j in range(0, no+1)] for i in range(0, no+1)] for t
+    cache = [[[np.full((ic+1, io+1), np.nan) for io in range(0, no+1)] for ic in range(0, no+1)] for t
              in range(0, max_t+1)]
 
     for nc in range(0, no+1):
@@ -113,17 +114,17 @@ if __name__ == "__main__":
 
     np.set_printoptions(precision=2, linewidth=100)
     n = 3
-    max_t = 2
+    max_t = 3
     t_start = perf_counter()
     M1, cache = matrix_explicit(n, max_t=max_t)
     print("Took ", perf_counter() - t_start)
     t_start = perf_counter()
     M2, _, _ = matrix(n, max_t=max_t)
     print("Took ", perf_counter() - t_start)
-    print("Last")
-    print(M1)
-    print(M2)
+    # print("Last")
+    # print(M1)
+    # print(M2)
     diff = (M1 - M2) / M2
     mdiff = diff[~np.isnan(diff)]
     print(mdiff)
-    print(np.max(np.abs(mdiff)))
+    assert np.max(np.abs(mdiff)) == 0
