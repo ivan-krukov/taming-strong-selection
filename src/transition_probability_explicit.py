@@ -25,11 +25,14 @@ def basecases_t(io, no, ic, nc, s, t):
 
 def Pf(io, no, ic, nc, s, N, t, max_t, cache):
     # v = cache[io, no, ic, nc, t]
-    v = cache[t][nc][no][ic, io]
+    z = cache[t][nc][no]
+    print(t, nc, no, ic, io, z.shape)
 
+
+    v = basecases_t(io, no, ic, nc, s, t)
     #print("v in pf", v, "for params ",io, no, ic, nc, s, t)
     if np.isnan(v):
-        v = basecases_t(io, no, ic, nc, s, t)
+        v = cache[t][nc][no][ic, io]
         if np.isnan(v):
             if t <= 0:
                 assert t == 0
@@ -42,17 +45,19 @@ def Pf(io, no, ic, nc, s, N, t, max_t, cache):
                 c = (ic / N) * s * Pf(io, no, ic, nc, s, N, t - 1, max_t, cache)
                 v = b + c
 
-                cache[t][nc][no][ic, io] = v
+    if (nc >= 0) and (no >= 0) and (ic >= 0) and (io >= 0) and (ic <= nc) and (io <= no):
+        cache[t][nc][no][ic, io] = v
             # cache[io, no, ic, nc, t] = v
+    print(v)
     return v
 
 def P0(io, no, ic, nc, s, N, max_t, cache):
 
     # v = cache[io, no, ic, nc, 0]
-    # v = cache[0][nc][no][ic, io]
-    v = np.nan
+    v = basecases_t(io, no, ic, nc, s, t=max_t)
     if np.isnan(v):  # Recursion on what happened in the last lineage.
-        v = basecases_t(io, no, ic, nc, s, t=max_t)
+        # v = np.nan
+        v = cache[0][nc][no][ic, io]
         if np.isnan(v):
             oos = 1 - ((nc - 1) / N)  # out-of-sample
             sel = 1 - s
@@ -83,20 +88,22 @@ def P0(io, no, ic, nc, s, N, max_t, cache):
             )  # Forcing success of cases b and c, respectively
 
             # cache[io, no, ic, nc, 0] = v
-            # cache[0][nc][no][ic, io] = v
+    if (nc >= 0) and (no >= 0) and (ic >= 0) and (io >= 0) and (ic <= nc) and (io <= no):
+        cache[0][nc][no][ic, io] = v
     return v
+
 
 def matrix_explicit(no=5, s=1/1000, N=1000, max_t=1):
     mtx = np.zeros((no+1, no+1))
     # cache = np.full((no+1, no+1, no+1, no+1, max_t+1), np.nan)
-    cache = [[[np.full((i+2, j+2), np.nan) for j in range(0, no+1)] for i in range(0, no+1)] for t
+    cache = [[[np.full((i+1, j+1), np.nan) for j in range(0, no+1)] for i in range(0, no+1)] for t
              in range(0, max_t+1)]
 
     for nc in range(0, no+1):
         for ic in range(0, nc+1):
             p = hypergeom.pmf(ic, no, np.arange(0, no+1), nc)
 
-            for io in range(0, no + 1):
+            for io in range(0, no+1):
                 mtx[:, io] += P0(io, no, ic, nc, s, N, max_t, cache) * p
 
     return mtx, cache
@@ -105,12 +112,13 @@ if __name__ == "__main__":
     from transition_probability_dynamic_failures import matrix
 
     np.set_printoptions(precision=2, linewidth=100)
-    n = 5
+    n = 3
+    max_t = 2
     t_start = perf_counter()
-    M1, cache = matrix_explicit(n, max_t=3)
+    M1, cache = matrix_explicit(n, max_t=max_t)
     print("Took ", perf_counter() - t_start)
     t_start = perf_counter()
-    M2, _, _ = matrix(n, max_t=3)
+    M2, _, _ = matrix(n, max_t=max_t)
     print("Took ", perf_counter() - t_start)
     print("Last")
     print(M1)
