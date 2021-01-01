@@ -495,8 +495,8 @@ there is a decrease in required lineages due to coalescent events.
   \includegraphics[width=\textwidth]{fig/combined.pdf}
   \caption{\textbf{A} The distribution of number of required lineages with $n_0=200$. Shaded
     red area shows missing probability, where $n_p > n_o$. Points represent the exact probability one
-    generation into the past (Eq. \ref{eq_lineages_in_past}), solid lines - Gaussian approximation
-    (Eq. \ref{eq_gaussian}). \textbf{B} Sample size ($n_o$) as a fraction of population size ($N$)
+    generation into the past (Eq. \ref{eq_lineages_in_past}), solid lines - Gaussian approximation.
+     \textbf{B} Sample size ($n_o$) as a fraction of population size ($N$)
     such that we have $99\%$ confidence that no lineages are missing, derived from the Gaussian
     approximation. The dotted line indicates regimes where the Gaussian approximation is likely inaccurate. 
      In both panels, $N=1000$.}
@@ -598,12 +598,12 @@ Thus the mean and variance to leading order are those of the Skellam distributio
 through selection (modelled as Poisson with mean  $ n_o s$) minus the number of lineages lost to
 drift (modelled as an independent Poisson variable with mean  $ n_o (n_o-1)/(2 N)$).
 As the number of drift and selection events get larger, the Skellam distribution can be approximated as a
-Gaussian:
+Gaussian with corresponding mean and variance. 
 
-\begin{equation}
-  P(n_p|n_o) \sim \mathcal{N}(\mu, \sigma).
-  \label{eq_gaussian}
-\end{equation}
+%\begin{equation}
+ % P(n_p|n_o) \sim \mathcal{N}(\mu, \sigma).
+%  \label{eq_gaussian}
+%\end{equation}
 
 Figure \ref{fig_combined}A shows the excellent agreement between the exact distribution and the
 Gaussian approximation (using the exact variance from Equation \ref{eq_exact_var}). By contrast,
@@ -612,16 +612,16 @@ events occur at a given generation, (say, $\frac{{n_o}^2}{2N} < 10$), where the 
 distribution is a better fit - Figure \ref{fig_apx_skellam}.
  
 The Gaussian approximation using leading order terms provides intuition about regimes where we
-expect drift to almost always overtake selection.  Concretely, if we solve for the sample size
+expect drift to almost always overtake selection.  Appendix \ref{subsec_apx_gauss} shows that the sample size
 $n_z$ required such that the expected loss in the number of lineages is $z$ times its standard deviation,
 such that a value of $z=3$ would entail that $99.9\%$ of lineages are accounted for under the Gaussian approximation,
-we get, for $n_z\gg 1$,
+obeys 
 
 \begin{equation}
   n_z \lessapprox 2 \sqrt{N} z + 2N s.
 \label{eq_nz}
 \end{equation}
-with assumptions of the approximation are outlined in Appendix \ref{subsec_apx_gauss}. 
+ 
 
 The second term
 encodes the condition that there are more coalescence events than selection events, on average. The
@@ -629,7 +629,7 @@ first term is independent of $s$ and can be interpreted as a condition that ther
 drift events per generation to ensure that the probability of having zero drift event is weak: $n_z
 = 2 \sqrt N z$ implies $\frac{n_z^2}{2N}= 2 z$. One interpretation is that we need at least a few
 expected coalescence events per generation to ensure that every selective event is compensated by a
-coalescence event. 
+coalescence event at the same generation. 
 
 %Alternatively, we can solve for the quantiles of the Gaussian approximation (eq. \ref{eq_gaussian})
 %numerically.
@@ -638,19 +638,17 @@ coalescence event.
 that the truncation can be accurate even for strong selection and sample sizes much smaller than
 the full population size. 
 
-As we have argued above, the number of rejections is highest when $x_p=1$. 
-Under strong  negative selection, this is unlikely, and we may hope that the
+We can improve upon the bound from Equation \eqref{eq_nz} in two ways. 
+First, as we have argued above, the number of rejections is highest when $x_p=1$. 
+Under strong  negative selection, high derived allele frequencies are unlikely, and we may hope that the
 criterion for practical convergence will occur earlier. 
-If we extrapolate the Poisson interpretation of the drift vs selection, 
+If we extrapolate the Poisson model of the drift vs selection interplay in equations \eqref{eq_lineages_approx} and \eqref{eq_gauss_var}, 
 we can approximate the critical sample size for a given parental frequency as:
-
 \begin{equation*}
   n_z \leq 2 \sqrt{N} z + 2Nsx_p.
 \end{equation*}
-
-If $n_z$ is still too large for easy computation because of the $2 \sqrt{N} z$ term, we 
-can reach similar confidence that drift will compensate for selection at smaller sample sizes
-by computing transition probabilities over a few generations. 
+Second, if $n_z$ is still too large for easy computation because of the $2 \sqrt{N} z$ term, we 
+can compute transition probabilities over a few generations to ensure that each selection event is met by a drift event. 
 
 \subsection{Integrating over several generations} 
 
@@ -669,9 +667,9 @@ to the single-generation case, and Equation \eqref{eq_nz} becomes:
 
 For example, consider a population of size $N=10,000$ with strong selection
 of $2Ns = 100,$ corresponding to a fixation probability reduced by a factor $4\times 10^{-42}$ relative 
-to the neutral expectation \cite{Kimura:1962um}.  If we set setting $z=5$ and $g=100,$ we require a sample size of at most $0.02 N.$
+to the neutral expectation \cite{Kimura:1962um}.  If we set $z=5$ and $g=100,$ we require a sample size of at most $0.02 N.$
  If we choose to limit ourselves to smaller numbers of generations (say, $g=10$), the critical sample 
- size is still much smaller than the entire population $0.04N$.
+ size is still much smaller than the entire population at $0.04N$.
  
  
 \section{Conclusion}
@@ -685,22 +683,14 @@ to the neutral expectation \cite{Kimura:1962um}.  If we set setting $z=5$ and $g
 Classical coalescent models in population genetics neglect the possibility that multiple coalescent events 
 can co-occur within a single generation. 
 Recent work \citep{BhaskarEtAl2014,NelsonEtAl2019} pointed out that this
-assumption is problematic for sample sizes found in modern experiments. As a result, models
-that consider multiple coalescent events per generation are gaining increased relevance in the field.
-However, generalized coalescent models that can handle multi-way mergers are difficult to reconcile 
-with selection models.
+assumption is problematic for sample sizes found in modern experiments \citep{Gravel:2011bg, Tennessen:2012ck}.
+We have shown that problems of diffusion models become even more severe under negative selection.
 
-In this work, we show that increasing the sample size has an unexpected beneficial consequence. 
+Conveniently, we also showed that increasing the sample size has an unexpected beneficial consequence. 
 As sample size increases, the number of distinct parents relevant to a sample becomes, 
 with high probability, smaller than the sample itself. Even though this does not rescue
 all desirable properties of coalescent models, it means that recursion equations 
 needed to calculate sample properties become nearly closed. 
-
-The recursion equations themselves  are expressed in terms of combinatorial probabilities 
-that can themselves be computed recursively in polynomial time. These computations 
-remain costly, especially if transition matrices must be computed for time-dependent
-population sizes and selection coefficients. It is likely that further computational 
-speed ups, possibly involving approximations, can be derived for such cases.  
 
 We have presented the current approach as an alternative to jackknife approximations in 
 achieving moment closure. The two approaches are not mutually exclusive. 
@@ -711,19 +701,28 @@ jackknifing a new lineage every time a selection event occurs, the approach pres
 here can be used to draw a new lineage only when drift fails to overcome selection 
 (that is, only within small truncation term $\epsilon$ in Equation \eqref{eq_truncated}).
 
+The recursion equations themselves  are expressed in terms of combinatorial probabilities 
+that can be computed recursively in polynomial time. These computations 
+remain costly if transition matrices must be computed for time-dependent
+population sizes and selection coefficients. In such cases, series expansion of transition matrices in terms
+of $s$, $\frac{n_o}{N}$ and $\frac{1}{N}$ may be the most practical option. 
 
-Here we have shown that setting the second term to zero can lead to asymptotically accurate computations. 
-A jackknife approximation of the form $\afs{n_p}{t-1} \simeq J_{n_p, n_o} \afs{n_o}{t-1}$ for $n_p>n_o$ as in \cite{Gravel2016}, 
-would only require an approximation for the already small proportion of samplings that required $n_p>n_o.$
 
 
-Approximate closure of recursions requires the simulated sample size to be above a critical size of $2N_e s.$ 
-It is not uncommon to perform simulations of allele frequencies to model datasets with hundreds or 
-thousands of samples \citep{Gravel:2011bg, Tennessen:2012ck}. 
- As argued in \citep{BhaskarEtAl2014},  this is a regime where diffusion-based approaches 
- struggle even under neutrality, and accurate simulations require accounting for multiple coalescence events.  
- Conveniently, such simulations would also be in the regime where the present approaches would be accurate, 
- meaning that selection can also be accounted for.
+%Here we have shown that setting the second term to zero can lead to asymptotically accurate computations. 
+%A jackknife approximation of the form $\afs{n_p}{t-1} \simeq J_{n_p, n_o} \afs{n_o}{t-1}$ for $n_p>n_o$ as in \cite{Gravel2016}, 
+%would only require an approximation for the already small proportion of samplings that required $n_p>n_o.$
+
+
+%Approximate closure of recursions requires the simulated sample size to be above a critical size of $2N_e s.$ 
+%It is not uncommon to perform simulations of allele frequencies to model datasets with hundreds or 
+%thousands of samples \citep{Gravel:2011bg, Tennessen:2012ck}. 
+ %As argued in \citep{BhaskarEtAl2014},  this is a regime where diffusion-based approaches 
+ %struggle even under neutrality. We have shown that problems become even more severe under negative selection.
+ 
+%  accurate simulations require accounting for multiple coalescence events.  
+% Conveniently, such simulations would also be in the regime where the present approaches would be accurate, 
+% meaning that selection can also be accounted for.
 
  
 % relevant to present-day human samples.  
@@ -739,7 +738,7 @@ One of the main benefits of studying large sample sizes of whole-genome
 genetic data is to refine our understanding of strongly deleterious variation \cite{karczewski2020mutational}. Performing 
 quantitative inference for such datasets will require models that can handle both strong selection and large sample sizes.  
 Since the transition matrices defined here can be used in both forward \citep{JouganousEtAl2017} 
-and backward approaches \cite{KammEtAl2017}, the can help genetic models catch up with the requirements of genetic data.
+and backward approaches \cite{KammEtAl2017}, they can help genetic models catch up with the requirements of genetic data.
 
 
 % \bibliography{taming-strong-selection}
