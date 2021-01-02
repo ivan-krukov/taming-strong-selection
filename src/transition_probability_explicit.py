@@ -105,26 +105,50 @@ def matrix_explicit(no=5, s=1/1000, N=1000, max_t=1):
             p = hypergeom.pmf(ic, no, np.arange(0, no+1), nc)
 
             for io in range(0, no+1):
-                mtx[:, io] += P0(io, no, ic, nc, s, N, max_t, cache) * p
+                x = P0(io, no, ic, nc, s, N, max_t, cache)
+                mtx[:, io] += x * p
+                print(io, no, ic, nc, " ", x, p)
 
     return mtx, cache
+
+def hypergeom_projection_mtx(N, n):
+    rN = np.arange(0, N+1)
+    rn = np.arange(0, n+1)
+    return np.array([hypergeom(N, i, n).pmf(rn) for i in rN])
 
 if __name__ == "__main__":
     from transition_probability_dynamic_failures import matrix
 
-    np.set_printoptions(precision=2, linewidth=100)
+    np.set_printoptions(precision=4, linewidth=100)
+    N = 10_000
+    s = 1 / N
     n = 3
     max_t = 3
     t_start = perf_counter()
-    M1, cache = matrix_explicit(n, max_t=max_t)
+    M1, cache = matrix_explicit(n, s, N, max_t=max_t)
     print("Took ", perf_counter() - t_start)
     t_start = perf_counter()
-    M2, _, _ = matrix(n, max_t=max_t)
+    M2, _, _ = matrix(n, s, N, max_t=max_t)
     print("Took ", perf_counter() - t_start)
     # print("Last")
     # print(M1)
     # print(M2)
+
+    print([[b.shape for b in a] for a in cache[0]])
     diff = (M1 - M2) / M2
     mdiff = diff[~np.isnan(diff)]
     print(mdiff)
     assert np.max(np.abs(mdiff)) == 0
+
+    M3 = np.zeros((n+1, n+1))
+    cached_mtx = [[np.full((ic+1, io+1), np.nan) for io in range(0, n+1)] for ic in range(0, n+1)]
+    for i in range(0, n+1):
+        for j in range(0, n+1):
+            z = cache[0][i][j]
+            z[np.isnan(z)] = 0
+            cached_mtx[i][j] = z
+        x = hypergeom_projection_mtx(n, i) @ cached_mtx[i][-1]
+        M3 += x
+
+
+
