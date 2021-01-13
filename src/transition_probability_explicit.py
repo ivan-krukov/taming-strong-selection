@@ -97,6 +97,7 @@ def P0(io, no, ic, nc, s, N, max_t, cache):
 def matrix_explicit(no=5, s=1/1000, N=1000, max_t=1):
     mtx = np.zeros((no+1, no+1))
     # cache = np.full((no+1, no+1, no+1, no+1, max_t+1), np.nan)
+    # outermost is NC
     cache = [[[np.full((ic+1, io+1), np.nan) for io in range(0, no+1)] for ic in range(0, no+1)] for t
              in range(0, max_t+1)]
 
@@ -122,7 +123,7 @@ if __name__ == "__main__":
     np.set_printoptions(precision=4, linewidth=100)
     N = 10_000
     s = 1 / N
-    n = 3
+    n = 7
     max_t = 3
     t_start = perf_counter()
     M1, cache = matrix_explicit(n, s, N, max_t=max_t)
@@ -147,8 +148,12 @@ if __name__ == "__main__":
             z = cache[0][i][j]
             z[np.isnan(z)] = 0
             cached_mtx[i][j] = z
+        print(len(cached_mtx[i]), cached_mtx[i][-1].shape)
         x = hypergeom_projection_mtx(n, i) @ cached_mtx[i][-1]
         M3 += x
 
+    diff = (M1 - M3) / M3
+    mdiff = diff[~np.isnan(diff)]
+    print(mdiff)
 
-
+    print(M3)
