@@ -35,3 +35,6 @@ extra/%.dvi: extra/%.tex
 clean:
 	rm -f taming-strong-selection.pdf
 	rm -rf tmp
+
+transition_probability_explicit: src/transition_probability_explicit.c
+	cc $^ -O3 -o $@

@@ -40,16 +40,11 @@ void matrix_fill(Matrix* self, double v) {
 } 
 
 void matrix_print(Matrix* self) {
-    printf("[");
     for (unsigned int i = 0; i < self->rows; i++) {
         for (unsigned int j = 0; j < self->cols; j++) {
-            printf("%.3e ", XMEM(self, i, j));
+            printf("%.5e ", XMEM(self, i, j));
         }
-        if (i == self->rows - 1) {
-            printf("]\n");
-        } else {
-            printf("\n");
-        }
+        printf("\n");
     }
 }
 
@@ -192,45 +187,37 @@ double P0(int io, int no, int ic, int nc, double s, int N, int max_t, Tile** cac
     return v;
 }
 
-int main() {
-    /* Sanity checks */
-    /* Matrix* M = matrix_new(4, 3); */
+int main(const int argc, const char* argv[]) {
 
-    /* for (unsigned int i = 0; i < M->rows; i++) { */
-    /*     for (unsigned int j = 0; j < M->cols; j++) { */
-    /*         XMEM(M, i, j) = (i + 1) * (j + 1); */
-    /*     } */
-    /* } */
-    /* matrix_print(M); */
-    /* assert(XMEM(M, 0, 0) == 1); */
+    if (argc != 6) {
+        printf("Usage:\n\ttranstion_probability_explicit N Ns no max_t k\n");
+        exit(1);
+    }
+    int N = atoi(argv[1]);
+    double Ns = atof(argv[2]);
+    double s = Ns / N;
+    int no = atoi(argv[3]);
+    int max_t = atoi(argv[4]);
+    int k = atoi(argv[5]);
 
-    /* matrix_fill(M, 3); */
-    /* matrix_print(M); */
-    /* matrix_del(M); */
-
-    /* Tile* T = tile_new(3, 3); */
-    /* tile_print(T); */
-    /* tile_del(T); */
-
-
-    int N = 10000;
-    double s = 1 / N;
-    int no = 100;
-    int max_t = 3;
     Tile** cache = malloc((max_t+1) * sizeof(Tile*));
     for (int i = 0; i < max_t+1; i++) {
-        cache[i] = tile_new(no+1, no+1);
+        cache[i] = tile_new(no+1+k, no+1+k);
     }
 
-    for (int nc = 0; nc < no+1; nc++) {
+    for (int nc = 0; nc < no+1+k; nc++) {
         for (int ic = 0; ic < nc+1; ic++) {
-            for (int io = 0; io < no+1; io++) {
+            for (int io = 0; io < no+1+k; io++) {
                 P0(io, no, ic, nc,s, N, max_t, cache);
             }
         }
     }
 
-    /* tile_print(cache[0]); */
+    for (int nc = 0; nc < no+1+k; nc++) {
+        matrix_print(XMEM(cache[0], nc, no));
+        printf("---\n");
+    }
+
     for (int i = 0; i < max_t+1; i++) {
         tile_del(cache[i]);
     }
