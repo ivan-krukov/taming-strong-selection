@@ -1,0 +1,143 @@
+\documentclass[review,nonatbib]{elsarticle}
+
+\usepackage[]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{float}
+% biblatex + elsarticle fix
+\makeatletter
+\let\c@author\relax
+\makeatother
+\usepackage[natbib=true,citestyle=authoryear]{biblatex}
+\addbibresource{taming-strong-selection.biblatex}
+
+\newcommand{\ra}{\rightarrow}
+\newcommand{\afs}[2]{\Phi_{#1}^{(#2)}}
+\newcommand{\Dfrac}[2]{%
+  \ooalign{%
+    $\genfrac{}{}{1.2pt}0{#1}{#2}$\cr%
+    $\color{white}\genfrac{}{}{.4pt}0{\phantom{#1}}{\phantom{#2}}$}%
+}
+\newcommand{\cond}{\middle\vert}
+\newcommand{\dslash}{/\!\!/}
+\newcommand{\Coalc}[4]{\begin{bmatrix}#1\dslash #2 \\ #3\dslash #4 \end{bmatrix}}
+
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\ms}{\mathcal{S}}
+\newcommand{\QQ}{\mathcal{Q}}
+
+\newcommand{\hypo}{\operatorname{hypo}}
+
+
+\newcommand{\sgcomment}[1]{{\color{red}{SG: #1}}}
+\newcommand{\ikcomment}[1]{{\color{blue}{IK: #1}}}
+\newcommand{\Var}{\operatorname{Var}}
+\newtheorem{proposition}{Proposition}
+
+\journal{Theoretical Population Biology}
+
+\begin{document}
+\begin{frontmatter}
+  \title{ Taming strong selection with large sample sizes. }
+
+  \author{Ivan Krukov}
+  \author{Simon Gravel}
+
+  \begin{abstract}
+  The collection of large genetic datasets has recently put into question the validity of classical population genetic approximations, 
+  notably Kingman's coalescent and the diffusion approximation, which can be seen as approximations to the Wright-Fisher model.
+   Differences in diversity statistics between the two models has a concrete bearing on the inference of demographic
+    and selective parameters. 
+
+Here we argue that many of these differences stem from the large differences in family sizes between Kingman's coalescent and the 
+Wright-Fisher model, where Kingman's coalescent implies a high number of very large families. 
+ 
+ Thus the `best' model depends not on mathematical properties of each model, but on the demographic realism of the underlying 
+ assumptions about family sizes.      
+  
+  
+  \end{abstract}
+
+\end{frontmatter}
+
+
+\section{Intro}
+
+\subsection{Family sizes in the Wright-Fisher model}
+The number of offspring carried by an individual in a neutral Wright-Fisher model is binomially distributed and accurately approximated as a Poisson distribution.
+The probability that a set of $k$ individuals sampled from a population are part of a sibship is simply $P(\tau_k)=\frac{1}{N^{k-1}}.$ The probability that the same 
+$k$ individuals form a complete sibship (i.e., that no one else is part of the sibship) is $P(\sigma_k) = \frac{1}{N^{k-1}} \left(1-\frac{1}{N}\right)^{N-k} \simeq \frac{1}{e N^{k-1}},$ where
+the last approximation supposes $k\ll N$.
+
+
+\section{Family sizes in the coalescent}
+
+Continuous coalescent models do not feature discrete generations, and therefore do not have an explicit notion of sibships or families. 
+However, a natural definition of a sibship, in a haploid population, is a set of individuals who share a common ancestor exactly one generation ago.
+
+The probability that $k$ individuals are part of a sibship is easily expressed in terms of the 
+cumulative distribution of the hypoexponential distribution: $P(\tau_k) = CDF(\hypo(\{\lambda_i\}_{i\in\{2,\ldots,k\}}),1),$ where $\lambda_i=\frac{i (i-1)}{2N}$ is 
+the rate of coalescence among $i$ lineages. 
+
+\begin{proposition}
+ $P(\tau_k) =  \frac{ k! +O(N)^{-1}}{2^{k-1}N^{k-1}}.$ 
+ \end{proposition}
+
+\begin{proof}
+We have $P(\tau_1)=1$. Now assume that $P(\tau_{k-1}) =  \frac{ (k-1)! +O(N)^{-1}}{2^{k-2}N^{k-2}}.$ We can condition
+on the waiting time of the first coalescent event, and denote $P_{1-\epsilon}(\tau_k)$ as the probability that $k$ lineages coalesce within time 
+$1-\epsilon.$ In Kingman's coalescent, we rescale times and population sizes to maintain probability:
+ $P_{1-\epsilon}(\tau_k) =  \frac{ (k-1)! +O(N)^{-1}}{2^{k-2}\left(\frac{N}{1-t}\right)^{k-2}}.$ 
+
+We can therefore write
+\begin{equation}
+\begin{split}
+P(\tau_k) &= \int dt_k P(t_k) P_{1-\epsilon}(\tau_{k-1}) \\
+&= \int dt_k \lambda_k \exp(-\lambda_k t)  \frac{ (k-1)! +O(N)^{-1}}{2^{k-2}\left(\frac{N}{1-t}\right)^{k-2}}  \\ 
+&= \int dt_k \lambda_k\left(1-O(N)^{-1}\right)  \frac{ (k-1)! +O(N)^{-1}}{2^{k-2}\left(\frac{N}{1-t}\right)^{k-2}}  \\
+&= \frac{ k! +O(N)^{-1}}{2^{k-1}N^{k-1}} \qedhere
+\end{split}
+\end{equation}
+ \end{proof}
+ 
+    
+
+With the exception of $k=2,$ the probability of multiple mergers within one generation is much larger than under the Wright-Fisher model (Figure X), and produces large departures even for modest $k$. 
+For example,  the probability of finding a three-way merger over the course of a single generation is three times larger in a coalescent model compared to the 
+Wright-Fisher model. 
+
+
+\section{Mathematical intuition}
+The excess of large sibships in coalescent models can be interpreted from a conditional sampling perspective.  If $\tau_k$ is the event that the 
+first $k$ sampled individuals have a common ancestor, then in both models $P(\tau_k) =  P(\tau_k|\tau_{k-1}) P(\tau_{k-1}) = \prod_{i=2}^k P(\tau_i|\tau_{i-1}).$ In the
+ WF model, $P(\tau_i|\tau_{i-1}) = \frac{1}{N}.$ In the coalescent, the probability of coalescing to the previous $i-1$ previously coalesced lineages is approximately equal to 
+$\frac{T_{i-1}}{N},$ where $T_{i-1}$ is the length of the tree formed by the previously coalesced lineages. In particular, $T_{i-1}>T_{1}=1,$ so that every term after the first one
+ in the product for $P(\tau_k)$ is larger (and possibly much larger) in the coalescent relative to WF.  This reinforcement effect allows for the buildup of
+ large sibships relative to the Wright-Fisher model. 
+ 
+ A perhaps surprising corollary of $P(\tau_k) =  P(\tau_k|\tau_{k-1}) P(\tau_{k-1})$ is that $P(\tau_k|\tau_{k-1})= \frac{k+O(1/N)}{2 N},$ 
+ and therefore that $T_k = 1+(k-1)/2,$ i.e., the size of the tree, conditional on coalescence,
+  grows linearly in the sample size. \sgcomment{This was confusing to me at first, but it does follow from the proposition. I feel like there must be an intuitive argument here, but can't find it}
+ 
+ Even though the number of large sibships in the coalescent is much larger than in WF,  the overall coalescence rate is lower, according to \cite{Bhaskar}. 
+ This must entail that the number of coalescences attributed to small families in WF is higher than in the coalescent. As an example, consider the probability 
+ that the first $2k$ lineages are chosen such that lineage $2i$ is paired only with lineage $2i-1$ for $i \in \{1,\ldots,k\}.$ Because of the added length 
+ trees formed by the previous pairs, these are attractive to our new lineages and reduce the overall probability of having only two-way coalescent events.
+ \sgcomment{This is correct and could be formalized, but a fairly weak argument. I'd rather show concretely that the overall rate is reduced. 
+ Maybe it can be done with a lookdown construction.}  So overall, the coalescent is just more likely to have very large families, not more likely to coalesce overall (?!). 
+  
+  
+ Conversely, the effect on the total rate of coalescence is opposite. If we ask for the expected number of coalescences $C_k$ 
+ within a sample of size $k$, we get $C_k= \sum_{i=1}^k  c_i$, with $c_i$ the probability that lineage $i$ coalesces in any of the previous lineages. 
+
+
+
+
+
+
+
+\end{document}
