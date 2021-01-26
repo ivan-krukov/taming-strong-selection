@@ -43,7 +43,7 @@ def projection_fun(x, i, n, N, s=0, u=1e-8):
 def binomial_projection_full(n, N, s=0, u=1e-8):
     integ = np.zeros(n - 1)
     for i in range(1, n):
-        z = integrate.quad(projection_fun, 0, 1, args=(i, n, N, s, u))
+        z = integrate.quad(projection_fun, 0, 1, args=(i, n, N, s, u), epsabs=1e-12)
         integ[i - 1] = z[0]
     return integ
 
@@ -77,21 +77,21 @@ def relative_error(values, truth):
 if __name__ == "__main__":
     tmp_store = Path("data")
 
-    N_range = [1000, 500, 100]
-    n = 100
+    N_range = [2000, 1000, 200]
+    n = 200
     mu = 1e-8
     z = np.zeros(n - 1)
     z[0] = n * mu  # Forward mutation
     I = np.eye(n - 1)
 
-    ns_range = [0, 1, 5, 10, 50, 99]
-
+    ns_range = [0, 1, 5, 10, 50]
 
     J = moments.Jackknife.calcJK13(n+1)
     frequency_spectra = {N: {ns: None for ns in ns_range} for N in N_range}
     for i, N in enumerate(tqdm(N_range)):
         for j, Ns in enumerate(tqdm(ns_range)):
-            mtx_store = tmp_store / Path(f"mtx_n_{n}_Ns_{Ns}_N_{N}_J_1.txt")
+            # mtx_store = tmp_store / Path(f"mtx_n_{n}_Ns_{Ns}_N_{N}_J_1.txt")
+            mtx_store = tmp_store / Path(f"q_mat_{N}_{Ns}_{n}_3_5.txt")
             M = np.loadtxt(mtx_store)
             # with open(mtx_pkl, "rb") as pkl:
             #     M = pickle.load(pkl)
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     with plot_and_legend(
             fname="fig/strong_selection_six_panel.pdf",
             ncol=3,
-            nrow=6,
+            nrow=5,
             figsize=(15, 12),
             legend_side="bottom",
             legend_ncol=3
@@ -124,23 +124,23 @@ if __name__ == "__main__":
                 large_v = wf_n > 1e-12
 
 
-                # numeric = relative_error(normalize(frequency_spectra[N][Ns]), wf_n)
-                # assert(len(numeric) == n-1)
-                # moments_solution = relative_error(normalize(moments_fs(n, N, -s)), wf_n)
-                # assert(len(moments_solution) == n-1)
-                # diffusion = relative_error(normalize(binomial_projection_full(n, N, s)), wf_n)
-                # assert(len(diffusion) == n-1)
+                numeric = relative_error(normalize(frequency_spectra[N][Ns]), wf_n)
+                assert(len(numeric) == n-1)
+                moments_solution = relative_error(normalize(moments_fs(n, N, -s)), wf_n)
+                assert(len(moments_solution) == n-1)
+                diffusion = relative_error(normalize(binomial_projection_full(n, N, s)), wf_n)
+                assert(len(diffusion) == n-1)
                 plot_range = np.arange(1, n)
 
                 plt_kw = dict(ls="", marker=".", markersize=5)
-                # a.plot(plot_range, ma.masked_array(numeric, ~large_v), label="This study", **plt_kw)
-                # a.plot(plot_range, ma.masked_array(moments_solution, ~large_v), label="Moments", **plt_kw)
-                # a.plot(plot_range, ma.masked_array(diffusion, ~large_v), label="Diffusion approximation")
-                a.semilogy(plot_range, normalize(frequency_spectra[N][Ns]), label='This study',
-                           **plt_kw)
-                a.semilogy(plot_range, normalize(moments_fs(n, N, -s)), label='Moments', **plt_kw)
-                a.semilogy(plot_range, normalize(binomial_projection_full(n, N, s)), label='Diffusion')
-                a.semilogy(plot_range, normalize(wf_n), label='Wright-Fisher')
+                a.plot(plot_range, ma.masked_array(numeric, ~large_v), label="This study", **plt_kw)
+                a.plot(plot_range, ma.masked_array(moments_solution, ~large_v), label="Moments", **plt_kw)
+                a.plot(plot_range, ma.masked_array(diffusion, ~large_v), label="Diffusion approximation")
+                # a.semilogy(plot_range, normalize(frequency_spectra[N][Ns]), label='This study',
+                #            **plt_kw)
+                # a.semilogy(plot_range, normalize(moments_fs(n, N, -s)), label='Moments', **plt_kw)
+                # a.semilogy(plot_range, normalize(binomial_projection_full(n, N, s)), label='Diffusion')
+                # a.semilogy(plot_range, normalize(wf_n), label='Wright-Fisher')
 
                 a.set(title=f"n={n}, N={N}, Ns={Ns}")
                 idx = (j * len(N_range)) + i

@@ -33,7 +33,8 @@ def calcJK13(n):
 if __name__ == '__main__':
     parser = ArgumentParser('convert matrices from transition_probability_explicit')
     parser.add_argument('--sample-size', '-n', type=int)
-    parser.add_argument('--jackknife', '-k', type=int)
+    parser.add_argument('--jackknife', '-j', type=int)
+    parser.add_argument('output_file')
 
     args = parser.parse_args()
     n = args.sample_size
@@ -63,4 +64,4 @@ if __name__ == '__main__':
         J = calcJK13(i+1) @ J
         M += J.T @ T[i]
 
-    print(M)
+    np.savetxt(args.output_file, M)
