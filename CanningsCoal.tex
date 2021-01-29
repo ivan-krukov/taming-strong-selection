@@ -42,18 +42,22 @@
 
 \begin{document}
 \begin{frontmatter}
-  \title{ Taming strong selection with large sample sizes. }
+  \title{ Family sizes in coalescent world }
 
   \author{Ivan Krukov}
   \author{Simon Gravel}
 
   \begin{abstract}
   The collection of large genetic datasets has recently put into question the validity of classical population genetic approximations, 
-  notably Kingman's coalescent and the diffusion approximation, which can be seen as approximations to the Wright-Fisher model.
-   Differences in diversity statistics between the two models has a concrete bearing on the inference of demographic
+  notably Kingman's coalescent and the diffusion approximation, which can be thought of as approximations to the Wright-Fisher model appropriate 
+  in the small sample size limit.
+   Differences in diversity statistics predicted by these models has a concrete bearing on the inference of demographic
     and selective parameters. 
 
-Here we argue that many of these differences stem from the large differences in family sizes between Kingman's coalescent and the 
+Such differences have been tied to the presence (or absence) of simultaneous mergers 
+in gene genealogies of the two models. 
+
+Here we argue that many differences between these models stem from the large differences in family sizes between Kingman's coalescent and the 
 Wright-Fisher model, where Kingman's coalescent implies a high number of very large families. 
  
  Thus the `best' model depends not on mathematical properties of each model, but on the demographic realism of the underlying 
@@ -67,8 +71,8 @@ Wright-Fisher model, where Kingman's coalescent implies a high number of very la
 
 \section{Intro}
 
-\subsection{Family sizes in the Wright-Fisher model}
-The number of offspring carried by an individual in a neutral Wright-Fisher model is binomially distributed and accurately approximated as a Poisson distribution.
+\subsection{Family and sibship sizes in the Wright-Fisher model}
+The number of offspring carried by an individual in a neutral haploid Wright-Fisher model is binomially distributed and accurately approximated as a Poisson distribution.
 The probability that a set of $k$ individuals sampled from a population are part of a sibship is simply $P(\tau_k)=\frac{1}{N^{k-1}}.$ The probability that the same 
 $k$ individuals form a complete sibship (i.e., that no one else is part of the sibship) is $P(\sigma_k) = \frac{1}{N^{k-1}} \left(1-\frac{1}{N}\right)^{N-k} \simeq \frac{1}{e N^{k-1}},$ where
 the last approximation supposes $k\ll N$.
@@ -90,7 +94,7 @@ the rate of coalescence among $i$ lineages.
 \begin{proof}
 We have $P(\tau_1)=1$. Now assume that $P(\tau_{k-1}) =  \frac{ (k-1)! +O(N)^{-1}}{2^{k-2}N^{k-2}}.$ We can condition
 on the waiting time of the first coalescent event, and denote $P_{1-\epsilon}(\tau_k)$ as the probability that $k$ lineages coalesce within time 
-$1-\epsilon.$ In Kingman's coalescent, we rescale times and population sizes to maintain probability:
+$1-\epsilon.$ In Kingman's coalescent, we can rescale times and population sizes to maintain probability:
  $P_{1-\epsilon}(\tau_k) =  \frac{ (k-1)! +O(N)^{-1}}{2^{k-2}\left(\frac{N}{1-t}\right)^{k-2}}.$ 
 
 We can therefore write
@@ -106,7 +110,7 @@ P(\tau_k) &= \int dt_k P(t_k) P_{1-\epsilon}(\tau_{k-1}) \\
  
     
 
-With the exception of $k=2,$ the probability of multiple mergers within one generation is much larger than under the Wright-Fisher model (Figure X), and produces large departures even for modest $k$. 
+With the exception of $k=2,$ the probability that sampled individuals are part of a kinship,(i.e., that we see multiple mergers within one generation) is much larger than under the Wright-Fisher model (Figure X), and produces large departures even for modest $k$. 
 For example,  the probability of finding a three-way merger over the course of a single generation is three times larger in a coalescent model compared to the 
 Wright-Fisher model. 
 
