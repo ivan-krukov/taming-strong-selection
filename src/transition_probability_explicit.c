@@ -89,7 +89,7 @@ void tile_del(Tile* self) {
 
     for (unsigned int i = 0; i < self->rows; i++) {
         for (unsigned int j = 0; j < self->cols; j++) {
-            free(XMEM(self, i, j));
+            matrix_del(XMEM(self, i, j));
         }
     }
 
@@ -221,4 +221,5 @@ int main(const int argc, const char* argv[]) {
     for (int i = 0; i < max_t+1; i++) {
         tile_del(cache[i]);
     }
+    free(cache);
 }

@@ -37,4 +37,4 @@ clean:
 	rm -rf tmp
 
 transition_probability_explicit: src/transition_probability_explicit.c
-	cc $^ -O3 -o $@
+	cc $^ -O3 -std=c99 -o $@
