@@ -138,8 +138,43 @@ $\frac{T_{i-1}}{N},$ where $T_{i-1}$ is the length of the tree formed by the pre
  Conversely, the effect on the total rate of coalescence is opposite. If we ask for the expected number of coalescences $C_k$ 
  within a sample of size $k$, we get $C_k= \sum_{i=1}^k  c_i$, with $c_i$ the probability that lineage $i$ coalesces in any of the previous lineages. 
 
+\section{Ancestral variants at low frequencies, and long uncoalesced branches}
+
+In addition to the differences in the proportion of rare derived variants between the Wright-Fisher and coalescent models documented in Bahaskar et al, which can be 
+explained by fine-scale differences between discrete and continuous trees that affect the coalescence modes of leaves of the tree, 
+we have observed a substantial excess of rare ancestral alleles in coalescent models relative to Wright-Fisher models. 
+Since these affect old mutations, they are less likely to be affected by discretization issues, and more likely to reflect differences in the overall topology of the gene genealogies. 
 
 
+Here we will focus on $(n-1)$-tons, i.e., singletons for the ancestral allele. The only way for an $(n-1)$-ton to be generated is if one of the lineages never coalesces in the time
+ it takes for all the other lineages to coalesce. Under the coalescent, the probability that a given lineage does not coalesce while we go from $n$ lineages down to $2$ is simply
+ the probability of being selected in none of the $n-2$ coalescence events:
+ $$\left(1-\frac{2}{n}\right) \left(1-\frac{2}{n-1}\right) \cdots \left(1-\frac{2}{3}\right) = \left(\frac{n-2}{n}\right) \left(\frac{n-3}{n-1}\right) \cdots  \left(\frac{1}{3}\right) = \frac{2}{n (n-1)}.$$
+ 
+ The corresponding calculation in the Wright-Fisher model is more difficult, but we can use the discretized coalescent as a useful comparison. 
+The distribution of sibship sizes shows that coalescent simulations have more singleton and large sibships relative to WF which has more 
+doubleton sibships.
+
+From the perspective of a lineage trying not to coalesce before others have, the coalescent situation is much more favourable, since the probability 
+of being in a singleton sibship, and therefore not being selected for coalescence, is higher at each generation. Since the overall rates of coalescence 
+are similar in the two models, this higher survival rate will translate into more $(n-1)$-tons. 
+
+An alternative way of thinking about this is by looking at the other side of the family size spectrum. A single $k$-way coalescent 
+reduces the number of lineages as much as $(k-1)$ two-way coalescences. However, the multi-way coalescent implicates only $k$ 
+linages, whereas the multiple two-way coalescent implicates $2(k-1)$ lineages. So the coalescent implicates fewer lineages to achieve 
+the same rates of coalescence. 
+
+Based on our original observations, this has particularly notable effects on the number of trees with long uncoalescing branches.  
+
+\section{Rare ancestral variants and ancient admixture}
+The presence of long un-coalesced lineages is sometimes used as evidence for archaic admixture, and indeed the effect documented here is 
+large enough that it could lead to incorrectly rejecting a null model of no archaic admixture. Aspects of family size distribution beyond mean 
+and variance can therefore have a measurable impact on tree topologies and important summary statistics in large sample sizes. 
+Since at the moment we do not have a good knowledge of the precise distribution of kinship sizes in realistic populations under different 
+growth scenarios, it is likely a good idea to focus on summaries of the data that do not require large sample sizes. 
+ 
+
+ 
 
 
 
