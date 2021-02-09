@@ -70,32 +70,47 @@
 The allele frequency spectrum (\textit{AFS}) is an important summary of genetic diversity that is
 commonly used to infer demographic history and natural selection (\textit{e.g.}
 \cite{GutenkunstEtAl2009, KammEtAl2017, JouganousEtAl2017}). Given a demographic scenario of
-population size histories and migrations, the diffusion approximation or coalescent simulations can
-be used to obtain a predicted \textit{AFS}. By comparing predictions to the observed \textit{AFS},
-one can compute likelihoods for different demographic scenarios. Unfortunately, the \textit{AFS}
-calculations can be time consuming under complex demographic models, for example with multiple
-populations, or with large sample sizes.
+population size histories and migrations, these approaches use versions of the diffusion approximation 
+or coalescent simulations can to obtain a predicted \textit{AFS}. By comparing predictions to the observed \textit{AFS},
+one can compute likelihoods for different demographic scenarios. These approaches share two drawbacks.
 
-In the absence of selection, efficient computational shortcuts can be used. Coalescence models such
-as \citep{fastsimcoal2, KammEtAl2017} can efficiently compute the \textit{AFS} or subsets of it. In
-addition, recursion equations have been derived for moments of the neutral allele frequency
-distribution \citep{KimuraCrow1964,Ewens1972,JouganousEtAl2017}. Recently, these recursions have
-been useful in fitting complex demographic models to genetic data
-\citep{JouganousEtAl2017,KammEtAl2017}.
+First, the \textit{AFS} calculations can be time consuming for large sample sizes. 
+Some efficient computational shortcuts
+can be used (e.g., \citep{fastsimcoal2, KammEtAl2017}) but these often require neutrality.  
+In the presence of natural selection, available methods are more limited, and often involve forward 
+simulations or variants of the diffusion approximation.\cite{GutenkunstEtAl2009, JouganousEtAl2017}).  
+
+Second, both Kingman's coalescent and diffusion-based models rely on an approximation that
+samples studied are smaller than the square root of the effective population size, an increasingly problematic assumption
+ \cite{Fu2006, BhaskarEtAl2014}. The assumptions of Kingman's coalescent can be relaxed to include more general models,
+ involving multiple mergers (e.g., \cite{Fu2006, Spence2016}, and references therein), but accounting for natural selection remains 
+ challenging.
  
-In the presence of natural selection, coalescent models become much more complicated, and the
-corresponding recursion equations do not close but
-form a very large or infinite set of coupled equations \citep{DonnellyKurtz1999, JouganousEtAl2017}. Moment-based closure approximations
-have been developed \citep{JouganousEtAl2017}, but these are not robust to strong selection and
-their convergence properties are not well understood.
 
-Closure of the moment equations under the neutral Wright-Fisher model occurs because the number $n_p$ of
+Since a large body of work aimed at understanding the distribution
+of fitness effects for new mutations relies on the diffusion approximation \cite{}, an approach 
+to handle large sample sizes and natural selection is important. In previous work \cite{JouganousEtAl2017},
+ we suggested that a moments-based recursion approach to compute the AFS could be modified to include multiple-merger events. 
+ 
+ This approach presents two challenges. 
+ 
+ First, the recursions are not closed under natural selection and require closure approximations
+ that become less reliable under strong selection. Closure of the moment equations under the neutral 
+ Wright-Fisher model occurs because the number $n_p$ of
 distinct parental lineages that are sampled when drawing $n_o$ offspring lineages is at most $n_o$,
 and can be less if common ancestors are found (\textit{i.e.}, if there are coalescent events): 
 $n_p \le n_o$ (see Table \ref{tab_symbols} for the notation used). This does not
 hold under negative selection -- selective deaths can require the drawing of $n_p>n_o$  \citep{DonnellyKurtz1999a,
-  JouganousEtAl2017}. This possible increase is made explicit, for example, in the framework of the ancestral
+ JouganousEtAl2017}. This possible increase is made explicit, for example, in the framework of the ancestral
 selection graph \citep{KroneNeuhauser1997}.
+
+ Second, the additional combinatorial possibilities brought forth by multiple mergers  make the computation of
+transition matrices for recursion equations more difficult. 
+
+In this article we derive these
+transition matrices, and show that the additional effort in bookkeeping for large sample sizes 
+has the unexpected benefit of solving our first challenge by making the recursions asymptotically closed. 
+
 
 The number of relevant lineages as we go back in time is a random variable that depends on the relative
 importance of drift (controlled by the population size $N$) and selection (controlled by the selection coefficient $s$), but also on the sample size $n_o$. 
@@ -104,17 +119,14 @@ while the number of selective deaths is linear in $n_o$. For sufficiently large
 samples, the expected number of selective deaths will be smaller than common ancestry events, which would prevent the
 increase in the number of lineages. If we can show that this holds not just in expectation, but almost always,  
 we can obtain recursion equations that are almost closed. 
- 
-Large sample sizes also bring in the complication of simultaneous coalescent events
-\citep{BhaskarEtAl2014}. The additional combinatorial possibilities make the computation of
-transition matrices for recursion equations more difficult. In this article we derive these
-transition matrices, and show that these can be asymptotically closed even under strong selection. We
+
+
+We
 show that these transition matrices can be used to accurately model the distribution of allele
 frequencies in moderate to large samples and strong selection. The implementation of our methods,
 and the source code for the figures are available at
 \url{github.com/ivan-krukov/taming-strong-selection}.
 
-In short, modeling large sample sizes makes it easier to accurately account for strong selection. 
 
 \section{Background}
 \label{sec_background}
@@ -681,8 +693,7 @@ to the neutral expectation \cite{Kimura:1962um}.  If we set $z=5$ and $g=100,$ w
 %\citep{KroneNeuhauser1997} deal with this in the limit of large population size ($N$).
 
 Classical coalescent models in population genetics neglect the possibility that multiple coalescent events 
-can co-occur within a single generation. 
-Recent work \citep{BhaskarEtAl2014,NelsonEtAl2019} pointed out that this
+can co-occur within a single generation.  \citep{BhaskarEtAl2014,NelsonEtAl2019} pointed out that this
 assumption is problematic for sample sizes found in modern experiments \citep{Gravel:2011bg, Tennessen:2012ck}.
 We have shown that problems of diffusion models become even more severe under negative selection.
 
