@@ -1,0 +1,40 @@
+\documentclass[preview]{standalone}
+\usepackage{float}
+\begin{document}
+
+\begin{table}
+    \centering
+    \begin{tabular}{c c r r r }
+        n & Ns & $L$ & $L_{diffusion}$ & Relative error \\
+        \hline
+        $50$  & $0$  & $       0$ & $       0$ & $0\%$ \\
+              & $1$  & $1.145 \times 10^{-8}$ & $1.140 \times 10^{-8}$ & $-0.441\%$ \\
+              & $5$  & $1.139 \times 10^{-8}$ & $1.130 \times 10^{-8}$ & $-0.750\%$ \\
+              & $10$ & $1.064 \times 10^{-8}$ & $1.056 \times 10^{-8}$ & $-0.729\%$ \\
+              & $20$ & $1.033 \times 10^{-8}$ & $1.026 \times 10^{-8}$ & $-0.612\%$ \\
+              & $50$ & $1.015 \times 10^{-8}$ & $1.010 \times 10^{-8}$ & $-0.457\%$ \\
+        \\
+        $100$ & $0$  & $       0$ & $       0$ & $0\%$ \\
+              & $1$  & $1.147 \times 10^{-8}$ & $1.147 \times 10^{-8}$ & $0.009\%$ \\
+              & $5$  & $1.130 \times 10^{-8}$ & $1.130 \times 10^{-8}$ & $0.026\%$ \\
+              & $10$ & $1.056 \times 10^{-8}$ & $1.056 \times 10^{-8}$ & $0.020\%$ \\
+              & $20$ & $1.026 \times 10^{-8}$ & $1.026 \times 10^{-8}$ & $0.019\%$ \\
+              & $50$ & $1.010 \times 10^{-8}$ & $1.010 \times 10^{-8}$ & $0.020\%$ \\
+        \\
+        $200$ & $0$  & $       0$ & $       0$ & $0\%$ \\
+              & $1$  & $1.150 \times 10^{-8}$ & $1.150 \times 10^{-8}$ & $0.016\%$ \\
+              & $5$  & $1.130 \times 10^{-8}$ & $1.130 \times 10^{-8}$ & $0.036\%$ \\
+              & $10$ & $1.056 \times 10^{-8}$ & $1.056 \times 10^{-8}$ & $0.028\%$ \\
+              & $20$ & $1.026 \times 10^{-8}$ & $1.026 \times 10^{-8}$ & $0.027\%$ \\
+              & $50$ & $1.010 \times 10^{-8}$ & $1.010 \times 10^{-8}$ & $0.026\%$ \\
+        \end{tabular}
+
+    \caption{\label{tab_symbols} Genetic load under the allele frequency
+    spectra from present study ($L$), and the diffusion approximation
+    ($L_{diffusion}$), with constant population size $N=1000$. Load calculated as
+    $L=\sum_i s \frac{i}{n} \phi(i)$, relative error is
+    $\frac{L-L_{diffusion}}{L}\times100\%$. }
+
+\end{table}
+
+\end{document}
