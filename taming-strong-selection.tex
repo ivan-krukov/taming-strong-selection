@@ -47,19 +47,19 @@
     depends on the strength of both selection and drift: strong selection breaks the assumptions of
     the nearly neutral model, and strong drift coupled with large sample sizes breaks
     Kingman's coalescent model.
-  
-    Thus, the regime with strong selection and large sample sizes, relevant 
+
+    Thus, the regime with strong selection and large sample sizes, relevant
     to the study of pathogenic variation, appears particularly daunting.
     However, we find that the competition between drift and natural selection in this regime can be
     used to define asymptotically closed recursions for the distribution of allele
     frequencies that are accurate well beyond the strong selection limit.
- 
+
     Selection becomes more analytically tractable when the sample size $n$ is larger than twice the
     population-scaled selection coefficient: $n \ge 2Ns$ ($4Ns$ in diploids). In this regime, the
-    expected number of coalescent events is larger than the number of selective events. 
+    expected number of coalescent events is larger than the number of selective events.
     We construct the relevant transition matrices, show how they can be used to accurately compute
     distributions of allele frequencies, and discuss the boundaries of this analytically tractable
-    regime. 
+    regime.
   \end{abstract}
 
 \end{frontmatter}
@@ -67,12 +67,14 @@
 \section{Introduction}
 \label{sec_introduciton}
 
-The allele frequency spectrum (\textit{AFS}) is an important summary of genetic diversity that is
-commonly used to infer demographic history and natural selection (\textit{e.g.}
-\cite{GutenkunstEtAl2009, KammEtAl2017, JouganousEtAl2017}). Given a demographic scenario of
-population size histories and migrations, these approaches use versions of the diffusion approximation 
-or coalescent simulations can to obtain a predicted \textit{AFS}. By comparing predictions to the observed \textit{AFS},
-one can compute likelihoods for different demographic scenarios. These approaches share two drawbacks.
+The allele frequency spectrum (\textit{AFS}) is an important summary of genetic
+diversity that is commonly used to infer demographic history and natural
+selection (\textit{e.g.} \cite{GutenkunstEtAl2009, KammEtAl2017,
+JouganousEtAl2017}). Given a demographic scenario of population size histories
+and migrations, these approaches use versions of the diffusion approximation or
+coalescent simulations can to obtain a predicted \textit{AFS}. By comparing
+predictions to the observed \textit{AFS}, one can compute likelihoods for
+different demographic scenarios. These approaches share two drawbacks.
 
 First, the \textit{AFS} calculations can be time consuming for large sample sizes. 
 Some efficient computational shortcuts
@@ -82,7 +84,7 @@ simulations or variants of the diffusion approximation.\cite{GutenkunstEtAl2009,
 
 Second, both Kingman's coalescent and diffusion-based models rely on an approximation that
 samples studied are smaller than the square root of the effective population size, an increasingly problematic assumption
- \cite{Fu2006, BhaskarEtAl2014}. The assumptions of Kingman's coalescent can be relaxed to include more general models,
+ \citep{Fu2006, BhaskarEtAl2014}. The assumptions of Kingman's coalescent can be relaxed to include more general models,
  involving multiple mergers (e.g., \cite{Fu2006, Spence2016}, and references therein), but accounting for natural selection remains 
  challenging.
  
