@@ -4,10 +4,14 @@ figures: fig/strong_selection_six_panel.pdf fig/combined.pdf fig/missing.pdf fig
 
 data:
 	mkdir -p data
+	# Note that this can also be generated with batch.sh script
 	python3 src/generate_tables.py
 
-fig/selection_six_panel.pdf: data
-	python3 src/strong_selection.py
+fig/afs_comp_small.pdf: data
+	python3 src/afs_comp_panel.py --N-range 2000 200 --ns-range 0 10 --output $@
+
+fig/afs_comp_big.pdf: data
+	python3 src/afs_comp_panel.py --N-range 2000 1000 200 --ns-range 0 1 5 10 50 --output $@
 
 fig/combined.pdf:
 	python3 src/combined.py
@@ -21,7 +25,7 @@ fig/critical_normal.pdf:
 fig/skellam.pdf:
 	python3 src/skellam.py
 
-%.pdf: %.tex
+%.pdf: %.tex %.bib
 	mkdir -p tmp
 	latexmk -pdf -outdir=tmp $^
 	mv tmp/$(@F) .
