@@ -1,6 +1,7 @@
 .PHONY: default figures
 default: taming-strong-selection.pdf
-figures: fig/strong_selection_six_panel.pdf fig/combined.pdf fig/missing.pdf fig/critical_normal.pdf fig/skellam.pdf
+figures: fig/strong_selection_six_panel.pdf fig/combined.pdf fig/missing.pdf fig/critical_normal.pdf fig/skellam.pdf fig/fixation_rate_N_100.pdf fig/fixation_rate_N_500.pdf fig/fixation_rate_N_1000.pdf
+.PRECIOUS: data/fixation_rate_table_%.csv
 
 data:
 	mkdir -p data
@@ -42,3 +43,12 @@ clean:
 
 transition_probability_explicit: src/transition_probability_explicit.c
 	cc $^ -O3 -std=c99 -o $@
+
+# FIXATION RATES
+
+data/fixation_rate_table_%.csv: src/fixation_rate_comparison.py
+	python src/fixation_rate_comparison.py $* > $@
+
+fig/fixation_rate_N_%.pdf: data/fixation_rate_table_%.csv src/fixation_rate_plot.py
+	python src/fixation_rate_plot.py $< $* $@
+
