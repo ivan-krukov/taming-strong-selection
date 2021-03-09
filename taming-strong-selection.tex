@@ -268,7 +268,6 @@ closure by truncating the summation in Eq. \ref{eq_recur}:
   \afs{n_o}{t}(i_o)
   &= \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o}  \afs{n_p}{t-1}+ \sum_{n_p> n_o }  \mathbf{T}_{n_p,n_o} \afs{n_p}{t-1} \\
   &=      \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o} \afs{n_o}{t-1}+ \sum_{n_p> n_o }  \mathbf{T}_{n_p,n_o} \afs{n_p}{t-1} \\
-  &\approx\sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o} \afs{n_o}{t-1}+ \epsilon \\
   &\equiv \mathbf{Q}_{n_o}                                               \afs{n_o}{t-1}+ \epsilon
 \end{split}
 \label{eq_truncated}
@@ -278,16 +277,27 @@ square matrix whose $(i_p,i_o)^\text{th}$ element is the probability $P_{n_o}(\m
 (i_o)| \mathcal{C}(i_p,n_p))$ of event $\ms_{\leq n_o}(i_o)$ that we observe $i_o$ derived alleles
 in a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (see
 Appendix \ref{subsec_apx_tpm_deriv}), given event $\mathcal{C}(i_p,n_p)$ that $i_p$ of the first
-$n_p$ parental alleles are derived.  The term $\epsilon$ accounts for events with $n_p>n_o.$ 
+$n_p$ parental alleles are derived.  
 
-We will show below that $\epsilon$ is typically small in large sample sizes. Further, it can be 
-approximated effectively using a jackknife approach \citep{Gravel2016}. 
-Such jackknife approaches have been used in \cite{JouganousEtAl2017} to derive approximate 
+The term $\epsilon \equiv \sum_{n_p> n_o }  \mathbf{T}_{n_p,n_o} \afs{n_p}{t-1} $ 
+accounts for events with $n_p>n_o.$ We will show below that it is small and often 
+negligible for large sample sizes. 
+Further, it can be estimated to ensure convergence even in moderate sample sizes.  
+Using the jackknife extrapolation of \citep{Gravel2016}, we can write  
+$\afs{n_p}{t-1} \simeq J_{n_p,n_o} \afs{n_o}{t-1},$ where $J_{n_p,n_o}$ is a $n_p\times n_o$
+matrix obtained by jackknife extrapolation, and thus
+\begin{equation}
+  \afs{n_o}{t}(i_o) \simeq \tilde{\mathbf{Q}}_{n_o}        \afs{n_o}{t-1}                                       
+\label{eq_truncated_jack}
+\end{equation}
+with  $ \tilde{\mathbf{Q}}_{n_o} =  \mathbf{Q}_{n_o}  +   \sum_{n_p=n_o+1 }^{n_o+\delta}  \mathbf{T}_{n_p,n_o} J_{n_p,n_o}$
+and $\delta$ is a parameter describing the order of the jackknife approximation to consider. \sgcomment{There is something weird with the convention on index order here...} 
+
+Jackknife approaches have been used in \cite{JouganousEtAl2017} to derive approximate 
 recursion equations under weak selection. But whereas the approach of \cite{JouganousEtAl2017} 
-require a jackknife approximation for every selective death, the formulation in Equation \eqref{eq_truncated}
+requires a jackknife approximation for every selective death, the formulation in Equation \eqref{eq_truncated}
 only requires approximations in the (rare) instances where there are more selective deaths than 
-common ancestry events. Thus larger sample sizes mean that fewer approximations are needed.
-
+common ancestry events. 
 
 Our first goal is to compute the matrices in \eqref{eq_recur}. To do so, we
 will need to account for multiple coalescent events, which will require some careful bookkeeping.
@@ -298,13 +308,13 @@ will need to account for multiple coalescent events, which will require some car
 \subsection{Constructing the transition matrix}
 \label{subsec_trans_mat}
 
-Even though $\mathbf{T}_{n_p,n_o}$ in equation \ref{eq_recur} is a combinatorial probability
+Even though $\mathbf{T}_{n_p,n_o}$ in Equation \ref{eq_recur} is a combinatorial probability
 describing a single generation in the Wright-Fisher model, we were unable to compute an analytical
 expression for it, while simultaneously allowing for multiple coalescences and multiple selective events.
 However,
 we can obtain fairly simple recursion by conditioning on the last draw. Such recursions were used for
 describing large sample size effects without selection in \citep{BhaskarEtAl2014}. In this section,
-we provide some mathematical intuition for the recursion equation, and a more detailed derivation is provided in
+we provide some mathematical intuition for the recursion equation with selection, and a more detailed derivation is provided in
 Appendix \ref{subsec_apx_tpm_deriv}.
 
 Under selection, the last draw can be characterized by whether it was successful or rejected, whether it drew a
@@ -319,14 +329,12 @@ $\ms_{n_o}(i_o, n_p, r)$ is a generalization of  $\ms_{n_o}(i_o, n_p)$ that acco
 it is the event that $i_o$ of the
 first $n_o$ successfully drawn offspring are derived, that the following $r$ draws are rejected, and
 that the $n_o$ offspring and subsequent $r$ failures required exactly $n_p$ distinct parental draws.
-
-The bracket notation $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$, 
-is convenient to keep track of the number of relevant parental lineages (at
-the top) and offspring lineages (at the bottom), similar to  figure \ref{fig_schematic}, at the cost
-of obscuring their different probabilistic role.
+The bracket notation, $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$, 
+is convenient to keep track of the number of relevant parental lineages (top of bracket) and offspring lineages (bottom of bracket) 
+in the recursion at the cost of obscuring their different probabilistic role.
 
 
-We show in the appendix and illustrate in Figure \ref{fig_rec_selection_dynamic_fail}  that we
+We show in the Appendix and illustrate in Figure \ref{fig_rec_selection_dynamic_fail}  that we
 can express $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ as a sum over a small number of terms
 of the form $\mathbf{T}_{r'}\Coalc{i'_p}{n'_p}{i'_o}{n'_o}.$ If $r>0,$ the last draw must be a failure
 and $r' = r - 1$ (leading to cases \textit{rC, rD} in Figure \ref{fig_rec_selection_dynamic_fail}).
@@ -386,7 +394,7 @@ Using caching to avoid re-computing previously computed values, we can systemati
 \end{figure}
 
 The set of selection transition probability matrices $\mathbf{T}$ requires $O(r_{max}n_o^2 n_p^2)$
-operations to construct: Since each term $\mathbf{T}_{r}$ (with $r>0$)  in the recursion requires a
+operations to construct: Since each entry in $\mathbf{T}_{r}$ (with $r>0$)  in the recursion requires a
 constant number of operations, the computational complexity depends on the number of terms we need
 to calculate. We will need to compute terms of the form
 $\mathbf{T}_{r}\Coalc{i_p'}{n_p'}{i_o'}{n_o'}$, with $1 \leq n_o'<n_o$, $i_o' \leq n_o'$, and $0\leq
@@ -396,14 +404,15 @@ The terms  $\mathbf{T}_{0}$ have a bound of the same form (i.e., there are at mo
 terms, each requiring $r_{max}$ computations).  Finally, the truncated matrix $\mathbf{Q}_{n_o} =
 \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_p,n_o} \mathbf{H}_{n_p,n_o}$ can be constructed in $O(n_o^4)$.
 
-This is moderately more complex than in the neutral case, where recursions (first derived in
-\cite{BhaskarEtAl2014}) and analytical expressions \cite{Lessard} can be computed in $O(n_o^3)$. 
+This is moderately more complex than in the neutral case, where recursions (\cite{BhaskarEtAl2014})
+ and analytical expressions \cite{Lessard} can be computed in $O(n_o^3)$. 
 
 
 \subsection{Calculation of allele frequency spectra}
 \label{subsec_afs}
 
-Once the truncated matrix $\mathbf{Q}_{n_o}$ from Eq. \ref{eq_truncated} is constructed, it can be
+Once the truncated matrix $\mathbf{Q}_{n_o}$ from Eq. \ref{eq_truncated} is constructed, or 
+the jackknife-corrected  $\tilde {\mathbf{Q}}_{n_o},$ they can be
 used to calculate the allele frequency spectrum. To validate the method, we estimate the equilibrium
 distribution where exact solutions are available \citep{Krukov2016}. In the infinite sites model at
 equilibrium, we can compute the equilibrium \textit{AFS} $\Phi$ in a finite sample as a solution to
@@ -416,15 +425,20 @@ where $\mu$ is the per-site (forward) mutation rate, $e_1$ is the second column 
 matrix of size $n+1.$ Since the infinite-sites model does not account for fixed sites,
 we only report frequency spectra for polymorphic sites below.
 
-Figure \ref{fig_strong_selection} and supplementary Figure \ref{} shows the comparison of the \textit{AFS} calculated from Equation
-\ref{eq_sfs_calc}, \sgcomment{This is not correct -- what is shown is the jackknife-corrected result, right?} 
+Figure \ref{fig_strong_selection} shows the comparison of the \textit{AFS} calculated from Equation
+\ref{eq_sfs_calc} with a jackknife of order \sgcomment{3},
 the diffusion approximation \cite[eq. 9.23]{Ewens2004}, and the numerical
 calculation performed in \texttt{Moments} \citep{JouganousEtAl2017}. In all the panels, the sample
 size is $n=200$ individuals. Any allele frequency probabilities below $1\times10^{-12}$ are not
-included in the figures.
+included in the figures. Results without a jackknife are presented on Figure S\ref{fig_no_jackknife}. 
 
-First, we note that our approach behaves in a way that is consistent with the Wright-Fisher
-\textit{AFS} in all the examined parameter ranges. However, the diffusion-based approaches diverge
+AFS computed using the recursion with the jackknife (Figure \ref{fig_strong_selection}) are 
+indistinguishable from the exact Wright-Fisher solution \textit{AFS} in all the examined 
+parameter ranges. AFS computed using the present approach without the jackknife 
+(i.e., with $\epsilon = 0$) show moderate departures from the exact results, mostly 
+\sgcomment{TBC}
+
+However, the diffusion-based approaches diverge
 in several ways.
 
 Figures \ref{fig_strong_selection}A,B show that there is a disagreement between the exact
