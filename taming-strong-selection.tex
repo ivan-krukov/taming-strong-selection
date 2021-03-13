@@ -437,9 +437,15 @@ indistinguishable from the exact Wright-Fisher solution \textit{AFS} in all the 
 parameter ranges. AFS computed using the present approach without the jackknife 
 (i.e., with pure truncation, $\epsilon = 0$) show moderate departures from the exact results, 
 mostly at high allele frequencies where the number of observations is low.
+Distributions of allele frequencies using \textsc{moments} with a jackknife shows 
+excellent agreement to predictions of the diffusion approximation for small selection 
+coefficients, but visible discrepancies with $Ns>50.$ Thus selection is treated more 
+accurately in the present approach, as expected. 
 
-However, the diffusion-based approaches differ from the Wright-Fisher model
-in several ways.
+
+However, the larger difference between the two approaches stems not from 
+is the difference in the accuracy of the jackknife approximations but in the
+contrast between diffusion-based and Wright-Fisher-based genealogies.
 
 Figures \ref{fig_strong_selection}A,B show that there is a disagreement between the exact
 Wright-Fisher and the diffusion solutions for singletons, doubletons, and $(n-1)$-tons even under neutrality. 
@@ -763,46 +769,67 @@ The diffusion approximation and Kingman's coalescent models differ from
 the Wright-Fisher model in that they do not account for possible simultaneous events. 
 A common interpretation is that they are approximations to the 
 "exact" Wright-Fisher process (e.g., \cite{Fu2006}). In that interpretation, the approach presented here 
-provides a more accurate way of estimating distributions of allele frequencies for deleterious variants 
-in large sample sizes than the state of the art. 
+provides an overall more accurate way of estimating distributions of allele frequencies for deleterious variants 
+in large samples than the state of the art. 
 
-Under neutrality, where these differences have been studied extensively, the coalescent remains useful 
+Under neutrality, where differences across models have been studied extensively, the coalescent remains useful 
 as an approximation even in rather large sample sizes \cite{Fu2006}, although quantitative inference 
-can be affected in realistically large samples \cite{BhaskarEtAl2014}. Overall, we find that the same holds under selection in 
+can be affected in realistically large samples \cite{BhaskarEtAl2014}. 
+Overall, we find that the same holds under selection in 
 large populations and modest selection coefficients, with differences being exacerbated and 
 reaching qualitative levels in small populations and large selection coefficients (Figure \cite{}). 
  
- A notable difference between the selective and neutral cases is that the choice of model impacts
- not only the abundance of very rare variants but the entire distribution of allele frequencies (Figure \cite{}). 
- These differences have less to do with whether mergers occur simultaneously or sequentially within a 
- generation, and more to do with the overall shape of gene genealogies generated under the different
-  models. 
+Whereas differences among neutral models were restricted to the extremes of the distribution, 
+differences under selection span the entire distribution of allele frequencies (Figure \cite{}). 
+Such discrepancies point to differences in the distribution of gene genealogies that go beyond 
+details whether coalescence events are simultaneous or sequential within a generation. 
+Fu \cite{Fu2006} proposed a rather detailed comparison of gene genealogies under both 
+(neutral) models.
  
-To understand differences in these gene genealogies, consider a discretized 
-version of Kingman's coalescent in which the times of all events are rounded up to the previous generation. 
+To directly compare how within-generation differences affect long-time gene genealogies, 
+we consider a discretized version of Kingman's coalescent in which the times of 
+all coalescence events are rounded up to the previous generation. 
 This discretization turns Kingman's coalescent into a Cannings model that has simultaneous and 
-multiple mergers, but whose gene genealogies have the same overall shape as Kingman's coalescent (up to rounding).
+multiple mergers, but whose gene genealogies have, up to rounding, the same distribution as in 
+Kingman's coalescent. 
 
-Figure \ref{sibships} shows a comparison of sibship sizes in both models. The discretized coalescent has 
-slightly larger families overall, (i.e., the rate of coalescence is slightly higher \cite{Fu2006}), but 
-it also has a large excess of large sibships relative to the Wright-Fisher model. Thus the probability of that 
-a new mutation rapidly reaching a high frequency is higher   
-
+Figure \ref{sibships} shows a comparison of sibship sizes under discrete Kingman coalescent 
+and Wright-Fisher model, in a sample equal to the population of size $n=N=100 000$. 
+The discretized coalescent has slightly larger families overall,
+ (i.e., the rate of coalescence is slightly higher, as has been observed e.g. in \cite{Fu2006}), but 
+the differences in sibship sizes are not uniform: There are a bit more sibships of size 1 and many more families of size above 4 
+in a coalescent world, whereas there are more parents with 0,2, or 3 offsprings in a Wright-Fisher world. Under neutrality, 
+the excess of single-child families in coalescent world leads to an excess of deep singleton lineages and thus $(n-1)$-tons,
+as discussed in \cite{Fu2006}. The abundance of large families in a coalescent world provides a higher probability for
+ new mutations, including deleterious ones, to rapidly reach appreciable frequency in the populations. 
  
 
-in that they neglect the possibility that multiple coalescent events
-can co-occur within a single generation. Even though Fu \cite{Fu2006} pointed out that the  
+The larger differences in prediction of allele frequencies between Wright-Fisher and Kingman's 
+coalescent models under selection is a bit of a concern for inference, as neither model provides 
+a particularly accurate model of the distribution of family sizes in real populations.
+If our inferences depend sensitively on the differences between family sizes under the two models, 
+we can expect that both models will perform poorly. 
 
-\citep{BhaskarEtAl2014,NelsonEtAl2019} pointed out that this
-assumption is problematic for sample sizes found in modern experiments.
-We have shown that discrepancies between Wright-Fisher and diffusion models become even more severe 
-under negative selection.
+As much as we would like to, we cannot state with confidence that recursions under the Wright-Fisher
+model presented here are a more faithful representation of natural gene genealogies than those based on 
+the coalescent. However, they do present substantial advantages. 
 
-Conveniently, we also showed that increasing the sample size has an unexpected beneficial consequence.
-As sample size increases, the number of distinct parents relevant to a sample becomes,
-with high probability, smaller than the sample itself. Even though this does not rescue
-all desirable properties of coalescent models, it means that recursion equations
-needed to calculate sample properties under complex demographic scenarios become nearly closed. 
+First, the handling of natural selection is more robust than in existing moments-based approach, as most selective
+events are now treated exactly rather than using an empirically accurate but uncontrolled jackknife approximation. 
+
+Second, the approach can be generalized to more general models so that we are no longer bound to the diffusion approximation. 
+\cite{Lessard} has derived recursions for a wide range of neutral models, and we expect that many of those 
+can be generalized to almost-closed recursions with selection. 
+
+Finally, even though we focused here on simple demographies, many methods for the analysis of complex demographies, 
+such as moments and momi, build on discrete transition matrices for the SFS. The existence of robust transition matrices 
+under selection opens up the possibility of extending these methods to a wider range of applications. 
+
+A remaining challenge of the present approach is that the computation of the transition matrices is itself costly. 
+It can be pre-computed, but this limits the applicability of the approach to step-wise constant population sizes 
+and selection coefficients. Efficient implementation of this approach for continuously-varying population
+sizes and selection coefficients, in the style of the moments software, will require some additional analytical work.
+
 
 %We have presented the current approach as an alternative to jackknife approximations in achieving
 %moment closure. The two approaches are not mutually exclusive. Even though we have focused here on
@@ -813,11 +840,11 @@ needed to calculate sample properties under complex demographic scenarios become
 %new lineage only when drift fails to overcome selection (that is, only within small truncation term
 %$\epsilon$ in Equation \eqref{eq_truncated}).
 
-The recursion equations themselves  are expressed in terms of combinatorial probabilities that can
-be computed recursively in polynomial time. These computations remain costly if transition matrices
-must be computed for time-dependent population sizes and selection coefficients. In such cases,
-series expansion of transition matrices in terms of $s$, $\frac{n_o}{N}$ and $\frac{1}{N}$ may be
-the most practical option.
+%The recursion equations themselves  are expressed in terms of combinatorial probabilities that can
+%be computed recursively in polynomial time. These computations remain costly if transition matrices
+%must be computed for time-dependent population sizes and selection coefficients. In such cases,
+%series expansion of transition matrices in terms of $s$, $\frac{n_o}{N}$ and $\frac{1}{N}$ may be
+%the most practical option.
 
 %Here we have shown that setting the second term to zero can lead to asymptotically accurate computations.
 %A jackknife approximation of the form $\afs{n_p}{t-1} \simeq J_{n_p, n_o} \afs{n_o}{t-1}$ for $n_p>n_o$ as in \cite{Gravel2016},
@@ -850,6 +877,15 @@ quantitative inference for such datasets will require models that can handle bot
 and large sample sizes.  Since the transition matrices defined here can be used in both forward
 \citep{JouganousEtAl2017} and backward approaches \cite{KammEtAl2017}, they can help genetic models
 catch up with the requirements of genetic data.
+
+Conveniently, we also showed that increasing the sample size has an unexpected beneficial consequence.
+As sample size increases, the number of distinct parents relevant to a sample becomes,
+with high probability, smaller than the sample itself. Even though this does not rescue
+all desirable properties of coalescent models, it means that recursion equations
+needed to calculate sample properties under complex demographic scenarios become nearly closed. 
+
+
+
 
 \printbibliography
 
