@@ -23,20 +23,22 @@ df["wright_fisher_load"] = (
     df.wright_fisher * df.dfe * N * genome_size * mutation_rate * (-df.selection)
 )
 
-ax[0].semilogy(df.selection, df.diffusion, label="Diffusion")
-ax[0].semilogy(df.selection, df.wright_fisher, label="Wright-Fisher")
+df = df[df.selection > -10]
+
+ax[0].plot(df.selection, df.diffusion, label="Diffusion")
+ax[0].plot(df.selection, df.wright_fisher, label="Wright-Fisher")
 ax[0].set_title("Probability of fixation \n of a single variant in the genome")
 ax[0].text(-0.1, 1.1, "A", fontweight="bold", transform=ax[0].transAxes)
 ax[0].legend()
 
-ax[1].semilogy(df.selection, df.diffusion_load, label="Diffusion")
-ax[1].semilogy(df.selection, df.wright_fisher_load, label="Wright-Fisher")
+ax[1].plot(df.selection, df.diffusion_load, label="Diffusion")
+ax[1].plot(df.selection, df.wright_fisher_load, label="Wright-Fisher")
 # ax[1].axhline(1 / N, color="red", ls="--")
 ax[1].set_title("Fixation load")
 ax[1].text(-0.1, 1.1, "B", fontweight="bold", transform=ax[1].transAxes)
 # ax[1].legend()
 
-ax[2].semilogy(df.selection, (df.diffusion - df.wright_fisher) / df.wright_fisher)
+ax[2].plot(df.selection, (df.diffusion - df.wright_fisher) / df.wright_fisher)
 # ax[2].axhline(1 / N, color="red", ls="--")
 ax[2].set_title("Relative error of fixation probabilities")
 ax[2].text(-0.1, 1.1, "C", fontweight="bold", transform=ax[2].transAxes)
