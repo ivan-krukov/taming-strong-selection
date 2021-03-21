@@ -495,7 +495,7 @@ remain modest except for fairly deleterious alleles and small populations,
 where the differences are large enough to affect mean fitness over evolutionary time-scales. 
 
 
-When the sample is the entire population, as in figures \ref{fig_strong_seelction} B and D, the
+When the sample is the entire population, as in figures \ref{fig_strong_selection} B and D, the
 present method is exact. It is also not needed, since exact recursion equations can be obtained 
 from binomial sampling (\textit{i.e.}, there is no computational benefit to consider a subsample that is as
 large as the entire population).  The present approach is useful where accurate recursions can be
@@ -575,7 +575,6 @@ obeys
 \label{eq_nz}
 \end{equation}
 
-
 The second term
 encodes the condition that there are more coalescence events than selection events, on average. 
 It is comparable to contemporary sample sizes even under strong selection (say, $2Ns=100$)
@@ -629,7 +628,7 @@ of $2Ns = 100.$
   we require a sample size of at most $ 400 = 0.04 N.$
 
 As long as $n>2Ns x_p$, we can choose a number of generations to ensure that the probability of 
-$n_p>n_o$ is small.  
+$n_p>n_o$ is small.
 
 \section{Discussion}
 \label{sec_conclusion}
@@ -675,7 +674,7 @@ The discretized coalescent has slightly larger families overall,
 the differences in sibship sizes are not uniform: There are a few more sibships of size 1 and many more families of size above 4 
 in a coalescent model, whereas there are more parents with 0, 2, or 3 offspring under Wright-Fisher. Under neutrality, 
 the excess of single-child families with the coalescent leads to an excess of deep singleton lineages and thus $(n-1)$-tons,
-as discussed in \cite{Fu2006}. The abundance of large families with the coalescent provides a higher probability for
+as discussed in \cite{Fu2006}. The abundance of large families within the coalescent provides a higher probability for
  new mutations, including deleterious ones, to rapidly reach appreciable frequency in the populations.
  
  \begin{figure}
@@ -688,11 +687,10 @@ as discussed in \cite{Fu2006}. The abundance of large families with the coalesce
   siblings are obtained by computing $N-n_p.$ \label{sibships}. The solid line shows the Poisson distribution.
   }
 
-  
 \end{figure}
  
 The larger differences in prediction of allele frequency distributions between Wright-Fisher and Kingman's 
-coalescent models under selection is a bit of a concern for inference, as neither model provides 
+coalescent models under selection is a bit of a concern for inference, as neither approach provides 
 a particularly accurate model of the distribution of family sizes in real populations.
 If our inferences depend sensitively on the differences between family sizes under the two models, 
 we can expect that both models will perform poorly. 
@@ -709,7 +707,7 @@ Second, the approach can be generalized to more general models so that we are no
 including the ancestral selection graph, can be generalized to almost-closed recursions with selection. 
 
 Finally, even though we focused here on simple demographies, many methods for the analysis of complex demographies, 
-such as momi, build on discrete transition matrices for the SFS but have been limited to neutrality.
+such as \texttt{momi} \citep{KammEtAl2017}, build on discrete transition matrices for the \textit{AFS} but have been limited to neutrality.
  The existence of robust transition matrices 
 under selection opens up the possibility of extending these methods to handle natural selection.
 
