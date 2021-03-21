@@ -10,7 +10,7 @@ fig_store = Path.cwd() / Path("fig")
 
 matrix_sets = []
 Ns_range = [1, 10, 50]
-n_range = np.arange(10, 140+5, 5)
+n_range = np.arange(10, 200+5, 5)
 k_range = [0, 1, 2, 3]
 N = 1000
 
@@ -26,6 +26,7 @@ with plot_and_legend(fname=fig_store / Path('missing.pdf'), legend_title="Ns", n
                 M = np.loadtxt(data_store / Path(f"q_mat_{N}_{Ns}_{n}_3_{k}.txt"))
                 missing_p.append(1 - (M[-1,:].sum()))
             ax[k].semilogy(n_range, missing_p, label=f"{Ns}", ls="", marker="o")
+            critical = 2 * Ns
             ax[k].set(title=f"Jackknife order {k}")
             ax[k].set(xlabel="Number of offspring, $n_o$")
             ax[k].sharey(ax[-1])
