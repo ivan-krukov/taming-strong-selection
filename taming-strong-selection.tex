@@ -380,7 +380,7 @@ Using caching to avoid re-computing previously computed values, we can systemati
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.9\textwidth]{fig/recurrence-selection-dynamic-failures-annotated.pdf}
+  \includegraphics[angle=-90,width=0.9\textwidth]{fig/recurrence-selection-dynamic-failures-annotated.pdf}
 
   \caption{Recursion over the last draw for transition probabilities with selection. 
     The right hand panel represents the last draw graphically.
@@ -836,9 +836,12 @@ needed to calculate sample properties under complex demographic scenarios become
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{fig/missing.pdf}
-  \caption{Probability that there are more contributing parents than offspring: $n_p > n_o$.
-    Calculated as $1-\sum_{i_o} \mathbf{Q}_{n_o}{(i_p, i_o)}$, with $N=1000$. Each panel shows an
-    increasing order of the jackknife approximation.}
+
+  \caption{Probability that there are more contributing parents than offspring: $n_p > n_o$ when
+    every allele is derived (worst case). Calculated as $1-\sum_{i_o} \mathbf{Q}_{n_o}{(i_p,
+    i_o)}$, with $Q$ defined in equation \ref{eq_truncated}, with $N=1000$. Each panel shows an
+    increasing order of the jackknife approximation. Transparent points show sample sizes below the
+    critical point, $2Ns$.}
 
   \label{fig_apx_missing}
 \end{figure}
