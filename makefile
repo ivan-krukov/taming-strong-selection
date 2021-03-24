@@ -14,6 +14,12 @@ fig/afs_comp_small.pdf: data
 fig/afs_comp_big.pdf: data
 	python3 src/afs_comp_panel.py --N-range 2000 1000 200 --ns-range 0 1 5 10 50 --output $@
 
+fig/afs_comp_small_no_jackknife.pdf: data
+	python3 src/afs_comp_panel.py --N-range 2000 200 --ns-range 0 10 -j 0 --output $@
+
+fig/afs_comp_big_no_jackknife.pdf: data
+	python3 src/afs_comp_panel.py --N-range 2000 1000 200 --ns-range 0 1 5 10 50 -j 5 --output $@
+
 fig/combined.pdf:
 	python3 src/combined.py
 
@@ -52,3 +58,6 @@ data/fixation_rate_table_%.csv: src/fixation_rate_comparison.py
 fig/fixation_rate_N_%.pdf: data/fixation_rate_table_%.csv src/fixation_rate_plot.py
 	python src/fixation_rate_plot.py $< $* $@
 
+# for n in 10 50 100;
+# do for Ns in 0 1 5 10 20 50;
+# do cat data/t_mat_1000_${Ns}_${n}_3_10.txt | python src/read_matrices.py -j 10 -n $n data/q_mat_1000_${Ns}_${n}_3_10.txt; done; done

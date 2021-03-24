@@ -26,6 +26,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--mu", type=float, default=1e-8)
     parser.add_argument("--n", type=int, default=200)
+    parser.add_argument("--jackknife", "-j", default=5, type=int)
     parser.add_argument(
         "--N-range", nargs="+", action="extend", type=int, required=True
     )
@@ -37,6 +38,7 @@ if __name__ == "__main__":
 
     n = args.n
     mu = args.mu
+    j = args.jackknife
     z = np.zeros(n - 1)
     z[0] = n * mu  # Forward mutation
     I = np.eye(n - 1)
@@ -45,7 +47,7 @@ if __name__ == "__main__":
     frequency_spectra = {N: {ns: None for ns in args.ns_range} for N in args.N_range}
     for i, N in enumerate(tqdm(args.N_range)):
         for j, Ns in enumerate(tqdm(args.ns_range)):
-            mtx_store = tmp_store / Path(f"q_mat_{N}_{Ns}_{n}_3_5.txt")
+            mtx_store = tmp_store / Path(f"q_mat_{N}_{Ns}_{n}_3_{j}.txt")
             M = np.loadtxt(mtx_store)
             # solve for equilibrium
             tmp = (M[1:-1, 1:-1] - I).T
