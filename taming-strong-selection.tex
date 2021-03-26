@@ -99,27 +99,24 @@ sample sizes used in recent studies that investigate selective constraints \cite
 \textit{AFS} could be modified to include multiple-merger events and selection.  Here we derive
 these recursions and study the impact of large sample sizes on the validity of diffusion models.
 
-We will have to address two challenges. 
-
-First, recursions are not formally closed under natural selection, meaning that
+We will have to address two challenges. First, recursions are not formally closed under natural selection, meaning that
 approximations are required.  Closure of the moment equations under the neutral
 Wright-Fisher model occurs because the number of offspring lineages can not be larger
 than the number of parental lineages. In our notation, the number $n_p$ of distinct
 parental lineages that are sampled when drawing $n_o$ offspring lineages is at most
-$n_o.$ (see Table \ref{tab_symbols}). This does not hold under negative selection --
+$n_o$ (see Table \ref{tab_symbols} for notation throughout). This does not hold under negative selection --
 selective deaths can require the drawing of $n_p>n_o$ \citep{DonnellyKurtz1999a,
 JouganousEtAl2017}. This possible increase in ancestral lineages is also made explicit,
 for example, in the framework of the ancestral selection graph
 \citep{KroneNeuhauser1997}. To obtain finite recursions, we will need a closure
 approximation that can handle strong selection.
-
 Second, the additional combinatorial possibilities brought forth by multiple coalescent
 mergers make the computation of transition matrices for recursion equations more
-difficult. This effect becomes particularly pertinent in larger sample sizes
-\citep{Fu2006, BhaskarEtAl2014}.
+difficult. %This effect becomes particularly pertinent in larger sample sizes
+%\citep{Fu2006, BhaskarEtAl2014}.
 
-In this article we derive the transition matrices for recursion equations, and show that the
-additional bookkeeping has the unexpected benefit of making the recursions almost-closed. 
+In this article we derive these transition matrices, and show that the
+additional bookkeeping has the unexpected benefit of making the recursions almost closed. 
 
 A mathematical interpretation is that the number of relevant lineages as we go back 
 in time is a random variable that depends on the relative importance of drift (controlled by 
@@ -128,9 +125,9 @@ but also on the sample size $n_o$.  The number of in-sample
 coalescent events per generation scales as the square of the sample size, $n_o^2$, while the number of
 selective deaths is linear in $n_o$. Even under strong selection, the expected number of
 selective deaths is smaller than common ancestry events in sufficiently large samples, meaning that 
-$E[n_p- n_o]> 0.$ Thus the larger the sample size, the less likely we are to find $n_p>n_o.$
+$E[n_p- n_o]\leq 0.$ Thus the larger the sample size, the less likely we are to find $n_p>n_o.$
 Together with an efficient closure approximation for the rare exceptions, this means that strong 
-selection can be handled efficiently in large samples. 
+selection can be handled efficiently and accurately in large samples. 
 
 
 From a practical point of view, we show that these transition matrices can 
@@ -187,13 +184,13 @@ sample.
   \caption{\label{tab_symbols} Table of symbols}
 \end{table}
 
-To model selection as part of our sampling process, we consider that a parental lineage carrying a
-derived allele can be `rejected' as a result of selective death with probability $s\ge0$ (Fig.
+To model selection as part of our sampling process, we consider that a selected parental lineage carrying a
+derived allele can fail to repreoduce with probability $s\ge0$ (Fig.
 \ref{fig_schematic}B, broken lines). In such case, we keep sampling until a successful draw. This is
 equivalent to the usual formulation of the Wright-Fisher model: the probability of drawing a copy of
 the derived allele is $1-s$ times the probability of drawing a copy of the ancestral allele. And,
 because the drawing process depends on the parental allele of both successful and rejected draws,
-the \textit{AFS} in the offspring will depend on the state of the $n_p$ distinct parental lineages
+we will see that the \textit{AFS} in the offspring will depend on the state of the $n_p$ distinct parental lineages
 that were sampled.
 
 % To disentangle the effects of drift and selection, we also define $n_g$ as the number of gametes
@@ -237,7 +234,6 @@ Wright-Fisher drawing process of $n_o$ offspring drew $i_o$ derived offspring al
 exactly $n_p$ distinct parental lineages. Event $\mathcal{C}(i_p, n_p)$ depends on the allele
 frequency distribution in the parental generation: $P(\mathcal{C}(i_p,n_p)) =\afs{n_p}{t} (i_p)$ by
 definition of the \textit{AFS}. Thus
-
 \begin{equation}
   \begin{split}
     \afs{n_o}{t}(i_o)&= \sum_{n_p,i_p} P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p), \mathcal{C}(i_p,n_p) )\\
@@ -257,7 +253,7 @@ probability matrix, whose row and column indices correspond to the number of der
 offspring and contributing parental lineages, respectively. Related recursions under general neutral 
 models were studied in \cite{Lessard2010}.
 
-The AFS  $\afs{n_p}{t-1}$ for any  $n_p\leq n_o$ can be obtained by downsampling from $\afs{n_o}{t-1}$ (\textit{i.e.}, $\afs{n_p}{t-1} =
+The \textit{AFS}  $\afs{n_p}{t-1}$ for any  $n_p\leq n_o$ can be obtained by downsampling from $\afs{n_o}{t-1}$ (\textit{i.e.}, $\afs{n_p}{t-1} =
 \mathbf{H}_{n_p,n_o} \afs{n_o}{t-1}$ for hypergeometric projection matrix $\mathbf{H}_{n_p,n_o}$ if
 $n_p\leq n_o$). Thus, Equation \eqref{eq_recur} provides a closed form recursion for $\Phi_{n_o}$ under neutrality. 
 This was used in \cite{JouganousEtAl2017} to efficiently 
@@ -300,10 +296,11 @@ and $\delta$ is a parameter describing the order of the jackknife approximation 
 
 Jackknife approaches have been used in \cite{JouganousEtAl2017} to derive approximate 
 recursion equations under weak selection. But whereas the approach of \cite{JouganousEtAl2017} 
-requires a jackknife approximation for every selective death, the formulation in Equation \eqref{eq_truncated}
+requires a jackknife approximation to create a new lineage for every selective death, the formulation in Equation \eqref{eq_truncated}
 only requires approximations in the (rare) instances where there are more selective deaths than 
-common ancestry events. Thus by keeping track of simultaneous events in the transition matrices
-in \eqref{eq_recur}, we can drastically improve closure  approximations. 
+common ancestry events. By accounting for simultaneous events, lineages that go unused due to genetic drift can be repurposed to model selection (Figure \ref{fig_schematic}b).
+Thus by keeping track of simultaneous events in the transition matrices
+in \eqref{eq_recur}, we can drastically reduce our reliance on approximations.
 
 Our next goal is to compute these matrices.
 
@@ -380,7 +377,6 @@ more stringent cutoff does not present particular challenges.
 
 Using caching to avoid re-computing previously computed values, we can systematically compute all the terms in Equation
 \ref{fig_rec_selection_dynamic_fail}.
-
 \begin{figure}
   \centering
   \includegraphics[angle=-90,width=0.9\textwidth]{fig/recurrence-selection-dynamic-failures-annotated.pdf}
@@ -399,7 +395,6 @@ Using caching to avoid re-computing previously computed values, we can systemati
 
   \label{fig_rec_selection_dynamic_fail}
 \end{figure}
-
 The set of selection transition probability matrices $\mathbf{T}$ requires $O(r_{max}n_o^2 n_p^2)$
 operations to construct: Since each entry in $\mathbf{T}_{r}$ (with $r>0$)  in the recursion requires a
 constant number of operations, the computational complexity depends on the number of terms we need
@@ -440,9 +435,9 @@ calculation performed in \texttt{moments} \citep{JouganousEtAl2017}. In all the 
 size is $n=200$ individuals. Any allele frequency probabilities below $1\times10^{-12}$ are not
 included in the figures. 
 
-AFS computed using the recursion with the jackknife (Figure \ref{fig_strong_selection}) are 
+\textit{AFS} computed using the recursion with the jackknife (Figure \ref{fig_strong_selection}) are 
 indistinguishable from the exact Wright-Fisher solution \textit{AFS} in all the examined 
-parameter ranges. AFS computed using the present approach without the jackknife 
+parameter ranges. \textit{AFS} computed using the present approach without the jackknife 
 (i.e., with pure truncation, $\epsilon = 0$, Figure \ref{fig_apx_no_jackknife}) show moderate departures from the exact results, 
 mostly at high allele frequencies where the number of observations is low. 
 Distributions of allele frequencies using \texttt{moments} with a jackknife shows 
@@ -486,7 +481,7 @@ Comparisons under more parameter choices can be found in  Figure~\ref{fig_apx_st
 
 Because differences between diffusion and Wright-Fisher models are tied to multiple merger events, 
 we do not expect large differences in intensive quantities such as the genetic load, and this is confirmed
-in Supplementary Table \ref{tab_apx_load}). 
+in Supplementary Table \ref{tab_apx_load}. 
 Rather, the distribution of allele frequencies in Figure \ref{fig_strong_selection}
  indicates that a higher proportion of the load is caused by common variants  
  under the diffusion model relative to the Wright-Fisher model. 
@@ -517,14 +512,14 @@ Given $i_p$ derived among the first $n_o$ parental alleles, this is $1-\sum_{i_o
 i_o).$ From a numerical perspective, this allows for easy tracking of the proportion of the probability
 transition that required a jackknife approximation. 
 Figure \ref{fig_apx_missing} shows the probability of missing lineages under the worst-case
-scenario where all parental alleles are derived, $i_p$ = $n_p.$ 
+scenario where all parental alleles are derived, $i_p = n_p.$ 
 The probability first increases with increasing sample size, as the number of draws that
 can result in selective deaths increases linearly. However, the number of drift events eventually overtakes
 the number of selective events, and the probability that we need additional lineages decreases
-rapidly with sample size. The jackknife approximation improves the performance further.
+rapidly with sample size. Creating additional lineages via the jackknife approximation improves the performance further.
 
 Supplementary section \ref{parent_distribution} provides analytical expressions for the probability distribution
-$P(n_p-n_o) $ under this worst-case scenario where all alleles are derived, $i_p= n_o$, as well as its
+$P(n_p-n_o) $ under worst-case scenario $i_p = n_p,$ as well as its
 mean and variance. In particular, we show that
 \begin{equation}
     \label{eq_lineages_approx}
@@ -602,18 +597,17 @@ we can approximate the critical sample size for a given parental frequency $x_p$
 \end{equation*}
 suggesting that even very strong selection will not overcome drift even in moderate sample sizes. 
 
-Thus the main determinant of the accuracy of the present approach is not whether selection
+Thus a determinant of the accuracy of the present approach is not whether selection
 is weak enough, but whether there is enough drift in our sample to ensure that each 
 selection event is met by a drift event in the same generation. 
 
-This naturally suggests an improvement: if we compute transitions over more than one generation, 
-drift at one generation can be used to compensate for selection events at another. 
- 
 \subsection{Integrating over several generations}
+This naturally suggests an improvement: if we consider transitions in the 
+\textit{AFS}  not from one generation to the next, but from one generation to $g$ generations down the line, drift at one generation can compensate for selection events at another.  If the $n_o$ offspring depend on $n_p=n_o+1$ distinct parental lineages, because a selective event occurred, but these parental alleles depend on only $n_{gp} = n_o$ grand-parental lineages, because of a drift event, a transition matrix from the grand-parental AFS to the offspring AFS would be closed.   
 
-Computing accurate multi-generation transition matrices is reasonably straightforward
-and not significantly more costly than computing single-generation matrices
-(Appendix \ref{subsec_apx_multi}). To get an idea of the truncation behavior
+Such a transition matrix require additional bookkeeping, summing over possible intermediate parental configurations. As it turns out, computing accurate transition matrices over a few generations is reasonably straightforward and not significantly more costly than computing single-generation matrices
+(Appendix \ref{subsec_apx_multi}). If the expectation of $n_p-n_o \simeq n_o  s - \frac{n_o (n_o-1) }{2N}$ is negative, the probability that we require more than $n_o$ ancestral lineages $g$ generations ago decreases with $g.$
+To get an idea of the truncation behavior
 for small number $g \ll N$ of generations, we can approximate the change  in the number
 of lineages as we go back in time as a random walk with (approximately) constant mean and
 variance. In this case, both the mean and variance will be scaled by a factor $g$ relative
