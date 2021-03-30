@@ -2,18 +2,12 @@
 
 \newcommand{\ra}{\rightarrow}
 \newcommand{\afs}[2]{\Phi_{#1}^{(#2)}}
-\newcommand{\Dfrac}[2]{%
-  \ooalign{%
-    $\genfrac{}{}{1.2pt}0{#1}{#2}$\cr%
-    $\color{white}\genfrac{}{}{.4pt}0{\phantom{#1}}{\phantom{#2}}$}%
-}
 \newcommand{\cond}{\middle\vert}
 \newcommand{\dslash}{/\!\!/}
 \newcommand{\Coalc}[4]{\begin{bmatrix}#1\dslash #2 \\ #3\dslash #4 \end{bmatrix}}
 
 \newcommand{\CC}{\mathcal{C}}
 \newcommand{\ms}{\mathcal{S}}
-\newcommand{\QQ}{\mathcal{Q}}
 \newcommand{\Var}{\operatorname{Var}}
 
 \articletype{inv}
@@ -49,7 +43,6 @@ construct the relevant transition matrices, show how they can be used to accurat
 distributions of allele frequencies, and show that the distribution of deleterious allele frequencies is  sensitive to details of the evolutionary model.  
 
 \end{abstract}
-
 
 \begin{document}
 
@@ -1153,22 +1146,21 @@ The expectation in the first term can be derived from the occupancy distribution
 &= \Var_{n_g}\left[N\left(1-(1-\frac{1}{N})^{n_g} \right) \right] \\
 &= N^2 \Var_{n_g}\left[(1-\frac{1}{N})^{n_g} \right] \\
 &= N^2 \left( E_{n_g}\left[(1-\frac{1}{N})^{2n_g} \right] - E_{n_g}\left[(1-\frac{1}{N})^{n_g} \right]^2\right) \\
-&= N^2 \left( \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o}
--   \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s  \left(1-\frac{1}{N}\right)}\right)^{2n_o} \right) \\
+&= N^2 \Bigg[ \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s \left(1-\frac{1}{N}\right)^2}\right)^{n_o} \\
+&- \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-s}{1-s \left(1-\frac{1}{N}\right)}\right)^{2n_o}\Bigg] \\
 \end{split}
 \end{equation}
 The variance of the second term of Equation \eqref{eq_apx_var} is the variance of the modified occupancy
 distribution \cite{JohnsonEtAl2005}:
-% I think there was a mistake in here: changed this to be consistent with the code and mathematica
-% notebook
+
 \begin{equation}
 \begin{split}
-E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] & = E_{n_g}\left[N ((N - 1) (1 - 2/N)^{n_g} + (1 - 1/N)^{n_g} - N (1 - 1/N)^{2 n_g}) \right] \\
-% & = N (N-1)  \left(1-\frac{2}{N}\right)^{n_o} \left(\frac{1- s}{1- s  \left(1-\frac{2}{N}\right)}\right)^{n_o} +  \left(1-\frac{1}{N}\right)^{n_o} \left(\frac{1- s}{1- s  \left(1-\frac{1}{N}\right)}\right)^{n_o} \\
-% &-N  \left(1-\frac{1}{N}\right)^{2n_o} \left(\frac{1-  s}{1- s  \left(1-\frac{1}{N}\right)^2}\right)^{n_o}.
-&= N (N-1) \left( \frac{ (1-s)\left( 1-\frac{2}{N} \right) }{ 1-s\left( 1-\frac{2}{N} \right) } \right)^{n_o} + \\
-&+ N \left( \frac{(1-s)\left( 1-\frac{1}{N} \right)}{1-s\left( 1-\frac{1}{N} \right)}\right)^{n_o} - \\
-&- N^2 \left( \frac{(1-s)\left( 1-\frac{1}{N} \right)^2}{1-s\left( 1-\frac{1}{N} \right)^2}\right)^{n_o} \\
+	E_{n_g}\left[Var\left[n_p-n_o | n_g \right]\right] 
+	&= E_{n_g}\Big[N ((N - 1) (1 - 2/N)^{n_g} + (1 - 1/N)^{n_g} \\
+	&- N (1 - 1/N)^{2 n_g}) \Big] \\
+	&= N (N-1) \left( \frac{ (1-s)\left( 1-\frac{2}{N} \right) }{ 1-s\left( 1-\frac{2}{N} \right) } \right)^{n_o} + \\
+	&+ N \left( \frac{(1-s)\left( 1-\frac{1}{N} \right)}{1-s\left( 1-\frac{1}{N} \right)}\right)^{n_o} - \\
+	&- N^2 \left( \frac{(1-s)\left( 1-\frac{1}{N} \right)^2}{1-s\left( 1-\frac{1}{N} \right)^2}\right)^{n_o} \\
 \end{split}
 \end{equation}
 
@@ -1179,10 +1171,13 @@ Combining the two terms in Equation \eqref{eq_apx_var}, we get
 
 \begin{equation}
   \begin{aligned}
-    \operatorname{Var}[n_p-n_o | n_o] &=
-    N^2\left( \vara{1}^{2n_o}\varb{\vara{1}^2}^{n_o}-\vara{1}^{2n_o}\varb{\vara{1}}^{2n_o} \right) + \\
-    &+ N (N-1) \left( \frac{ (1-s)\left( 1-\frac{2}{N} \right) }{ 1-s\left( 1-\frac{2}{N} \right) } \right)^{n_o} + N \left( \frac{(1-s)\left( 1-\frac{1}{N} \right)}{1-s\left( 1-\frac{1}{N} \right)}\right)^{n_o} - N^2 \left( \frac{(1-s)\left( 1-\frac{1}{N} \right)^2}{1-s\left( 1-\frac{1}{N} \right)^2}\right)^{n_o}.
-    \label{eq_exact_var}
+	  \Var[n_p-n_o | n_o] &= N^2\Bigg( \vara{1}^{2n_o}\varb{\vara{1}^2}^{n_o} \\ 
+	  &-\vara{1}^{2n_o}\varb{\vara{1}}^{2n_o} \Bigg) + \\
+	  &+ N (N-1) \Bigg( \frac{ (1-s)\left( 1-\frac{2}{N} \right) }{ 1-s\left( 1-\frac{2}{N}
+	  \right) } \Bigg)^{n_o} \\
+	  &+ N \left( \frac{(1-s)\left( 1-\frac{1}{N} \right)}{1-s\left( 1-\frac{1}{N} \right)}\right)^{n_o} \\ 
+	  &- N^2 \left( \frac{(1-s)\left( 1-\frac{1}{N} \right)^2}{1-s\left( 1-\frac{1}{N} \right)^2}\right)^{n_o}.
+  \label{eq_exact_var}
   \end{aligned}
 \end{equation}
 
