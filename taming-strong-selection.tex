@@ -1,35 +1,34 @@
-\documentclass[9pt,twocolumn,twoside,lineno]{gsajnl}
+\documentclass[9pt, letterpaper]{article}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{authblk}
+\usepackage[margin=2cm]{geometry}
 
-\newcommand{\ra}{\rightarrow}
+\bibliographystyle{unsrtnat}
+
 \newcommand{\afs}[2]{\Phi_{#1}^{(#2)}}
-\newcommand{\Dfrac}[2]{%
-  \ooalign{%
-    $\genfrac{}{}{1.2pt}0{#1}{#2}$\cr%
-    $\color{white}\genfrac{}{}{.4pt}0{\phantom{#1}}{\phantom{#2}}$}%
-}
-\newcommand{\cond}{\middle\vert}
 \newcommand{\dslash}{/\!\!/}
 \newcommand{\Coalc}[4]{\begin{bmatrix}#1\dslash #2 \\ #3\dslash #4 \end{bmatrix}}
-
 \newcommand{\CC}{\mathcal{C}}
 \newcommand{\ms}{\mathcal{S}}
-\newcommand{\QQ}{\mathcal{Q}}
 \newcommand{\Var}{\operatorname{Var}}
 
-\articletype{inv}
+
+\begin{document}
 
 \title{ Taming strong selection with large sample sizes }
+\author{Ivan Krukov}
+\author{Simon Gravel}
+\affil{Genome Center, Department of Human Genetics, McGill University, Montreal, Canada}
+\maketitle
 
-\author[$\ast$]{Ivan Krukov}
-\author[$\ast$]{Simon Gravel}
-
-\affil[$\ast$]{Genome Center, Department of Human Genetics, McGill University, Montreal, Canada}
-\keywords{Coalescent; Strong selection; Allele-Frequency spectrum}
-
-\runningtitle{Taming strong selection with large sample sizes}
-\runningauthor{Krukov and Gravel}
-
-\begin{abstract}
+\section{Abstract}
 
 The fate of mutations and the genetic load of populations depend on the relative importance of
 genetic drift and natural selection. In addition, the accuracy of numerical models of evolution
@@ -43,20 +42,11 @@ and selection in that regime can be used to define asymptotically closed recursi
 distribution of allele frequencies that are accurate well beyond the strong selection limit.
 
 Selection becomes more analytically tractable when the sample size $n$ is larger than twice the
-population-scaled selection coefficient: $n \ge 2Ns$ ($4Ns$ in diploids). That is, when the
-expected number of coalescent events in the sample is larger than the number of selective events.  We
+population-scaled selection coefficient: $n \ge 2Ns$ ($4Ns$ in diploids). That is, when the expected
+number of coalescent events in the sample is larger than the number of selective events.  We
 construct the relevant transition matrices, show how they can be used to accurately compute
-distributions of allele frequencies, and show that the distribution of deleterious allele frequencies is  sensitive to details of the evolutionary model.  
-
-\end{abstract}
-
-
-\begin{document}
-
-\maketitle
-\thispagestyle{firststyle}
-\marginmark
-\firstpagefootnote
+distributions of allele frequencies, and show that the distribution of deleterious allele
+frequencies is  sensitive to details of the evolutionary model.  
 
 \section{Introduction}
 \label{sec_introduciton}
