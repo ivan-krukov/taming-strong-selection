@@ -1,20 +1,4 @@
-\documentclass[review,nonatbib]{elsarticle}
-
-\usepackage[]{geometry}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{xcolor}
-\usepackage{hyperref}
-\usepackage{float}
-
-% biblatex + elsarticle fix
-\makeatletter
-\let\c@author\relax
-\makeatother
-
-\usepackage[natbib=true,citestyle=authoryear]{biblatex}
-\addbibresource{taming-strong-selection.bib}
+\documentclass[9pt,twocolumn,twoside,lineno]{gsajnl}
 
 \newcommand{\ra}{\rightarrow}
 \newcommand{\afs}[2]{\Phi_{#1}^{(#2)}}
@@ -30,41 +14,49 @@
 \newcommand{\CC}{\mathcal{C}}
 \newcommand{\ms}{\mathcal{S}}
 \newcommand{\QQ}{\mathcal{Q}}
-
-\newcommand{\sgcomment}[1]{{\color{red}{SG: #1}}}
-\newcommand{\ikcomment}[1]{{\color{blue}{IK: #1}}}
 \newcommand{\Var}{\operatorname{Var}}
-\journal{Theoretical Population Biology}
+
+\articletype{inv}
+
+\title{ Taming strong selection with large sample sizes }
+
+\author[$\ast$]{Ivan Krukov}
+\author[$\ast$]{Simon Gravel}
+
+\affil[$\ast$]{Genome Center, Department of Human Genetics, McGill University, Montreal, Canada}
+\keywords{Coalescent; Strong selection; Allele-Frequency spectrum}
+
+\runningtitle{Taming strong selection with large sample sizes}
+\runningauthor{Krukov and Gravel}
+
+\begin{abstract}
+
+The fate of mutations and the genetic load of populations depend on the relative importance of
+genetic drift and natural selection. In addition, the accuracy of numerical models of evolution
+depends on the strength of both selection and drift: strong selection breaks the assumptions of
+the nearly neutral model, and drift coupled with large sample sizes breaks
+Kingman's coalescent model.
+
+Thus, the regime with strong selection and large sample sizes, relevant to the study of pathogenic
+variation, appears particularly daunting.  Surprisingly, we find that the interplay of drift
+and selection in that regime can be used to define asymptotically closed recursions for the
+distribution of allele frequencies that are accurate well beyond the strong selection limit.
+
+Selection becomes more analytically tractable when the sample size $n$ is larger than twice the
+population-scaled selection coefficient: $n \ge 2Ns$ ($4Ns$ in diploids). That is, when the
+expected number of coalescent events in the sample is larger than the number of selective events.  We
+construct the relevant transition matrices, show how they can be used to accurately compute
+distributions of allele frequencies, and show that the distribution of deleterious allele frequencies is  sensitive to details of the evolutionary model.  
+
+\end{abstract}
+
 
 \begin{document}
-\begin{frontmatter}
-  \title{ Taming strong selection with large sample sizes. }
 
-  \author{Ivan Krukov}
-  \author{Simon Gravel}
-
-  \begin{abstract}
-
-    The fate of mutations and the genetic load of populations depend on the relative importance of
-    genetic drift and natural selection. In addition, the accuracy of numerical models of evolution
-    depends on the strength of both selection and drift: strong selection breaks the assumptions of
-    the nearly neutral model, and drift coupled with large sample sizes breaks
-    Kingman's coalescent model.
-
-    Thus, the regime with strong selection and large sample sizes, relevant to the study of pathogenic
-    variation, appears particularly daunting.  Surprisingly, we find that the interplay of drift
-    and selection in that regime can be used to define asymptotically closed recursions for the
-    distribution of allele frequencies that are accurate well beyond the strong selection limit.
-
-    Selection becomes more analytically tractable when the sample size $n$ is larger than twice the
-    population-scaled selection coefficient: $n \ge 2Ns$ ($4Ns$ in diploids). That is, when the
-    expected number of coalescent events in the sample is larger than the number of selective events.  We
-    construct the relevant transition matrices, show how they can be used to accurately compute
-    distributions of allele frequencies, and show that the distribution of deleterious allele frequencies is  sensitive to details of the evolutionary model.  
-
-  \end{abstract}
-
-\end{frontmatter}
+\maketitle
+\thispagestyle{firststyle}
+\marginmark
+\firstpagefootnote
 
 \section{Introduction}
 \label{sec_introduciton}
@@ -150,7 +142,7 @@ sample.
 
 \begin{table}
   \centering
-  \begin{tabular}{l|p{100mm}}
+    \begin{tabular}{l|p{0.8\columnwidth}}
     Symbol & Meaning\\
     \hline
     $N$ & Population size\\
@@ -181,11 +173,11 @@ sample.
     $n_o+1$th offspring were rejected,
     and that $n_p$ distinct parental alleles were drawn (across all draws).
   \end{tabular}
-  \caption{\label{tab_symbols} Table of symbols}
+  \caption{\label{tab_symbols} Table of symbols and notation}
 \end{table}
 
 To model selection as part of our sampling process, we consider that a selected parental lineage carrying a
-derived allele can fail to repreoduce with probability $s\ge0$ (Fig.
+derived allele can fail to reproduce with probability $s\ge0$ (Fig.
 \ref{fig_schematic}B, broken lines). In such case, we keep sampling until a successful draw. This is
 equivalent to the usual formulation of the Wright-Fisher model: the probability of drawing a copy of
 the derived allele is $1-s$ times the probability of drawing a copy of the ancestral allele. And,
@@ -198,9 +190,9 @@ that were sampled.
 % depends on the number of selective deaths, whereas the difference $n_p-n_g \le 0$ depends
 % on the number of coalescent events.
 
-\begin{figure}[h]
+\begin{figure}
   \centering
-  \includegraphics[width=1.0\textwidth]{fig/schematic-AB.pdf}
+  \includegraphics[width=1.0\columnwidth]{fig/schematic-AB.pdf}
 
   \caption{\label{fig_schematic}
     Realizations of sampling parental lineages under neutrality (A) and under selection (B). The top
@@ -316,7 +308,7 @@ expression for it, while simultaneously allowing for multiple coalescences and m
 However,
 we can obtain fairly simple recursion by conditioning on the last draw. Such recursions were used for
 describing large sample size effects without selection in \citep{BhaskarEtAl2014}. In this section,
-we provide some mathematical intuition, and a more detailed derivation is provided in
+we provide some mathematical intuition, and a more detailed derivation is provided in the
 Appendix \ref{subsec_apx_tpm_deriv}.
 
 Under selection, the last draw can be characterized by whether it was successful or rejected,
@@ -379,7 +371,7 @@ Using caching to avoid re-computing previously computed values, we can systemati
 \ref{fig_rec_selection_dynamic_fail}.
 \begin{figure}
   \centering
-  \includegraphics[angle=-90,width=0.9\textwidth]{fig/recurrence-selection-dynamic-failures-annotated.pdf}
+  \includegraphics[angle=-90,width=1.1\columnwidth]{fig/recurrence-selection-dynamic-failures-annotated.pdf}
 
   \caption{Recursion over the last draw for transition probabilities with selection. 
     The right hand panel represents the last draw graphically.
@@ -466,7 +458,7 @@ Comparisons under more parameter choices can be found in  Figure~\ref{fig_apx_st
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.7\textheight]{fig/afs_comp_small.pdf}
+  \includegraphics[width=\columnwidth]{fig/afs_comp_small.pdf}
 
   \caption{Relative error of allele frequency spectra in a sample of size $n=200$ with respect to
     the Wright-Fisher model. Neutral ($Ns$=0) (A,B), or deleterious alleles ($Ns=10$) (C,D). (A) shows
@@ -676,7 +668,7 @@ as discussed in \cite{Fu2006}. The abundance of large families within the coales
  
  \begin{figure}
   \centering
-  \includegraphics[width=0.7\textheight]{fig/familysizes.pdf}
+  \includegraphics[width=\columnwidth]{fig/familysizes.pdf}
 
   \caption{Distribution of family sizes under Kingman's coalescent and Wright-Fisher model, as
      simulated under \texttt{msprime}.
@@ -769,8 +761,8 @@ catch up with the requirements of genetic data.
 
 \section{Acknowledgements}
 We thank Sabin Lessard and Aaron Ragsdale for useful discussions. 
-\printbibliography
 
+\bibliography{taming-strong-selection}
 
 \newcommand{\beginsupplement}{%
         \setcounter{table}{0}
@@ -786,18 +778,18 @@ We thank Sabin Lessard and Aaron Ragsdale for useful discussions.
 \subsection{Additional figures}
 \label{subsec_apx_figures}
 
-\begin{figure}[H]
+\begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{fig/afs_comp_small_no_jackknife.pdf}
+  \includegraphics[width=\columnwidth]{fig/afs_comp_small_no_jackknife.pdf}
 
     \caption{Allele frequency spectra calculated in Figure \ref{fig_strong_selection} without the use of the jackknife.    }
 
   \label{fig_apx_no_jackknife}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{fig/afs_comp_big.pdf}
+  \includegraphics[width=\columnwidth]{fig/afs_comp_big.pdf}
 
     \caption{Extended version of figure \ref{fig_strong_selection}. Relative error of allele
     frequency spectra from different models with respect to the Wright-Fisher \textit{AFS}. Panels
@@ -810,9 +802,9 @@ We thank Sabin Lessard and Aaron Ragsdale for useful discussions.
   \label{fig_apx_strong_selection_extended}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
   \centering
-  \includegraphics[width=0.9\textwidth]{fig/fixation_rate_N_100.pdf}
+  \includegraphics[width=\columnwidth]{fig/fixation_rate_N_100.pdf}
 
     \caption{(A) Fixation probability, (B) fixation load, and (C) relative error between the
     diffusion and Wright-Fisher models for N=100.}
@@ -821,9 +813,9 @@ We thank Sabin Lessard and Aaron Ragsdale for useful discussions.
 
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
   \centering
-  \includegraphics[width=0.9\textwidth]{fig/fixation_rate_N_1000.pdf}
+  \includegraphics[width=\columnwidth]{fig/fixation_rate_N_1000.pdf}
 
     \caption{(A) Fixation probability, (B) fixation load, and (C) relative error between the
     diffusion and Wright-Fisher models for N=1000.}
@@ -833,9 +825,9 @@ We thank Sabin Lessard and Aaron Ragsdale for useful discussions.
 \end{figure}
 %\subsection{Missing lineages}
 
-\begin{figure}[H]
+\begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{fig/missing.pdf}
+  \includegraphics[width=\columnwidth]{fig/missing.pdf}
 
   \caption{Probability that there are more contributing parents than offspring: $n_p > n_o$ when
     every allele is derived (worst case). Calculated as $1-\sum_{i_o} \mathbf{Q}_{n_o}{(i_p,
@@ -854,9 +846,9 @@ We thank Sabin Lessard and Aaron Ragsdale for useful discussions.
 %If we want to ascertain that the distribution is closed with increased confidence, we require a
 %larger number of lineages. All curves assume $N=1000$.
 
-\begin{figure}[H]
+\begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{fig/critical_normal.pdf}
+  \includegraphics[width=\columnwidth]{fig/critical_normal.pdf}
   \caption{Critical sample size that is required to ensure that a given proportion of simulated
   draws are included, for a given closure confidence level. The
     $50^\text{th}$ percentile corresponds to the mean in the equation \eqref{eq_critical_sample}. Note that the
@@ -865,9 +857,9 @@ We thank Sabin Lessard and Aaron Ragsdale for useful discussions.
   \label{fig_apx_critical_normal}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
   \centering
-  \includegraphics[width=0.5\textwidth]{fig/skellam.pdf}
+  \includegraphics[width=\columnwidth]{fig/skellam.pdf}
   \caption{Skellam approximation to the number of required lineages where $n_o$ is small:
   $\frac{{n_o}^2}{2N} < 10$. The Skellam distribution describes the difference between the number
   of offspring lineages $n_o$, and parental lineages $n_p$. }
@@ -992,9 +984,9 @@ offspring lineages, we also define $n_g$ as the number of gametes sampled in the
 \ref{fig_schematic_gametes}). The difference $n_g-n_o \ge 0$ depends on the number of selective
 deaths, whereas the difference $n_p-n_g \le 0$ depends on the number of coalescent events.
 
-\begin{figure}[h]
+\begin{figure}
   \centering
-  \includegraphics[width=0.5\textwidth]{fig/schematic-gametes.pdf}
+  \includegraphics[width=\columnwidth]{fig/schematic-gametes.pdf}
 
   \caption{\label{fig_schematic_gametes}
     An extension of figure \ref{fig_schematic}, with the addition of the gamete
@@ -1056,7 +1048,7 @@ there is a decrease in required lineages due to coalescent events.
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{fig/combined.pdf}
+  \includegraphics[width=\columnwidth]{fig/combined.pdf}
   \caption{\textbf{A} The distribution of number of required lineages with $n_0=200$. Shaded
     red area shows missing probability, where $n_p > n_o$. Points represent the exact probability one
     generation into the past (Eq. \ref{eq_lineages_in_past}), solid lines - Gaussian approximation.
@@ -1078,7 +1070,6 @@ Skellam and Gaussian distributions in useful parameter regimes.
 Using the law of total expectation, we can write the expectation $E[n_p-n_o | n_o]$ as
 \begin{equation*}
   \begin{aligned}
-    \label{eq_lineages_approx}
     E[n_p-n_o | n_o] &=        E[n_p | n_o]       - n_o \\
                      &=E_{n_g} E_{n_p}[n_p | n_g] - n_o.
   \end{aligned}
@@ -1130,7 +1121,6 @@ Thus we can write:
 Taking the terms of order up to $\frac{1}{N}$ gives
 
 \begin{equation}
-    \label{eq_lineages_approx}
     \hat{E}[n_p-n_o | n_o] \approx n_o  s - \frac{n_o (n_o-1) }{2N}.
 \end{equation}
 
@@ -1138,7 +1128,6 @@ We thus have the usual interplay of selection and drift. Solving for $ \hat{E}[n
 yields, to leading order,
 
 \begin{equation}
-  \label{eq_critical_sample}
   n_o^* \ge 2N s.
 \end{equation}
 
@@ -1202,7 +1191,6 @@ Taking series expansion in Mathematica \citep{Mathematica}, we can show that
 \begin{equation}
   \begin{aligned}
     \operatorname{Var}[n_p-n_o | n_o] &= n s + \frac{n (n-1)}{2 N_e}  + \cdots
-    \label{eq_exact_var}
   \end{aligned}
 \end{equation}
 where missing terms are of at least second order in products of  $s$, $\frac{n}{N}$,  and

@@ -24,7 +24,7 @@ fig/combined.pdf:
 	python3 src/combined.py
 
 fig/missing.pdf:
-	python3 src/plot_closures.py
+	Rscript src/plot_missing.R
 
 fig/critical_normal.pdf:
 	python3 src/critical_normal.py

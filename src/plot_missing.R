@@ -1,6 +1,6 @@
 library(tidyverse)
 
-missing <- read_table('data/missing_probability.tsv') %>%
+missing <- read_table('extra/missing_probability.tsv') %>%
   mutate(above_critical = no > 2 * Ns) %>%
   mutate(jackknife = as.factor(j),
          Ns = as.factor(Ns))
