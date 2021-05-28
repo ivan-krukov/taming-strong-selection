@@ -81,42 +81,26 @@ Because of its ability to handle both complex demographic and selective processe
 has been used to model the distribution of fitness effects for new
 mutations (\textit{e.g.} \cite{EyreWalker2006, BoykoEtAl2008}). However, its application to large studies (e.g., \citep{karczewski2020mutational} with n=...), is limited by the problematic assumption $n < \sqrt{N}$ highlighted by \citep{Fu2006, BhaskarEtAl2014}. 
 \cite{JouganousEtAl2017} suggested that a moments-based recursion approach to compute the
-\textit{AFS} could be modified to include multiple-merger events and selection.  Here we derive
-these recursions and study the impact of large sample sizes on the validity of diffusion models.
+\textit{AFS} under the Wright-Fisher model could be modified to include multiple-merger events and selection.  Here we derive these recursions and study the impact of large sample sizes on the validity of diffusion models.
 
-We will have to address two challenges. First, recursions are not formally closed under natural selection, meaning that
-approximations are required.  Closure of the moment equations under the neutral
-Wright-Fisher model occurs because the number of offspring lineages can not be larger
-than the number of parental lineages. In our notation, the number $n_p$ of distinct
-parental lineages that are sampled when drawing $n_o$ offspring lineages is at most
-$n_o$ (see Table \ref{tab_symbols} for notation throughout). This does not hold under negative selection --
-selective deaths can require the drawing of $n_p>n_o$ leading to problems in recursive approaches \citep{DonnellyKurtz1999a,
-JouganousEtAl2017}. This possible increase in ancestral lineages had also been made explicit previously in the framework of the ancestral selection graph
-\citep{KroneNeuhauser1997}. To obtain finite recursions, we will need a closure
-approximation that can handle strong selection.
-Second, the additional combinatorial possibilities brought forth by multiple coalescent
-mergers make the computation of transition matrices for recursion equations more
-difficult. %This effect becomes particularly pertinent in larger sample sizes
-%\citep{Fu2006, BhaskarEtAl2014}.
+We will have to address two challenges. First, recursions are not formally closed under natural selection, meaning that approximations are required. We will show that such approximations become more and more benign as the sample size increases. Second, multiple individuals in a large samples can find common ancestors within a generation, which forces us to track a large number of combinatorial possibilities.  
 
-In this article we derive these transition matrices, and show that the
-additional bookkeeping has the unexpected benefit of making the recursions approximately closed. 
-
-A mathematical interpretation is that the number of relevant lineages as we go back 
-in time is a random variable that depends on the relative importance of drift (controlled by 
-the population size $N$) and selection (controlled by the selection coefficient $s$), 
-but also on the sample size $n_o$.  The number of in-sample
-coalescent events per generation scales as the square of the sample size, $n_o^2$, while the number of
-selective deaths is linear in $n_o$. Even under strong selection, the expected number of
-selective deaths is smaller than common ancestry events in sufficiently large samples, meaning that 
-$E[n_p- n_o]\leq 0.$ Thus the larger the sample size, the less likely we are to find $n_p>n_o.$
-Together with an efficient closure approximation for the rare exceptions, this means that strong 
-selection can be handled efficiently and accurately in large samples. 
+In this article we propose a dynamic programming approach to integrate over these possibilities and provide recursion equations for distributions of allele frequencies in large samples with natural selection and changing population sizes. We show that small-sample approximations common in coalescent or diffusion approaches lead to stronger distortions for the distribution of allele frequencies under selection than under neutrality. 
+%A mathematical interpretation is that the number of relevant lineages as we go back 
+%in time is a random variable that depends on the relative importance of drift (controlled by 
+%the population size $N$) and selection (controlled by the selection coefficient $s$), 
+%but also on the sample size $n_o$.  The number of in-sample
+%coalescent events per generation scales as the square of the sample size, $n_o^2$, while the number of
+%selective deaths is linear in $n_o$. Even under strong selection, the expected number of
+%selective deaths is smaller than common ancestry events in sufficiently large samples, meaning that 
+%$E[n_p- n_o]\leq 0.$ Thus the larger the sample size, the less likely we are to find $n_p>n_o.$
+%Together with an efficient closure approximation for the rare exceptions, this means that strong 
+%selection can be handled efficiently and accurately in large samples. 
 
 
-From a practical point of view, we show that these transition matrices can 
-be used to accurately model the distribution of allele frequencies under 
-selection in moderate to large samples, and discuss implications for inference.
+%From a practical point of view, we show that these transition matrices can 
+%be used to accurately model the distribution of allele frequencies under 
+%selection in moderate to large samples, and discuss implications for inference.
 The implementation of our methods,
 and the source code for the figures are available at
 \url{github.com/ivan-krukov/taming-strong-selection}.
@@ -125,15 +109,15 @@ and the source code for the figures are available at
 \section{Background}
 \label{sec_background}
 \subsection{Model}
-We consider a single generation of a haploid Wright-Fisher model with $N$ \sgcomment{$N(T)$?} individuals per generation, focusing on expectations for a single biallelic locus with a selection coefficient $s>0$. That is, a model with discrete generations where each "offspring" at generation $t$ is generated by drawing a "parent" at random from generation $t-1$.  The probability of selecting a parent depends on the allele it carries: the probability of drawing a given parent with the deleterious allele is $(1-s)$ times the probability of drawing a given parent with the beneficial allele.  
+We consider a sample of $n_o$ individuals in a haploid Wright-Fisher population. We will focus on expectations for a single biallelic locus with a selection coefficient $s>0$. That is, a model with discrete generations where each `offspring' at generation $t$ is generated by drawing a `parent' at random from a population of size $N$ at generation $t-1$.  The probability of selecting a parent depends on the allele it carries: the probability of drawing a given parent with the deleterious allele is $(1-s)$ times the probability of drawing a given parent with the beneficial allele.  
 One way to generate such sampling probabilities is to draw parents with equal probability but reject, with probability $s$, draws of parents carrying the deleterious alleles. We can think of such rejected draws as caused by reproductive failures.   
 For each offspring, we repeat the random parental draw until a successful draw is achieved (Fig.
-\ref{fig_schematic}B, broken lines).
-This iterative process is equivalent to the usual Wright-Fisher sampling, as each parent has the correct probability of being successfully drawn for each offspring.
+\ref{fig_schematic}B, broken lines). 
+This iterative process is equivalent to the usual Wright-Fisher sampling, as each parent has the correct probability of being successfully drawn for each offspring. To generate $n_o$ offspring, we will make $n_g$ distinct draws ($n_g\geq n_o$ since there can be rejected draws), corresponding to $n_p$ distinct parents ($n_p\leq n_g$ since there can be common ancestry events).  
 
-If the deleterious allele frequency in the parents is $x$, the probability of obtaining $r$ successive failures for a given offspring is $(xs)^r.$ This decreases rapidly with $r$ for $xs<1.$ To avoid having to keep track of very unlikely occurrences of very large numbers of failed draws, we will sometimes use a modified Wright-Fisher model with a maximum number $r_{max}$ of selective failures for a given offspring, so that the draw attempt number $r_{max}+1,$ if it is needed, is guaranteed to be successful even if a parent carrying the deleterious allele is selected. When using that model, we select $r_{max}$ large enough so that the probability of requiring $r_{max}+1$ attempts is low.   
+If the deleterious allele frequency in the parents is $x$, the probability of obtaining $r$ successive failures for a given offspring is $(xs)^r.$ This decreases rapidly with $r$ for $xs<1.$ To avoid having to keep track of very unlikely occurrences of very large numbers of failed draws, we will sometimes use a modified Wright-Fisher model with a maximum number $r_{max}$ of selective failures for a given offspring. That is, no rejection can occur at draw number $r_{max}+1.$  When using that model, we select $r_{max}$ large enough so that the probability of requiring $r_{max}+1$ attempts is low.   
  
-The offspring are first assigned the parental allele, unless a mutation occurs. For mathematical convenience, we first generate all offspring with copied parental alleles, and then allow for mutation to change the assigned alleles. We will consider different mutational models below. 
+The offspring are assigned the parental allele, unless a mutation occurs. For mathematical convenience, we first generate all offspring with copied parental alleles, and then allow for mutation to change the assigned alleles. We will consider different mutational models below. 
 
  %The mutational model is not the main focus of this article, and we will primarily consider the infinite-sites model \cite{}, where we ignore the possibility of new mutations occurring on an already polymorphic site. Rather, we will assume that an offspring at monomorphic sites have a constant probability $\mu$ of acquiring a mutation of fitness $s$ relative to the parental allele. 
 %Even though such a model may seem strange for the long-term behavior of a single locus, it provides a useful tool to analyze genome-wide expectations in the distribution of allele frequencies \cite{}. We will then consider ensembles of $L$ independently evolving loci, so that the rate at which new mutations are introduced in the population is approximately $NL\mu$ \sgcomment{check definition}
@@ -145,20 +129,22 @@ define as the probability of observing $i_o$ copies of the deleterious allele in
 To express the allele-frequency spectrum $\afs{n_o}{t}(i_o)$ for $n_o$ offspring in terms of the parental \textit{AFS} at $t-1$, we first consider the allele frequency spectrum  $\afsPsi{n_o}{t}(i_o)$ in the offspring after parents were chosen and alleles copied, but before mutation:   
 
 \begin{equation}
-  \afs{n_o}{t}(i_o)=  \sum_{j_o} M_{i_oj_o} \afsPsi{n_o}{t}(j_o) 
+  \afs{n_o}{t}(i_o)=  \sum_{j_o} \mathbf{M}_{i_oj_o} \afsPsi{n_o}{t}(j_o) 
   \label{mut}
 \end{equation}
-where $M_{i_oj_o}$ is the probability that the mutational process changes the allele frequency to $i_o$ given that it was $j_o$ prior to mutation. For example, under a reversible mutational model with a mutation rate $\mu$ towards the deleterious allele and $\nu$ away from it, the number $i_o$ of copies of the deleterious allele after mutation is the sum of the number $X$ of unmutated deleterious alleles ($X \sim \mathit{Binom}(j_o, 1-\nu)$)  and the number $Y$ of mutated beneficial alleles  ($X \sim \mathit{Binom}(n_o-j_o, \mu)$). Thus $M_{i_oj_o}$ is the probability mass function of a particular case of the Poisson binomial distribution, which is easy enough to calculate numerically \cite{}. Many inference approaches use the infinite-sites approximation to this model, which does not follow form \eqref{mut}:  
+or, in matrix form, 
+\begin{equation}
+  \afs{n_o}{t}= \mathbf{M} \afsPsi{n_o}{t}
+  \label{mut}
+\end{equation}
+where $\mathbf{M}_{i_oj_o}$ is the probability that the mutational process changes the allele frequency to $i_o$ given that it was $j_o$ prior to mutation. For example, under a reversible mutational model with a mutation rate $\mu$ towards the deleterious allele and $\nu$ away from it, the number $i_o$ of copies of the deleterious allele after mutation is the sum of the number $X$ of unmutated deleterious alleles ($X \sim \mathit{Binom}(j_o, 1-\nu)$)  and the number $Y$ of mutated beneficial alleles  ($Y \sim \mathit{Binom}(n_o-j_o, \mu)$). Thus $M_{i_oj_o}$ is the probability mass function of a Poisson binomial distribution. As an alternative that will be useful for comparison with existing inference approaches, we will also consider the infinite-sites approximation to this model, which supposes an constant supply of new mutation:  
 
 \begin{equation}
-  \afs{n_o}{t}(i_o)=  \afsPsi{n_o}{t}(j_o) + n \mu e_1
+  \afs{n_o}{t}=  \afsPsi{n_o}{t} + n \mu e_1
 \end{equation}
 where $\mu$ is the per-site (forward) mutation rate and $e_1$ is the second column of the identity
 matrix of size $n_o+1.$ Since the infinite-sites model does not account for fixed sites,
-only polymorphic sites are reported in such cases. 
-
-
-depends on the mutational model, but is usually not particularly challenging to estimate. 
+only polymorphic sites are reported under that model. 
 \begin{table}
   \centering
     \begin{tabular}{l|p{0.8\columnwidth}}
@@ -215,8 +201,8 @@ depends on the mutational model, but is usually not particularly challenging to 
 \end{figure}
 
 
-To express the allele-frequency spectrum $\afsPsi{n_o}{t}(i_o)$ for $n_o$ offspring in terms of the parental
-\textit{AFS} at $t-1$, we can sum over possible values for random variables $n_p$ and the number $i_p$ of distinct derived alleles
+The next step, which is more challenging, is to express the allele-frequency spectrum $\afsPsi{n_o}{t}(i_o)$ for $n_o$ offspring in terms of the parental
+\textit{AFS} at $t-1$. To do this, we can sum over possible values for random variables $n_p$ and the number $i_p$ of distinct derived alleles
 among the parents:
 \begin{equation}
   \afsPsi{n_o}{t}(i_o)=\sum_{n_p,i_p} P_{n_o}(i_o,i_p,n_p),
@@ -231,9 +217,9 @@ draw new parental lineages in the Wright-Fisher model is random, we can first dr
 of the parental population, and then select unsampled parents in order from this permutation. 
 This allows us to separate properties of this permutation,
 which depend only on parental \textit{AFS}, from properties of Wright-Fisher sampling, which depend
-on population size and selection coefficients. Concretely, the event $(i_o,i_p,n_p)$ that we draw
-$i_o$ derived offspring alleles from $n_p$ distinct parents of which $i_p$ are derived can be
-expressed as the intersection of two events, $\mathcal{C}(i_p,n_p)$ and $\mathcal{S}_{n_o}(i_o,
+on population size and selection coefficients. Concretely, we consider the event $(i_o, i_p, n_p)$ that $i_o$ offspring carry the deleterious allele, that $n_p$ distinct parents were drawn (successfully or not) when generating the $n_o$ offspring, and that $i_p$ of these $n_p$ parents carry the deleterious allele.  \sgcomment{Check throughout that we use `deleterious' allele consistently, vs 'derived'}
+
+This event $(i_o, i_p, n_p)$ can be expressed as the intersection of two events, $\mathcal{C}(i_p,n_p)$ and $\mathcal{S}_{n_o}(i_o,
 n_p)$. Event $\mathcal{C}(i_p,n_p)$ specifies that the first $n_p$ parental lineages from the random
 permutation carry $i_p$ derived alleles. Event $\mathcal{S}_{n_o}(i_o, n_p)$ requires that the
 Wright-Fisher drawing process of $n_o$ offspring drew $i_o$ derived offspring alleles and sampled
