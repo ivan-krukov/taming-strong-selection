@@ -210,22 +210,18 @@ among the parents:
 where the subscript $n_o$ indicates dependence on parameter $n_o$. 
 
 
-
 To obtain a recursion on the
-\textit{AFS}, we use an exchangeability property of the parental lineages. Since the order in which we
-draw new parental lineages in the Wright-Fisher model is random, we can first draw a random permutation 
-of the parental population, and then select unsampled parents in order from this permutation. 
+\textit{AFS}, we use the fact that parents are equally likely to be sampled prior to the rejection step. Since the order in which we
+draw previously unsampled parents is random, we can first draw a random permutation of the parents, and draw previously unsampled parents in order from this permutation. 
 This allows us to separate properties of this permutation,
 which depend only on parental \textit{AFS}, from properties of Wright-Fisher sampling, which depend
-on population size and selection coefficients. Concretely, we consider the event $(i_o, i_p, n_p)$ that $i_o$ offspring carry the deleterious allele, that $n_p$ distinct parents were drawn (successfully or not) when generating the $n_o$ offspring, and that $i_p$ of these $n_p$ parents carry the deleterious allele.  \sgcomment{Check throughout that we use `deleterious' allele consistently, vs 'derived'}
+on population size and selection coefficients.
 
-This event $(i_o, i_p, n_p)$ can be expressed as the intersection of two events, $\mathcal{C}(i_p,n_p)$ and $\mathcal{S}_{n_o}(i_o,
-n_p)$. Event $\mathcal{C}(i_p,n_p)$ specifies that the first $n_p$ parental lineages from the random
-permutation carry $i_p$ derived alleles. Event $\mathcal{S}_{n_o}(i_o, n_p)$ requires that the
-Wright-Fisher drawing process of $n_o$ offspring drew $i_o$ derived offspring alleles and sampled
-exactly $n_p$ distinct parental lineages. Event $\mathcal{C}(i_p, n_p)$ depends on the allele
-frequency distribution in the parental generation: $P(\mathcal{C}(i_p,n_p)) =\afs{n_p}{t-1} (i_p)$ by
-definition of the \textit{AFS}. Thus
+Concretely, the event $(i_o, i_p, n_p)$ that $i_o$ offspring carry the deleterious allele, that $n_p$ distinct parents were drawn (successfully or not) when generating the $n_o$ offspring, and that $i_p$ of these $n_p$ parents carry the deleterious allele is true if and only if two distinct events are true. First, it requires that $i_p$ of the first $n_p$ parents in the random permutation of the parental population carry the deleterious allele (we call this event $\mathcal{C}(i_p,n_p))$. Second it requires that the
+Wright-Fisher process to generate $n_o$ offspring required exactly $n_p$ parents and copies exactly $i_o$ derived alleles into the offspring (we call that event that event $\mathcal{S}_{n_o}(i_o, n_p)$).
+
+
+Event $\mathcal{C}(i_p, n_p)$ depends only on the allele frequency distribution in the parental generation: $P(\mathcal{C}(i_p,n_p)) =\afs{n_p}{t-1} (i_p)$ by definition of the \textit{AFS}. Thus
 \begin{equation}
   \begin{split}
     \afsPsi{n_o}{t}(i_o)&= \sum_{n_p,i_p} P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p), \mathcal{C}(i_p,n_p) )\\
