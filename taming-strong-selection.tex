@@ -67,10 +67,18 @@ scenarios. Our goal is to efficiently compute the expected AFS under natural sel
 
 It is difficult to do all these things at once. Methods that can handle natural selection often rely on variants of the diffusion approximation  \citep{EyreWalker2006, BoykoEtAl2008, GutenkunstEtAl2009, JouganousEtAl2017} \sgcomment{cite the original?} or the ancestral selection graph of Krone and Neuhauser \cite{Krone1997} \sgcomment{is anyone actually using this?}, which all rely on the assumption that the sample size $n_o$ is smaller than the square root of the effective population size $N$, i.e., $n_o < \sqrt{N}.$  
 
-However, current studies challenge this assumption (e.g., \citep{karczewski2020mutational} with $n_o=...$). Holding on to the incorrect assumption leads, among other problems, to an incorrect estimation of the proportion of rare variants in large samples \citep{Fu2006, BhaskarEtAl2014}. 
+However, sample sizes in current studies make this assumption questionable (e.g., \citep{karczewski2020mutational} with $n_o=...$). Holding on to the incorrect assumption leads, among other problems, to an incorrect estimation of the proportion of rare variants in large samples \citep{Fu2006, BhaskarEtAl2014}. 
 Even though coalescent approaches can be generalized to include more general models, involving multiple mergers (e.g., \cite{Fu2006, Spence2016}, and references therein), accounting for selection in such generalized settings remains challenging.
 
-Here we propose a recursion approach to computes the expected AFS at one generation from the expected AFS at a previous generation. Iterating the recursion from a distant past to the present provides expected AFS in large samples under selection. Since recursions equations have a long history in population genetics, this approach has many relatives. It is similar in spirit to the diffusion equation, in that it tracks distributions of allele frequencies forward in time, but it bypasses the classical diffusion limit. Recursions derived without the diffusion limit include the classical recursion for the evolution of heterozygosity under neutrality \cite{}, and have been generalized to a range of finite-sample models under neutrality \cite{Lessard2010,JouganousEtAl2017,others}. 
+Here we propose a recursion approach to expresses the expected AFS at one generation as a simple function of the expected AFS at a previous generation. Iterating the recursion from a distant past to the present provides expected AFS in large samples under selection. Such recursion approaches have a long history in population genetics. Under Wright-Fisher neutrality, for example, expected pairwise differences $\pi_t$ at time $t$ in a population of size $N$ depends only on the same quantity at time $t-1$: 
+$$\pi_t = \pi_{t-1} \left(1-\frac{1}{N}\right).$$ 
+Such recursions have been found for many more complex summaries of genetic variation including distributions of allele frequencies \cite{JouganousEtAl2017, others}, and under a wide range of neutral models of evolution \cite{Lessard2010}. 
+
+Under natural selection, related recursions can be derived (e.g., \cite{Donelly, Krone1997, Jouganous}), but they tend to implicate large to infinite numbers of summary statistic. The diffusion approximation, for example, can be thought of as a recursion equation for an infinite number of summary variables. 
+
+In this article, we show that there exist approximate recursions for distributions of allele frequencies 
+
+. It is similar in spirit to the diffusion equation, in that it tracks distributions of allele frequencies forward in time, but it bypasses the classical diffusion limit. Recursions derived without the diffusion limit include the classical recursion for the evolution of heterozygosity under neutrality \cite{}, and have been generalized to a range of finite-sample models under neutrality \cite{Lessard2010,JouganousEtAl2017,others}. 
 
  .These recursions have been generalized to distributions of allele frequencies in both large-sample limits \cite{Lessard2010} and selection \cite{Krone1997, Kurtz}.  
 } 
