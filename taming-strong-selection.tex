@@ -63,25 +63,27 @@ commonly used to infer demographic history and natural selection (\textit{e.g.}
 population size histories and patterns of migration, these approaches use versions of the diffusion
 approximation or coalescent simulations to obtain a predicted \textit{AFS}. By comparing
 predictions to the observed \textit{AFS}, one can compute likelihoods for different demographic
-scenarios. These approaches share two drawbacks.
+scenarios. Our goal is to efficiently compute the expected AFS under natural selection for large samples.  
 
-First, the \textit{AFS} calculations can be time consuming for large sample sizes.  Some efficient
-computational shortcuts can be used (e.g., \cite{fastsimcoal2, KammEtAl2017}) but these often
-require neutrality.  In the presence of natural selection, available methods are more limited, and
-often involve forward simulations or variants of the diffusion
-approximation \citep{GutenkunstEtAl2009, JouganousEtAl2017}.
+It is difficult to do all these things at once. Methods that can handle natural selection often rely on variants of the diffusion approximation  \citep{EyreWalker2006, BoykoEtAl2008, GutenkunstEtAl2009, JouganousEtAl2017} \sgcomment{cite the original?} or the ancestral selection graph of Krone and Neuhauser \cite{Krone1997} \sgcomment{is anyone actually using this?}, which all rely on the assumption that the sample size $n_o$ is smaller than the square root of the effective population size $N$, i.e., $n_o < \sqrt{N}.$  
 
-Second, both Kingman's coalescent and diffusion-based models rely on an approximation that sample
-sizes are smaller than the square root of the effective population size ($n < \sqrt{N}$), an assumption leading, among other problems, to incorrect estimation of the proportion of rare variants in large samples \citep{Fu2006, BhaskarEtAl2014}. The assumptions of Kingman's coalescent can
-be relaxed to include more general models, involving multiple mergers (e.g., \cite{Fu2006,
-Spence2016}, and references therein), but accounting for selection in such generalized coalescent models 
-remains challenging.
+However, current studies challenge this assumption (e.g., \citep{karczewski2020mutational} with $n_o=...$). Holding on to the incorrect assumption leads, among other problems, to an incorrect estimation of the proportion of rare variants in large samples \citep{Fu2006, BhaskarEtAl2014}. 
+Even though coalescent approaches can be generalized to include more general models, involving multiple mergers (e.g., \cite{Fu2006, Spence2016}, and references therein), accounting for selection in such generalized settings remains challenging.
 
-Because of its ability to handle both complex demographic and selective processes, the diffusion approach 
-has been used to model the distribution of fitness effects for new
-mutations (\textit{e.g.} \cite{EyreWalker2006, BoykoEtAl2008}). However, its application to large studies (e.g., \citep{karczewski2020mutational} with n=...), is limited by the problematic assumption $n < \sqrt{N}$ highlighted by \citep{Fu2006, BhaskarEtAl2014}. 
-\cite{JouganousEtAl2017} suggested that a moments-based recursion approach to compute the
-\textit{AFS} under the Wright-Fisher model could be modified to include multiple-merger events and selection.  Here we derive these recursions and study the impact of large sample sizes on the validity of diffusion models.
+Here we propose a recursion approach to computes the expected AFS at one generation from the expected AFS at a previous generation. Iterating the recursion from a distant past to the present provides expected AFS in large samples under selection. Since recursions equations have a long history in population genetics, this approach has many relatives. It is similar in spirit to the diffusion equation, in that it tracks distributions of allele frequencies forward in time, but it bypasses the classical diffusion limit. Recursions derived without the diffusion limit include the classical recursion for the evolution of heterozygosity under neutrality \cite{}, and have been generalized to a range of finite-sample models under neutrality \cite{Lessard2010,JouganousEtAl2017,others}. 
+
+ .These recursions have been generalized to distributions of allele frequencies in both large-sample limits \cite{Lessard2010} and selection \cite{Krone1997, Kurtz}.  
+} 
+
+
+Jouganous et al. \cite{JouganousEtAl2017} suggested that a moments-based recursion approach to compute the
+\textit{AFS} under the Wright-Fisher model could be modified to include multiple-merger events and selection.  
+
+
+Here we derive these recursions and study the impact of large sample sizes on the validity of diffusion models. 
+
+
+
 
 We will have to address two challenges. First, recursions are not formally closed under natural selection, meaning that approximations are required. We will show that such approximations become more and more benign as the sample size increases. Second, multiple individuals in a large samples can find common ancestors within a generation, which forces us to track a large number of combinatorial possibilities.  
 
@@ -113,9 +115,9 @@ We consider a sample of $n_o$ individuals in a haploid Wright-Fisher population.
 One way to generate such sampling probabilities is to draw parents with equal probability but reject, with probability $s$, draws of parents carrying the deleterious alleles. We can think of such rejected draws as caused by reproductive failures.   
 For each offspring, we repeat the random parental draw until a successful draw is achieved (Fig.
 \ref{fig_schematic}B, broken lines). 
-This iterative process is equivalent to the usual Wright-Fisher sampling, as each parent has the correct probability of being successfully drawn for each offspring. To generate $n_o$ offspring, we will make $n_g$ distinct draws ($n_g\geq n_o$ since there can be rejected draws), corresponding to $n_p$ distinct parents ($n_p\leq n_g$ since there can be common ancestry events).  
+This iterative process is equivalent to the usual Wright-Fisher sampling, as each parent has the correct probability of being successfully drawn for each offspring. To generate $n_o$ offspring, we will make $n_g$ distinct draws ($n_g\geq n_o$ since there can be rejected draws), corresponding to $n_p$ distinct parents ($n_p\leq n_g$ since the same parent can be selected more than once, in which case we say that there was `shared ancestry' or `coalescence').  
 
-If the deleterious allele frequency in the parents is $x$, the probability of obtaining $r$ successive failures for a given offspring is $(xs)^r.$ This decreases rapidly with $r$ for $xs<1.$ To avoid having to keep track of very unlikely occurrences of very large numbers of failed draws, we will sometimes use a modified Wright-Fisher model with a maximum number $r_{max}$ of selective failures for a given offspring. That is, no rejection can occur at draw number $r_{max}+1.$  When using that model, we select $r_{max}$ large enough so that the probability of requiring $r_{max}+1$ attempts is low.   
+If the deleterious allele frequency in the parents is $x$, the probability of obtaining $r$ successive failures for a given offspring is $(xs)^r.$ This decreases rapidly with $r$ for $xs<1.$ To avoid having to keep track of very unlikely occurrences of very large numbers of failed draws, we will sometimes use a modified Wright-Fisher model with a maximum number $r_{max}$ of selective failures for a given offspring. That is, no rejection can occur at draw number $r_{max}+1.$  If $r_{max}$ is not specified, we are using the usual Wright-Fisher model (i.e., $r_{max} = \infty$). Otherwise, we select $r_{max}$ large enough so that the probability of requiring $r_{max}+1$ attempts is low.   
  
 The offspring are assigned the parental allele, unless a mutation occurs. For mathematical convenience, we first generate all offspring with copied parental alleles, and then allow for mutation to change the assigned alleles. We will consider different mutational models below. 
 
@@ -137,7 +139,7 @@ or, in matrix form,
   \afs{n_o}{t}= \mathbf{M} \afsPsi{n_o}{t}
   \label{mut}
 \end{equation}
-where $\mathbf{M}_{i_oj_o}$ is the probability that the mutational process changes the allele frequency to $i_o$ given that it was $j_o$ prior to mutation. For example, under a reversible mutational model with a mutation rate $\mu$ towards the deleterious allele and $\nu$ away from it, the number $i_o$ of copies of the deleterious allele after mutation is the sum of the number $X$ of unmutated deleterious alleles ($X \sim \mathit{Binom}(j_o, 1-\nu)$)  and the number $Y$ of mutated beneficial alleles  ($Y \sim \mathit{Binom}(n_o-j_o, \mu)$). Thus $M_{i_oj_o}$ is the probability mass function of a Poisson binomial distribution. As an alternative that will be useful for comparison with existing inference approaches, we will also consider the infinite-sites approximation to this model, which supposes an constant supply of new mutation:  
+where $\mathbf{M}_{i_oj_o}$ is the probability that the allele frequency is $i_o$ after mutation given that it was $j_o$ prior to mutation. For example, under a reversible mutational model with a mutation rate $\mu$ towards the deleterious allele and $\nu$ away from it, the number $i_o$ of copies of the deleterious allele after mutation is the sum of the number $X$ of unmutated deleterious alleles ($X \sim \mathit{Binom}(j_o, 1-\nu)$)  and the number $Y$ of mutated beneficial alleles  ($Y \sim \mathit{Binom}(n_o-j_o, \mu)$). Thus $M_{i_oj_o}$ is the probability mass function of a Poisson binomial distribution. As an alternative that will be useful for comparison with existing inference approaches, we will also consider the infinite-sites approximation to this model, which supposes an constant supply of new mutation:  
 
 \begin{equation}
   \afs{n_o}{t}=  \afsPsi{n_o}{t} + n \mu e_1
@@ -145,11 +147,13 @@ where $\mathbf{M}_{i_oj_o}$ is the probability that the mutational process chang
 where $\mu$ is the per-site (forward) mutation rate and $e_1$ is the second column of the identity
 matrix of size $n_o+1.$ Since the infinite-sites model does not account for fixed sites,
 only polymorphic sites are reported under that model. 
+ \sgcomment{Should we punt the list of symbols to the appendix?}
 \begin{table}
   \centering
     \begin{tabular}{l|p{0.8\columnwidth}}
     Symbol & Meaning\\
     \hline
+   
     $N$ & Population size\\
     $n_p$ & Number of sampled parental lineages (actual plus rejected samples due to selective deaths)\\
     % $n_g$ & Number of gametes (intermediate)\\
@@ -164,7 +168,7 @@ only polymorphic sites are reported under that model.
     $i_o \dslash n_o$ & A sample with $i_o$ derived alleles ``out of'' $n_o$ total lineages\\
     $\mathbf{H}\Coalc{i_p}{n_p}{i_o}{n_o}$ &
       Hypergeometric probability - sample $i_o \dslash n_o$ in offspring from
-      $i_p \dslash n_p$ in parental generation\\
+      $i_p \dslash n_p$ in parental generation \sgcomment{Use conventional notation here}\\
     $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ &
       Probability of transition from $i_p \dslash n_p$ in parents to $i_o \dslash n_o$ in offspring, 
       with $r$ selective events - see text for a more detailed description\\
@@ -202,7 +206,7 @@ only polymorphic sites are reported under that model.
 
 
 The next step, which is more challenging, is to express the allele-frequency spectrum $\afsPsi{n_o}{t}(i_o)$ for $n_o$ offspring in terms of the parental
-\textit{AFS} at $t-1$. To do this, we can sum over possible values for random variables $n_p$ and the number $i_p$ of distinct derived alleles
+\textit{AFS}  $\afs{n_p}{t-1}(i_p).$ To do this, we can sum over possible values for random variables $n_p$ and the number $i_p$ of distinct derived alleles
 among the parents:
 \begin{equation}
   \afsPsi{n_o}{t}(i_o)=\sum_{n_p,i_p} P_{n_o}(i_o,i_p,n_p),
@@ -212,13 +216,13 @@ where the subscript $n_o$ indicates dependence on parameter $n_o$.
 
 To obtain a recursion on the
 \textit{AFS}, we use the fact that parents are equally likely to be sampled prior to the rejection step. Since the order in which we
-draw previously unsampled parents is random, we can first draw a random permutation of the parents, and draw previously unsampled parents in order from this permutation. 
+draw previously unsampled parents is random, we can first generate a random permutation of the parents, and draw previously unsampled parents in order from this permutation. 
 This allows us to separate properties of this permutation,
 which depend only on parental \textit{AFS}, from properties of Wright-Fisher sampling, which depend
 on population size and selection coefficients.
 
 Concretely, the event $(i_o, i_p, n_p)$ that $i_o$ offspring carry the deleterious allele, that $n_p$ distinct parents were drawn (successfully or not) when generating the $n_o$ offspring, and that $i_p$ of these $n_p$ parents carry the deleterious allele is true if and only if two distinct events are true. First, it requires that $i_p$ of the first $n_p$ parents in the random permutation of the parental population carry the deleterious allele (we call this event $\mathcal{C}(i_p,n_p))$. Second it requires that the
-Wright-Fisher process to generate $n_o$ offspring required exactly $n_p$ parents and copies exactly $i_o$ derived alleles into the offspring (we call that event that event $\mathcal{S}_{n_o}(i_o, n_p)$).
+Wright-Fisher process to generate $n_o$ offspring required drawing exactly $n_p$ parents and copied the derived allele exactly into $i_o$ of the offspring (we call that event that event $\mathcal{S}_{n_o}(i_o, n_p)$).
 
 
 Event $\mathcal{C}(i_p, n_p)$ depends only on the allele frequency distribution in the parental generation: $P(\mathcal{C}(i_p,n_p)) =\afs{n_p}{t-1} (i_p)$ by definition of the \textit{AFS}. Thus
@@ -230,7 +234,7 @@ Event $\mathcal{C}(i_p, n_p)$ depends only on the allele frequency distribution 
 %    \afs{n_o}{t} &\equiv  \sum_{n_p}  \mathbf{T}_{n_o,n_p}     \afs{n_p}{t-1}.
   \end{split}
 \end{equation}
-Using matrix notation to account for the sum over $j_o$ and $i_p,$ we have
+Using matrix notation to account for the sum over $i_p,$ we have
 \begin{equation}
   \afs{n_o}{t} = \mathbf{M}  \afsPsi{n_o}{t} =  \mathbf{M}  \sum_{n_p}  \mathbf{T}_{n_o,n_p}     \afs{n_p}{t-1}
     \label{eq_recur}
@@ -238,7 +242,7 @@ Using matrix notation to account for the sum over $j_o$ and $i_p,$ we have
 where $\mathbf{T}_{n_o,n_p}(i_o,i_p) = P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p)| \mathcal{C}(i_p,n_p) ) $ 
 can be thought of as $(n_o+1) \times (n_p+1)$ transition
 probability matrix, whose row and column indices correspond to the number of derived alleles in the
-offspring and contributing parental lineages, respectively. $\mathbf{M}$ is an $n_o\times n_o$ matrix encoding the effects of mutation. Related recursions under general neutral 
+offspring and contributing parental lineages, respectively. Related recursions under general neutral 
 models were studied in \cite{Lessard2010}.
 
 The \textit{AFS}  $\afs{n_p}{t-1}$ for any  $n_p\leq n_o$ can be obtained by downsampling from $\afs{n_o}{t-1}$ (\textit{i.e.}, $\afs{n_p}{t-1} =
@@ -247,12 +251,8 @@ $n_p\leq n_o$). Thus, Equation \eqref{eq_recur} provides a closed form recursion
 This was used in \cite{JouganousEtAl2017} to efficiently 
 compute distributions of allele frequencies under neutrality and in small sample sizes.
 
-Under selection, $n_{p}$ may be larger than $n_o$, leading to a set of $N$ coupled equations that is
-typically too large to solve numerically (in the diffusion limit, the number of coupled equations is
-infinite). But if the number of drift events is typically larger than the number of selective
-deaths, as happens in large sample sizes, the coupling is weak and we can restore approximate
-closure by truncating the summation in Eq. \ref{eq_recur}:
-
+Under selection, $n_{p}$ may be larger than $n_o$. This leads to a set of $N$ coupled equations that is typically too large to solve numerically (in the diffusion limit, the number of coupled equations is
+infinite). We will be looking for a closure approximation for this set of coupled equation so that we can express $\afs{n_o}{t}$ in terms of $\afs{n_o}{t-1}$. To do this, we will keep track separately of terms with $n_p \leq n_o,$ which require no approximation, from those with $n_p>n_o$, which we intend to approximate:   
 \begin{equation}
 \begin{split}
   \afsPsi{n_o}{t}(i_o)
@@ -266,11 +266,24 @@ where $\mathbf{Q}_{n_o} =  \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_o,n_p} \mathbf{H}_
 square matrix whose $(i_p,i_o)^\text{th}$ element is the probability $P_{n_o}(\mathcal{S}_{\leq n_o}
 (i_o)| \mathcal{C}(i_p,n_p))$ of event $\ms_{\leq n_o}(i_o)$ that we observe $i_o$ derived alleles
 in a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (see
-Appendix \ref{subsec_apx_tpm_deriv}), given event $\mathcal{C}(i_p,n_p)$ that $i_p$ of the first
+Appendix \ref{subsec_apx_tpm_deriv} \sgcomment{Fix appendix references}), given event $\mathcal{C}(i_p,n_p)$ that $i_p$ of the first
 $n_p$ parental alleles are derived.  
 
-The term $\epsilon \equiv \sum_{n_p> n_o }  \mathbf{T}_{n_o,n_p} \afs{n_p}{t-1} $ 
-accounts for events with $n_p>n_o.$ We will show below that it is small and often 
+The term $\epsilon \equiv \sum_{n_p> n_o}  \mathbf{T}_{n_o,n_p} \afs{n_p}{t-1} $ 
+accounts for events with $n_p>n_o.$ 
+
+In what follows, we will first show how to compute matrices $\mathbf{T}_{n_o,n_p}.$ We will then argue that the probability of observing $n_p>n_o$ can be made small for large enough sample size, so that the the term $\epsilon$ itself is small.  Intuitively, $n_p>n_o$ happens if the number $n_g-n_o$ of selective rejections is larger than the number $n_g-n_p$ of common ancestry events in the parental drawing process.  Informally, this becomes less likely as sample size increases because the expected number of selective rejections per generation grows linearly in $n_o$, whereas the number of common ancestry events grows closer to quadratically in $n_o$. 
+and the number of common ancestry events occurs approximately
+
+
+Finally, we will propose a jackknife approximation to $\epsilon$ to ensure approximate closure for smaller values of $n_o$. 
+
+
+By definition, $n_p>n_o$ happens if the number $n_g-n_o$ of selective rejections is larger than the number $n_g-n_p$ of common ancestry events in the parental drawing process.   
+
+
+
+We will argue below that it is small and often 
 negligible for large sample sizes \sgcomment{Point to figure/result, or remove this statement. }. 
 Further, it can be estimated to ensure convergence even in moderate sample sizes.  
 Using the jackknife extrapolation of \citep{Gravel2016}, we can write  
