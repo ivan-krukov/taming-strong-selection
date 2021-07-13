@@ -72,30 +72,17 @@ Even though coalescent approaches can be generalized to include more general mod
 
 Here we propose a recursion approach to expresses the expected AFS at one generation as a simple function of the expected AFS at a previous generation. Iterating the recursion from a distant past to the present provides expected AFS in large samples under selection. Such recursion approaches have a long history in population genetics. Under Wright-Fisher neutrality, for example, expected pairwise differences $\pi_t$ at time $t$ in a population of size $N$ depends only on the same quantity at time $t-1$: 
 $$\pi_t = \pi_{t-1} \left(1-\frac{1}{N}\right).$$ 
-Such recursions have been found for many more complex summaries of genetic variation including distributions of allele frequencies \cite{JouganousEtAl2017, others}, and under a wide range of neutral models of evolution \cite{Lessard2010}. 
+Such recursions have been found for many more complex summaries of genetic variation including distributions of allele frequencies in finite samples \cite{JouganousEtAl2017, others}, and under a wide range of neutral models of evolution \cite{Lessard2010}. 
 
-Under natural selection, related recursions can be derived (e.g., \cite{Donelly, Krone1997, Jouganous}), but they tend to implicate large to infinite numbers of summary statistic. The diffusion approximation, for example, can be thought of as a recursion equation for an infinite number of summary variables. 
+Under natural selection, related recursions can be derived (e.g., \cite{Donelly, Krone1997, Jouganous}), but they implicate large to infinite numbers of summary statistics. The diffusion equation, for example, can be thought of as the limit of a recursion for the allele frequency distribution in an infinite sample. Jouganous et al \cite{JouganousEtAl2017} proposed approximate recursions for distributions of allele frequencies in finite sample and suggested that the approach could be modified to include multiple-merger events and selection.  
 
-In this article, we show that there exist approximate recursions for distributions of allele frequencies 
+Here we derive these recursions and study the impact of large sample sizes on the validity of diffusion models. We will have to address two challenges. 
 
-. It is similar in spirit to the diffusion equation, in that it tracks distributions of allele frequencies forward in time, but it bypasses the classical diffusion limit. Recursions derived without the diffusion limit include the classical recursion for the evolution of heterozygosity under neutrality \cite{}, and have been generalized to a range of finite-sample models under neutrality \cite{Lessard2010,JouganousEtAl2017,others}. 
+First, multiple individuals in a large samples can find common ancestors within a generation, which forces us to track a large number of combinatorial possibilities.  In this article we propose a dynamic programming approach to integrate over these possibilities and provide recursion equations for distributions of allele frequencies in large samples with natural selection and changing population sizes. 
 
- .These recursions have been generalized to distributions of allele frequencies in both large-sample limits \cite{Lessard2010} and selection \cite{Krone1997, Kurtz}.  
-} 
+Second, recursions are not formally closed under natural selection, meaning that approximations are required. We will show that such approximations become more and more benign as the sample size increases. Second, 
 
-
-Jouganous et al. \cite{JouganousEtAl2017} suggested that a moments-based recursion approach to compute the
-\textit{AFS} under the Wright-Fisher model could be modified to include multiple-merger events and selection.  
-
-
-Here we derive these recursions and study the impact of large sample sizes on the validity of diffusion models. 
-
-
-
-
-We will have to address two challenges. First, recursions are not formally closed under natural selection, meaning that approximations are required. We will show that such approximations become more and more benign as the sample size increases. Second, multiple individuals in a large samples can find common ancestors within a generation, which forces us to track a large number of combinatorial possibilities.  
-
-In this article we propose a dynamic programming approach to integrate over these possibilities and provide recursion equations for distributions of allele frequencies in large samples with natural selection and changing population sizes. We show that small-sample approximations common in coalescent or diffusion approaches lead to stronger distortions for the distribution of allele frequencies under selection than under neutrality. 
+We show that small-sample approximations common in coalescent or diffusion approaches lead to stronger distortions for the distribution of allele frequencies under selection than under neutrality. 
 %A mathematical interpretation is that the number of relevant lineages as we go back 
 %in time is a random variable that depends on the relative importance of drift (controlled by 
 %the population size $N$) and selection (controlled by the selection coefficient $s$), 
