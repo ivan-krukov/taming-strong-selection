@@ -207,7 +207,7 @@ int main(const int argc, const char* argv[]) {
 
     for (int nc = 0; nc < no+1+k; nc++) {
         for (int ic = 0; ic < nc+1; ic++) {
-            for (int io = 0; io < no+1+k; io++) {
+            for (int io = 0; io < no+1+k; io++) { //SG: It seems to me like i_o should never be larger than n_o?
                 P0(io, no, ic, nc,s, N, max_t, cache);
             }
         }
