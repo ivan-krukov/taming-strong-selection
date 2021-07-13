@@ -17,6 +17,11 @@ The pdf for the manuscript can be built with:
 ```
 make taming-strong-selection.pdf
 ```
+## c compilation
+
+The transition matrices are computed in a small c program. I could compile this on OSX using
+
+`gcc -o transition_probability_explicit transition_probability_explicit.c -lm`
 
 ## Creating figures
 
