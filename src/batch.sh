@@ -5,7 +5,7 @@
 #   done
 # done
 
-# then convest these into Q matrices
+# then convert these into Q matrices
 # for N in 2000 1000 200; do for Ns in 0 1 10 50; do cat data/t_mat_${N}_${Ns}_200_3_10.txt | python src/read_matrices.py -j 5 -n 200 data/q_mat_${N}_${Ns}_200_3_5.txt; done; done
 
 # The first two arguments are specified through qsub                                                                                         
