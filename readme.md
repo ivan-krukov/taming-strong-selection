@@ -35,6 +35,8 @@ make figures
 
 ## Computing transition matrices
 
+An example of a full computation of a transition matrix is provided in script `src/compute_Q_from_scratch.sh`.
+
 ### Computing the rectangular T matrices
 
 To compute the transition matrices discussed in the article, we first compute the $(n_o+1)\times(n_p+1)$ matrices $T$, 
@@ -53,6 +55,7 @@ T up to order $(n_o+1)\times(n_o+1+j)$. All the T matrices are then stored in fi
 Once the T matrices are computed, we can compute the Q matrices using equation 8. This is implemented in 
 read_matrices.py
 
-`cat data/t_mat_${N}_${Ns}_200_3_10.txt | python src/read_matrices.py -j 5 -n 200 data/q_mat_${N}_${Ns}_${no}_${k}_${j}.txt`.
+`cat ../data/t_mat_${N}_${Ns}_${no}_${k}_${j}.txt | python ./read_matrices.py -j $j -n $no ../data/q_mat_${N}_${Ns}_${no}_${k}_${j}.txt`
+
 
 
