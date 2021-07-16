@@ -116,6 +116,9 @@ if __name__ == "__main__":
                 a.ticklabel_format(style="plain", useOffset=False)
 
         ax[0][0].set(ylabel="Relative error")
-        ax[1][0].set(ylabel="Relative error", xlabel="Allele count")
-        ax[1][1].set(xlabel="Allele count")
-        fig.suptitle("Relative error to the exact Wright-Fisher AFS")
+        ax[1][0].set(ylabel="Relative error")
+        ax[2][0].set(ylabel="Relative error")
+        ax[2][0].set(xlabel="Allele count")
+        ax[2][1].set(xlabel="Allele count")
+        ax[2][2].set(xlabel="Allele count")
+        fig.suptitle("Relative difference between diffusion and Wright-Fisher AFS")
