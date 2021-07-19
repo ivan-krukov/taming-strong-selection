@@ -5,7 +5,11 @@
 \newcommand{\afsPsi}[2]{\Psi_{#1}^{(#2)}}
 \newcommand{\cond}{\middle\vert}
 \newcommand{\dslash}{/\!\!/}
-\newcommand{\Coalc}[4]{\begin{bmatrix}#1\dslash #2 \\ #3\dslash #4 \end{bmatrix}}
+%\newcommand{\Coalc}[4]{\begin{bmatrix}#1\dslash #2 \\ #3\dslash #4 \end{bmatrix}}
+%Version to satisfy reviewer
+\newcommand{\Coalc}[4]{\left(#1, #2 ; #3, #4 \right)}
+
+
 
 \newcommand{\CC}{\mathcal{C}}
 \newcommand{\ms}{\mathcal{S}}
@@ -70,7 +74,7 @@ It is difficult to do all these things at once. Methods that can handle natural 
 However, sample sizes in current studies make this assumption questionable (e.g., \citep{karczewski2020mutational} with $n_o=...$). Holding on to the incorrect assumption leads, among other problems, to an incorrect estimation of the proportion of rare variants in large samples \citep{Fu2006, BhaskarEtAl2014}. 
 Even though coalescent approaches can be generalized to include more general models, involving multiple mergers (e.g., \cite{Fu2006, Spence2016}, and references therein), accounting for selection in such generalized settings remains challenging.
 
-Here we propose a recursion approach to expresses the expected AFS at one generation as a simple function of the expected AFS at a previous generation. Iterating the recursion from a distant past to the present provides expected AFS in large samples under selection. Such recursion approaches have a long history in population genetics. Under Wright-Fisher neutrality, for example, expected pairwise differences $\pi_t$ at time $t$ in a population of size $N$ depends only on the same quantity at time $t-1$: 
+Here we propose a recursion approach to express the expected AFS at one generation as a simple function of the expected AFS at a previous generation. Iterating the recursion from a distant past to the present provides expected AFS in large samples under selection. Such recursion approaches have a long history in population genetics. Under Wright-Fisher neutrality, for example, expected pairwise differences $\pi_t$ at time $t$ in a population of size $N$ depends only on the same quantity at time $t-1$: 
 $$\pi_t = \pi_{t-1} \left(1-\frac{1}{N}\right).$$ 
 Such recursions have been found for many more complex summaries of genetic variation including distributions of allele frequencies in finite samples \cite{JouganousEtAl2017, others}, and under a wide range of neutral models of evolution \cite{Lessard2010}. 
 
@@ -78,11 +82,11 @@ Under natural selection, related recursions can be derived (e.g., \cite{Donelly,
 
 Here we derive these recursions and study the impact of large sample sizes on the validity of diffusion models. We will have to address two challenges. 
 
-First, multiple individuals in a large samples can find common ancestors within a generation, which forces us to track a large number of combinatorial possibilities.  In this article we propose a dynamic programming approach to integrate over these possibilities and provide recursion equations for distributions of allele frequencies in large samples with natural selection and changing population sizes. 
+First, multiple individuals in a large sample can find common ancestors within a generation, which forces us to track a large number of combinatorial possibilities.  In this article we propose a dynamic programming approach to integrate over these possibilities and provide recursion equations for distributions of allele frequencies in large samples with natural selection and changing population sizes. 
 
-Second, recursions are not formally closed under natural selection, meaning that approximations are required. We will show that such approximations become more and more benign as the sample size increases. Second, 
+Second, recursions are not formally closed under natural selection, meaning that approximations are required. We will show that such approximations become more and more benign as the sample size increases. 
 
-We show that small-sample approximations common in coalescent or diffusion approaches lead to stronger distortions for the distribution of allele frequencies under selection than under neutrality. 
+Using these recursions, we show that small-sample approximations common in coalescent or diffusion approaches lead to stronger distortions for the distribution of allele frequencies under selection than under neutrality. 
 %A mathematical interpretation is that the number of relevant lineages as we go back 
 %in time is a random variable that depends on the relative importance of drift (controlled by 
 %the population size $N$) and selection (controlled by the selection coefficient $s$), 
@@ -106,15 +110,17 @@ and the source code for the figures are available at
 \section{Background}
 \label{sec_background}
 \subsection{Model}
-We consider a sample of $n_o$ individuals in a haploid Wright-Fisher population. We will focus on expectations for a single biallelic locus with a selection coefficient $s>0$. That is, a model with discrete generations where each `offspring' at generation $t$ is generated by drawing a `parent' at random from a population of size $N$ at generation $t-1$.  The probability of selecting a parent depends on the allele it carries: the probability of drawing a given parent with the deleterious allele is $(1-s)$ times the probability of drawing a given parent with the beneficial allele.  
-One way to generate such sampling probabilities is to draw parents with equal probability but reject, with probability $s$, draws of parents carrying the deleterious alleles. We can think of such rejected draws as caused by reproductive failures.   
-For each offspring, we repeat the random parental draw until a successful draw is achieved (Fig.
-\ref{fig_schematic}B, broken lines). 
-This iterative process is equivalent to the usual Wright-Fisher sampling, as each parent has the correct probability of being successfully drawn for each offspring. To generate $n_o$ offspring, we will make $n_g$ distinct draws ($n_g\geq n_o$ since there can be rejected draws), corresponding to $n_p$ distinct parents ($n_p\leq n_g$ since the same parent can be selected more than once, in which case we say that there was `shared ancestry' or `coalescence').  
+We consider a sample of $n_o$ individuals in a haploid Wright-Fisher population. We will focus on expectations for a single biallelic locus with a selection coefficient $s>0$. That is, a model with discrete generations where each `offspring' at generation $t$ is generated by selecting a `parent' at random from a population of size $N$ at generation $t-1$.  The probability of selecting a parent depends on the allele it carries: the probability of selecting a given parent with the deleterious allele is $(1-s)$ times the probability of selecting a given parent with the beneficial allele.  
+One way to generate such sampling probabilities is to randomly draw parents with equal probability but reject, with probability $s$, draws of parents carrying the deleterious alleles. We can think of such rejected draws as caused by reproductive failures.   
+For each offspring, we repeat the random parental draw until a parent is assigned, that is, 
+until a draw occurs without rejection (Fig. \ref{fig_schematic}B, broken lines). 
+This iterative process is equivalent to the usual Wright-Fisher sampling, as each parent has the correct probability of being assigned to each offspring. To generate $n_o$ offspring, we will make $n_g$ distinct draws ($n_g\geq n_o$ since there can be rejected draws), corresponding to $n_p$ distinct individuals in the parent generation ($n_p\leq n_g$ since the same parent can be assigned more than once, in which case we say that there was `shared ancestry' or `coalescence').  
 
-If the deleterious allele frequency in the parents is $x$, the probability of obtaining $r$ successive failures for a given offspring is $(xs)^r.$ This decreases rapidly with $r$ for $xs<1.$ To avoid having to keep track of very unlikely occurrences of very large numbers of failed draws, we will sometimes use a modified Wright-Fisher model with a maximum number $r_{max}$ of selective failures for a given offspring. That is, no rejection can occur at draw number $r_{max}+1.$  If $r_{max}$ is not specified, we are using the usual Wright-Fisher model (i.e., $r_{max} = \infty$). Otherwise, we select $r_{max}$ large enough so that the probability of requiring $r_{max}+1$ attempts is low.   
+If the deleterious allele frequency in the parents is $x$, the probability of obtaining $r$ reproductive failures for a given parental assignment is $(xs)^r.$ This decreases rapidly with $r$ for $xs<1.$ To avoid having to keep track of very unlikely occurrences of very large numbers of failed draws, we will sometimes use a modified Wright-Fisher model with a maximum number $r_{max}$ of reproductive failures for a given parental assignment. That is, no rejection can occur at draw number $r_{max}+1.$  In numerical applications, we select $r_{max}$ large enough so that the probability of requiring $r_{max}+1$ attempts is low.    
  
-The offspring are assigned the parental allele, unless a mutation occurs. For mathematical convenience, we first generate all offspring with copied parental alleles, and then allow for mutation to change the assigned alleles. We will consider different mutational models below. 
+The offspring are assigned the parental allele, unless a mutation occurs. We consider different mutational models below, and first consider a model where mutations take place in the offspring after the parental allele has been copied. 
+
+When we consider a sample from this population, we sample immediately after this mutation step.  
 
  %The mutational model is not the main focus of this article, and we will primarily consider the infinite-sites model \cite{}, where we ignore the possibility of new mutations occurring on an already polymorphic site. Rather, we will assume that an offspring at monomorphic sites have a constant probability $\mu$ of acquiring a mutation of fitness $s$ relative to the parental allele. 
 %Even though such a model may seem strange for the long-term behavior of a single locus, it provides a useful tool to analyze genome-wide expectations in the distribution of allele frequencies \cite{}. We will then consider ensembles of $L$ independently evolving loci, so that the rate at which new mutations are introduced in the population is approximately $NL\mu$ \sgcomment{check definition}
