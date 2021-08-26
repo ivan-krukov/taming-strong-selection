@@ -267,7 +267,7 @@ where $\mathbf{Q}_{n_o} =  \sum_{n_p=1}^{n_{o}} \mathbf{T}_{n_o,n_p} \mathbf{H}_
 square matrix whose $(i_p,i_o)^\text{th}$ element is the probability $P_{n_o}(\mathcal{S}_{\leq n_o}
 (i_o)| \mathcal{C}(i_p,n_p))$ of event $\ms_{\leq n_o}(i_o)$ that we observe $i_o$ derived alleles
 in a sample of size $n_o$ and that we draw \emph{at most} $n_o$ distinct parental lineages (see
-Appendix \ref{subsec_apx_tpm_deriv} \sgcomment{Fix appendix references}), given event $\mathcal{C}(i_p,n_p)$ that $i_p$ of the first
+Appendix \nameref{subsec_apx_tpm_deriv}), given event $\mathcal{C}(i_p,n_p)$ that $i_p$ of the first
 $n_p$ parental alleles are derived.  
 
 The term $\epsilon \equiv \sum_{n_p> n_o}  \mathbf{T}_{n_o,n_p} \afs{n_p}{t-1} $ 
@@ -319,8 +319,8 @@ expression for it, while simultaneously allowing for multiple coalescences and m
 However,
 we can obtain fairly simple recursion by conditioning on the last draw. Such recursions were used for
 describing large sample size effects without selection in \citep{BhaskarEtAl2014}. In this section,
-we provide some mathematical intuition, and a more detailed derivation is provided in the
-Appendix \ref{subsec_apx_tpm_deriv}.
+we provide some mathematical intuition, and a more detailed derivation is provided in
+Appendix \nameref{subsec_apx_tpm_deriv}.
 
 Under selection, the last draw can be characterized by whether it was successful or rejected,
 whether it drew a derived or ancestral allele, and whether it drew a previously drawn parental
@@ -566,7 +566,7 @@ events occur at a given generation, (say, $\frac{{n_o}^2}{2N} < 10$), where the 
 distribution is a better fit - Figure \ref{fig_apx_skellam}.
 
 The Gaussian approximation using leading order terms provides intuition about regimes where we
-expect drift to almost always overtake selection.  Appendix \ref{subsec_apx_gauss} shows that the sample size
+expect drift to almost always overtake selection.  Appendix \nameref{subsec_apx_gauss} shows that the sample size
 $n_z$ required such that the expected loss in the number of lineages is $z$ times its standard deviation
 obeys
 
@@ -608,7 +608,7 @@ This naturally suggests an improvement: if we consider transitions in the
 \textit{AFS}  not from one generation to the next, but from one generation to $g$ generations down the line, drift at one generation can compensate for selection events at another.  If the $n_o$ offspring depend on $n_p=n_o+1$ distinct parental lineages, because a selective event occurred, but these parental alleles depend on only $n_{gp} = n_o$ grand-parental lineages, because of a drift event, a transition matrix from the grand-parental AFS to the offspring AFS would be closed.   
 
 Such a transition matrix require additional bookkeeping, summing over possible intermediate parental configurations. As it turns out, computing accurate transition matrices over a few generations is reasonably straightforward and not significantly more costly than computing single-generation matrices
-(Appendix \ref{subsec_apx_multi}). If the expectation of $n_p-n_o \simeq n_o  s - \frac{n_o (n_o-1) }{2N}$ is negative, the probability that we require more than $n_o$ ancestral lineages $g$ generations ago decreases with $g.$
+(see Appendix \nameref{subsec_apx_multi}). If the expectation of $n_p-n_o \simeq n_o  s - \frac{n_o (n_o-1) }{2N}$ is negative, the probability that we require more than $n_o$ ancestral lineages $g$ generations ago decreases with $g.$
 To get an idea of the truncation behavior
 for small number $g \ll N$ of generations, we can approximate the change  in the number
 of lineages as we go back in time as a random walk with (approximately) constant mean and
