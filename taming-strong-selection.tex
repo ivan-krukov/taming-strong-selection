@@ -767,7 +767,7 @@ We thank Sabin Lessard and Aaron Ragsdale for useful discussions.
     $s$ & Selection advantage of the derived allele\\
     $r$ & Number of selection events (rejections) in the sample\\
     $x_p$ & Frequency of derived allele in parental generation\\
-    $i_o \dslash n_o$ & A sample with $i_o$ derived alleles ``out of'' $n_o$ total lineages\\
+%    $i_o \dslash n_o$ & A sample with $i_o$ derived alleles ``out of'' $n_o$ total lineages\\
     $H\Coalc{i_p}{n_p}{i_o}{n_o}$ &
       Hypergeometric probability of $i_o$ successes in $n_o$ trials when sampling without replacement 
       from $n_p\geq n_o$ possibilities of which $i_p$ are considered successful.
@@ -777,10 +777,7 @@ We thank Sabin Lessard and Aaron Ragsdale for useful discussions.
       Hypergeometric projection matrix whose element $(i_o, i_p)$ is $H\Coalc{i_p}{n_p}{i_o}{n_o}.$
       %$i_p \dslash n_p$ in parental generation \sgcomment{Use conventional notation here}
       \\
-    $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ &
-      Probability of transition from $i_p \dslash n_p$ in parents to $i_o \dslash n_o$ in offspring, 
-      with $r$ selective events - see text for a more detailed description\\
-    \hline
+        \hline
     $(i_p, n_p)$ & Event of \textit{drawing} exactly $i_p$ derived out of $n_p$ distinct parental lineages \\
     $\mathcal{C}(i_p, n_p)$ & Event of $n_p$ parental lineages \textit{containing} $i_p$ derived alleles \\
     $\mathcal{S}_{n_o}(i_o, n_p)$ & Event that $i_o$ out of $n_o$ offspring carry the derived allele and 
@@ -788,7 +785,10 @@ We thank Sabin Lessard and Aaron Ragsdale for useful discussions.
     $\ms_{n_o}(i_o, n_p, r)$ & Event that  $i_o$ out of $n_o$ offspring carry the derived allele, 
       that the first $r$ draws for the
     $n_o+1$th offspring were rejected,
-    and that $n_p$ distinct parental alleles were drawn (across all draws).
+    and that $n_p$ distinct parental alleles were drawn (across all draws)\\
+    $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ &
+      Probability of transition from $i_p \dslash n_p$ in parents to $i_o \dslash n_o$ in offspring, 
+      with $r$ selective events - see text for a more detailed description.
   \end{tabular}
   \caption{\label{tab_symbols} Table of symbols and notation}
 \end{table}
