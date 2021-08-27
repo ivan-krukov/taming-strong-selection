@@ -5,9 +5,9 @@
 \newcommand{\afsPsi}[2]{\Psi_{#1}^{(#2)}}
 \newcommand{\cond}{\middle\vert}
 \newcommand{\dslash}{/\!\!/}
-\newcommand{\Coalc}[4]{\begin{bmatrix}#1\dslash #2 \\ #3\dslash #4 \end{bmatrix}}
+%\newcommand{\Coalc}[4]{\begin{bmatrix}#1\dslash #2 \\ #3\dslash #4 \end{bmatrix}}
 %Version to satisfy reviewer
-%\newcommand{\Coalc}[4]{\left(#1, #2 ; #3, #4 \right)}
+\newcommand{\Coalc}[4]{\left(#1, #2 ; #3, #4 \right)}
 
 
 
@@ -357,7 +357,7 @@ Using caching to avoid re-computing previously computed values, we can systemati
 \ref{fig_rec_selection_dynamic_fail}.
 \begin{figure}
   \centering
-  \includegraphics[angle=-90,width=1.1\columnwidth]{fig/recurrence-selection-dynamic-failures-annotated.pdf}
+  \includegraphics[width=\columnwidth]{fig/recurrence-selection-dynamic-failures-annotated_horizontal.pdf}
 
   \caption{Recursion over the last draw for transition probabilities with selection. 
     The right hand panel represents the last draw graphically.
