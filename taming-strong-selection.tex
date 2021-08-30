@@ -288,38 +288,47 @@ Our next goal is to compute these matrices.
 \subsection{Constructing the transition matrix}
 \label{subsec_trans_mat}
 
-Even though $\mathbf{T}_{n_o,n_p}$ in Equation \ref{eq_recur} is a combinatorial probability
+Even though the probability $P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p)| \mathcal{C}(i_p,n_p))$ used to define $\mathbf{T}_{n_o,n_p}$ in Equation \ref{eq_recur} is a combinatorial probability
 describing a single generation in the Wright-Fisher model, we were unable to compute an analytical
-expression for it, while simultaneously allowing for multiple coalescences and multiple selective events.
-However,
-we can obtain fairly simple recursion by conditioning on the last draw. Such recursions were used for
+expression for it while simultaneously allowing for multiple coalescences and multiple selective events.
+However, we can obtain a fairly simple recursion by building our sample of size $n_o$ one sample at a time and, within each sample, one attempted draw at a time. 
+Such recursions were used for
 describing large sample size effects without selection in \citep{BhaskarEtAl2014}. In this section,
 we provide some mathematical intuition, and a more detailed derivation is provided in
 Appendix \nameref{subsec_apx_tpm_deriv}.
 
-Under selection, the last draw can be characterized by whether it was successful or rejected,
+Under neutrality, sampling probabilities for a sample of size $n_o$ could be expressed in terms of sampling probabilities in a sample of size $n_o-1$ by conditioning on whether the last drawn offspring corresponded to an ancestral or a derived allele. 
+Under selection, because of the possibility of selective failure, the last drawn offspring
+may require multiple attempted parental draws. To simplify the recursion, we therefore condition on the last attempted draw, instead of on the last successful draw.    
+The last attempted draw can be characterized by whether it was successful or rejected,
 whether it drew a derived or ancestral allele, and whether it drew a previously drawn parental
 lineage or not (Figure \ref{fig_rec_selection_dynamic_fail}).  The state of the sampling process
-prior to the last draw can be described by a number of successfully drawn offspring $n'_o$, of which
+prior to the last attempted draw can be described by a number of successfully drawn offspring $n'_o$, of which
 $i'_o$ are derived, a number of distinct parental lineages $n'_p$ of which $i'_p$ are derived, and a
-number of failures since last successful draw $r'$.  The recursion will be over a probability
-$\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ which generalize the transition matrices from Equation
-\eqref{eq_truncated} to account for rejected draws: $\mathbf{T}_{n_o,n_p}\equiv
-\mathbf{T}_{r=0}\Coalc{i_p}{n_p}{i_o}{n_o}$. Formally,  $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}
-\equiv P_{n_o}\left[\ms_{n_o}(i_o, n_p, r) | \mathcal{C}(i_p, n_p)\right]$ where $\ms_{n_o}(i_o,
-n_p, r)$ is a generalization of  $\ms_{n_o}(i_o, n_p)$ that accounts for rejected draws: it is the
-event that $i_o$ of the first $n_o$ successfully drawn offspring are derived, that the following $r$
-draws are rejected, and that the $n_o$ offspring and subsequent $r$ failures required exactly $n_p$
-distinct parental draws.  The bracket notation, $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$, is
-convenient to keep track of the number of relevant parental lineages (top of bracket) and offspring
-lineages (bottom of bracket) in the recursion at the cost of obscuring their different probabilistic
-role.
+number of failures since last successful draw $r'$.  
+
+We will build a recursion for probability $P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p, r)| \mathcal{C}(i_p,n_p) )$, where $\ms_{n_o}(i_o,n_p, r)$ is the
+event that $i_o$ of the first $n_o$ successfully drawn offspring carry the derived allele, that the following $r$
+attempted parental draws are rejected, and that the $n_o$ offspring and subsequent $r$ failures led to the sampling of exactly $n_p$ distinct parents. Note that $\ms_{n_o}(i_o,n_p, r=0) =  \ms_{n_o}(i_o,n_p),$ so that $P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p, r)| \mathcal{C}(i_p,n_p) )$ generalizes the probability $P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p)| \mathcal{C}(i_p,n_p))$ used to define the transition matrices $\mathbf{T}_{n_o,n_p}$ in Equation \eqref{eq_truncated}. 
+
+%The recursion will be over a probability
+%$T_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ which generalize the transition matrices from Equation
+%\eqref{eq_truncated} to account for rejected draws: $\mathbf{T}_{n_o,n_p}\equiv
+%T_{r=0}\Coalc{i_p}{n_p}{i_o}{n_o}$. Formally,  $T_{r}\Coalc{i_p}{n_p}{i_o}{n_o}
+%\equiv P_{n_o}\left[\ms_{n_o}(i_o, n_p, r) | \mathcal{C}(i_p, n_p)\right]$ where $\ms_{n_o}(i_o,
+%n_p, r)$ is a generalization of  $\ms_{n_o}(i_o, n_p)$ that accounts for rejected draws: it is the
+%event that $i_o$ of the first $n_o$ successfully drawn offspring are derived, that the following $r$
+%draws are rejected, and that the $n_o$ offspring and subsequent $r$ failures required exactly $n_p$
+%distinct parental draws.  The bracket notation, $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$, is
+%convenient to keep track of the number of relevant parental lineages (top of bracket) and offspring
+%lineages (bottom of bracket) in the recursion at the cost of obscuring their different probabilistic
+%role.
 
 We show in the Appendix and illustrate in Figure \ref{fig_rec_selection_dynamic_fail}  that we
-can express $\mathbf{T}_{r}\Coalc{i_p}{n_p}{i_o}{n_o}$ as a sum over a small number of terms
-of the form $\mathbf{T}_{r'}\Coalc{i'_p}{n'_p}{i'_o}{n'_o}.$ If $r>0,$ the last draw must be a failure
+can express $P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p, r)| \mathcal{C}(i_p,n_p) )$ as a sum over a small number of terms
+of the form $P_{n_o}(\mathcal{S}_{n'_o}(i'_o, n'_p, r')| \mathcal{C}(i'_p,n'_p) ).$ If $r>0,$ the last draw must be a failure
 and $r' = r - 1$ (leading to cases \textit{rC, rD} in Figure \ref{fig_rec_selection_dynamic_fail}).
-If $r=0,$ the last draw must be a success and $n_o' = n_o-1$ (cases \textit{A} to \textit{D})
+If $r=0,$ the last draw must be a success and $n_o' = n_o-1$ (cases \textit{A} to \textit{D}).
 
 % Figure \ref{fig_rec_selection_dynamic_fail} shows a graphical representation of the recursion, and
 %A mathematical derivation is provided in the appendix.
@@ -353,7 +362,7 @@ three selective deaths is less than $10^{-8}$, and the probability of having mor
 less than $10^{-18}.$ We have used $r_{max}=3$ in numerical calculations presented below, but a 
 more stringent cutoff does not present particular challenges.
 
-Using caching to avoid re-computing previously computed values, we can systematically compute all the terms in Equation
+Using caching to avoid re-computing previously computed values, we can systematically compute all terms in Figure
 \ref{fig_rec_selection_dynamic_fail}.
 \begin{figure}
   \centering
@@ -373,8 +382,8 @@ Using caching to avoid re-computing previously computed values, we can systemati
 
   \label{fig_rec_selection_dynamic_fail}
 \end{figure}
-The set of selection transition probability matrices $\mathbf{T}$ requires $O(r_{max}n_o^2 n_p^2)$
-operations to construct: Since each entry in $\mathbf{T}_{r}$ (with $r>0$)  in the recursion requires a
+The set of selection transition probability matrices $\mathbf{T_{n_o,n_p}}$ requires $O(r_{max}n_o^2 n_p^2)$
+operations to construct: Since each probability $P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p, r)| \mathcal{C}(i_p,n_p) )$ can be computed from a recursion with
 constant number of operations, the computational complexity depends on the number of terms we need
 to calculate. We will need to compute terms of the form
 $\mathbf{T}_{r}\Coalc{i_p'}{n_p'}{i_o'}{n_o'}$, with $1 \leq n_o'<n_o$, $i_o' \leq n_o'$, and $0\leq
