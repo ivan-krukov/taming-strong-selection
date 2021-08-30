@@ -1,5 +1,6 @@
 \documentclass[9pt,twocolumn,twoside,lineno]{gsajnl}
-
+\usepackage[switch]{lineno}
+\linenumbers
 \newcommand{\ra}{\rightarrow}
 \newcommand{\afs}[2]{\Phi_{#1}^{(#2)}}
 \newcommand{\afsPsi}[2]{\Psi_{#1}^{(#2)}}
@@ -377,7 +378,7 @@ Using caching to avoid re-computing previously computed values, we can systemati
     (\textit{A-D}) are successful draws where the last lineage is ancestral (\textit{A,B}) or
     derived (\textit{C,D}). A successful draw can happen after
     $0$ to $r_{max}$ failed draws, which is accounted for by the sum in the recursion . Terms \textit{rC} and \textit{rD}
-    represent the probability that last draw was rejected. See Table \ref{tab_symbols} for notation used.
+    represent the probability that last draw was rejected. In term $D$, $\delta_{r,r_{max}}$ is the Kronecker delta. See Table \ref{tab_symbols} for other notations used.
   }
 
   \label{fig_rec_selection_dynamic_fail}
@@ -478,9 +479,7 @@ where the differences are large enough to affect mean fitness over evolutionary 
 
 
 When the sample is the entire population, as in figures \ref{fig_strong_selection} B and D, the
-present method is exact. It is also not needed, since exact recursion equations can be obtained 
-from binomial sampling (\textit{i.e.}, there is no computational benefit to consider a subsample that is as
-large as the entire population).  The present approach is useful where accurate recursions can be
+present method is exact. In this case, however, the recursion could be obtained much more simply by noticing that the allele frequency in the offspring generation can be obtained by binomial sampling from the frequency in the parental population.  The present approach is thus useful where accurate recursions can be
 obtained for sample sizes that are appreciably smaller than $N$. We therefore seek asymptotic
 results for the convergence of the recursion approach in the following sections.
 
@@ -777,7 +776,7 @@ We thank Sabin Lessard and Aaron Ragsdale for useful discussions.
     \hline
    
     $N$ & Population size\\
-    $n_p$ & Number of sampled parental lineages (actual plus rejected samples due to selective deaths)\\
+    $n_p$ & Number of distinct sampled parental lineages, including lineages sampled but rejected through selective failure.\\
     % $n_g$ & Number of gametes (intermediate)\\
     $n_o$ & Number of offspring, sample size\\
     $i_p$ & Number of derived alleles in parents\\
