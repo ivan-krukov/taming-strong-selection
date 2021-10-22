@@ -136,12 +136,12 @@ This lemma allows us to define the Wright-Fisher model as follows. Rather than d
 Because this apparently simple rearranging of Wright-Fisher sampling is at the foundation of the look-down model, we refer to this definition of the Wright-Fisher model as the look-down construction. Many other models could also be formulated using look-down constructions, and would as a result be amenable to the techniques described below.   
  \begin{figure}
   \centering
-  \includegraphics[width=\columnwidth]{fig/WF_schematic.pdf}
+  \includegraphics[width=\columnwidth]{fig/WF_schematic_lookdown.pdf}
 
  \caption{\label{fig_schematic_gametes}
- A representation of a Wright-Fisher generation as a three-step process in a population of size $N=4$ and a sample of size $n_o=4$ using the infinite-gametes  construction. Quantities relevant to each step within the generation are shown on the right.  Filled circles represent carriers of the derived allele. A proportion $s=0.66$ of gametes carrying the derived allele are marked in gray, indicating selective failure. When generating an offspring, gametes are repeatedly drawn uniformly at random until an unmarked gamete is drawn. 
+ A representation of a Wright-Fisher generation in a population of constant size $N=4$ and a sample of size $n_o=4$. Quantities relevant to each step within the generation are shown on the right.  Filled circles represent carriers of the derived allele. Numbers represent order of visit in the lookdown construction for offspring, gametes, and parents. A proportion $s=0.66$ of gametes carrying the derived allele are marked in gray, indicating selective failure. When generating an offspring, gametes are repeatedly drawn uniformly at random until an unmarked gamete is drawn. 
 Successful transmissions are indicated as arrows, failed transmissions as broken lines.   
-   Here the fourth offspring required two draws. There are $n_g=5$ distinct sampled gametes, of which $i_g=1$ carries the derived allele and is rejected due to selection. Because of shared ancestry, $n_p=3$ parents had sampled gametes, of which  $i_p=1$ carry the derived allele and has no descendant.  Depending on the number of selective failures and drift events, $n_p$ can be smaller than, equal, or larger than $n_o$.  Mutations (stars) occur after gametes are assigned.}
+ Offspring $1$ required two draws. There are $n_g=5$ distinct sampled gametes, of which $i_g=1$ carries the derived allele and is rejected due to selection. Because of shared ancestry, $n_p=3$ parents had sampled gametes, of which  $i_p=1$ carry the derived allele and has no descendant.  Depending on the number of selective failures and drift events, $n_p$ can be smaller than, equal, or larger than $n_o$.  Mutations (stars) occur after gametes are assigned.}
 \end{figure}
  
 The number $n_g$ of distinct gametes sampled to generate $n_o$ offspring can be larger than $n_o$, and can in fact be arbitrarily large since there is no upper bound to the number of rejected draws. However, as we will see, the probability that $n_g \gg n_o$ is often small. 
