@@ -1,5 +1,7 @@
 \documentclass[9pt,twocolumn,twoside,lineno]{gsajnl}
 \usepackage[switch]{lineno}
+\usepackage{amsthm}
+
 \linenumbers
 \newcommand{\ra}{\rightarrow}
 \newcommand{\afs}[2]{\Phi_{#1}^{(#2)}}
@@ -9,8 +11,8 @@
 %\newcommand{\Coalc}[4]{\begin{bmatrix}#1\dslash #2 \\ #3\dslash #4 \end{bmatrix}}
 %Version to satisfy reviewer
 \newcommand{\Coalc}[4]{\left(#1, #2 ; #3, #4 \right)}
-
-
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
 
 \newcommand{\CC}{\mathcal{C}}
 \newcommand{\ms}{\mathcal{S}}
@@ -65,29 +67,30 @@ distributions of allele frequencies, and show that the distribution of deleterio
 The allele frequency spectrum (\textit{AFS}) is an important summary of genetic diversity that is
 commonly used to infer demographic history and natural selection (\textit{e.g.}
 \cite{GutenkunstEtAl2009, KammEtAl2017, JouganousEtAl2017}). Given a demographic scenario of
-population size histories and patterns of migration, these approaches use versions of the diffusion
-approximation or coalescent simulations to obtain a predicted \textit{AFS}. By comparing
+population size histories and patterns of migration, these approaches predict an expected \textit{AFS}. By comparing
 predictions to the observed \textit{AFS}, one can compute likelihoods for different demographic
-scenarios. Our goal is to efficiently compute the expected AFS under natural selection for large samples.  
+scenarios. Our goal is to efficiently compute the expected AFS under natural selection for large samples in out-of-equilibrium populations.  
 
-It is difficult to do all these things at once. Methods that can handle natural selection often rely on variants of the diffusion approximation  \citep{EyreWalker2006, BoykoEtAl2008, GutenkunstEtAl2009, JouganousEtAl2017} or the ancestral selection graph \cite{Krone1997}, which all rely on the assumption that the sample size $n_o$ is smaller than the square root of the effective population size $N$, i.e., $n_o < \sqrt{N}.$  
+It is difficult to do all these things at once. Methods that can handle natural selection often rely on variants of the diffusion approximation  \citep{EyreWalker2006, BoykoEtAl2008, GutenkunstEtAl2009, JouganousEtAl2017} or the ancestral selection graph \cite{KroneNeuhauser1997}, which all rely on the assumption that the sample size $n_o$ is smaller than the square root of the effective population size $N$, i.e., $n_o < \sqrt{N}.$  
 
-However, sample sizes in current studies make this assumption questionable (e.g., \citep{karczewski2020mutational} with $n_o=...$). Holding on to the incorrect assumption leads, among other problems, to an incorrect estimation of the proportion of rare variants in large samples \citep{Fu2006, BhaskarEtAl2014}. 
+However, sample sizes in current studies make this assumption questionable (e.g., \citep{karczewski2020mutational} with $n_o=146,456$). Holding on to the incorrect assumption leads, among other problems, to an incorrect estimation of the proportion of rare variants in large samples \citep{Fu2006, BhaskarEtAl2014}. 
 Even though coalescent approaches can be generalized to include more general models, involving multiple mergers (e.g., \cite{Fu2006, Spence2016}, and references therein), accounting for selection in such generalized settings remains challenging.
 
-Here we propose a recursion approach to express the expected AFS at one generation as a simple function of the expected AFS at a previous generation. Iterating the recursion from a distant past to the present provides expected AFS in large samples under selection. Such recursion approaches have a long history in population genetics. Under Wright-Fisher neutrality, for example, expected pairwise differences $\pi_t$ at time $t$ in a population of size $N$ depends only on the same quantity at time $t-1$: 
-$$\pi_t = \pi_{t-1} \left(1-\frac{1}{N}\right).$$ 
-Such recursions have been found for many more complex summaries of genetic variation including distributions of allele frequencies in finite samples \cite{JouganousEtAl2017, others}, and under a wide range of neutral models of evolution \cite{Lessard2010}. 
+Here we propose a recursion approach to express the expected AFS at one generation as a simple function of the expected AFS at a previous generation. Iterating the recursion from a distant past to the present provides expected AFS in large samples under selection. 
 
-Under natural selection, related recursions can be derived (e.g., \cite{Donelly, Krone1997, Jouganous}), but they implicate large to infinite numbers of summary statistics. The diffusion equation, for example, can be thought of as the limit of a recursion for the allele frequency distribution in an infinite sample. Jouganous et al \cite{JouganousEtAl2017} proposed approximate recursions for distributions of allele frequencies in finite sample and suggested that the approach could be modified to include multiple-merger events and selection.  
+Such recursion approaches have a long history in population genetics. Under Wright-Fisher neutrality, for example, expected pairwise differences $\pi_t$ at time $t$ in a population of size $N$ depends only on the same quantity at time $t-1$: 
+$$\pi_t = \pi_{t-1} \left(1-\frac{1}{N}\right).$$ 
+Such recursions have been found for many more complex summaries of genetic variation including distributions of allele frequencies in finite samples \cite{JouganousEtAl2017, evans2007non}, and under a wide range of neutral models of evolution \cite{Lessard2010}. 
+
+Under natural selection, related recursions can be derived (e.g., \cite{DonnellyKurtz1999a, KroneNeuhauser1997, JouganousEtAl2017}), but they implicate large to infinite numbers of summary statistics. The diffusion equation, for example, can be thought of as the limit of a recursion for the allele frequency distribution in an infinite sample. Jouganous et al \cite{JouganousEtAl2017} proposed approximate recursions for distributions of allele frequencies in finite samples and suggested that the approach could be modified to include multiple-merger events and selection.  
 
 Here we derive these recursions and study the impact of large sample sizes on the validity of diffusion models. We will have to address two challenges. 
 
-First, multiple individuals in a large sample can find common ancestors within a generation, which forces us to track a large number of combinatorial possibilities.  In this article we propose a dynamic programming approach to integrate over these possibilities and provide recursion equations for distributions of allele frequencies in large samples with natural selection and changing population sizes. 
+First, multiple individuals in a large sample can find common ancestors within a generation, which forces us to track a large number of combinatorial possibilities.  In this article we propose a dynamic programming approach to integrate over these possibilities. 
 
 Second, recursions are not formally closed under natural selection, meaning that approximations are required. We will show that such approximations become more and more benign as the sample size increases. 
 
-Using these recursions, we show that small-sample approximations common in coalescent or diffusion approaches lead to stronger distortions for the distribution of allele frequencies under selection than under neutrality. 
+
 %A mathematical interpretation is that the number of relevant lineages as we go back 
 %in time is a random variable that depends on the relative importance of drift (controlled by 
 %the population size $N$) and selection (controlled by the selection coefficient $s$), 
@@ -98,10 +101,10 @@ Using these recursions, we show that small-sample approximations common in coale
 %$E[n_p- n_o]\leq 0.$ Thus the larger the sample size, the less likely we are to find $n_p>n_o.$
 %Together with an efficient closure approximation for the rare exceptions, this means that strong 
 %selection can be handled efficiently and accurately in large samples. 
-The manuscript is organized as follows. We first provide a formulation of the Wright-Fisher model that treats selection as a discrete, stochastic process.   
 
+The manuscript is organized as follows. We first present two formulations of the Wright-Fisher model that treat selection as a discrete, stochastic process. Second, we use this formulation and dynamic programming to derive recursions for the distribution of allele frequencies that account for selection and large sample size in out-of equilibrium populations. Third, we validate these recursions using exact solutions for the AFS at equilibrium. Finally, we use these equations to study the distribution of allele frequencies in populations experiencing tight bottlenecks. 
 
-
+We show that small-sample approximations common in coalescent or diffusion approaches lead to stronger distortions for the distribution of allele frequencies under selection than under neutrality. 
 %From a practical point of view, we show that these transition matrices can 
 %be used to accurately model the distribution of allele frequencies under 
 %selection in moderate to large samples, and discuss implications for inference.
@@ -113,16 +116,24 @@ and the source code for the figures are available at
 \section{Background}
 \label{sec_background}
 \subsection{Model}
-We consider a sample of $n_o$ individuals in a haploid Wright-Fisher population. We will focus on expectations for a single biallelic locus with a selection coefficient $s>0$. That is, a model with discrete generations where each `offspring' at generation $t$ is generated by selecting a `parent' at random from a population of size $N_{t-1}$ at generation $t-1$.  The probability of selecting a parent depends on the allele it carries: the probability of selecting a given parent with the deleterious allele is $(1-s)$ times the probability of selecting a given parent with the beneficial allele. 
+We consider a haploid Wright-Fisher population of size $N_t$ at generation $t$. We will focus on a single biallelic locus with a selection coefficient $s>0$. That is, a model with discrete generations where each `offspring' at generation $t$ is generated independently by selecting one of the $N_{t-1}$ `parents' at random.  The probability of selecting a parent depends on the allele it carries: the probability of selecting a given parent with the deleterious allele is $(1-s)$ times the probability of selecting a given parent with the beneficial allele. 
 
-To select a parent with the specified probabilities, we use a random rejection scheme: We first draw a parent uniformly at random, but reject the draw with probability $s.$ For each offspring, we must then iteratively draw parents until a draw is accepted.  
+To select a parent with the specified probabilities, we use a random rejection construction: We first draw a parent uniformly at random, but reject the draw with probability $s.$ For each offspring, we iteratively draw parents until a draw is accepted.  
 %This sampling scheme is clearly equivalent to the usual Wright-Fisher model. It allows us to treat parents as exchangeable under the initial draw, and to treat selection as a discrete stochastic process that is hidden in the usual formulation of the Wright-Fisher process. 
-Equivalently, we can imagine that parents all generate a large and equal number of gametes, but a fraction $s$ of gametes from parents carrying the deleterious allele are marked as selective failures (Figure \ref{fig_schematic_gametes}). An offspring is then generated by iteratively drawing gametes uniformly at random until an unmarked gamete is selected. Since the first unmarked gamete selected is chosen uniformly at random from a pool containing a ratio $1:1-s$ of gametes carrying the favoured allele to gametes carrying the deleterious allele, this is equivalent to the usual Wright-Fisher model with selection.   
+Equivalently, we can imagine that parents all generate a very large and equal number of gametes, but that a fraction $s$ of gametes from parents carrying the deleterious allele are marked as selective failures (Figure \ref{fig_schematic_gametes}). An offspring is then generated by iteratively drawing gametes uniformly at random until an unmarked gamete is selected. Since the first unmarked gamete selected is chosen uniformly at random from a pool containing a ratio $1:1-s$ of gametes carrying the favoured allele to gametes carrying the deleterious allele, this is equivalent to the usual Wright-Fisher model with selection.   
 
-A benefit of the uniform sampling with rejection approach is that parents are drawn independently of their genotype (i.e., they are exchangeable with respect to drawing, but not with respect to rejection). We can emphasize this property using another equivalent formulation of the Wright-Fisher model that is closely related to the lookdown model \cite{}. Since the $N_t$ offspring are generated independently, we can choose to generate them iteratively rather than simultaneously. Attempted parental draws in this iterative process form a sequence of parents drawn uniformly with replacement. It is easy to show that a sequence $S$ drawn uniformly with replacement from a set $\Omega$ can be generated in two steps. First, we draw a random permutation $\sigma(\Omega).$ This will define the order of first sampling of elements of $\Omega$ in $S$. As we proceed through the sampling of $S$, we simply keep track of highest index $k$ of a sampled element in $\sigma_{\Omega}$, and draw either a previously sampled element from $\{\sigma\}_{i,1,\ldots, k}$, each with probability $1/|\Omega|$, or element $\sigma(\Omega)_{k+1}$ (with probability $1-k/|\Omega|$). We therefore first choose a random permutation of the parents, generate offspring in turn, and allow each offspring to attempt choosing parents either from parents previously drawn, or from the next parent in the permutation. Selection is implemented as above. 
-This approach is strongly reminiscent of the lookdown model \cite{}, and we will refer to it as the lookdown construction. 
+A benefit of the uniform sampling with rejection approach is that parents (or their gametes) are drawn independently of their genotype: even though they are rejected at different rates, they are exchangeable with respect to the random drawing process. We can emphasize this property using yet another equivalent formulation of the Wright-Fisher model that is closely related to the lookdown model \cite{DonnellyKurtz1999a}. Since the $N_t$ offspring are generated independently, we can choose to generate them sequentially rather than simultaneously. The list of parents drawn in this process for the $N_t$ offspring forms a sequence in which each element is a parent drawn uniformly and with replacement from the set of $N_{t-1}$ parents. Intuitively, because parents are exchangeable, the order in which parents are first sampled in this process is random and uniform. We can formalize this intuition in a simple lemma:
 
-  
+\begin{lemma}
+ Given a set $\Omega,$ the following two-step process generates a sequence $S=\{S_i\}_{i=1,\ldots,\infty}$ in which elements are drawn independently and uniformly with replacement from $\Omega$. That is, $P(S_i = \omega | \{S_1,\ldots, S_{i-1}\} ) = \frac{1}{|\Omega|}$ for all $i $ and for all $ \omega \in \Omega$. 
+
+We first define a random permutation $\sigma(\Omega)$ of set $\Omega$. This permutation determines the order in which elements of $\Omega$ are to be first visited in $S$.  Second, we generate $S$ by sampling from $\sigma(\Omega)$ and respecting this order of first visit. Concretely, let $k_0=0$ and $k_i$ represent the highest index, in $\sigma(\Omega),$ of an element in $\{S_1,\ldots,S_{i-1}\}.$  To generate $S_i,$ we either select a (previously sampled) element from $\{\sigma(\Omega)_j\}_{j=1,\ldots, k_i}$, each with probability $1/|\Omega|$, or select element $\sigma(\Omega)_{k_i+1},$ with probability $1-k_i/|\Omega|$. 
+\end{lemma}
+The proof is elementary and can be found in the supplement. 
+
+This lemma allows us to define the Wright-Fisher model as follows. Rather than drawing a sequence of parents independently with replacement as we generate the offspring, we select a random permutation of the parents before we start generating offspring. When generating offspring, we select parents from this permutation as outlined in the lemma. Selection is implemented as above. Because the sequence of parents drawn has the same distribution as in the iterative formulation of the Wright-Fisher process, the two processes are equivalent. 
+
+Because this apparently simple rearranging of Wright-Fisher sampling is at the foundation of the look-down model, we refer to this definition of the Wright-Fisher model as the look-down construction. Many other models could also be formulated using look-down constructions, and would as a result be amenable to the techniques described below.   
  \begin{figure}
   \centering
   \includegraphics[width=\columnwidth]{fig/WF_schematic.pdf}
@@ -146,7 +157,7 @@ Finally, the offspring are assigned the parental allele, unless a mutation occur
 %Even though such a model may seem strange for the long-term behavior of a single locus, it provides a useful tool to analyze genome-wide expectations in the distribution of allele frequencies \cite{}. We will then consider ensembles of $L$ independently evolving loci, so that the rate at which new mutations are introduced in the population is approximately $NL\mu$ \sgcomment{check definition}
 \section{A recursion for the allele frequency spectrum}
 We are interested in the expected allele frequency spectrum or AFS, $\afs{n_o}{t}(i_o),$ which we
-define as the probability of observing $i_o$ copies of the deleterious allele in a sample of size $n_o$ sampled at time $t$. Our goal is to obtain recursion equations expressing the AFS at time $t$ in terms of the AFS at time $t-1$. Such recursions can be used for either forward-time integration (as in \cite{Jouganous}) or back-in-time integration (\cite{momi}). 
+define as the probability of observing $i_o$ copies of the deleterious allele in a sample of size $n_o$ sampled at time $t$. Our goal is to obtain recursion equations expressing the AFS at time $t$ in terms of the AFS at time $t-1$. Such recursions can be used for either forward-time integration (as in \cite{JouganousEtAl2017}) or back-in-time integration (\cite{KammEtAl2017}). 
 
 To obtain the recursion, we want to condition the sample state at time $t$ on the possible states of random samples from the parental population at time $t-1$.  
 
@@ -213,7 +224,7 @@ Event $\mathcal{C}_{n_p}(i_p)$ depends only on the allele frequency distribution
   \begin{split}
     \afsPsi{n_o}{t}(i_o)&= \sum_{n_p,i_p} P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p), \mathcal{C}(i_p,n_p) )\\
     &=   \sum_{n_p,i_p} P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p)| \mathcal{C}(i_p,n_p) ) P(\mathcal{C}(i_p,n_p))\\
-    &=   \sum_{n_p,i_p} P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p)| \mathcal{C}(i_p,n_p) )  \afs{n_p}{t-1}(i_p)%\\
+    &=   \sum_{n_p,i_p} P_{n_o}(\mathcal{S}_{n_o}(i_o, n_p)| \mathcal{C}(i_p,n_p) )  \afs{n_p}{t-1}(i_p).%\\
 %    \afs{n_o}{t} &\equiv  \sum_{n_p}  \mathbf{T}_{n_o,n_p}     \afs{n_p}{t-1}.
   \end{split}
 \end{equation}
@@ -643,7 +654,7 @@ the Wright-Fisher model in that they do not account for possible simultaneous ev
 A common interpretation is that they are approximations to the 
 `exact' Wright-Fisher process (e.g., \cite{Fu2006}). In this interpretation, the approach presented here 
 provides an overall more accurate way of estimating distributions of allele frequencies for deleterious variants 
-in large samples than state of the art diffusion-based \cite{Gutenkunst2009} or recursion-based \cite{Jouganous2017} approaches. 
+in large samples than state of the art diffusion-based \cite{GutenkunstEtAl2009} or recursion-based \cite{JouganousEtAl2017} approaches. 
 
 Under neutrality, where differences across models have been studied extensively, the coalescent remains useful 
 as an approximation even in rather large sample sizes \citep{Fu2006}, although quantitative inference 
@@ -1321,7 +1332,53 @@ unaccounted-for lineages. In most practical applications with $s<0.1$ we expect 
 $n_{p,max}=  2 n_o$ would provide excellent convergence, hence an overall scaling of   $O(r_{max}
 n_{o}^4)$ for the construction of the matrices and $O(n_o^4)$ for the matrix product.  Thus a naive
 construction of a transition matrix over $g$ generations would require  $O( (g + r_{max} ) n_o^4).$
+\subsection{Proof of lemma 1}
+\begin{proof} [Proof of lemma 1]
+Let $X[:i]$ denote the first $i$ elements of any sequence $X$.
+
+The condition $P(S_i = \omega | S[:i-1] ) = \frac{1}{\Omega}$ is true by construction if $\omega \in S[:i-1] $, since in that case we must have also had $\omega \in \sigma(\Omega)[:k_i]$. 
+
+For $\omega \notin S[:i-1],$  note that knowing the sequence $S[:i-1]$ fully specifies $k_i$, the number of distinct elements in $S[:i-1]$, and $\sigma(\Omega)[:k_i],$ the permutation up to element $k_i.$
+Further, by construction of the sampling scheme, $P(S_i = \omega)$ only depends on 
+$\sigma(\Omega)[:k_i+1].$   
+
+We therefore use the law of total probability to sum over possible configurations for $\sigma(\Omega)[:k_i+1]$ :
 
 
+\begin{equation*}
+\begin{split}
+P(S_i = \omega |S[:i-1]  ) &= \sum_{\sigma(\Omega)[:k_i+1] } P(S_i = \omega |\sigma(\Omega)[:k_i+1] , S[:i-1] ) \\
+&~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~P(\sigma(\Omega)[:k_i+1] |S[:i-1] )
+\end{split}
+\end{equation*}
 
+Since the sequence $S[:i-1]$ fully constrains the first $k_i$ elements of $\sigma(\Omega)[:k_i+1],$ the sum only needs to run over the possible values for the last element $\sigma(\Omega)_{k_i+1}:$
+\begin{equation}
+\begin{split}
+P(S_i = \omega |S[:i-1]  )&= \sum_{\sigma(\Omega)_{k_i+1}\notin S[:i-1]} P(S_i = \omega |\sigma(\Omega)_{k_i+1} , S[:i-1] )\\
+&~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~P(\sigma(\Omega)_{k_i+1} |\sigma(\Omega)[:k_i] ).\\
+%P(S_i = \omega |S[:i-1]  ) &= \sum_{\sigma(\Omega)[:k_i+1] } P(S_i = \omega |\sigma(\Omega)[:k_i+1] , S[:i-1] ) \\ &~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ P(\sigma(\Omega)_{k_i+1} |\sigma(\Omega)[:k_i] ,  S[:i-1] )\\
+%&~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~P(\sigma(\Omega)[:k_i] |S[:i-1] ) \\
+%&= \sum_{\{\sigma(\Omega)_j\}_{j=1,\ldots, k_i+1}} P(\sigma(\Omega)_{k_i+1} = \omega |\{\sigma(\Omega)_j\}_{j=1, \ldots, k_i}, \{S_1,\ldots, S_{i-1}\} )\\
+%&~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~P(\{\sigma(\Omega)_j\}_{j=1, \ldots, k_i} | \{S_1,\ldots, S_{i-1}\} )  \\
+%&= \sum_{\{\sigma(\Omega)_j\}_{j=1,\ldots, k_i}} \frac{1}{|\Omega |} P(\{\sigma(\Omega)_j\}_{j=1, \ldots, k_i} | \{S_1,\ldots, S_{i-1}\} ) \\
+%&=\frac{1}{|\Omega |}
+\end{split}
+\end{equation}
+
+Here, $P(S_i = \omega |\sigma(\Omega)_{k_i+1} , S[:i-1] )$ is only nonzero if $\sigma(\Omega)_{k_i+1} = \omega,$ leading to simplification
+\begin{equation}
+\begin{split}
+P(S_i = \omega |S[:i-1]  )&=P(S_i = \omega |\sigma(\Omega)_{k_i+1} =\omega, S[:i-1] )\\
+&~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~P(\sigma(\Omega)_{k_i+1}  |\sigma(\Omega)[:k_i] ).\\
+%P(S_i = \omega |S[:i-1]  ) &= \sum_{\sigma(\Omega)[:k_i+1] } P(S_i = \omega |\sigma(\Omega)[:k_i+1] , S[:i-1] ) \\ &~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ P(\sigma(\Omega)_{k_i+1} |\sigma(\Omega)[:k_i] ,  S[:i-1] )\\
+%&~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~P(\sigma(\Omega)[:k_i] |S[:i-1] ) \\
+%&= \sum_{\{\sigma(\Omega)_j\}_{j=1,\ldots, k_i+1}} P(\sigma(\Omega)_{k_i+1} = \omega |\{\sigma(\Omega)_j\}_{j=1, \ldots, k_i}, \{S_1,\ldots, S_{i-1}\} )\\
+%&~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~P(\{\sigma(\Omega)_j\}_{j=1, \ldots, k_i} | \{S_1,\ldots, S_{i-1}\} )  \\
+%&= \sum_{\{\sigma(\Omega)_j\}_{j=1,\ldots, k_i}} \frac{1}{|\Omega |} P(\{\sigma(\Omega)_j\}_{j=1, \ldots, k_i} | \{S_1,\ldots, S_{i-1}\} ) \\
+%&=\frac{1}{|\Omega |}
+\end{split}
+\end{equation}
+Finally, $P(S_i = \omega |\sigma(\Omega)_{k_i+1} =\omega, S[:i-1] ) = (1-k/|\Omega|)$ by construction of the sampling scheme, and $P(\sigma(\Omega)_{k_i+1} |\sigma(\Omega)[:k_i] ) =1/(|\Omega| - k_1)$ by definition of sampling without replacement, leading to our desired result   $P(S_i = \omega |S[:i-1]  ) = \frac{1}{|\Omega|}$.
+\end{proof}
 \end{document}
